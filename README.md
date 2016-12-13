@@ -25,6 +25,6 @@ instructions on how to author new rules.
 
 ### Reporting Issues
 
-Please see [CONTRIBUTING](https://github.com/Microsoft/DevSkim/CONTRIBUTING.md) for
+Please see [CONTRIBUTING](https://github.com/Microsoft/DevSkim/blob/master/CONTRIBUTING.md) for
 information on reporting issues and contributing code.
 
