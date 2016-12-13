@@ -12,7 +12,7 @@
         "severity": "important",
         "description": "The mcrypt_encrypt function was used without an initialization vector.",
         "replacement": "Add an initialization vector or consider a different cipher mode",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS188250.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS188250.md",
         "patterns": [
             {
                 "pattern": "mcrypt_encrypt\\s*\\([^,]+,[^,]+,[^,]+,[^,]+\\);",
@@ -41,7 +41,7 @@
         "severity": "moderate",
         "description": "An initialization vector was created to a static size, rather than determining it based on the encryption algorithm used.",
         "replacement": "Use mcrypt_get_iv_size to get the correct IV size based on the cipher and mode.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS128921.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS128921.md",
         "patterns": [
             {
                 "pattern": "mcrypt_create_iv\\s*\\(\\s*\\d.*",

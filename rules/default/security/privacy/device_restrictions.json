@@ -12,7 +12,7 @@
         "severity": "important",
         "description": "Access to the device UDID (via [[UIDevice currentDevice] uniqueIdentifier]) is deprecated as of iOS 5 and should not be used or relied upon.",
         "replacement": "[[UIDevice currentDevice] identifierForVendor]",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS165348.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS165348.md",
         "patterns": [
             {
                 "pattern": "uniqueIdentifier",

@@ -9,7 +9,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS101155.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101155.md",
         "patterns": [
             {
                 "pattern": "encrypt=false",
@@ -48,7 +48,7 @@
         "severity": "informational",
         "description": "SecurityContext initialization, look here for cryptography functions.",
         "replacement": "",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS101159.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101159.md",
         "applies_to": [
             "cpp"
         ],

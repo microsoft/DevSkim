@@ -11,8 +11,8 @@
         ],
         "severity": "important",
         "description": "This line of code shows the dynamic evaluation of JavaScript, sourced from a string. It's important that this string not contain unsanitized user-supplied data, as it could be a vector for a cross-site scripting (XSS) attack.",
-        "replacement": "REPLACEMENT",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS165746.md",
+        "replacement": "",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS165746.md",
         "patterns": [
             {
                 "pattern": "stringByEvaluatingJavaScriptFromString",

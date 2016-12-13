@@ -9,7 +9,7 @@
         "severity": "informational",
         "description": "Inbound HTTP",
         "replacement": "",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS137038.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS137038.md",
         "applies_to": [
             "ruby"
         ],        

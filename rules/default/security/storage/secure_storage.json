@@ -9,7 +9,7 @@
         "severity": "moderate",
         "description": "The ProtectedData class should be used with additional entropy to reduce the risk of other application calling DPAPI to access the data.",
         "replacement": "Add additional entropy (per-application secret).",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS112266.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS112266.md",
         "applies_to": [
             "csharp"
         ],
@@ -41,7 +41,7 @@
         "severity": "moderate",
         "description": "Do not store sensitive data in NSUserDefaults.",
         "replacement": "Consider another mechanism instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS191340.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS191340.md",
         "patterns": [
             {
                 "pattern": "NSUserDefaults \\*(.*) = \\[NSUserDefaults standardUserDefaults\\];(\\n.*){1,5}$1 .*setString:(password|key)",

@@ -13,7 +13,7 @@
         "severity": "important",
         "description": "The CERT Secure Coding Standard recommends that FILE objects not be copied.",
         "replacement": "Copy a pointer to the FILE object instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS179924.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS179924.md",
         "patterns": [
             {
                 "pattern": "FILE [a-z0-9_][^=]*=\\s*\\*",
@@ -35,7 +35,7 @@
         "severity": "critical",
         "description": "Don't pass user input to this function.",
         "replacement": "Validate this data before passing it to the function.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS181731.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181731.md",
         "patterns": [
             {
                 "pattern": "(include|require|include_once|require_once|passthru)\\s*\\(.*\\$\\_(GET|POST|REQUEST|COOKIES|FILES)",

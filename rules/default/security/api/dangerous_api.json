@@ -13,7 +13,7 @@
         "severity": "moderate",
         "description": "These functions are historically error-prone and have been associated with a significant number of vulnerabilities. Most of these functions have safer alternatives, such as replacing 'strcpy' with 'strlcpy' or 'strcpy_s'.",
         "replacement": "",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS154189.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS154189.md",
         "patterns": [
             {
                 "pattern": "(_getts|_getws|_snprintf|_sntprintf|_snwprintf|_stprintf|_tcsat|_tcscpy|_tcslen|_tcsncpy|_vsnprintf|_vsntprintf|_vsnwprintf|_vstprintf|alloca|asctime|atof|atoi|atoll|bsearch|ctime|fopen|fprintf|freopen|fscanf|fwprintf|fwscanf|getenv|getwd|gmtime|localtime|lstrcat|lstrcpy|mbsrtowcs|mbstowcs|memmove|mktemp|printf|qsort|rewind|scanf|setbuf|snprintf|sprintf|sscanf|strcatbuff|strerror|strlen|strncat|strtok|swprintf|swscanf|tmpnam|vfprintf|vfscanf|vfwscanf|vprintf|vscanf|vsnprintf|vsprintf|vsscanf|vswprintf|vswscanf|vwprintf|vwscanf|wcrtomb|wcrtombs|wcscat|wcscpy|wcslen|wcsncat|wcsncpy|wcsrtombs|wcstok|wctomb|wmemcpy|wmemmove|wnsprintf|wprintf|wscanf|wsprintf|wvnsprintf|wvsprintf)",
@@ -40,7 +40,7 @@
         "severity": "important",
         "description": "strcpy is frequently dangerous, as it will cause a buffer overflow if the source is larger than the destination.",
         "replacement": "Use strcpy_s or strlcpy if possible. If no safe function is viable, strcpy/strncpy should be proceeded by conditional checks to verify tha that the source string will fit in the destination with a null termnator.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS185832.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS185832.md",
         "patterns": [
             {
                 "pattern": "\\bstrcpy\\(([^,]+),([^,\\)]+)\\)",
@@ -80,7 +80,7 @@
         "severity": "important",
         "description": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination.",
         "replacement": "Use strcpy_s or strlcpy if possible. If no safe function is viable, strcpy/strncpy should be proceeded by conditional checks to verify tha that the source string will fit in the destination with a null termnator.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS111237.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS111237.md",
         "patterns": [
             {
                 "pattern": "\\bstrncpy\\(([^,]+),([^,]+),([^,\\)]+)\\)",
@@ -120,7 +120,7 @@
         "severity": "important",
         "description": "If the combination of strings is larger than the destination buffer, strcat will cbuffer overflow the destination buffer",
         "replacement": "Use strcat_s or strlcat if possible. strncat's size parameter excludes the null terminator, which leads to frequent mistakes",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS141863.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS141863.md",
         "patterns": [
             {
                 "pattern": "\\bstrcat\\(([^,]+),([^,\\)]+)\\)",
@@ -160,7 +160,7 @@
         "severity": "important",
         "description": "strncat adds the null terminator at character 'n + 1', rather than at the nth character. this frequently leads to the null terminator being added in the memory adjacent to the destination buffer, rather than in the destination buffer.",
         "replacement": "Use strcat_s or strlcat if possible. ",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS108330.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS108330.md",
         "patterns": [
             {
                 "pattern": "\\bstrncat\\(([^,]+),([^,]+),([^,\\)]+)\\)",
@@ -200,7 +200,7 @@
         "severity": "important",
         "description": "gets will read in as many bytes as are provided, regardless of the size of buffer recieving the bytes.  This allows for conditions that cause a buffer overlow in the destination buffer.",
         "replacement": "Use gets_s or fgets if possible. fgets has different behavior from gets (may include newline for example), so care should be taken if it is used.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS181021.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181021.md",
         "patterns": [
             {
                 "pattern": "\\bgets\\(([^,\\)]+)\\)",

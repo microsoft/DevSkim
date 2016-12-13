@@ -12,7 +12,7 @@
         "severity": "moderate",
         "description": "The Set-ExecutionPolicy cmdlet has been used to dynamically change the permissions available to PowerShell.",
         "replacement": "Avoid elevating privileges if possible.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS113853.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS113853.md",
         "patterns": [
             {
                 "pattern": "Set-ExecutionPolicy",
@@ -33,8 +33,8 @@
         ],
         "severity": "important",
         "description": "Use of restricted functions.",
-        "replacement": "REPLACEMENT",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS104456.md",
+        "replacement": "",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS104456.md",
         "patterns": [
             {
                 "pattern": "GetDelegateForFunctionPointer",

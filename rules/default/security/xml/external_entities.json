@@ -11,8 +11,8 @@
         ],
         "severity": "moderate",
         "description": "Do not enable external entity resolution.",
-        "replacement": "REPLACEMENT",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS132779.md",
+        "replacement": "",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS132779.md",
         "patterns": [
             {
                 "pattern": "shouldResolveExternalEntities\\s*=\\s*YES",
@@ -41,7 +41,7 @@
         "severity": "moderate",
         "description": "Do not enable external entity resolution.",
         "replacement": "x.setShouldResolveExternalEntities = FALSE;",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS132780.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS132780.md",
         "patterns": [
             {
                 "pattern": "shouldResolveExternalEntities\\s*=\\s*TRUE",
@@ -70,7 +70,7 @@
         "severity": "moderate",
         "description": "Do not enable external entity resolution.",
         "replacement": "[x setShouldResolveExternalEntities: NO];",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS132790.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS132790.md",
         "patterns": [
             {
                 "pattern": "setShouldResolveExternalEntities:\\s*YES",

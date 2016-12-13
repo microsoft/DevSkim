@@ -9,7 +9,7 @@
         "severity": "important",
         "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific SecurityProtocolType.",
         "replacement": "Either leave off or set to SecurityProtocolType.Tls12;",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS144436.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS144436.md",
         "applies_to": [
             "csharp"
         ],
@@ -38,7 +38,7 @@
         "severity": "moderate",
         "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific list of protocols.",
         "replacement": "",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS227101.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS227101.md",
         "applies_to": [
             "cpp"
         ],
@@ -59,7 +59,7 @@
         "severity": "important",
         "description": "An outdated SSL/TLS protocol version is specified.",
         "replacement": "Use TLS 1.2",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS169125.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS169125.md",
         "applies_to": [
         ],
         "patterns": [
@@ -80,7 +80,7 @@
         "severity": "important",
         "description": "An Outdated or Banned SSL/TLS Protocol is Used",
         "replacement": "Use TLS 1.2",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS169126.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS169126.md",
         "applies_to": [
         ],
         "patterns": [

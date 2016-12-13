@@ -9,7 +9,7 @@
         "severity": "important",
         "description": "Use cryptographic random numbers generators for anything even close to a security function.",
         "replacement": "Replacements depend on language.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS148264.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS148264.md",
         "patterns": [
             {
                 "pattern": "DUAL_EC_DRBG",
@@ -77,8 +77,8 @@
         ],
         "severity": "critical",
         "description": "Passing a predicable value to srand() is very insecure and should be avoided.",
-        "replacement": "REPLACEMENT",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS149435.md",
+        "replacement": "",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS149435.md",
         "patterns": [
             {
                 "pattern": "srand\\(\\s*time\\(",

@@ -9,7 +9,7 @@
         "severity": "important",
         "description": "Optional encryption or integrity checking can be dangerous.",
         "replacement": "As a best practice, always enable strong encryption and integrity checking.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "patterns": [
             {
                 "pattern": "Integrity.*optional",
@@ -32,7 +32,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS181865.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181865.md",
         "applies_to": [
             "ios"
         ],
@@ -81,7 +81,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS134411.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS134411.md",
         "applies_to": [
             "csharp"
         ],
@@ -124,7 +124,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "applies_to": [
             "ruby"
         ],
@@ -146,7 +146,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "applies_to": [
             "python"
         ],
@@ -177,7 +177,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "applies_to": [
             "cpp"
         ],
@@ -219,7 +219,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "applies_to": [
             ".config"
         ],
@@ -253,7 +253,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "applies_to": [
             "javascript"
         ],
@@ -275,7 +275,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "applies_to": [
             "java"
         ],
@@ -297,7 +297,7 @@
         "severity": "critical",
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS114352.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
         "applies_to": [
             "powershell"
         ],

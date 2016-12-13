@@ -13,7 +13,7 @@
         "severity": "moderate",
         "description": "All Controllers Should Derive From Controller.",
         "replacement": "Ensure this class derives from Controller.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS184626.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS184626.md",
         "patterns": [
             {
                 "pattern": "class [^\\s]+Controller\\s*:\\s*(?!.*?(Controller)).*",

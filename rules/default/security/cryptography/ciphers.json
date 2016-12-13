@@ -12,7 +12,7 @@
         "severity": "moderate",
         "description": "The PHP mcrypt module is based on libmcrypt, which has been abanonded since 2007.",
         "replacement": "OpenSSL",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS175862.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS175862.md",
         "patterns": [
             {
                 "pattern": "mcrypt",
@@ -38,7 +38,7 @@
         "severity": "moderate",
         "description": "The 3DES cipher was found, which is only secure if three independent keys are used.",
         "replacement": "Use AES instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS109501.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS109501.md",
         "patterns": [
             {
                 "pattern": "TripleDESCryptoServiceProvider",
@@ -67,7 +67,7 @@
         "severity": "critical",
         "description": "The DES cipher was found, which is widely considered to be broken.",
         "replacement": "Use AES instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS106864.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS106864.md",
         "patterns": [
             {
                 "pattern": "DESCryptoServiceProvider",
@@ -96,7 +96,7 @@
         "severity": "critical",
         "description": "The RC2 cipher was found, which is considered to be broken.",
         "replacement": "Use AES instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS156431.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS156431.md",
         "patterns": [
             {
                 "pattern": "RC2CryptoServiceProvider",

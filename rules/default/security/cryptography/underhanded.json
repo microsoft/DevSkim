@@ -9,7 +9,7 @@
         "severity": "critical",
         "description": "An implementation of a weak/broken hash function was found in source code.",
         "replacement": "Do not use MD5, and always prefer OS- or library-provided cryptography implementations.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS109733.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS109733.md",
         "patterns": [
             {
                 "_comment": "MD5",

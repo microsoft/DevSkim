@@ -9,7 +9,7 @@
         "severity": "critical",
         "description": "A weak or broken hash algorithm was detected.",
         "replacement": "Consider switching to use SHA-256 or SHA-512 instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS126858.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS126858.md",
         "patterns": [
             {
                 "pattern": "XXXXX",
@@ -28,7 +28,7 @@
         "severity": "critical",
         "description": "A weak or broken hash algorithm was detected.",
         "replacement": "Consider switching to use SHA-256 or SHA-512 instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS126858.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS126858.md",
         "patterns": [
             {
                 "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
@@ -63,7 +63,7 @@
         "severity": "critical",
         "description": "A weak or broken hash algorithm was detected.",
         "replacement": "Use CC_SHA256 or CC_SHA512 instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS197800.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS197800.md",
         "applies_to": [
             "objective-c"
         ],
@@ -98,7 +98,7 @@
         "severity": "critical",
         "description": "Avoid using broken or weak hash algorithms.",
         "replacement": "Use Digest::SHA256 or Digest::SHA512",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS108647.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS108647.md",
         "applies_to": [
             "ruby"
         ],
@@ -136,7 +136,7 @@
         "severity": "critical",
         "description": "Avoid using broken or weak hash algorithms.",
         "replacement": "Use hashlib.sha256 instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS196098.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS196098.md",
         "applies_to": [
             "python"
         ],
@@ -174,7 +174,7 @@
         "severity": "critical",
         "description": "A potentially weak hashing algorithm was used.",
         "replacement": "Use SHA-256 instead.",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS168931.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS168931.md",
         "patterns": [
             {
                 "pattern": "MD5CryptoServiceProvider",
@@ -206,7 +206,7 @@
         "severity": "important",
         "description": "Taking a hash of a time value is suspicious, as there is insufficient entropy to protect against brute-force attacks.",
         "replacement": "",
-        "rule_info": "https://github.com/microsoft/devskim/guidance/DS197836.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS197836.md",
         "patterns": [
             {
                 "pattern": "(MD4|MD5|(SHA(1|224|256|384|512))).*Time",
