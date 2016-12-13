@@ -1,0 +1,53 @@
+[
+    {
+        "id": "DS112266",
+        "name": "ProtectedData used without additional entropy",
+        "active": true,
+        "tags": [
+            "Storage.Windows.DPAPI"
+        ],
+        "severity": "moderate",
+        "description": "The ProtectedData class should be used with additional entropy to reduce the risk of other application calling DPAPI to access the data.",
+        "replacement": "Add additional entropy (per-application secret).",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS112266.md",
+        "applies_to": [
+            "csharp"
+        ],
+        "patterns": [
+            {
+                "pattern": "ProtectedData\\.Protect.*,\\s*null.*",
+                "type": "regex"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Add entropy placeholder",
+                "search": "(ProtectedData\\.Protect[^,]+,\\s*)null(.*)",
+                "replace": "$1<entropy>$2"
+            }
+        ]
+    },
+    {
+        "id": "DS191340",
+        "name": "Do not store sensitive data in NSUserDefaults.",
+        "active": true,
+        "tags": [
+            "Storage.Apple.iOS.UserDefaults.SensitiveData"
+        ],
+        "applies_to": [
+            "objective-c"
+        ],
+        "severity": "moderate",
+        "description": "Do not store sensitive data in NSUserDefaults.",
+        "replacement": "Consider another mechanism instead.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS191340.md",
+        "patterns": [
+            {
+                "pattern": "NSUserDefaults \\*(.*) = \\[NSUserDefaults standardUserDefaults\\];(\\n.*){1,5}$1 .*setString:(password|key)",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    }
+]

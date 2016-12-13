@@ -1,0 +1,20 @@
+   [ {
+        "id": "DS176209",
+        "name": "Suspicious comment",
+        "active": true,
+        "tags": [
+            "Hygiene.Comment.Suspicious"
+        ],
+        "severity": "low",
+        "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
+        "replacement": "",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS176209.md",
+        "patterns": [
+            {
+                "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
+                "type": "regex_word"
+            }
+        ],
+        "fix_it": []
+    }
+]

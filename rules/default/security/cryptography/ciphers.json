@@ -1,0 +1,118 @@
+[
+    {
+        "id": "DS175862",
+        "name": "Do not use the mcrypt module, use OpenSSL instead.",
+        "active": true,
+        "tags": [
+            "Cryptography.Library.Abandoned"
+        ],
+        "applies_to": [
+            "php"
+        ],
+        "severity": "moderate",
+        "description": "The PHP mcrypt module is based on libmcrypt, which has been abanonded since 2007.",
+        "replacement": "OpenSSL",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS175862.md",
+        "patterns": [
+            {
+                "pattern": "mcrypt",
+                "type": "string"
+            }
+        ],
+        "fix_it": [
+        ]
+    },
+    {
+        "id": "DS109501",
+        "overrides": [
+            "DS106864"
+        ],
+        "name": "Do not use the 3DES symmetric block cipher.",
+        "active": true,
+        "tags": [
+            "Cryptography.Symmetric.PotentiallyWeakAlgorithm"
+        ],
+        "applies_to": [
+            "csharp"
+        ],
+        "severity": "moderate",
+        "description": "The 3DES cipher was found, which is only secure if three independent keys are used.",
+        "replacement": "Use AES instead.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS109501.md",
+        "patterns": [
+            {
+                "pattern": "TripleDESCryptoServiceProvider",
+                "type": "string"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Change to AESCryptoServiceProvider",
+                "search": "TripleDESCryptoServiceProvider",
+                "replace": "AESCryptoServiceProvider"
+            }
+        ]
+    },
+    {
+        "id": "DS106864",
+        "name": "Do not use the DES symmetric block cipher.",
+        "active": true,
+        "tags": [
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+        ],
+        "applies_to": [
+            "csharp"
+        ],
+        "severity": "critical",
+        "description": "The DES cipher was found, which is widely considered to be broken.",
+        "replacement": "Use AES instead.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS106864.md",
+        "patterns": [
+            {
+                "pattern": "DESCryptoServiceProvider",
+                "type": "string"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Change to AESCryptoServiceProvider",
+                "search": "DESCryptoServiceProvider",
+                "replace": "AESCryptoServiceProvider"
+            }
+        ]
+    },
+    {
+        "id": "DS156431",
+        "name": "Do not use the RC2 symmetric block cipher.",
+        "active": true,
+        "tags": [
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+        ],
+        "applies_to": [
+            "csharp"
+        ],
+        "severity": "critical",
+        "description": "The RC2 cipher was found, which is considered to be broken.",
+        "replacement": "Use AES instead.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS156431.md",
+        "patterns": [
+            {
+                "pattern": "RC2CryptoServiceProvider",
+                "type": "string"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Change to AESCryptoServiceProvider",
+                "search": "RC2CryptoServiceProvider",
+                "replace": "AESCryptoServiceProvider"
+            }
+        ]
+    }
+
+
+]
+

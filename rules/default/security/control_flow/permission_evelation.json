@@ -1,0 +1,90 @@
+[
+    {
+        "id": "DS113853",
+        "name": "Do not set a custom execution policy.",
+        "active": true,
+        "tags": [
+            "ControlFlow.Permission.Evalation"
+        ],
+        "applies_to": [
+            "powershell"
+        ],
+        "severity": "moderate",
+        "description": "The Set-ExecutionPolicy cmdlet has been used to dynamically change the permissions available to PowerShell.",
+        "replacement": "Avoid elevating privileges if possible.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS113853.md",
+        "patterns": [
+            {
+                "pattern": "Set-ExecutionPolicy",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS104456",
+        "name": "Use of restricted functions.",
+        "active": true,
+        "tags": [
+            "Implementation.Scripting.PowerShell.DangeousFunction"
+        ],
+        "applies_to": [
+            "powershell"
+        ],
+        "severity": "important",
+        "description": "Use of restricted functions.",
+        "replacement": "REPLACEMENT",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS104456.md",
+        "patterns": [
+            {
+                "pattern": "GetDelegateForFunctionPointer",
+                "type": "string"
+            },
+            {
+                "pattern": "System.Runtime.InteropServices.Marshal",
+                "type": "string"
+            },
+            {
+                "pattern": "WriteByte",
+                "type": "string"
+            },
+            {
+                "pattern": "Microsoft.Win32.UnsafeNativeMethods",
+                "type": "string"
+            },
+            {
+                "pattern": "PtrToStructure",
+                "type": "string"
+            },
+            {
+                "pattern": "StructureToPtr",
+                "type": "string"
+            },
+            {
+                "pattern": "(NtCreateThreadEx|CreateRemoteThread)",
+                "type": "regex_word"
+            },
+            {
+                "pattern": "Invoke",
+                "type": "string"
+            },
+            {
+                "pattern": "VirtualProtect",
+                "type": "string"
+            },
+            {
+                "pattern": "iex",
+                "type": "string"
+            },
+            {
+                "pattern": "&\"",
+                "type": "string"
+            },
+            {
+                "pattern": "& $",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    }
+]

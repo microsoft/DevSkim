@@ -1,0 +1,2 @@
+requests.get('https://kennethreitz.com',
+             verify=False)

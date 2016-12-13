@@ -1,0 +1,23 @@
+    [{
+        "id": "DS162092",
+        "name": "Do not leave debug code in production",
+        "active": true,
+        "tags": [
+            "Hygiene.Network.AccessingLocalhost"
+        ],
+        "severity": "informational",
+        "description": "Accessing localhost could indicate debug code, or could hinder scaling.",
+        "replacement": "",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS162092.md",
+        "patterns": [
+            {
+                "pattern": "localhost",
+                "type": "string"
+            },
+            {
+                "pattern": "127.0.0.1",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    }]

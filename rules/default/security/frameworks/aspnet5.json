@@ -1,0 +1,36 @@
+[
+    {
+        "id": "DS184626",
+        "name": "All Controllers Should Derive From Controller.",
+        "active": true,
+        "tags": [
+            "Implementation.Web.ASPNET.ControllerWithoutExtendingController"
+        ],
+        "applies_to": [
+            "csharp",
+            "aspnet"
+        ],
+        "severity": "moderate",
+        "description": "All Controllers Should Derive From Controller.",
+        "replacement": "Ensure this class derives from Controller.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS184626.md",
+        "patterns": [
+            {
+                "pattern": "class [^\\s]+Controller\\s*:\\s*(?!.*?(Controller)).*",
+                "type": "regex"
+            },
+            {
+                "pattern": "class [^\\s]+Controller[\\s{]*$",
+                "type": "regex"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Change to inherit from Controller",
+                "search": "(class [^\\s]+Controller)(([\\s{]*$)|(\\s*:\\s*(?!.*?(Controller)).*))",
+                "replace": "$1 : Controller"
+            }
+        ]
+    }
+]

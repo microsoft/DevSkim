@@ -1,0 +1,5 @@
+/* FLAG */
+FILE tdout = *stdout;
+
+/* NO FLAG */
+FILE *my_stdout = stdout;

@@ -1,0 +1,3 @@
+# $sha1->add($$ , time() , rand(time) );
+
+$md5->add($$ , time() , rand(time) );

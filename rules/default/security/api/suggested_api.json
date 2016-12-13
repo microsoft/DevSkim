@@ -1,0 +1,68 @@
+[
+    {
+        "id": "DS161085",
+        "name": "Problematic C function detected (malloc)",
+        "active": true,
+        "tags": [
+            "API.DangerousAPI.ProblematicFunction"
+        ],
+        "applies_to": [
+            "c",
+            "cpp",
+            "objective-c"
+        ],
+        "severity": "defense-in-depth",
+        "description": "If the value provided to malloc is the result of unsafe integer math, it can result in an exploitable condition. ",
+        "replacement": "calloc handles the most common integer math in memory allocation (# of elements * their size) with error handling to prevent overflows in most implementations, and zeros out memory",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS161085.md",
+        "patterns": [
+            {
+                "pattern": "\\bmalloc\\(([^,\\)]+)\\)",
+                "type": "regex"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Change to calloc ",
+                "search": "\\bmalloc\\(([^,\\)]+)\\)",
+                "replace": "calloc(<number of elements>, <size of each element>)"
+            }
+        ]
+    },
+{
+        "id": "DS121708",
+        "name": "Problematic C function detected (memcpy)",
+        "active": true,
+        "tags": [
+            "API.DangerousAPI.BannedFunction"
+        ],
+        "applies_to": [
+            "c",
+            "cpp",
+            "objective-c"
+        ],
+        "severity": "defense-in-depth",
+        "description": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer",
+        "replacement": "Use memcpy_s if possible.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS121708.md",
+        "patterns": [
+            {
+                "pattern": "\\bmemcpy\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+                "type": "regex",
+                "subtype": [
+                    "function-call"
+                ]
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Change to memcpy_s (Recommended for VC++)",
+                "search": "\\bmemcpy\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+                "replace": "memcpy_s($1, <size of $1>, $2, $3)"
+            }
+        ]
+    }
+
+]

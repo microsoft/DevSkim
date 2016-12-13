@@ -1,0 +1,24 @@
+[
+    {
+        "id": "DS137038",
+        "name": "Notice: Outbound HTTP Connection",
+        "active": true,
+        "tags": [
+            "ThreatModel.Integration.HTTP"
+        ],
+        "severity": "informational",
+        "description": "Inbound HTTP",
+        "replacement": "",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS137038.md",
+        "applies_to": [
+            "ruby"
+        ],        
+        "patterns": [
+            {
+                "pattern": "Net::HTTP",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    }
+]

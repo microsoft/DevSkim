@@ -1,0 +1,24 @@
+[
+    {
+        "id": "DS165348",
+        "name": "Do not attempt to access device UDID",
+        "active": true,
+        "tags": [
+            "Implementation.Mobile.iOS.DataProtection.Privacy.UDID"
+        ],
+        "applies_to": [
+            "objective-c"
+        ],
+        "severity": "important",
+        "description": "Access to the device UDID (via [[UIDevice currentDevice] uniqueIdentifier]) is deprecated as of iOS 5 and should not be used or relied upon.",
+        "replacement": "[[UIDevice currentDevice] identifierForVendor]",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS165348.md",
+        "patterns": [
+            {
+                "pattern": "uniqueIdentifier",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    }
+]

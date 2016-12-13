@@ -1,0 +1,94 @@
+[
+    {
+        "id": "DS148264",
+        "name": "Do not use weak/non-cryptographic random number generators",
+        "active": true,
+        "tags": [
+            "Cryptography.PRNG.Weak"
+        ],
+        "severity": "important",
+        "description": "Use cryptographic random numbers generators for anything even close to a security function.",
+        "replacement": "Replacements depend on language.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS148264.md",
+        "patterns": [
+            {
+                "pattern": "DUAL_EC_DRBG",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "javascript"
+                ],
+                "pattern": "pseudoRandomBytes",
+                "type": "string"
+            },
+            {
+                "pattern": "rand\\(",
+                "type": "regex"
+            },
+            {
+                "pattern": "random_shuffle\\(",
+                "type": "regex"
+            },
+            {
+                "pattern": "shuffle\\(",
+                "type": "regex"
+            },
+            {
+                "pattern": "RAND_MAX",
+                "type": "string"
+            },
+            {
+                "pattern": "rand\\(\\s*\\)\\s*%",
+                "type": "regex"
+            },
+            {
+                "pattern": "mwc1616",
+                "type": "string"
+            },
+            {
+                "pattern": "(32969|18273)",
+                "type": "regex_word"
+            },
+            {
+                "pattern": "System.Random",
+                "type": "string"
+            },
+            {
+                "pattern": "Random\\(",
+                "type": "regex_word",
+                "applies_to": [
+                    "java"
+                ]
+            },
+            {
+                "pattern": "arc4random",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS149435",
+        "name": "Do not seed randomness based on system time or a static value.",
+        "active": true,
+        "tags": [
+            "Cryptography.WeakRandomness"
+        ],
+        "severity": "critical",
+        "description": "Passing a predicable value to srand() is very insecure and should be avoided.",
+        "replacement": "REPLACEMENT",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS149435.md",
+        "patterns": [
+            {
+                "pattern": "srand\\(\\s*time\\(",
+                "type": "regex"
+            },
+            {
+                "pattern": "srand\\(\\s*\\d+\\s*\\)",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    }
+]

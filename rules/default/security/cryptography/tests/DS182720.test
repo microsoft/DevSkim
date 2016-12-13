@@ -1,0 +1,5 @@
+<?php
+
+$output = mcrypt_encrypt(MCRYPT_BLOWFISH, $key, $data, MCRYPT_MODE_ECB, $iv);
+
+?>

@@ -1,0 +1,47 @@
+[    {
+        "id": "DS179924",
+        "name": "Do not copy a FILE object (CERT FIO38-C)",
+        "active": true,
+        "tags": [
+            "CERT.FIO38-C",
+            "C.DangerousFunctionCall"
+        ],
+        "applies_to": [
+            "cpp",
+            "c"
+        ],
+        "severity": "important",
+        "description": "The CERT Secure Coding Standard recommends that FILE objects not be copied.",
+        "replacement": "Copy a pointer to the FILE object instead.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS179924.md",
+        "patterns": [
+            {
+                "pattern": "FILE [a-z0-9_][^=]*=\\s*\\*",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    },
+     {
+        "id": "DS181731",
+        "name": "Don't pass user input to this function",
+        "active": true,
+        "tags": [
+            "PHP.Injection"
+        ],
+        "applies_to": [
+            "php"
+        ],
+        "severity": "critical",
+        "description": "Don't pass user input to this function.",
+        "replacement": "Validate this data before passing it to the function.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS181731.md",
+        "patterns": [
+            {
+                "pattern": "(include|require|include_once|require_once|passthru)\\s*\\(.*\\$\\_(GET|POST|REQUEST|COOKIES|FILES)",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    }
+]

@@ -1,0 +1,373 @@
+[
+    {
+        "id": "DS144436",
+        "name": "Do not use outdated SSL/TLS protocols",
+        "active": true,
+        "tags": [
+            "Cryptography.Protocol.TLS"
+        ],
+        "severity": "important",
+        "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific SecurityProtocolType.",
+        "replacement": "Either leave off or set to SecurityProtocolType.Tls12;",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS144436.md",
+        "applies_to": [
+            "csharp"
+        ],
+        "patterns": [
+            {
+                "pattern": "SecurityProtocolType\\.(Ssl3|Tls|Tls11)",
+                "type": "regex_word"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex_substitute",
+                "name": "Change to SecurityProtocolType.Tls12",
+                "search": "\\bSecurityProtocolType\\.(Ssl3|Tls|Tls11)\\b",
+                "replace": "SecurityProtocolType.Tls12"
+            }
+        ]
+    },
+    {
+        "id": "DS227101",
+        "name": "Hardcoding TLS protocol version",
+        "active": true,
+        "tags": [
+            "Cryptography.Protocol.TLS"
+        ],
+        "severity": "moderate",
+        "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific list of protocols.",
+        "replacement": "",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS227101.md",
+        "applies_to": [
+            "cpp"
+        ],
+        "patterns": [
+            {
+                "pattern": "SecPkgCred_SupportedProtocols",
+                "type": "regex_word"
+            }
+        ]
+    },
+    {
+        "id": "DS169125",
+        "name": "Do not use outdated SSL/TLS protocols",
+        "active": true,
+        "tags": [
+            "Cryptography.Protocol.TLS"
+        ],
+        "severity": "important",
+        "description": "An outdated SSL/TLS protocol version is specified.",
+        "replacement": "Use TLS 1.2",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS169125.md",
+        "applies_to": [
+        ],
+        "patterns": [
+            {
+
+                "pattern": "(SSLv?2|SSLv?3|TLSv?1|TLSv?10)",
+                "type": "regex_word"
+            }
+        ]
+    },
+    {
+        "id": "DS169126",
+        "name": "An Outdated or Banned SSL/TLS Protocol is Used",
+        "active": true,
+        "tags": [
+            "Cryptography.Protocol.Banned"
+        ],
+        "severity": "important",
+        "description": "An Outdated or Banned SSL/TLS Protocol is Used",
+        "replacement": "Use TLS 1.2",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS169126.md",
+        "applies_to": [
+        ],
+        "patterns": [
+            {
+                "pattern": "(SSL|TLS)v(2|23|3|1)_(client|server)",
+                "type": "regex"
+            },
+            {
+
+                "pattern": "SSLv2",
+                "type": "string"
+            },
+            {
+
+                "pattern": "SSLv3",
+                "type": "string"
+            },
+            {
+
+                "pattern": "TLSv1",
+                "type": "string"
+            },
+            {
+
+                "pattern": "TLSv10",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_40BIT",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_56BIT",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_NORMALBITNESS",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_PCT",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_PCT4",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_SSL",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_SSL3",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_STRENGTH_MEDIUM",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_STRENGTH_WEAK",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_UNKNOWNBIT",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_SSL2",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_SSL3",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_TLS1",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_ALL",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_STRENGTH_MEDIUM",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SECURITY_FLAG_STRENGTH_WEAK",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "cpp"
+                ],
+                "pattern": "SP_PROT_(PCT1|SSL2|SSL3|TLS1|TLS1_0)_(CLIENT|SERVER)",
+                "type": "regex"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "NSStreamSocketSecurityLevelNone",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "NSStreamSocketSecurityLevelSSLv2",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "NSStreamSocketSecurityLevelSSLv3",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "NSStreamSocketSecurityLevelTLSv1",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kCFStreamSocketSecurityLevelNone",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kCFStreamSocketSecurityLevelSSLv2",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kCFStreamSocketSecurityLevelSSLv3",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kCFStreamSocketSecurityLevelTLSv1",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kSSLProtocolUnknown ",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kSSLProtocol3",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kTLSProtocol1",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kDTLSProtocol1",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kSSLProtocol2",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kSSLProtocol3Only",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kTLSProtocol1Only",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "objective-c"
+                ],
+                "pattern": "kSSLProtocolAll",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "python"
+                ],
+                "pattern": "PROTOCOL_SSLv2",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "python"
+                ],
+                "pattern": "PROTOCOL_SSLv23",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "python"
+                ],
+                "pattern": "PROTOCOL_SSLv3",
+                "type": "string"
+            },
+            {
+                "applies_to": [
+                    "python"
+                ],
+                "pattern": "PROTOCOL_TLSv1",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    }
+]

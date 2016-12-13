@@ -1,0 +1,62 @@
+[
+    {
+        "id": "DS101155",
+        "name": "Disabled certificate validation",
+        "active": true,
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS101155.md",
+        "patterns": [
+            {
+                "pattern": "encrypt=false",
+                "type": "string",
+                "subtype": [
+                    "string"
+                ]
+            },
+            {
+                "pattern": "encryption=false",
+                "type": "string",
+                "subtype": [
+                    "string"
+                ]
+            },
+            {
+                "pattern": "unencrypted.*password",
+                "type": "regex"
+            },
+            {
+                "pattern": "TODO.*crypt",
+                "type": "regex",
+                "subtype": [
+                    "comment"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "DS101159",
+        "name": "Initializing Security Context",
+        "active": true,
+        "tags": [
+            "Cryptography.SecurityContext.Initialization"
+        ],
+        "severity": "informational",
+        "description": "SecurityContext initialization, look here for cryptography functions.",
+        "replacement": "",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS101159.md",
+        "applies_to": [
+            "cpp"
+        ],
+        "patterns": [
+            {
+                "pattern": "InitializeSecurityContext",
+                "type": "string"
+            }
+        ]
+    }
+]

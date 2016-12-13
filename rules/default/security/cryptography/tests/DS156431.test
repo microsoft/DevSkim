@@ -1,0 +1,5 @@
+using (var myRC2 = new RC2CryptoServiceProvider())
+{
+    ...
+
+}

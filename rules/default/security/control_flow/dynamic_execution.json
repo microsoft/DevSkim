@@ -1,0 +1,24 @@
+[
+    {
+        "id": "DS165746",
+        "name": "Do not execute user-provided JavaScript",
+        "active": true,
+        "tags": [
+            "Design.Mobile.iOS.WebView.DynamicJavaScript"
+        ],
+        "applies_to": [
+            "objective-c"
+        ],
+        "severity": "important",
+        "description": "This line of code shows the dynamic evaluation of JavaScript, sourced from a string. It's important that this string not contain unsanitized user-supplied data, as it could be a vector for a cross-site scripting (XSS) attack.",
+        "replacement": "REPLACEMENT",
+        "rule_info": "https://github.com/microsoft/devskim/guidance/DS165746.md",
+        "patterns": [
+            {
+                "pattern": "stringByEvaluatingJavaScriptFromString",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    }
+]

@@ -1,0 +1,8 @@
+/* FLAG */
+include($_GET['t']);
+include($_POST['t']);
+require_once($_POST['t']);
+
+/* NO FLAG */
+include("lib/file.php");
+require_once("lib/file.php");
