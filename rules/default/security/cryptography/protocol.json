@@ -29,7 +29,7 @@
         ]
     },
     {
-        "id": "DS227101",
+        "id": "DS127101",
         "name": "Hardcoding TLS protocol version",
         "active": true,
         "tags": [
@@ -38,7 +38,7 @@
         "severity": "moderate",
         "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific list of protocols.",
         "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS227101.md",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS127101.md",
         "applies_to": [
             "cpp"
         ],
