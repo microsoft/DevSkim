@@ -1,0 +1,118 @@
+[
+    {
+        "name": "c",
+        "extensions": ["c"]    
+    },    
+    {
+        "name": "cpp",
+        "extensions": ["cpp", "h"]    
+    },
+    {
+        "name": "csharp",
+        "extensions": ["cs"]    
+    },
+    {
+        "name": "vb",
+        "extensions": ["vb"]    
+    },
+    {
+        "name": "python",
+        "extensions": ["py"]    
+    },
+    {
+        "name": "javascript",
+        "extensions": ["js"]    
+    },
+    {
+        "name": "javascriptreact",
+        "extensions": ["jsx"]    
+    },
+    {
+        "name": "typescript",
+        "extensions": ["ts"]    
+    },
+    {
+        "name": "typescriptreact",
+        "extensions": ["tsx"]    
+    },
+    {
+        "name": "coffeescript",
+        "extensions": ["coffee"]    
+    },
+    {
+        "name": "java",
+        "extensions": ["java"]    
+    },
+    {
+        "name": "objective-c",
+        "extensions": ["m"]
+    },
+    {
+        "name": "swift",
+        "extensions": ["swift"] 
+    },
+    {
+        "name": "perl",
+        "extensions": ["pl", "pm", "t", "pod"]
+    },
+    {
+        "name": "perl6",
+        "extensions": ["pl6", "p6", "pm6"]
+    },
+    {
+        "name": "ruby",
+        "extensions": ["rb"]
+    },
+    {
+        "name": "lua",
+        "extensions": ["lua"]
+    },
+    {
+        "name": "groovy",
+        "extensions": ["groovy"]
+    },
+    {
+        "name": "go",
+        "extensions": ["go"]
+    },
+    {
+        "name": "rust",
+        "extensions": ["rs", "rlib"]
+    },
+    {
+        "name": "jade",
+        "extensions": ["jade"]
+    },
+    {
+        "name": "clojure",
+        "extensions": [".clj", ".cljs", ".cljc", ".edn"]
+    },
+    {
+        "name": "r",
+        "extensions": ["r"]
+    },
+    {
+        "name": "yaml",
+        "extensions": ["yaml"]
+    },
+    {
+        "name": "fsharp",
+        "extensions": ["fs"]
+    },
+    {
+        "name": "php",
+        "extensions": ["php"]
+    },
+    {
+        "name": "powershell",
+        "extensions": ["ps1", "psm1", "psd1"]
+    },
+    {
+        "name": "shellscript",
+        "extensions": ["sh"]
+    },
+    {
+        "name": "plaintext",
+        "extensions": ["txt"]
+    }
+]
