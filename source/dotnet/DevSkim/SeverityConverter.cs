@@ -4,7 +4,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace DevSkim
+namespace Microsoft.Security.DevSkim
 {
     public enum Severity
     {

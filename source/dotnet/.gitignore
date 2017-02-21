@@ -4,5 +4,8 @@
 
 DevSkim/bin
 DevSkim/obj
+DevSkim.Tests/bin
+DevSkim.Tests/obj
+TestResults
 packages
 .vs/
