@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkim", "DevSkim\DevSkim.csproj", "{CC0635AC-ADEE-428B-A98E-32B2F88EF50C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Security.DevSkim", "DevSkim\Microsoft.Security.DevSkim.csproj", "{CC0635AC-ADEE-428B-A98E-32B2F88EF50C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkim.Tests", "DevSkim.Tests\DevSkim.Tests.csproj", "{42EF48EA-0BC9-4AFE-B7A1-929828D7203F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{CC0635AC-ADEE-428B-A98E-32B2F88EF50C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC0635AC-ADEE-428B-A98E-32B2F88EF50C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC0635AC-ADEE-428B-A98E-32B2F88EF50C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42EF48EA-0BC9-4AFE-B7A1-929828D7203F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42EF48EA-0BC9-4AFE-B7A1-929828D7203F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42EF48EA-0BC9-4AFE-B7A1-929828D7203F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42EF48EA-0BC9-4AFE-B7A1-929828D7203F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,7 +3,7 @@
 
 using Newtonsoft.Json;
 
-namespace DevSkim
+namespace Microsoft.Security.DevSkim
 {
     /// <summary>
     /// Comment class to hold information about comment for each language
