@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.Security.DevSkim
+namespace DevSkim
 {
     /// <summary>
     /// Processor for rule suppressions
@@ -24,10 +24,10 @@ namespace Microsoft.Security.DevSkim
         /// <param name="language">Visual Studio content yype</param>
         public Suppressor(string lineOfCode, string language)
         {
-            if (lineOfCode == null || language == null)
-                throw new ArgumentNullException();
-
             _text = lineOfCode;
+            if (string.IsNullOrEmpty(_text))
+                _text = string.Empty;
+
             _language = language;
 
             ParseLine();
@@ -43,20 +43,11 @@ namespace Microsoft.Security.DevSkim
             bool result = false;
             if (_rulesAll || _rules.Contains(ruleId))
                 result = true;
-            
+
             if (_date > DateTime.MinValue)
-                return (DateTime.Now < _date && result);
+                return (result && DateTime.Now < _date);
             else
                 return result;
-        }
-
-        /// <summary>
-        /// Supress all rules
-        /// </summary>
-        /// <returns>Line of code with suppression set</returns>
-        public string SuppressAll()
-        {
-            return SuppressAll(DateTime.MinValue);
         }
 
         /// <summary>
@@ -67,16 +58,6 @@ namespace Microsoft.Security.DevSkim
         public string SuppressAll(DateTime date)
         {
             return SuppressRule(null, date);
-        }
-
-        /// <summary>
-        /// Suppress given rule
-        /// </summary>
-        /// <param name="ruleId">Rule Id to suppress (null for all)</param>        
-        /// <returns>Line of code with suppression set</returns>
-        public string SuppressRule(string ruleId)
-        {
-            return SuppressRule(ruleId, DateTime.MinValue);
         }
 
         /// <summary>
@@ -116,8 +97,7 @@ namespace Microsoft.Security.DevSkim
             {
                 expiration = string.Format(" {0} {1}", SUPPRESS_RULE_UNTIL, _date.ToString("yyyy-MM-dd"));
             }
-
-            if (date > DateTime.MinValue && _date < date)
+            else if (date > DateTime.MinValue)
             {                
                 expiration = string.Format(" {0} {1}", SUPPRESS_RULE_UNTIL, date.ToString("yyyy-MM-dd"));
             }

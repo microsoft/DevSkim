@@ -2,10 +2,11 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.Security.DevSkim
+namespace DevSkim
 {
     /// <summary>
     /// Heart of DevSkim. Parses code applies rules
@@ -22,7 +23,7 @@ namespace Microsoft.Security.DevSkim
         /// <summary>
         /// Creates instance of RuleProcessor        
         /// </summary>
-        public RuleProcessor(string rulesDirectory) : this()
+        public RuleProcessor(string rulesDirectory) : base()
         {
             AddRules(rulesDirectory, null);
         }       
@@ -42,13 +43,13 @@ namespace Microsoft.Security.DevSkim
         /// <summary>
         /// Test given source code line for issues
         /// </summary>
-        /// <param name="lineOfCode">Source code line</param>
+        /// <param name="text">Source code line</param>
         /// <param name="index">Position in text where to start the scan</param>
         /// <param name="contenttype">Visual Studio content type</param>
         /// <returns>MatchRecord with infomartion of identified issue</returns>
-        public Match IsMatch(string lineOfCode, int index, string language)
-        {
-            Match result = FindMatch(lineOfCode.Substring(index), lineOfCode, language);
+        public Match IsMatch(string text, int index, string language)
+        {            
+            Match result = FindMatch(text.Substring(index), text, language);
             if (result.Location > -1)
                 result.Location += index;
 
@@ -58,20 +59,13 @@ namespace Microsoft.Security.DevSkim
         /// <summary>
         /// Applies given fix on the provided source code line
         /// </summary>
-        /// <param name="lineOfCode">Source code line</param>
+        /// <param name="text">Source code line</param>
         /// <param name="fixRecord">Fix record to be applied</param>
         /// <returns>Fixed source code line</returns>
-        public static string Fix(string lineOfCode, CodeFix fixRecord)
+        public static string Fix(string text, CodeFix fixRecord)
         {
-            string result = string.Empty;
-
-            if (fixRecord.Type == "regex_substitute")
-            {
-                Regex regex = new Regex(fixRecord.Search);
-                result = regex.Replace(lineOfCode, fixRecord.Replace);
-            }
-
-            return result;
+            Regex regex = new Regex(fixRecord.Search);
+            return regex.Replace(text, fixRecord.Replace);
         }
         #endregion
 
@@ -80,10 +74,10 @@ namespace Microsoft.Security.DevSkim
         /// <summary>
         /// Test given text for issues
         /// </summary>
-        /// <param name="lineOfCode">Source code</param>
+        /// <param name="text">Source code</param>
         /// <param name="language">Visual Studio content type</param>
         /// <returns>MatchRecord with infomartion of identified issue</returns>
-        private Match FindMatch(string lineOfCode, string textLine, string language)
+        private Match FindMatch(string text, string textLine, string language)
         {
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguage(language);
@@ -98,7 +92,7 @@ namespace Microsoft.Security.DevSkim
                     // Type == Substring 
                     if (p.Type == PatternType.Substring)
                     {
-                        result.Location = lineOfCode.ToLower().IndexOf(p.Pattern.ToLower());
+                        result.Location = text.ToLower().IndexOf(p.Pattern.ToLower());
                         result.Length = p.Pattern.Length;
                         if (result.Location > -1)
                         {
@@ -111,14 +105,14 @@ namespace Microsoft.Security.DevSkim
                     else if (p.Type == PatternType.Regex)
                     {
                         RegexOptions reopt = RegexOptions.None;
-                        if (p.Modifiers != null && p.Modifiers.Length > 0)
+                        if (p.Modifiers != null)
                         {
-                            reopt |= (p.Modifiers.Contains("IGNORECASE")) ? RegexOptions.IgnoreCase : RegexOptions.None;
-                            reopt |= (p.Modifiers.Contains("MULTILINE")) ? RegexOptions.Multiline : RegexOptions.None;                            
+                            reopt |= (p.Modifiers.Contains("ignorecase")) ? RegexOptions.IgnoreCase : RegexOptions.None;
+                            reopt |= (p.Modifiers.Contains("multiline")) ? RegexOptions.Multiline : RegexOptions.None;                            
                         }
                         
                         Regex patRegx = new Regex(p.Pattern, reopt);
-                        System.Text.RegularExpressions.Match m = patRegx.Match(lineOfCode);
+                        System.Text.RegularExpressions.Match m = patRegx.Match(text);
                         if (m.Success)
                         {
                             result.Success = true;
@@ -173,7 +167,7 @@ namespace Microsoft.Security.DevSkim
                     // Put rules with defined contenty type (AppliesTo) on top
                     filteredRules.Insert(0, r);
                 }
-                else if (r.AppliesTo == null || r.AppliesTo.Length == 0)
+                else if (r.AppliesTo == null)
                 {
                     foreach (SearchPattern p in r.Patterns)
                     {
@@ -181,13 +175,13 @@ namespace Microsoft.Security.DevSkim
                         if (p.AppliesTo != null && p.AppliesTo.Contains(language))
                         {
                             filteredRules.Insert(0, r);
-                            continue;
+                            break;
                         }
                         // Generic rules goes to the end of the list
                         if (p.AppliesTo == null)
                         {
                             filteredRules.Add(r);
-                            continue;
+                            break;
                         }
                     }
                 }

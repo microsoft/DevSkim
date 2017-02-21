@@ -3,7 +3,7 @@
 
 using Newtonsoft.Json;
 
-namespace Microsoft.Security.DevSkim
+namespace DevSkim
 {
     /// <summary>
     /// Class to hold the Rule

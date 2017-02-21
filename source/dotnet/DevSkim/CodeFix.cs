@@ -3,7 +3,7 @@
 
 using Newtonsoft.Json;
 
-namespace Microsoft.Security.DevSkim
+namespace DevSkim
 {
     /// <summary>
     /// Class that holds code fix record for the rules
