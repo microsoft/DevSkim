@@ -20,7 +20,7 @@ namespace Microsoft.Security.DevSkim
         }
 
         /// <summary>
-        /// Creates instance of RuleProcessor        
+        /// Creates instance of RuleProcessor
         /// </summary>
         public RuleProcessor(string rulesDirectory) : this()
         {

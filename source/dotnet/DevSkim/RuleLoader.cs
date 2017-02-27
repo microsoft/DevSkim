@@ -11,7 +11,7 @@ namespace Microsoft.Security.DevSkim
     /// <summary>
     /// Provides functionality for loading the rules
     /// </summary>
-    class RuleLoader
+    public class RuleLoader
     {
         /// <summary>
         /// Parse a directory with rules files and loads the rules
