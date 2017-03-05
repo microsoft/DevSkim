@@ -3,28 +3,29 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 
 namespace Microsoft.Security.DevSkim
 {
     /// <summary>
-    /// Provides functionality for loading the rules
+    /// Storage for rules
     /// </summary>
-    public class Ruleset
+    public class Ruleset : IEnumerable
     {
-        private Ruleset()
+        public Ruleset()
         {
             _rules = new List<Rule>();
         }
 
         /// <summary>
-        /// Parse a directory with rules files and loads the rules
+        /// Parse a directory with rule files and loads the rules
         /// </summary>
         /// <param name="path">Path to rules folder</param>
         /// <param name="tag">Tag for the rules</param>
-        /// <returns>Return list of Rules objects</returns>
+        /// <returns>Ruleset</returns>
         public static Ruleset FromDirectory(string path, string tag)
         {
             Ruleset result = new Ruleset();
@@ -33,6 +34,12 @@ namespace Microsoft.Security.DevSkim
             return result;
         }
 
+        /// <summary>
+        /// Load rules from a file
+        /// </summary>
+        /// <param name="filename">Filename with rules</param>
+        /// <param name="tag">Tag for the rules</param>
+        /// <returns>Ruleset</returns>
         public static Ruleset FromFile(string filename, string tag)
         {
             Ruleset result = new Ruleset();
@@ -41,14 +48,26 @@ namespace Microsoft.Security.DevSkim
             return result;
         }
 
+        /// <summary>
+        /// Load rules from JSON string
+        /// </summary>
+        /// <param name="jsonstring">JSON string</param>
+        /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
+        /// <param name="tag">Tag for the rules</param>
+        /// <returns>Ruleset</returns>
         public static Ruleset FromString(string jsonstring, string sourcename, string tag)
         {
             Ruleset result = new Ruleset();
-            result.AddRaw(jsonstring, sourcename, tag);
+            result.AddString(jsonstring, sourcename, tag);
 
             return result;
         }
 
+        /// <summary>
+        /// Parse a directory with rule files and loads the rules
+        /// </summary>
+        /// <param name="path">Path to rules folder</param>
+        /// <param name="tag">Tag for the rules</param>        
         public void AddDirectory(string path, string tag)
         {
             if (path == null)
@@ -63,6 +82,11 @@ namespace Microsoft.Security.DevSkim
             }
         }
 
+        /// <summary>
+        /// Load rules from a file
+        /// </summary>
+        /// <param name="filename">Filename with rules</param>
+        /// <param name="tag">Tag for the rules</param>
         public void AddFile(string filename, string tag)
         {
             if (filename == null)
@@ -73,11 +97,17 @@ namespace Microsoft.Security.DevSkim
 
             using (StreamReader file = File.OpenText(filename))
             {
-                AddRaw(file.ReadToEnd(), filename, tag);
+                AddString(file.ReadToEnd(), filename, tag);
             }
         }
 
-        public void AddRaw(string jsonstring, string sourcename, string tag)
+        /// <summary>
+        /// Load rules from JSON string
+        /// </summary>
+        /// <param name="jsonstring">JSON string</param>
+        /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
+        /// <param name="tag">Tag for the rules</param>
+        public void AddString(string jsonstring, string sourcename, string tag)
         {
             List<Rule> ruleList = new List<Rule>();
             ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring);
@@ -104,6 +134,29 @@ namespace Microsoft.Security.DevSkim
             }
         }
 
+        /// <summary>
+        /// Add rule into Ruleset
+        /// </summary>
+        /// <param name="rule"></param>
+        public void AddRule(Rule rule)
+        {
+            _rules.Add(rule);
+        }
+
+        /// <summary>
+        /// Adds the elements of the collection to the Ruleset
+        /// </summary>
+        /// <param name="collection">Collection of rules</param>
+        public void AddRange(IEnumerable<Rule> collection)
+        {
+            _rules.AddRange(collection);
+        }
+
+        /// <summary>
+        /// Filters rules within Ruleset by language
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <returns>Filtered rules</returns>
         public IEnumerable<Rule> ByLanguage(string language)
         {
             // Otherwise preprare the rules for the content type and store it in cache.
@@ -160,6 +213,24 @@ namespace Microsoft.Security.DevSkim
             return filteredRules;
         }
 
+        #region IEnumerable interface
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the Ruleset
+        /// </summary>
+        /// <returns>Enumerator</returns>
+        public IEnumerator GetEnumerator()
+        {
+            return this._rules.GetEnumerator();
+        }
+
+        #endregion
+
+        #region Fields
+
         private List<Rule> _rules;
+        
+        #endregion
     }
+
 }

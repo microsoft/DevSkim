@@ -13,8 +13,8 @@ namespace DevSkim.Tests
         [TestMethod]
         [ExpectedException(typeof(FileNotFoundException))]
         public void InvalidRuleFileFailTest()
-        {
-            Ruleset ruleset = Ruleset.FromFile("x:\\file.txt", null);
+        {            
+            Ruleset ruleset = Ruleset.FromFile("x:\\file.txt", null);                       
         }
 
         [TestMethod]

@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Security.DevSkim;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace DevSkim.Tests
 {
@@ -16,7 +18,7 @@ namespace DevSkim.Tests
             rules.AddDirectory(@"rules\custom", "my rules");
 
             RuleProcessor processor = new RuleProcessor(rules);
-            
+                        
             string lang = Language.FromFilename("testfilename.cpp");
             string testString = "strcpy(dest,src);";
 
