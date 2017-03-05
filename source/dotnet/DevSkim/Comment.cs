@@ -11,7 +11,7 @@ namespace Microsoft.Security.DevSkim
     class Comment
     {
         [JsonProperty(PropertyName ="language")]
-        public string[] ContentTypes { get; set; }
+        public string[] Languages { get; set; }
 
         [JsonProperty(PropertyName ="preffix")]
         public string Preffix{ get; set; }

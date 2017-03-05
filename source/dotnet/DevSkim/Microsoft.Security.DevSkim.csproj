@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="CodeFix.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="ContentType.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Match.cs" />
     <Compile Include="PatternTypeConverter.cs" />
@@ -49,7 +50,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Rule.cs" />
-    <Compile Include="RuleLoader.cs" />
+    <Compile Include="Ruleset.cs" />
     <Compile Include="RuleProcessor.cs" />
     <Compile Include="SearchPattern.cs" />
     <Compile Include="SeverityConverter.cs" />

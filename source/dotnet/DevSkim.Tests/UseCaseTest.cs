@@ -12,13 +12,16 @@ namespace DevSkim.Tests
         [TestMethod]
         public void UseCase_Normal_Test()
         {
-            RuleProcessor processor = new RuleProcessor(@"rules\valid");
-            processor.AddRules(@"rules\custom", "my rules");
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            rules.AddDirectory(@"rules\custom", "my rules");
 
+            RuleProcessor processor = new RuleProcessor(rules);
+            
+            string lang = Language.FromFilename("testfilename.cpp");
             string testString = "strcpy(dest,src);";
 
             // strcpy test
-            Match match = processor.IsMatch(testString, 0, "cpp");
+            Match match = processor.IsMatch(testString, 0, lang);
             Assert.IsTrue(match.Success, "strcpy should be flagged");
             Assert.AreEqual(0, match.Location, "strcpy invalid index");
             Assert.AreEqual(16, match.Length, "strcpy invalid length ");
@@ -45,8 +48,10 @@ namespace DevSkim.Tests
         [TestMethod]
         public void UseCase_IgnoreRules_Test()
         {
-            RuleProcessor processor = new RuleProcessor(@"rules\valid");
-            processor.AddRules(@"rules\custom");
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            rules.AddDirectory(@"rules\custom", null);
+
+            RuleProcessor processor = new RuleProcessor(rules);
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
@@ -83,8 +88,10 @@ namespace DevSkim.Tests
         [TestMethod]
         public void UseCase_Suppress_Test()
         {
-            RuleProcessor processor = new RuleProcessor(@"rules\valid");
-            processor.AddRules(@"rules\custom");
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            rules.AddDirectory(@"rules\custom", null);
+
+            RuleProcessor processor = new RuleProcessor(rules);
 
             // Is supressed test
             string testString = "md5.new()";
@@ -120,8 +127,10 @@ namespace DevSkim.Tests
         [TestMethod]
         public void UseCase_SuppressExisting_Test()
         {
-            RuleProcessor processor = new RuleProcessor(@"rules\valid");
-            processor.AddRules(@"rules\custom");
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            rules.AddDirectory(@"rules\custom", null);
+
+            RuleProcessor processor = new RuleProcessor(rules);
 
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until {0:yyyy}-{0:MM}-{0:dd}";
             DateTime expirationDate = DateTime.Now.AddDays(5);
@@ -155,8 +164,10 @@ namespace DevSkim.Tests
         [TestMethod]
         public void UseCase_SuppressExistingPast_Test()
         {
-            RuleProcessor processor = new RuleProcessor(@"rules\valid");
-            processor.AddRules(@"rules\custom");
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            rules.AddDirectory(@"rules\custom", null);
+
+            RuleProcessor processor = new RuleProcessor(rules);
 
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until 1980-07-15";
             Suppressor sup = new Suppressor(testString, "csharp");            

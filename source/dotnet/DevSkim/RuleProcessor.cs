@@ -12,32 +12,20 @@ namespace Microsoft.Security.DevSkim
     /// </summary>
     public class RuleProcessor
     {
-
         public RuleProcessor()
-        {
-            _rules = new List<Rule>();
-            _rulesCache = new Dictionary<string, List<Rule>>();
+        {            
+            _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
         }
 
         /// <summary>
         /// Creates instance of RuleProcessor
         /// </summary>
-        public RuleProcessor(string rulesDirectory) : this()
+        public RuleProcessor(Ruleset rules) : this()
         {
-            AddRules(rulesDirectory, null);
+            this.Rules = rules;
         }       
 
         #region Public Methods
-
-        public void AddRules(string rulesDirectory, string tag)
-        {
-            _rules.AddRange(RuleLoader.ParseDirectory(rulesDirectory, tag));
-        }
-
-        public void AddRules(string rulesDirectory)
-        {
-            AddRules(rulesDirectory, null);
-        }
 
         /// <summary>
         /// Test given source code line for issues
@@ -163,56 +151,7 @@ namespace Microsoft.Security.DevSkim
             if (_rulesCache.ContainsKey(language))
                 return _rulesCache[language];
 
-            // Otherwise preprare the rules for the content type and store it in cache.
-            List<Rule> filteredRules = new List<Rule>();
-            
-            foreach (Rule r in _rules)
-            {
-                if (r.AppliesTo != null && r.AppliesTo.Contains(language))
-                {
-                    // Put rules with defined contenty type (AppliesTo) on top
-                    filteredRules.Insert(0, r);
-                }
-                else if (r.AppliesTo == null || r.AppliesTo.Length == 0)
-                {
-                    foreach (SearchPattern p in r.Patterns)
-                    {
-                        // If applies to is defined and matching put those rules first
-                        if (p.AppliesTo != null && p.AppliesTo.Contains(language))
-                        {
-                            filteredRules.Insert(0, r);
-                            continue;
-                        }
-                        // Generic rules goes to the end of the list
-                        if (p.AppliesTo == null)
-                        {
-                            filteredRules.Add(r);
-                            continue;
-                        }
-                    }
-                }
-            }
-
-            // Now deal with rule overrides. 
-            List<string> idsToRemove = new List<string>();
-            foreach(Rule rule in filteredRules)
-            {
-                if (rule.Overrides != null)
-                {
-                    foreach (string r in rule.Overrides)
-                    {
-                        // Mark every rule that is overriden
-                        if (!idsToRemove.Contains(r))
-                            idsToRemove.Add(r);
-                    }
-                }
-            }
-
-            // Remove marked rules
-            foreach (string id in idsToRemove)
-            {
-                filteredRules.Remove(filteredRules.Find(x => x.Id == id));
-            }
+            IEnumerable<Rule> filteredRules = _ruleset.ByLanguage(language); 
 
             // Add the list to the cache so we save time on the next call
             _rulesCache.Add(language, filteredRules);
@@ -222,14 +161,28 @@ namespace Microsoft.Security.DevSkim
 
         #endregion
 
+        #region Properties
+
+        public Ruleset Rules
+        {
+            get { return _ruleset; }
+            set
+            {
+                _ruleset = value;
+                _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
+            }
+        }
+
+        #endregion
+
         #region Fields 
 
-        private List<Rule> _rules;
+        private Ruleset _ruleset;
 
         /// <summary>
         /// Cache for rules filtered by content type
         /// </summary>
-        private Dictionary<string, List<Rule>> _rulesCache;
+        private Dictionary<string, IEnumerable<Rule>> _rulesCache;
         #endregion
     }
 }

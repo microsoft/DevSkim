@@ -11,9 +11,10 @@ namespace Microsoft.Security.DevSkim
     public class Rule
     {
         /// <summary>
-        /// Name of the file where the rule definition resides
+        /// Name of the source where the rule definition resides.
+        /// Typically file, database name or other storage
         /// </summary>
-        public string File { get; set; }
+        public string Source { get; set; }
         /// <summary>
         /// Optional tag assigned to the rule
         /// </summary>

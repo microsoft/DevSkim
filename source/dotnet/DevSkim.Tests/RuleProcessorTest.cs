@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Security.DevSkim;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 namespace DevSkim.Tests
 {
@@ -11,25 +10,11 @@ namespace DevSkim.Tests
     public class RuleProcessorTest
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void ConstructorFailTest()
-        {
-            RuleProcessor processor = new RuleProcessor(null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(DirectoryNotFoundException))]
-        public void InvalidRuleDirectoryFailTest()
-        {
-            RuleProcessor processor = new RuleProcessor();
-            processor.AddRules("x:\\invalid_directory");
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void IsMatch_FalseTest()
         {
-            RuleProcessor processor = new RuleProcessor();
+            Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleProcessor processor = new RuleProcessor(ruleset);            
             string testString = "this is a test string";
 
             // Normal functionality test
@@ -71,7 +56,8 @@ namespace DevSkim.Tests
         [TestMethod]
         public void RuleInfoTest()
         {
-            RuleProcessor processor = new RuleProcessor(@"rules\valid");
+            Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "strcpy(dest,src);";
             
             Match match = processor.IsMatch(testString, 0, "cpp");
@@ -79,7 +65,7 @@ namespace DevSkim.Tests
 
             Rule r = match.Rule;
             Assert.IsTrue(r.Description.Contains("strcpy"), "Invalid decription");
-            Assert.IsTrue(r.File.Contains("dangerous_api.json"), "Invalid file");
+            Assert.IsTrue(r.Source.Contains("dangerous_api.json"), "Invalid file");
             Assert.IsTrue(r.Name.Contains("strcpy"), "Invalid name");
             Assert.IsTrue(r.Replecement.Contains("strcpy_s"), "Invalid replacement");
             Assert.IsTrue(r.RuleInfo.Contains(r.Id), "Invalid ruleinfo");

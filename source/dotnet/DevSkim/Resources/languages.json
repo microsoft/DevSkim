@@ -85,7 +85,7 @@
     },
     {
         "name": "clojure",
-        "extensions": [".clj", ".cljs", ".cljc", ".edn"]
+        "extensions": ["clj", "cljs", "cljc", "edn"]
     },
     {
         "name": "r",

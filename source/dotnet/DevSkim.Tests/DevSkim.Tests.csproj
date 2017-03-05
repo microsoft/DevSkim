@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="RuleProcessorTest.cs" />
     <Compile Include="SuppressorTest.cs" />
+    <Compile Include="RulesetTest.cs" />
     <Compile Include="UseCaseTest.cs" />
   </ItemGroup>
   <ItemGroup>

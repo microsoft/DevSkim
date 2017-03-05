@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -11,23 +12,51 @@ namespace Microsoft.Security.DevSkim
     /// <summary>
     /// Helper class for language based commenting
     /// </summary>
-    class Language
+    public class Language
     {
         private Language()
         {
             Assembly assembly = typeof(Microsoft.Security.DevSkim.Language).GetTypeInfo().Assembly;
-            Stream resource = assembly.GetManifestResourceStream("Microsoft.Security.DevSkim.Resources.comments.json");
 
+            // Load comments
+            Stream resource = assembly.GetManifestResourceStream("Microsoft.Security.DevSkim.Resources.comments.json");
             using (StreamReader file = new StreamReader(resource))
             {
                 Comments = JsonConvert.DeserializeObject<List<Comment>>(file.ReadToEnd());
             }
+
+            // Load languages
+            resource = assembly.GetManifestResourceStream("Microsoft.Security.DevSkim.Resources.languages.json");
+            using (StreamReader file = new StreamReader(resource))
+            {
+                ContentTypes = JsonConvert.DeserializeObject<List<ContentType>>(file.ReadToEnd());
+            }
         }
 
         /// <summary>
-        /// Decorates given string with language specific comments
+        /// Returns language for given file name
         /// </summary>
-        /// <param name="textToComment">text to be decorated</param>
+        /// <param name="filename">File name</param>
+        /// <returns>Language</returns>
+        public static string FromFilename(string filename)
+        {
+            string ext = Path.GetExtension(filename);
+            if (ext.StartsWith("."))
+                ext = ext.Substring(1);
+
+            foreach (ContentType item in Instance.ContentTypes)
+            {
+                if (Array.Exists(item.Extensions, x => x.Equals(ext)))
+                    return item.Name;
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Decorates given string with language specific comment prefix/suffix
+        /// </summary>
+        /// <param name="textToComment">Text to be decorated</param>
         /// <param name="language">Language</param>
         /// <returns>Commented string</returns>
         public static string Comment(string textToComment, string language)
@@ -36,9 +65,9 @@ namespace Microsoft.Security.DevSkim
 
             foreach (Comment comment in Instance.Comments)
             {
-                foreach (string ct in comment.ContentTypes)
+                foreach (string lang in comment.Languages)
                 {
-                    if (ct == language)
+                    if (lang == language)
                     {
                         result = string.Concat(comment.Preffix, textToComment, comment.Suffix);
                         break;
@@ -64,6 +93,8 @@ namespace Microsoft.Security.DevSkim
             }        
         }
 
-        private List<Comment> Comments;        
+        private List<Comment> Comments;
+        private List<ContentType> ContentTypes;      
     }
 }
+
