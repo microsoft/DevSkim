@@ -1,24 +1,5 @@
 [
     {
-        "id": "ddddddd",
-        "name": "XXX",
-        "active": true,
-        "tags": [
-            "Cryptography.BannedHashAlgorithm"
-        ],
-        "severity": "critical",
-        "description": "A weak or broken hash algorithm was detected.",
-        "replacement": "Consider switching to use SHA-256 or SHA-512 instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS126858.md",
-        "patterns": [
-            {
-                "pattern": "XXXXX",
-                "subtype": ["string"],
-                "type": "regex"
-            }
-        ]
-    },
-    {
         "id": "DS126858",
         "name": "Weak/Broken Hash Algorithm",
         "active": true,
