@@ -13,7 +13,7 @@ namespace Microsoft.Security.DevSkim
     public class Suppressor
     {
         const string SUPPRESS_RULE_PREFFIX = "DevSkim:";
-        const string SUPPRESS_RULE_IGNORE = "ignore";
+        const string SUPPRESS_RULE_IGNORE = "ignore";        
         const string SUPPRESS_RULE_ALL = "all";
         const string SUPPRESS_RULE_UNTIL = "until";
 

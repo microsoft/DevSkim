@@ -6,14 +6,15 @@ using System;
 
 namespace Microsoft.Security.DevSkim
 {
-    public enum Severity
+    public enum Severity 
     {
         Critical,
         Important,
         Moderate,
         Low,
         Informational,
-        DefenseInDepth
+        DefenseInDepth,
+        ManualReview
     }
 
     /// <summary>
@@ -24,7 +25,17 @@ namespace Microsoft.Security.DevSkim
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             Severity svr = (Severity)value;
-            string svrstr = (svr == Severity.DefenseInDepth) ? "defense-in-depth" : svr.ToString().ToLower();
+            string svrstr = svr.ToString().ToLower();
+
+            switch (svr)
+            {
+                case Severity.DefenseInDepth:
+                    svrstr = "defense-in-depth";
+                    break;
+                case Severity.ManualReview:
+                    svrstr = "manual-review";
+                    break;
+            }
             writer.WriteValue(svrstr);
         }
 

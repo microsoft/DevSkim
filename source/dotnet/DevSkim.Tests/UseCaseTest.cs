@@ -54,6 +54,7 @@ namespace DevSkim.Tests
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules);
+            processor.AllowSuppression = true;
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
@@ -85,6 +86,24 @@ namespace DevSkim.Tests
             testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
             match = processor.IsMatch(string.Format(testString, expirationDate), 0, "csharp");
             Assert.IsTrue(match.Success, "Expired all should be flagged");
+        }
+
+        [TestMethod]
+        public void UseCase_IgnoreSuppression_Test()
+        {
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            rules.AddDirectory(@"rules\custom", null);
+
+            RuleProcessor processor = new RuleProcessor(rules);
+            processor.AllowSuppression = false;
+
+            // MD5CryptoServiceProvider test
+            string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
+            Match match = processor.IsMatch(testString, 0, "csharp");
+            Assert.IsTrue(match.Success, "MD5CryptoServiceProvider should be flagged");
+            Assert.AreEqual(0, match.Location, "MD5CryptoServiceProvider invalid index");
+            Assert.AreEqual(3, match.Length, "MD5CryptoServiceProvider invalid length ");
+            Assert.AreEqual("DS126858", match.Rule.Id, "MD5CryptoServiceProvider invalid rule");
         }
 
         [TestMethod]

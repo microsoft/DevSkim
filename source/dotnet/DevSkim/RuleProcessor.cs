@@ -15,6 +15,8 @@ namespace Microsoft.Security.DevSkim
         public RuleProcessor()
         {            
             _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
+            AllowSuppression = false;
+            AllowManualReview = false;
         }
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace Microsoft.Security.DevSkim
                 }
 
                 // We got matching rule. Let's see if we have a supression on the line
-                if (result.Success)
+                if (result.Success && AllowSuppression)
                 {
                     Suppressor supp = new Suppressor(textLine, language);
                     // If rule is being suppressed then clear the MatchResult
@@ -173,6 +175,9 @@ namespace Microsoft.Security.DevSkim
             }
         }
 
+        public bool AllowSuppression { get; set; }
+
+        public bool AllowManualReview { get; set; }
         #endregion
 
         #region Fields 
