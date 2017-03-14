@@ -1,7 +1,6 @@
 [    {
         "id": "DS179924",
         "name": "Do not copy a FILE object (CERT FIO38-C)",
-        "active": true,
         "tags": [
             "CERT.FIO38-C",
             "C.DangerousFunctionCall"
@@ -25,7 +24,6 @@
      {
         "id": "DS181731",
         "name": "Don't pass user input to this function",
-        "active": true,
         "tags": [
             "PHP.Injection"
         ],

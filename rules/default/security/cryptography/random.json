@@ -2,7 +2,6 @@
     {
         "id": "DS148264",
         "name": "Do not use weak/non-cryptographic random number generators",
-        "active": true,
         "tags": [
             "Cryptography.PRNG.Weak"
         ],
@@ -48,7 +47,7 @@
             },
             {
                 "pattern": "(32969|18273)",
-                "type": "regex_word"
+                "type": "regex-word"
             },
             {
                 "pattern": "System.Random",
@@ -56,7 +55,7 @@
             },
             {
                 "pattern": "Random\\(",
-                "type": "regex_word",
+                "type": "regex-word",
                 "applies_to": [
                     "java"
                 ]
@@ -71,7 +70,6 @@
     {
         "id": "DS149435",
         "name": "Do not seed randomness based on system time or a static value.",
-        "active": true,
         "tags": [
             "Cryptography.WeakRandomness"
         ],

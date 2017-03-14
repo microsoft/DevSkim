@@ -2,7 +2,6 @@
     {
         "id": "DS188250",
         "name": "Missing initialization vector",
-        "active": true,
         "tags": [
             "Cryptography.Symmetric.InitializationVector.Missing"
         ],
@@ -21,7 +20,7 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Add initialization vector",
                 "search": "(mcrypt_encrypt\\s*\\([^,]+,[^,]+,[^,]+,[^,]+)(\\);)",
                 "replace": "$1, <$iv>$2"
@@ -31,7 +30,6 @@
     {
         "id": "DS128921",
         "name": "Hardcoded initialization vector size",
-        "active": true,
         "tags": [
             "Cryptography.Symmetric.InitializationVector.HardcodedSize"
         ],

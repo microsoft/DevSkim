@@ -2,7 +2,6 @@
     {
         "id": "DS144436",
         "name": "Do not use outdated SSL/TLS protocols",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
@@ -16,12 +15,12 @@
         "patterns": [
             {
                 "pattern": "SecurityProtocolType\\.(Ssl3|Tls|Tls11)",
-                "type": "regex_word"
+                "type": "regex-word"
             }
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Change to SecurityProtocolType.Tls12",
                 "search": "\\bSecurityProtocolType\\.(Ssl3|Tls|Tls11)\\b",
                 "replace": "SecurityProtocolType.Tls12"
@@ -31,7 +30,6 @@
     {
         "id": "DS127101",
         "name": "Hardcoding TLS protocol version",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
@@ -45,14 +43,13 @@
         "patterns": [
             {
                 "pattern": "SecPkgCred_SupportedProtocols",
-                "type": "regex_word"
+                "type": "regex-word"
             }
         ]
     },
     {
         "id": "DS169125",
         "name": "Do not use outdated SSL/TLS protocols",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
@@ -66,14 +63,13 @@
             {
 
                 "pattern": "(SSLv?2|SSLv?3|TLSv?1|TLSv?10)",
-                "type": "regex_word"
+                "type": "regex-word"
             }
         ]
     },
     {
         "id": "DS169126",
         "name": "An Outdated or Banned SSL/TLS Protocol is Used",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.Banned"
         ],

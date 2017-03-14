@@ -2,7 +2,6 @@
     {
         "id": "DS165746",
         "name": "Do not execute user-provided JavaScript",
-        "active": true,
         "tags": [
             "Design.Mobile.iOS.WebView.DynamicJavaScript"
         ],

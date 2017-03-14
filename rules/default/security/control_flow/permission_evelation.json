@@ -2,7 +2,6 @@
     {
         "id": "DS113853",
         "name": "Do not set a custom execution policy.",
-        "active": true,
         "tags": [
             "ControlFlow.Permission.Evalation"
         ],
@@ -24,7 +23,6 @@
     {
         "id": "DS104456",
         "name": "Use of restricted functions.",
-        "active": true,
         "tags": [
             "Implementation.Scripting.PowerShell.DangeousFunction"
         ],
@@ -62,7 +60,7 @@
             },
             {
                 "pattern": "(NtCreateThreadEx|CreateRemoteThread)",
-                "type": "regex_word"
+                "type": "regex-word"
             },
             {
                 "pattern": "Invoke",

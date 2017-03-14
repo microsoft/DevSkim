@@ -2,7 +2,6 @@
     {
         "id": "DS101155",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -41,7 +40,6 @@
     {
         "id": "DS101159",
         "name": "Initializing Security Context",
-        "active": true,
         "tags": [
             "Cryptography.SecurityContext.Initialization"
         ],

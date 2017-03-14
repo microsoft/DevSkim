@@ -2,7 +2,6 @@
     {
         "id": "DS114352",
         "name": "Encryption Marked 'Optional'",
-        "active": true,
         "tags": [
             "Cryptography.Optional"
         ],
@@ -25,7 +24,6 @@
     {
         "id": "DS181865",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -74,7 +72,6 @@
     {
         "id": "DS134411",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -117,7 +114,6 @@
     {
         "id": "DS176603",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -139,7 +135,6 @@
     {
         "id": "DS130821",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -170,7 +165,6 @@
     {
         "id": "DS159369",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -212,7 +206,6 @@
     {
         "id": "DS101940",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -246,7 +239,6 @@
     {
         "id": "DS125134",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -268,7 +260,6 @@
     {
         "id": "DS152094",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
@@ -290,7 +281,6 @@
     {
         "id": "DS126185",
         "name": "Disabled certificate validation",
-        "active": true,
         "tags": [
             "Cryptography.Certificate.Validation"
         ],

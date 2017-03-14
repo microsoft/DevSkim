@@ -2,7 +2,6 @@
     {
         "id": "DS113286",
         "name": "Do not include user-input directoy in format strings",
-        "active": true,
         "tags": [
             "ControlFlow.Injection.FormatString",
             "cert:FIO30-C"
@@ -22,7 +21,7 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use a predefined format string",
                 "search": "\\[NSString stringWithFormat:\\s*([^@\\\"\\]]+\\])",
                 "replace": "[NSString stringWithFormat:@\"%@\", $1"

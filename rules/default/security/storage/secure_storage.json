@@ -2,7 +2,6 @@
     {
         "id": "DS112266",
         "name": "ProtectedData used without additional entropy",
-        "active": true,
         "tags": [
             "Storage.Windows.DPAPI"
         ],
@@ -21,7 +20,7 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Add entropy placeholder",
                 "search": "(ProtectedData\\.Protect[^,]+,\\s*)null(.*)",
                 "replace": "$1<entropy>$2"
@@ -31,7 +30,6 @@
     {
         "id": "DS191340",
         "name": "Do not store sensitive data in NSUserDefaults.",
-        "active": true,
         "tags": [
             "Storage.Apple.iOS.UserDefaults.SensitiveData"
         ],

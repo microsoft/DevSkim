@@ -2,7 +2,6 @@
     {
         "id": "DS165348",
         "name": "Do not attempt to access device UDID",
-        "active": true,
         "tags": [
             "Implementation.Mobile.iOS.DataProtection.Privacy.UDID"
         ],

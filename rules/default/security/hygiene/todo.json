@@ -1,7 +1,6 @@
    [ {
         "id": "DS176209",
         "name": "Suspicious comment",
-        "active": true,
         "tags": [
             "Hygiene.Comment.Suspicious"
         ],
@@ -12,7 +11,7 @@
         "patterns": [
             {
                 "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
-                "type": "regex_word"
+                "type": "regex-word"
             }
         ],
         "fix_it": []

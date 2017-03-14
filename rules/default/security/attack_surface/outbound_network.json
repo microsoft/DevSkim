@@ -2,7 +2,6 @@
     {
         "id": "DS137038",
         "name": "Notice: Outbound HTTP Connection",
-        "active": true,
         "tags": [
             "ThreatModel.Integration.HTTP"
         ],

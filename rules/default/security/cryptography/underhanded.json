@@ -2,7 +2,6 @@
     {
         "id": "DS109733",
         "name": "Source implementation of a weak/broken cryptography hash function",
-        "active": true,
         "tags": [
             "Cryptography.HashAlgorithm.WeakOrBrokenImplementation"
         ],

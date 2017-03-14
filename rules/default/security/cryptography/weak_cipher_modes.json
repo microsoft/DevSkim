@@ -2,7 +2,6 @@
     {
         "id": "DS187371",
         "name": "A weak cipher mode of operation was used",
-        "active": true,
         "tags": [
             "Cryptography.Symmetric.CipherMode.Weak"
         ],
@@ -13,7 +12,7 @@
         "patterns": [
             {
                 "pattern": "(ECB|OFB|CFB|CTS|PCBC|GMAC|XCBC|IACBC|IAPM|EAX|OCB|CWC|AEAD|LRW|XEX|XTS|CMC|EME|CBCMAC|OMAC|PMAC)",
-                "type": "regex_word"
+                "type": "regex-word"
             }
         ],
         "fix_it": []
@@ -21,7 +20,6 @@
     {
         "id": "DS182720",
         "name": "A weak cipher mode of operation was used",
-        "active": true,
         "tags": [
             "Cryptography.Symmetric.CipherMode.Weak"
         ],
@@ -35,12 +33,12 @@
         "patterns": [
             {
                 "pattern": "MCRYPT_MODE_(ECB|CFB|OFB|NOFB|STREAM)",
-                "type": "regex_word"
+                "type": "regex-word"
             }
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Change cipher mode to CBC",
                 "search": "MCRYPT_MODE_(ECB|CFB|OFB|NOFB|STREAM)",
                 "replace": "MCRYPT_MODE_CBC"

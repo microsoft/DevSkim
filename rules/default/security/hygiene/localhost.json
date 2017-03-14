@@ -1,7 +1,6 @@
     [{
         "id": "DS162092",
         "name": "Do not leave debug code in production",
-        "active": true,
         "tags": [
             "Hygiene.Network.AccessingLocalhost"
         ],

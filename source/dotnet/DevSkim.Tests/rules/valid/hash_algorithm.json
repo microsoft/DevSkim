@@ -18,13 +18,13 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Change to \"SHA256\"",
                 "search": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                 "replace": "SHA256"
             },
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Change to \"SHA512\"",
                 "search": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                 "replace": "SHA512"
@@ -56,13 +56,13 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use SHA-256",
                 "search": "CC_(MD2|MD4|MD5|SHA1)",
                 "replace": "CC_SHA256"
             },
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use SHA-512",
                 "search": "CC_(MD2|MD4|MD5|SHA1)",
                 "replace": "CC_SHA512"
@@ -91,13 +91,13 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use SHA-256",
                 "search": "Digest::(MD5|RMD160|SHA1)",
                 "replace": "Digest::SHA256"
             },
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use SHA-512",
                 "search": "Digest::(MD5|RMD160|SHA1)",
                 "replace": "Digest::SHA512"
@@ -129,13 +129,13 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use hashlib.sha256",
                 "search": "(md5|sha)\\.new\\(",
                 "replace": "hashlib.sha256("
             },
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use hashlib.sha512",
                 "search": "(md5|sha)\\.new\\(",
                 "replace": "hashlib.sha512("
@@ -164,13 +164,13 @@
         ],
         "fix_it": [
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use SHA-256",
                 "search": "MD5CryptoServiceProvider",
                 "replace": "SHA256CryptoServiceProvider"
             },
             {
-                "type": "regex_substitute",
+                "type": "regex-substitute",
                 "name": "Use SHA-512",
                 "search": "MD5CryptoServiceProvider",
                 "replace": "SHA512CryptoServiceProvider"

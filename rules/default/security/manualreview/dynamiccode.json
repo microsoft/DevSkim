@@ -1,7 +1,6 @@
 [    {
         "id": "DS189424",
         "name": "Review eval for untrusted data",
-        "active": true,
         "tags": [
             "Python.DangerousFunctionCall",
             "JavaScript.DangerousFunctionCall",
@@ -29,7 +28,6 @@
     {
         "id": "DS172411",
         "name": "Review setTimeout for untrusted data",
-        "active": true,
         "tags": [
             "JavaScript.DangerousFunctionCall",
             "TypeScript.DangerousFunctionCall"
