@@ -1,4 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
+﻿// Copyright(C) Microsoft.All rights reserved.
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Newtonsoft.Json;
@@ -6,30 +6,39 @@ using System;
 
 namespace Microsoft.Security.DevSkim
 {
-    public enum PatternType
+    /// <summary>
+    /// Code Fix Type
+    /// </summary>
+    public enum FixType
     {
-        Regex,
-        Regex_Word,
-        String,
-        Substring
+        RegexSubstitute
     }
 
+
     /// <summary>
-    /// Json converter for Pattern Type
+    /// Json Converter for FixType
     /// </summary>
-    class PatternTypeConverter : JsonConverter
+    class FixTypeConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            PatternType svr = (PatternType)value;
-            writer.WriteValue(svr.ToString().ToLower());
+            FixType svr = (FixType)value;
+            string svrstr = svr.ToString().ToLower();
+
+            switch (svr)
+            {
+                case FixType.RegexSubstitute:
+                    svrstr = "regex-substitute";
+                    break;
+            }
+            writer.WriteValue(svrstr);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var enumString = (string)reader.Value;
-
-            return Enum.Parse(typeof(PatternType), enumString, true);
+            enumString = enumString.Replace("-", "");
+            return Enum.Parse(typeof(FixType), enumString, true);
         }
 
         public override bool CanConvert(Type objectType)
@@ -37,4 +46,5 @@ namespace Microsoft.Security.DevSkim
             return objectType == typeof(string);
         }
     }
+    
 }

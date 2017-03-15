@@ -2,7 +2,6 @@
     {
         "id": "DS144436",
         "name": "Do not use outdated SSL/TLS protocols",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
@@ -31,7 +30,6 @@
     {
         "id": "DS127101",
         "name": "Hardcoding TLS protocol version",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
@@ -52,7 +50,6 @@
     {
         "id": "DS169125",
         "name": "Do not use outdated SSL/TLS protocols",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
@@ -73,7 +70,6 @@
     {
         "id": "DS169126",
         "name": "An Outdated or Banned SSL/TLS Protocol is Used",
-        "active": true,
         "tags": [
             "Cryptography.Protocol.Banned"
         ],

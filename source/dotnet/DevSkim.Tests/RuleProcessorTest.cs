@@ -9,8 +9,7 @@ namespace DevSkim.Tests
     [ExcludeFromCodeCoverage]
     public class RuleProcessorTest
     {
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod]        
         public void IsMatch_FalseTest()
         {
             Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
@@ -18,16 +17,12 @@ namespace DevSkim.Tests
             string testString = "this is a test string";
 
             // Normal functionality test
-            Match match = processor.IsMatch(testString, 0, "csharp");
-            Assert.IsFalse(match.Success, "Match.Success should be false");
+            Match[] matches = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(0, matches.Length, "Match.Success should be false");
 
             // Non existent langugage
-            match = processor.IsMatch(testString, 0, "");
-            Assert.IsFalse(match.Success, "Match.Success should be false, when no language is passed");
-
-            // Index out of range
-            match = processor.IsMatch(testString, testString.Length + 1, "csharp");
-            Assert.IsFalse(match.Success, "Match.Success should be false, when invalid index is passed");
+            matches = processor.Analyze(testString, "");
+            Assert.AreEqual(0, matches.Length, "Match.Success should be false, when no language is passed");
         }
 
         [TestMethod]
@@ -37,8 +32,8 @@ namespace DevSkim.Tests
             RuleProcessor processor = new RuleProcessor();
 
             // Langugage is null
-            Match match = processor.IsMatch(null, 0, "");
-            Assert.IsFalse(match.Success, "Match.Success should be false");
+            Match[] matches = processor.Analyze(null, "");
+            Assert.AreEqual(0, matches.Length, "Match.Success should be false");
         }
 
         [TestMethod]
@@ -49,8 +44,8 @@ namespace DevSkim.Tests
             string testString = "this is a test string";
 
             // Langugage is null
-            Match match = processor.IsMatch(testString, 0, null);
-            Assert.IsFalse(match.Success, "Match.Success should be false");
+            Match[] matches = processor.Analyze(testString, null);
+            Assert.AreEqual(0, matches.Length, "Match.Success should be false");
         }
         
         [TestMethod]
@@ -60,10 +55,10 @@ namespace DevSkim.Tests
             RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "strcpy(dest,src);";
             
-            Match match = processor.IsMatch(testString, 0, "cpp");
-            Assert.IsTrue(match.Success, "strcpy should be flagged");
+            Match[] matches = processor.Analyze(testString, "cpp");
+            Assert.AreEqual(1, matches.Length, "strcpy should be flagged");
 
-            Rule r = match.Rule;
+            Rule r = matches[0].Rule;
             Assert.IsTrue(r.Description.Contains("strcpy"), "Invalid decription");
             Assert.IsTrue(r.Source.Contains("dangerous_api.json"), "Invalid file");
             Assert.IsTrue(r.Name.Contains("strcpy"), "Invalid name");

@@ -3,9 +3,11 @@
 
 using Newtonsoft.Json;
 
-
 namespace Microsoft.Security.DevSkim
 {
+    /// <summary>
+    /// Content Type class
+    /// </summary>
     class ContentType
     {
         [JsonProperty(PropertyName = "name")]

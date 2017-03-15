@@ -13,7 +13,7 @@ namespace Microsoft.Security.DevSkim
     /// <summary>
     /// Storage for rules
     /// </summary>
-    public class Ruleset : IEnumerable
+    public class Ruleset : IEnumerable<Rule>
     {
         public Ruleset()
         {
@@ -71,14 +71,14 @@ namespace Microsoft.Security.DevSkim
         public void AddDirectory(string path, string tag)
         {
             if (path == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("path");
 
             if (!Directory.Exists(path))
                 throw new DirectoryNotFoundException();
 
-            foreach (string fileName in Directory.EnumerateFileSystemEntries(path, "*.json", SearchOption.AllDirectories))
+            foreach (string filename in Directory.EnumerateFileSystemEntries(path, "*.json", SearchOption.AllDirectories))
             {
-                this.AddFile(fileName, tag);
+                this.AddFile(filename, tag);
             }
         }
 
@@ -89,8 +89,8 @@ namespace Microsoft.Security.DevSkim
         /// <param name="tag">Tag for the rules</param>
         public void AddFile(string filename, string tag)
         {
-            if (filename == null)
-                throw new ArgumentNullException();
+            if (string.IsNullOrEmpty(filename))
+                throw new ArgumentException("filename");
 
             if (!File.Exists(filename))
                 throw new FileNotFoundException();
@@ -118,20 +118,15 @@ namespace Microsoft.Security.DevSkim
 
                 foreach (SearchPattern p in r.Patterns)
                 {
-                    if (p.Type == PatternType.Regex_Word || p.Type == PatternType.String)
+                    if (p.PatternType == PatternType.RegexWord || p.PatternType == PatternType.String)
                     {
-                        p.Type = PatternType.Regex;
+                        p.PatternType = PatternType.Regex;
                         p.Pattern = string.Format(@"\b{0}\b", p.Pattern);
                     }
                 }
             }
 
-            // Add only active rules
-            foreach (Rule r in ruleList)
-            {
-                if (r.Active)
-                    _rules.Add(r);
-            }
+            _rules.AddRange(ruleList);
         }
 
         /// <summary>
@@ -177,13 +172,13 @@ namespace Microsoft.Security.DevSkim
                         if (p.AppliesTo != null && p.AppliesTo.Contains(language))
                         {
                             filteredRules.Insert(0, r);
-                            continue;
+                            break;
                         }
                         // Generic rules goes to the end of the list
                         if (p.AppliesTo == null)
                         {
                             filteredRules.Add(r);
-                            continue;
+                            break;
                         }
                     }
                 }
@@ -216,10 +211,27 @@ namespace Microsoft.Security.DevSkim
         #region IEnumerable interface
 
         /// <summary>
+        /// Count of rules in the ruleset
+        /// </summary>        
+        public int Count()
+        {
+            return _rules.Count();
+        }
+
+        /// <summary>
         /// Returns an enumerator that iterates through the Ruleset
         /// </summary>
         /// <returns>Enumerator</returns>
         public IEnumerator GetEnumerator()
+        {
+            return this._rules.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the Ruleset
+        /// </summary>
+        /// <returns>Enumerator</returns>
+        IEnumerator<Rule> IEnumerable<Rule>.GetEnumerator()
         {
             return this._rules.GetEnumerator();
         }

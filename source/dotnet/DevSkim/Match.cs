@@ -3,18 +3,32 @@
 
 namespace Microsoft.Security.DevSkim
 {
+
+    /// <summary>
+    /// Analysis match
+    /// </summary>
     public class Match
     {
         public Match()
-        {
-            Success = false;
+        {            
             Location = -1;
             Length = 0;
             Rule = null;
         }
-        public bool Success { get; set; }
+        
+        /// <summary>
+        /// Start index of the match in the string
+        /// </summary>
         public int Location { get; set; }
+
+        /// <summary>
+        /// Length of the match
+        /// </summary>
         public int Length { get; set; }        
+
+        /// <summary>
+        /// Matching rule
+        /// </summary>
         public Rule Rule { get; set; }
     }
 }

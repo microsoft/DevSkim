@@ -2,7 +2,6 @@
     {
         "id": "DS126858",
         "name": "Weak/Broken Hash Algorithm",
-        "active": true,
         "tags": [
             "Cryptography.BannedHashAlgorithm"
         ],
@@ -37,7 +36,6 @@
             "DS126858"
         ],
         "name": "Weak/Broken Hash Algorithm",
-        "active": true,
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
@@ -72,7 +70,6 @@
     {
         "id": "DS108647",
         "name": "Do not use broken/weak cryptographic hash algorithms",
-        "active": true,
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
@@ -110,7 +107,6 @@
             "DS126858"
         ],
         "name": "Do not use broken/weak cryptographic hash algorithms",
-        "active": true,
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
@@ -145,7 +141,6 @@
     {
         "id": "DS168931",
         "name": "Do not use broken/weak cryptographic hash algorithms",
-        "active": true,
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
@@ -180,7 +175,6 @@
     {
         "id": "DS197836",
         "name": "Do not take the hash of low-entropy content.",
-        "active": true,
         "tags": [
             "Cryptography.HashAlgorithm.InsufficientEntropy"
         ],

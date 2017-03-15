@@ -65,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="rules\invalid\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="rules\custom\todo.json">
@@ -84,6 +83,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="rules\valid\dynamiccode.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="rules\valid\protocol.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -6,44 +6,42 @@ using System;
 
 namespace Microsoft.Security.DevSkim
 {
-    public enum Severity 
+    /// <summary>
+    /// Pattern Type for search pattern
+    /// </summary>
+    public enum PatternType
     {
-        Critical,
-        Important,
-        Moderate,
-        Low,
-        Informational,
-        DefenseInDepth,
-        ManualReview
+        Regex,
+        RegexWord,
+        String,
+        Substring
     }
 
     /// <summary>
-    /// Json Converter for Severity
+    /// Json converter for Pattern Type
     /// </summary>
-    class SeverityConverter : JsonConverter
+    class PatternTypeConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            Severity svr = (Severity)value;
+            PatternType svr = (PatternType)value;
             string svrstr = svr.ToString().ToLower();
 
             switch (svr)
             {
-                case Severity.DefenseInDepth:
-                    svrstr = "defense-in-depth";
-                    break;
-                case Severity.ManualReview:
-                    svrstr = "manual-review";
+                case PatternType.RegexWord:
+                    svrstr = "regex-word";
                     break;
             }
             writer.WriteValue(svrstr);
+            writer.WriteValue(svr.ToString().ToLower());
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var enumString = (string)reader.Value;
             enumString = enumString.Replace("-", "");
-            return Enum.Parse(typeof(Severity), enumString, true);
+            return Enum.Parse(typeof(PatternType), enumString, true);
         }
 
         public override bool CanConvert(Type objectType)

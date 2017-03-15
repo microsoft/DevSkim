@@ -29,8 +29,8 @@ namespace Microsoft.Security.DevSkim
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "active")]
-        public bool Active { get; set; }
+        [JsonProperty(PropertyName = "disabled")]
+        public bool Disabled { get; set; }
 
         [JsonProperty(PropertyName = "tags")]
         public string[] Tags { get; set; }

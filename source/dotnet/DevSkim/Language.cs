@@ -36,12 +36,12 @@ namespace Microsoft.Security.DevSkim
         /// <summary>
         /// Returns language for given file name
         /// </summary>
-        /// <param name="filename">File name</param>
+        /// <param name="fileName">File name</param>
         /// <returns>Language</returns>
-        public static string FromFilename(string filename)
+        public static string FromFileName(string fileName)
         {
-            string ext = Path.GetExtension(filename);
-            if (ext.StartsWith("."))
+            string ext = Path.GetExtension(fileName);
+            if (ext.StartsWith(".", StringComparison.CurrentCulture))
                 ext = ext.Substring(1);
 
             foreach (ContentType item in Instance.ContentTypes)

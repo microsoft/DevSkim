@@ -1,7 +1,6 @@
 [    {
         "id": "DS154189",
         "name": "Banned C function detected",
-        "active": true,
         "tags": [
             "API.DangerousAPI.BannedFunction"
         ],
@@ -28,7 +27,6 @@
     {
         "id": "DS185832",
         "name": "Banned C function detected (strcpy)",
-        "active": true,
         "tags": [
             "API.DangerousAPI.BannedFunction"
         ],
@@ -71,7 +69,6 @@
     {
         "id": "DS111237",
         "name": "Banned C function detected (strncpy)",
-        "active": true,
         "tags": [
             "API.DangerousAPI.BannedFunction"
         ],
@@ -114,7 +111,7 @@
     {
         "id": "DS141863",
         "name": "Banned C function detected (strcat)",
-        "active": true,
+        
         "tags": [
             "API.DangerousAPI.BannedFunction"
         ],
@@ -157,7 +154,7 @@
     {
         "id": "DS108330",
         "name": "Banned C function detected (strncat)",
-        "active": true,
+        
         "tags": [
             "API.DangerousAPI.BannedFunction"
         ],
@@ -200,7 +197,6 @@
     {
         "id": "DS181021",
         "name": "Banned C function detected (gets)",
-        "active": true,
         "tags": [
             "API.DangerousAPI.BannedFunction"
         ],

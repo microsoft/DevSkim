@@ -1,10 +1,13 @@
 ﻿// Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+
+[assembly: CLSCompliant(true)]
 namespace Microsoft.Security.DevSkim
 {
     /// <summary>
@@ -15,7 +18,7 @@ namespace Microsoft.Security.DevSkim
         public RuleProcessor()
         {            
             _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
-            AllowSuppression = false;
+            AllowSuppressions = false;
             AllowManualReview = false;
         }
 
@@ -30,22 +33,6 @@ namespace Microsoft.Security.DevSkim
         #region Public Methods
 
         /// <summary>
-        /// Test given source code line for issues
-        /// </summary>
-        /// <param name="lineOfCode">Source code line</param>
-        /// <param name="index">Position in text where to start the scan</param>
-        /// <param name="contenttype">Visual Studio content type</param>
-        /// <returns>MatchRecord with infomartion of identified issue</returns>
-        public Match IsMatch(string lineOfCode, int index, string language)
-        {
-            Match result = FindMatch(lineOfCode.Substring(index), lineOfCode, language);
-            if (result.Location > -1)
-                result.Location += index;
-
-            return result;
-        }
-
-        /// <summary>
         /// Applies given fix on the provided source code line
         /// </summary>
         /// <param name="lineOfCode">Source code line</param>
@@ -55,7 +42,7 @@ namespace Microsoft.Security.DevSkim
         {
             string result = string.Empty;
 
-            if (fixRecord.Type == "regex_substitute")
+            if (fixRecord.FixType == FixType.RegexSubstitute)
             {
                 Regex regex = new Regex(fixRecord.Search);
                 result = regex.Replace(lineOfCode, fixRecord.Replace);
@@ -63,83 +50,88 @@ namespace Microsoft.Security.DevSkim
 
             return result;
         }
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
-        /// Test given text for issues
+        /// Analyzes given line of code
         /// </summary>
         /// <param name="lineOfCode">Source code</param>
         /// <param name="language">Visual Studio content type</param>
-        /// <returns>MatchRecord with infomartion of identified issue</returns>
-        private Match FindMatch(string lineOfCode, string textLine, string language)
+        /// <returns>Array of matches</returns>
+        public Match[] Analyze(string lineOfCode, string language)
         {
             // Get rules for the given content type
-            IEnumerable<Rule> rules = GetRulesForLanguage(language);
-            Match result = new Match() { Success = false };
+            IEnumerable<Rule> rules = GetRulesForLanguage(language);            
+            List<Match> resultsList = new List<Match>();
 
             // Go through each rule
-            foreach(Rule r in rules)
+            foreach (Rule r in rules)
             {
+                Match result = new Match();
+
+                // Skip rules that don't apply based on settings
+                if (r.Disabled || (r.Severity == Severity.ManualReview && !AllowManualReview))
+                    continue;
+
                 // Go through each matching pattern of the rule
-                foreach(SearchPattern p in r.Patterns)
+                foreach (SearchPattern p in r.Patterns)
                 {
                     // Type == Substring 
-                    if (p.Type == PatternType.Substring)
+                    if (p.PatternType == PatternType.Substring)
                     {
                         result.Location = lineOfCode.ToLower().IndexOf(p.Pattern.ToLower());
                         result.Length = p.Pattern.Length;
                         if (result.Location > -1)
-                        {
-                            result.Success = true;
+                        {                            
                             result.Rule = r;
                             break; // from pattern loop
                         }
                     }
                     // Type == Regex
-                    else if (p.Type == PatternType.Regex)
+                    else if (p.PatternType == PatternType.Regex)
                     {
                         RegexOptions reopt = RegexOptions.None;
                         if (p.Modifiers != null && p.Modifiers.Length > 0)
                         {
                             reopt |= (p.Modifiers.Contains("IGNORECASE")) ? RegexOptions.IgnoreCase : RegexOptions.None;
-                            reopt |= (p.Modifiers.Contains("MULTILINE")) ? RegexOptions.Multiline : RegexOptions.None;                            
+                            reopt |= (p.Modifiers.Contains("MULTILINE")) ? RegexOptions.Multiline : RegexOptions.None;
                         }
-                        
+
                         Regex patRegx = new Regex(p.Pattern, reopt);
                         System.Text.RegularExpressions.Match m = patRegx.Match(lineOfCode);
                         if (m.Success)
-                        {
-                            result.Success = true;
+                        {                            
                             result.Rule = r;
                             result.Location = m.Index;
                             result.Length = m.Length;
                             break; // from pattern loop                 
                         }
-                    }                    
+                    }
                 }
 
                 // We got matching rule. Let's see if we have a supression on the line
-                if (result.Success && AllowSuppression)
+                if (result.Location > -1)
                 {
-                    Suppressor supp = new Suppressor(textLine, language);
+                    Suppressor supp = new Suppressor(lineOfCode, language);
                     // If rule is being suppressed then clear the MatchResult
-                    if (supp.IsRuleSuppressed(result.Rule.Id))
+                    if (supp.IsRuleSuppressed(result.Rule.Id) && AllowSuppressions)
                     {
-                        result = new Match();
+                        continue;
                     }
                     // Otherwise break out of the loop as we found an issue.
                     // So, no need to scan for more.
                     else
-                    {                        
-                        break;
+                    {
+                        resultsList.Add(result);
                     }
                 }
             }
 
-            return result;
+            return resultsList.ToArray();
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Filters the rules for those matching the content type.
@@ -175,7 +167,7 @@ namespace Microsoft.Security.DevSkim
             }
         }
 
-        public bool AllowSuppression { get; set; }
+        public bool AllowSuppressions { get; set; }
 
         public bool AllowManualReview { get; set; }
         #endregion

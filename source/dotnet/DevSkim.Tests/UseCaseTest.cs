@@ -18,33 +18,33 @@ namespace DevSkim.Tests
             rules.AddDirectory(@"rules\custom", "my rules");
 
             RuleProcessor processor = new RuleProcessor(rules);
-                        
-            string lang = Language.FromFilename("testfilename.cpp");
+
+            string lang = Language.FromFileName("testfilename.cpp");
             string testString = "strcpy(dest,src);";
 
             // strcpy test
-            Match match = processor.IsMatch(testString, 0, lang);
-            Assert.IsTrue(match.Success, "strcpy should be flagged");
-            Assert.AreEqual(0, match.Location, "strcpy invalid index");
-            Assert.AreEqual(16, match.Length, "strcpy invalid length ");
-            Assert.AreEqual("DS185832", match.Rule.Id, "strcpy invalid rule");
+            Match[] matches = processor.Analyze(testString, lang);
+            Assert.AreEqual(1, matches.Length, "strcpy should be flagged");
+            Assert.AreEqual(0, matches[0].Location, "strcpy invalid index");
+            Assert.AreEqual(16, matches[0].Length, "strcpy invalid length ");
+            Assert.AreEqual("DS185832", matches[0].Rule.Id, "strcpy invalid rule");
 
             // Fix it test
-            Assert.AreNotEqual(match.Rule.Fixes.Length, 0, "strcpy invalid Fixes");
-            CodeFix fix = match.Rule.Fixes[0];
+            Assert.AreNotEqual(matches[0].Rule.Fixes.Length, 0, "strcpy invalid Fixes");
+            CodeFix fix = matches[0].Rule.Fixes[0];
             string fixedCode = RuleProcessor.Fix(testString, fix);
             Assert.AreEqual("strcpy_s(dest, <size of dest>, src);", fixedCode, "strcpy invalid code fix");
-            Assert.IsTrue(fix.Name.Contains("Change to strcpy_s"), "strcpy wrong fix name" );
+            Assert.IsTrue(fix.Name.Contains("Change to strcpy_s"), "strcpy wrong fix name");
 
             // TODO test
             testString = "//TODO: fix this later";
-            match = processor.IsMatch(testString, 0, "csharp");
-            Assert.IsTrue(match.Success, "todo should be flagged");
-            Assert.AreEqual(2, match.Location, "todo invalid index");
-            Assert.AreEqual(4, match.Length, "todo invalid length ");
-            Assert.AreEqual("DS176209", match.Rule.Id, "todo invalid rule");
-            Assert.AreEqual(0, match.Rule.Fixes.Length, "todo invalid Fixes");
-            Assert.AreEqual("my rules", match.Rule.Tag, "todo invalid tag");
+            matches = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(1, matches.Length, "todo should be flagged");
+            Assert.AreEqual(2, matches[0].Location, "todo invalid index");
+            Assert.AreEqual(4, matches[0].Length, "todo invalid length ");
+            Assert.AreEqual("DS176209", matches[0].Rule.Id, "todo invalid rule");
+            Assert.AreEqual(0, matches[0].Rule.Fixes.Length, "todo invalid Fixes");
+            Assert.AreEqual("my rules", matches[0].Rule.Tag, "todo invalid tag");
         }
 
         [TestMethod]
@@ -54,38 +54,38 @@ namespace DevSkim.Tests
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules);
-            processor.AllowSuppression = true;
+            processor.AllowSuppressions = true;
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
-            Match match = processor.IsMatch(testString, 0, "csharp");
-            Assert.IsTrue(match.Success, "MD5CryptoServiceProvider should be flagged");
-            Assert.AreEqual(15, match.Location, "MD5CryptoServiceProvider invalid index");
-            Assert.AreEqual(24, match.Length, "MD5CryptoServiceProvider invalid length ");
-            Assert.AreEqual("DS168931", match.Rule.Id, "MD5CryptoServiceProvider invalid rule");
+            Match[] matches = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(1, matches.Length, "MD5CryptoServiceProvider should be flagged");
+            Assert.AreEqual(15, matches[0].Location, "MD5CryptoServiceProvider invalid index");
+            Assert.AreEqual(24, matches[0].Length, "MD5CryptoServiceProvider invalid length ");
+            Assert.AreEqual("DS168931", matches[0].Rule.Id, "MD5CryptoServiceProvider invalid rule");
 
             // Ignore until test
             DateTime expirationDate = DateTime.Now.AddDays(5);
             testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS130821 until {0:yyyy}-{0:MM}-{0:dd}";
-            match = processor.IsMatch(string.Format(testString, expirationDate), 0, "python");
-            Assert.IsFalse(match.Success, "Ignore until should not be flagged");
+            matches = processor.Analyze(string.Format(testString, expirationDate), "python");
+            Assert.AreEqual(0, matches.Length, "Ignore until should not be flagged");
 
             // Expired until test
             expirationDate = DateTime.Now;
-            match = processor.IsMatch(string.Format(testString, expirationDate), 0, "python");
-            Assert.IsTrue(match.Success, "Expired until should be flagged");
+            matches = processor.Analyze(string.Format(testString, expirationDate), "python");
+            Assert.AreEqual(1, matches.Length, "Expired until should be flagged");
 
             // Ignore all until test
             expirationDate = DateTime.Now.AddDays(5);
             testString = "MD5 hash  = new MD5.Create(); #DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            match = processor.IsMatch(string.Format(testString, expirationDate), 0, "csharp");
-            Assert.IsFalse(match.Success, "Ignore all until should not be flagged");
+            matches = processor.Analyze(string.Format(testString, expirationDate), "csharp");
+            Assert.AreEqual(0, matches.Length, "Ignore all until should not be flagged");
 
             // Expired all test
             expirationDate = DateTime.Now;
             testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            match = processor.IsMatch(string.Format(testString, expirationDate), 0, "csharp");
-            Assert.IsTrue(match.Success, "Expired all should be flagged");
+            matches = processor.Analyze(string.Format(testString, expirationDate), "csharp");
+            Assert.AreEqual(2, matches.Length, "Expired all should be flagged");
         }
 
         [TestMethod]
@@ -95,15 +95,15 @@ namespace DevSkim.Tests
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules);
-            processor.AllowSuppression = false;
+            processor.AllowSuppressions = false;
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
-            Match match = processor.IsMatch(testString, 0, "csharp");
-            Assert.IsTrue(match.Success, "MD5CryptoServiceProvider should be flagged");
-            Assert.AreEqual(0, match.Location, "MD5CryptoServiceProvider invalid index");
-            Assert.AreEqual(3, match.Length, "MD5CryptoServiceProvider invalid length ");
-            Assert.AreEqual("DS126858", match.Rule.Id, "MD5CryptoServiceProvider invalid rule");
+            Match[] matches = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(2, matches.Length, "MD5CryptoServiceProvider should be flagged");
+            Assert.AreEqual(0, matches[1].Location, "MD5CryptoServiceProvider invalid index");
+            Assert.AreEqual(3, matches[1].Length, "MD5CryptoServiceProvider invalid length ");
+            Assert.AreEqual("DS126858", matches[1].Rule.Id, "MD5CryptoServiceProvider invalid rule");
         }
 
         [TestMethod]
@@ -116,10 +116,10 @@ namespace DevSkim.Tests
 
             // Is supressed test
             string testString = "md5.new()";
-            Match match = processor.IsMatch(testString, 0, "python");
-            Assert.IsTrue(match.Success, "Is suppressed should ve flagged");
+            Match[] matches = processor.Analyze(testString, "python");
+            Assert.AreEqual(1, matches.Length, "Is suppressed should ve flagged");
 
-            string ruleId = match.Rule.Id;
+            string ruleId = matches[0].Rule.Id;
             Suppressor sup = new Suppressor(testString, "python");
             Assert.IsFalse(sup.IsRuleSuppressed(ruleId), "Is suppressed should be false");
 
@@ -163,7 +163,7 @@ namespace DevSkim.Tests
             // Suppress multiple
             string suppressedString = sup.SuppressRule("DS196098");
             string expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931,DS196098 until {0:yyyy}-{0:MM}-{0:dd}";
-            Assert.AreEqual(string.Format(expected,expirationDate), suppressedString, "Suppress multiple failed");
+            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple failed");
 
             // Suppress multiple to all
             suppressedString = sup.SuppressAll();
@@ -189,9 +189,8 @@ namespace DevSkim.Tests
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules);
-
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until 1980-07-15";
-            Suppressor sup = new Suppressor(testString, "csharp");            
+            Suppressor sup = new Suppressor(testString, "csharp");
             Assert.IsFalse(sup.IsRuleSuppressed("DS126858"), "Is suppressed DS126858 should be True");
             Assert.IsFalse(sup.IsRuleSuppressed("DS168931"), "Is suppressed DS168931 should be True");
 
@@ -202,7 +201,7 @@ namespace DevSkim.Tests
 
             // Suppress multiple new date            
             DateTime expirationDate = DateTime.Now.AddDays(10);
-            suppressedString = sup.SuppressRule("DS196098", expirationDate); 
+            suppressedString = sup.SuppressRule("DS196098", expirationDate);
             expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931,DS196098 until {0:yyyy}-{0:MM}-{0:dd}";
             Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple new date failed");
 
@@ -215,6 +214,22 @@ namespace DevSkim.Tests
             suppressedString = sup.SuppressAll(expirationDate);
             expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
             Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple to all new date failed");
+        }
+
+        [TestMethod]
+        public void UseCase_ManualReview_Test()
+        {
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            rules.AddDirectory(@"rules\custom", null);
+
+            RuleProcessor processor = new RuleProcessor(rules);
+            string testString = "eval(something)";
+            Match[] matches = processor.Analyze(testString, "javascript");
+            Assert.AreEqual(0, matches.Length, "Manual Review should not be flagged");
+
+            processor.AllowManualReview = true;
+            matches = processor.Analyze(testString, "javascript");
+            Assert.AreEqual(1, matches.Length, "Manual Review should be flagged");
 
         }
     }

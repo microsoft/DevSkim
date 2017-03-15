@@ -6,12 +6,13 @@ using Newtonsoft.Json;
 namespace Microsoft.Security.DevSkim
 {
     /// <summary>
-    /// Class that holds code fix record for the rules
+    /// Code fix class
     /// </summary>
     public class CodeFix
     {
         [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
+        [JsonConverter(typeof(FixTypeConverter))]
+        public FixType FixType { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }

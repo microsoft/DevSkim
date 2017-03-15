@@ -24,8 +24,10 @@ namespace Microsoft.Security.DevSkim
         /// <param name="language">Visual Studio content yype</param>
         public Suppressor(string lineOfCode, string language)
         {
-            if (lineOfCode == null || language == null)
-                throw new ArgumentNullException();
+            if (lineOfCode == null)
+                throw new ArgumentNullException("lineOfCode");
+            if (language == null)
+                throw new ArgumentNullException("language");
 
             _text = lineOfCode;
             _language = language;

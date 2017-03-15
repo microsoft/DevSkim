@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,9 +42,10 @@
     <Compile Include="CodeFix.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="ContentType.cs" />
+    <Compile Include="FixType.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Match.cs" />
-    <Compile Include="PatternTypeConverter.cs" />
+    <Compile Include="PatternType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -53,7 +56,7 @@
     <Compile Include="Ruleset.cs" />
     <Compile Include="RuleProcessor.cs" />
     <Compile Include="SearchPattern.cs" />
-    <Compile Include="SeverityConverter.cs" />
+    <Compile Include="Severity.cs" />
     <Compile Include="Suppressor.cs" />
   </ItemGroup>
   <ItemGroup>

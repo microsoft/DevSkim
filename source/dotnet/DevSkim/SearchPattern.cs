@@ -18,7 +18,7 @@ namespace Microsoft.Security.DevSkim
 
         [JsonProperty(PropertyName = "type")]
         [JsonConverter(typeof(PatternTypeConverter))]
-        public PatternType Type { get; set; }
+        public PatternType PatternType { get; set; }
 
         [JsonProperty(PropertyName = "modifiers")]
         public string[] Modifiers { get; set; }
