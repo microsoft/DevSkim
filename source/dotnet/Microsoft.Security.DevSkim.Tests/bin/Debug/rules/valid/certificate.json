@@ -1,0 +1,302 @@
+[
+    {
+        "id": "DS114352",
+        "name": "Encryption Marked 'Optional'",
+        "tags": [
+            "Cryptography.Optional"
+        ],
+        "severity": "important",
+        "description": "Optional encryption or integrity checking can be dangerous.",
+        "replacement": "As a best practice, always enable strong encryption and integrity checking.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "patterns": [
+            {
+                "pattern": "Integrity.*optional",
+                "type": "regex"
+            },
+            {
+                "pattern": "Encryption.*optional",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS181865",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181865.md",
+        "applies_to": [
+            "ios"
+        ],
+        "patterns": [
+            {
+                "pattern": "setValidatesSecureCertificate:\\s*NO",
+                "type": "regex"
+            },
+            {
+                "pattern": "setAllowsAnyHTTPSCertificate:\\s*YES",
+                "type": "regex"
+            },
+            {
+                "pattern": "allowsAnyHTTPSCertificate\\s*=\\s*YES",
+                "type": "regex"
+            },
+            {
+                "pattern": "setValidatesSecureCertificate:\\s*NO",
+                "type": "regex"
+            },
+            {
+                "pattern": "validatesSecureCertificate\\s*=\\s*NO",
+                "type": "regex"
+            },
+            {
+                "pattern": "continueWithoutCredentialForAuthenticationChallenge",
+                "type": "string"
+            },
+            {
+                "pattern": "kCFStreamSSL(Level|AllowsExpiredCertificates|AllowsExpiredRoots|AllowsAnyRoot|ValidatesCertificateChain|PeerName)",
+                "type": "regex"
+            },
+            {
+                "pattern": "kCFStreamPropertySSLSettings",
+                "type": "string"
+            }
+        ]
+    },
+    {
+        "id": "DS134411",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS134411.md",
+        "applies_to": [
+            "csharp"
+        ],
+        "patterns": [
+            {
+                "pattern": ".IgnorableServerCertificateErrors.",
+                "type": "string"
+            },
+            {
+                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "type": "regex"
+            },
+            {
+                "pattern": "ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\([^\\)]*\\)\\s*{\\s+return[\\s\\(]?true[\\s\\)]?",
+                "type": "regex",
+                "modifiers": ["DOTALL", "MULTILINE", "IGNORECASE"]
+            },
+            {
+                "pattern": "ServerCertificateValidationCallback\\s*\\+?=\\s*\\([^\\)]*\\)\\s*=>\\s*true",
+                "type": "regex",
+                "modifiers": ["DOTALL", "MULTILINE", "IGNORECASE"]
+            },
+            {
+                "pattern": "RemoteCertificateValidationCallback\\(delegate\\s*{\\s*return true;\\s*}\\);",
+                "type": "regex"
+            },
+            {
+                "pattern": "RemoteCertificateValidationCallback\\(\\s*\\([^\\)]*\\)\\s*=>\\s*{\\s*return true;\\s*}\\s*\\)",
+                "type": "regex"
+            }
+        ]
+    },
+    {
+        "id": "DS176603",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "applies_to": [
+            "ruby"
+        ],
+        "patterns": [
+            {
+                "pattern": "OpenSSL::SSL::VERIFY_NONE",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS130821",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "applies_to": [
+            "python"
+        ],
+        "patterns": [
+            {
+                "pattern": "requests\\.get\\([^\\)]*\\s+verify\\s*=\\s*False\\)",
+                "type": "regex",
+                "modifiers": ["DOTALL", "MULTILINE", "IGNORECASE"]
+            },
+            {
+                "pattern": "\\.check_hostname\\s*=\\s*False",
+                "type": "regex"
+            },
+            {
+                "pattern": "disable_ssl_certificate_validation\\s*=\\s*True",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS159369",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "applies_to": [
+            "cpp"
+        ],
+        "patterns": [
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_CERT_CN_INVALID",
+                "type": "string"
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_CERT_DATE_INVALID",
+                "type": "string"
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_REVOCATION",
+                "type": "string"
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_UNKNOWN_CA",
+                "type": "string"
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_WRONG_USAGE",
+                "type": "string"
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS101940",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "applies_to": [
+            ".config"
+        ],
+        "patterns": [
+            {
+                "pattern": "certificateValidationMode=\"None\"",
+                "type": "string"
+            },
+            {
+                "pattern": "checkCertificateName=\"false\"",
+                "type": "string"
+            },
+            {
+                "pattern": "checkCertificateRevocationList=\"false\"",
+                "type": "string"
+            },
+            {
+                "pattern": "encryptionPolicy=\"(AllowNoEncryption|NoEncryption)",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS125134",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "applies_to": [
+            "javascript"
+        ],
+        "patterns": [
+            {
+                "pattern": "NODE_TLS_REJECT_UNAUTHORIZED|rejectUnauthorized",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS152094",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "applies_to": [
+            "java"
+        ],
+        "patterns": [
+            {
+                "pattern": "(TrustManager|getInsecure|HostnameVerifier|AbstractVerifier|AllowAllHostnameVerifier|BrowserCompatHostnameVerifier|StrictHostnameVerifier|onReceivedSslError|insecuresocketfactory|customhostnameverifier)",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS126185",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+        "applies_to": [
+            "powershell"
+        ],
+        "patterns": [
+            {
+                "pattern": "::ServerCertificateValidationCallback\\s*=\\s*{\\s*\\$true\\s*}",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    }
+]

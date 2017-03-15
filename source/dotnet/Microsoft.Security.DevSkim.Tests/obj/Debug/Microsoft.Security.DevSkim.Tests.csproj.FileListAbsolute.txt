@@ -1,0 +1,15 @@
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\rules\valid\protocol.json
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\rules\custom\todo.json
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\rules\valid\dangerous_api.json
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\rules\valid\hash_algorithm.json
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\rules\valid\certificate.json
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\rules\valid\dynamiccode.json
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\Microsoft.Security.DevSkim.Tests.dll
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\Microsoft.Security.DevSkim.Tests.pdb
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\Microsoft.Security.DevSkim.dll
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\Newtonsoft.Json.dll
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\Microsoft.Security.DevSkim.pdb
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\bin\Debug\Newtonsoft.Json.xml
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\obj\Debug\Microsoft.Security.DevSkim.Tests.csprojResolveAssemblyReference.cache
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\obj\Debug\Microsoft.Security.DevSkim.Tests.dll
+D:\GitHub\DevSkim\source\dotnet\Microsoft.Security.DevSkim.Tests\obj\Debug\Microsoft.Security.DevSkim.Tests.pdb
