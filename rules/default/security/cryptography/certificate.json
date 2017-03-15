@@ -147,10 +147,35 @@
         ],
         "patterns": [
             {
-                "pattern": "requests\\.get\\([^\\)]*\\s+verify\\s*=\\s*False\\)",
+                "pattern": "requests\\.(get|post|head|patch|delete|options)\\([^\\)]*\\s+verify\\s*=\\s*False\\)",
                 "type": "regex",
                 "modifiers": ["DOTALL", "MULTILINE", "IGNORECASE"]
-            },
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex-substitute",
+                "modifiers": ["DOTALL", "MULTILINE", "IGNORECASE"],
+                "name": "Set verify to True",
+                "search": "False",
+                "replace": "True"
+            }
+        ]
+    },
+    {
+        "id": "DS130822",
+        "name": "Disabled certificate validation",
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "replacement": "Always use a valid certificate, even during testing.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS130822.md",
+        "applies_to": [
+            "python"
+        ],
+        "patterns": [
             {
                 "pattern": "\\.check_hostname\\s*=\\s*False",
                 "type": "regex"
