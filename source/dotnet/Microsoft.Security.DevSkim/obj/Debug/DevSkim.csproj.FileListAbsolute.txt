@@ -1,8 +1,0 @@
-D:\GitHub\DevSkim\source\dotnet\DevSkim\bin\Debug\Newtonsoft.Json.dll
-D:\GitHub\DevSkim\source\dotnet\DevSkim\bin\Debug\Newtonsoft.Json.xml
-D:\GitHub\DevSkim\source\dotnet\DevSkim\obj\Debug\DevSkim.csproj.GenerateResource.Cache
-D:\GitHub\DevSkim\source\dotnet\DevSkim\obj\Debug\Microsoft.Security.DevSkim.Resources.resources
-D:\GitHub\DevSkim\source\dotnet\DevSkim\bin\Debug\Microsoft.Security.DevSkim.dll
-D:\GitHub\DevSkim\source\dotnet\DevSkim\bin\Debug\Microsoft.Security.DevSkim.pdb
-D:\GitHub\DevSkim\source\dotnet\DevSkim\obj\Debug\Microsoft.Security.DevSkim.dll
-D:\GitHub\DevSkim\source\dotnet\DevSkim\obj\Debug\Microsoft.Security.DevSkim.pdb
