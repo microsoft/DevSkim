@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Security.DevSkim;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.Security.DevSkim.Tests
+namespace Microsoft.DevSkim.Tests
 {
     [TestClass]
     [ExcludeFromCodeCoverage]
@@ -17,12 +16,12 @@ namespace Microsoft.Security.DevSkim.Tests
             string testString = "this is a test string";
 
             // Normal functionality test
-            Match[] matches = processor.Analyze(testString, "csharp");
-            Assert.AreEqual(0, matches.Length, "Match.Success should be false");
+            Issue[] issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(0, issues.Length, "Match.Success should be false");
 
             // Non existent langugage
-            matches = processor.Analyze(testString, "");
-            Assert.AreEqual(0, matches.Length, "Match.Success should be false, when no language is passed");
+            issues = processor.Analyze(testString, "");
+            Assert.AreEqual(0, issues.Length, "Match.Success should be false, when no language is passed");
         }
 
         [TestMethod]
@@ -32,8 +31,8 @@ namespace Microsoft.Security.DevSkim.Tests
             RuleProcessor processor = new RuleProcessor();
 
             // Langugage is null
-            Match[] matches = processor.Analyze(null, "");
-            Assert.AreEqual(0, matches.Length, "Match.Success should be false");
+            Issue[] issues = processor.Analyze(null, "");
+            Assert.AreEqual(0, issues.Length, "Match.Success should be false");
         }
 
         [TestMethod]
@@ -44,7 +43,7 @@ namespace Microsoft.Security.DevSkim.Tests
             string testString = "this is a test string";
 
             // Langugage is empty
-            Match[] matches = processor.Analyze(testString, string.Empty);            
+            Issue[] issues = processor.Analyze(testString, string.Empty);            
         }
         
         [TestMethod]
@@ -54,10 +53,10 @@ namespace Microsoft.Security.DevSkim.Tests
             RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "strcpy(dest,src);";
             
-            Match[] matches = processor.Analyze(testString, "cpp");
-            Assert.AreEqual(1, matches.Length, "strcpy should be flagged");
+            Issue[] issues = processor.Analyze(testString, "cpp");
+            Assert.AreEqual(1, issues.Length, "strcpy should be flagged");
 
-            Rule r = matches[0].Rule;
+            Rule r = issues[0].Rule;
             Assert.IsTrue(r.Description.Contains("strcpy"), "Invalid decription");
             Assert.IsTrue(r.Source.Contains("dangerous_api.json"), "Invalid file");
             Assert.IsTrue(r.Name.Contains("strcpy"), "Invalid name");

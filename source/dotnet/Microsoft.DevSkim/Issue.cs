@@ -1,15 +1,15 @@
 ﻿// Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
-namespace Microsoft.Security.DevSkim
+namespace Microsoft.DevSkim
 {
 
     /// <summary>
-    /// Analysis match
+    /// Analysis Issue
     /// </summary>
-    public class Match
+    public class Issue
     {
-        public Match()
+        public Issue()
         {            
             Index = -1;
             Length = 0;

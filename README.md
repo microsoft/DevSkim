@@ -1,6 +1,6 @@
 # DevSkim
 
-DevSkim is a framework of IDE plugins and Language analyzers that provide inline security analysis 
+DevSkim is a framework of IDE extensions and Language analyzers that provide inline security analysis 
 in the dev environment as the developer writes code. It is designed to work with multiple IDEs
 (VS, VS Code, Sublime Text, etc.), and has a flexible rule model that supports multiple programming
 languages. The idea is to give the developer notification as they are introducing a security
@@ -18,7 +18,7 @@ and contributions!
 DevSkim consists of multiple repositories (one for the rules, and one per plugin):
 
 * [DevSkim](https://github.com/Microsoft/DevSkim/) - This repository, plus common rules and guidance
-* [DevSkim-VisualStudio-Plugin](https://github.com/Microsoft/DevSkim-VisualStudio-Plugin/) - Visual Studio Plugin
+* [DevSkim-VisualStudio-Extension](https://github.com/Microsoft/DevSkim-VisualStudio-Extension/) - Visual Studio Plugin
 * [DevSkim-Sublime-Plugin](https://github.com/Microsoft/DevSkim-Sublime-Plugin/) - Sublime Text Plugin
 * [DevSkim-VSCode-Plugin](https://github.com/Microsoft/DevSkim-VSCode-Plugin/) - VS Code Plugin
 

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.Security.DevSkim")]
+[assembly: AssemblyTitle("Microsoft.DevSkim")]
 [assembly: AssemblyDescription("Language analyzers that provide inline security analysis")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft Corporation")]
-[assembly: AssemblyProduct("Microsoft.Security.DevSkim")]
+[assembly: AssemblyProduct("Microsoft.DevSkim")]
 [assembly: AssemblyCopyright("Microsoft Corp. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

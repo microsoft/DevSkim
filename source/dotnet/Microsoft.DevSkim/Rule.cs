@@ -3,7 +3,7 @@
 
 using Newtonsoft.Json;
 
-namespace Microsoft.Security.DevSkim
+namespace Microsoft.DevSkim
 {
     /// <summary>
     /// Class to hold the Rule
@@ -11,13 +11,16 @@ namespace Microsoft.Security.DevSkim
     public class Rule
     {
         /// <summary>
-        /// Name of the source where the rule definition resides.
-        /// Typically file, database name or other storage
+        /// Name of the source where the rule definition came from.
+        /// Typically file, database or other storage.
         /// </summary>
+        [JsonIgnore]
         public string Source { get; set; }
+
         /// <summary>
-        /// Optional tag assigned to the rule
+        /// Optional tag assigned to the rule during runtime
         /// </summary>
+        [JsonIgnore]
         public string Tag { get; set; }
 
         [JsonProperty(PropertyName = "id")]

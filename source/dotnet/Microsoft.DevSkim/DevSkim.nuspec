@@ -8,6 +8,7 @@
     <owners>$author$</owners>
     <licenseUrl>https://github.com/Microsoft/DevSkim/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/Microsoft/DevSkim</projectUrl>    
+    <iconUrl>https://github.com/Microsoft/DevSkim/raw/master/media/devskim.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>DevSkim is a framework and Language analyzers that provide inline security analysis</description>
     <releaseNotes>Initial release</releaseNotes>    

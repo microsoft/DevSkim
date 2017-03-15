@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace Microsoft.Security.DevSkim
+namespace Microsoft.DevSkim
 {
     /// <summary>
     /// Helper class for language based commenting
@@ -16,17 +16,17 @@ namespace Microsoft.Security.DevSkim
     {
         private Language()
         {
-            Assembly assembly = typeof(Microsoft.Security.DevSkim.Language).GetTypeInfo().Assembly;
+            Assembly assembly = typeof(Microsoft.DevSkim.Language).GetTypeInfo().Assembly;
 
             // Load comments
-            Stream resource = assembly.GetManifestResourceStream("Microsoft.Security.DevSkim.Resources.comments.json");
+            Stream resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.comments.json");
             using (StreamReader file = new StreamReader(resource))
             {
                 Comments = JsonConvert.DeserializeObject<List<Comment>>(file.ReadToEnd());
             }
 
             // Load languages
-            resource = assembly.GetManifestResourceStream("Microsoft.Security.DevSkim.Resources.languages.json");
+            resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.languages.json");
             using (StreamReader file = new StreamReader(resource))
             {
                 ContentTypes = JsonConvert.DeserializeObject<List<ContentType>>(file.ReadToEnd());

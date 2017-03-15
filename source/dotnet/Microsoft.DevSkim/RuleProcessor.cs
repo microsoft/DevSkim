@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 
 [assembly: CLSCompliant(true)]
-namespace Microsoft.Security.DevSkim
+namespace Microsoft.DevSkim
 {
     /// <summary>
     /// Heart of DevSkim. Parses code applies rules
@@ -59,7 +59,7 @@ namespace Microsoft.Security.DevSkim
         /// <param name="text">Source code</param>
         /// <param name="language">Language</param>
         /// <returns>Array of matches</returns>
-        public Match[] Analyze(string text, string language)
+        public Issue[] Analyze(string text, string language)
         {
             return Analyze(text, new string[] { language });
         }
@@ -70,16 +70,16 @@ namespace Microsoft.Security.DevSkim
         /// <param name="text">Source code</param>
         /// <param name="languages">List of languages</param>
         /// <returns>Array of matches</returns>
-        public Match[] Analyze(string text, string[] languages)
+        public Issue[] Analyze(string text, string[] languages)
         {
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
-            List<Match> matchList = new List<Match>();
+            List<Issue> matchList = new List<Issue>();
 
             // Go through each rule
             foreach (Rule r in rules)
             {
-                List<Match> resultList = new List<Match>();
+                List<Issue> resultList = new List<Issue>();
 
                 // Skip rules that don't apply based on settings
                 if (r.Disabled || !SeverityLevel.HasFlag(r.Severity))
@@ -101,7 +101,7 @@ namespace Microsoft.Security.DevSkim
                     {
                         foreach (System.Text.RegularExpressions.Match m in matches)
                         {
-                            resultList.Add(new Match() { Index = m.Index, Length = m.Length, Rule = r });
+                            resultList.Add(new Issue() { Index = m.Index, Length = m.Length, Rule = r });
                         }
                         break; // from pattern loop                 
                     }                    
@@ -112,7 +112,7 @@ namespace Microsoft.Security.DevSkim
                 {
                     Suppressor supp = new Suppressor(text, languages[0]);
 
-                    foreach (Match result in resultList)
+                    foreach (Issue result in resultList)
                     {
                         // If rule is NOT being suppressed then useit
                         if (!(supp.IsRuleSuppressed(result.Rule.Id) && AllowSuppressions))
@@ -124,14 +124,14 @@ namespace Microsoft.Security.DevSkim
             }
             
             // Deal with overrides 
-            List<Match> removes = new List<Match>();
-            foreach (Match m in matchList)
+            List<Issue> removes = new List<Issue>();
+            foreach (Issue m in matchList)
             {
                 if (m.Rule.Overrides != null && m.Rule.Overrides.Length > 0)
                 {
                     foreach(string ovrd in m.Rule.Overrides)
                     {                        
-                        foreach(Match om in matchList.FindAll(x => x.Rule.Id == ovrd))
+                        foreach(Issue om in matchList.FindAll(x => x.Rule.Id == ovrd))
                         {
                             if (m.Index == om.Index)
                                 removes.Add(om);

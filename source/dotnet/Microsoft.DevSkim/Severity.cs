@@ -4,7 +4,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Microsoft.Security.DevSkim
+namespace Microsoft.DevSkim
 {
     /// <summary>
     /// Issue severity

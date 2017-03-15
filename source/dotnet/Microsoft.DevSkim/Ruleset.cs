@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Microsoft.Security.DevSkim
+namespace Microsoft.DevSkim
 {
     /// <summary>
     /// Storage for rules
@@ -159,8 +159,6 @@ namespace Microsoft.Security.DevSkim
         /// <returns>Filtered rules</returns>
         public IEnumerable<Rule> ByLanguages(string[] languages)
         {
-            string langid = string.Join(":", languages);
-
             // Otherwise preprare the rules for the content type and store it in cache.
             List<Rule> filteredRules = new List<Rule>();
 

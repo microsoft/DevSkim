@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Security.DevSkim;
 
-namespace Microsoft.Security.DevSkim.Tests
+namespace Microsoft.DevSkim.Tests
 {
     [TestClass]
     [ExcludeFromCodeCoverage]

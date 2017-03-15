@@ -7,10 +7,11 @@
     <ProjectGuid>{CC0635AC-ADEE-428B-A98E-32B2F88EF50C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Security.DevSkim</RootNamespace>
-    <AssemblyName>Microsoft.Security.DevSkim</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>Microsoft.DevSkim</RootNamespace>
+    <AssemblyName>Microsoft.DevSkim</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +45,7 @@
     <Compile Include="ContentType.cs" />
     <Compile Include="FixType.cs" />
     <Compile Include="Language.cs" />
-    <Compile Include="Match.cs" />
+    <Compile Include="Issue.cs" />
     <Compile Include="PatternType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
