@@ -2,7 +2,6 @@
     {
         "id": "DS175862",
         "name": "Do not use the mcrypt module, use OpenSSL instead.",
-        "active": true,
         "tags": [
             "Cryptography.Library.Abandoned"
         ],
@@ -28,7 +27,6 @@
             "DS106864"
         ],
         "name": "Do not use the 3DES symmetric block cipher.",
-        "active": true,
         "tags": [
             "Cryptography.Symmetric.PotentiallyWeakAlgorithm"
         ],

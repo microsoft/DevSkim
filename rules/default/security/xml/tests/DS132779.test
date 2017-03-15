@@ -1,0 +1,8 @@
+/* Should match */
+foo.shouldResolveExternalEntities = YES ;
+bar.shouldResolveExternalEntities=YES;
+
+/* Should not match */
+foo.shouldResolveExternalEntities = NO ;
+bar.shouldResolveExternalEntities=NO;
+foo.shouldResolveExternalEntities = baz;

@@ -10,7 +10,7 @@
         ],
         "severity": "moderate",
         "description": "Do not enable external entity resolution.",
-        "replacement": "",
+        "replacement": "Set shouldResolveExternalEntities to NO.",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS132779.md",
         "patterns": [
             {
@@ -22,7 +22,7 @@
             {
                 "type": "regex-substitute",
                 "name": "Disable external entity resolution",
-                "search": "x.setShouldResolveExternalEntities = NO;",
+                "search": "(shouldResolveExternalEntities\\s*=\\s*)(YES)",
                 "replace": "$1NO"
             }
         ]
