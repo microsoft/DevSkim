@@ -2,6 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+Microsoft.Security.DevSkim/*.nupkg
 Microsoft.Security.DevSkim/bin
 Microsoft.Security.DevSkim/obj
 Microsoft.Security.DevSkim.Tests/bin
