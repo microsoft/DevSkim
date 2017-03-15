@@ -10,9 +10,6 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class SearchPattern
     {
-        [JsonProperty(PropertyName = "applies_to")]
-        public string[] AppliesTo { get; set; }
-
         [JsonProperty(PropertyName = "pattern")]
         public string Pattern { get; set; }
 

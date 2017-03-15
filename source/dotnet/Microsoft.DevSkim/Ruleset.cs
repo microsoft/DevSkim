@@ -166,26 +166,13 @@ namespace Microsoft.DevSkim
             {
                 if (r.AppliesTo != null && ArrayContains(r.AppliesTo, languages))
                 {
-                    // Put rules with defined contenty type (AppliesTo) on top
+                    // Put rules with defined language (applies_to) on top
                     filteredRules.Insert(0, r);
                 }
                 else if (r.AppliesTo == null || r.AppliesTo.Length == 0)
                 {
-                    foreach (SearchPattern p in r.Patterns)
-                    {
-                        // If applies to is defined and matching put those rules first
-                        if (p.AppliesTo != null && ArrayContains(r.AppliesTo, languages))
-                        {
-                            filteredRules.Insert(0, r);
-                            break;
-                        }
-                        // Generic rules goes to the end of the list
-                        if (p.AppliesTo == null)
-                        {
-                            filteredRules.Add(r);
-                            break;
-                        }
-                    }
+                    // Put rules without applies_to on the bottom
+                    filteredRules.Add(r);
                 }
             }
 
