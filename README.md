@@ -18,7 +18,7 @@ and contributions!
 DevSkim consists of multiple repositories (one for the rules, and one per plugin):
 
 * [DevSkim](https://github.com/Microsoft/DevSkim/) - This repository, plus common rules and guidance
-* [DevSkim-VisualStudio-Extension](https://github.com/Microsoft/DevSkim-VisualStudio-Extension/) - Visual Studio Plugin
+* [DevSkim-VisualStudio-Extension](https://github.com/Microsoft/DevSkim-VisualStudio-Extension/) - Visual Studio Extension
 * [DevSkim-Sublime-Plugin](https://github.com/Microsoft/DevSkim-Sublime-Plugin/) - Sublime Text Plugin
 * [DevSkim-VSCode-Plugin](https://github.com/Microsoft/DevSkim-VSCode-Plugin/) - VS Code Plugin
 
