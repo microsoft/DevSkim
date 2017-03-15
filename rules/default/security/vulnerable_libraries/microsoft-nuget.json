@@ -10,7 +10,7 @@
         "replacement": "Upgrade this package to a later, unaffected version.",
         "rule_info": "https://technet.microsoft.com/en-us/library/security/3181759",
         "applies_to": [
-            ".config"
+            "packages.config"
         ],
         "patterns": [
             {
