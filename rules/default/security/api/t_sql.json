@@ -1,0 +1,22 @@
+[
+    {
+        "id": "DS224000",
+        "name": "Dangerous T-SQL Command",
+        "tags": [
+            "API.T-SQL.Dangerous"
+        ],
+        "applies_to": [
+        ],
+        "severity": "important",
+        "description": "These stored procedures provide access to system resources and should only be used with trusted data.",
+        "replacement": "",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS224000.md",
+        "patterns": [
+            {
+                "pattern": "(xp_cmdshell|xp_regread|xp_instance_regread|xp_regwrite|sp_makewebtask|xp_sendmail|sp_configure|sp_executesql|dbcc writepage)",
+                "type": "regex-word"
+            }
+        ],
+        "fix_it": []
+    }
+]
