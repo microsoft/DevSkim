@@ -49,10 +49,10 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(2, issues.Length, "Same issue should be twice on line");
             Assert.AreEqual(issues[0].Rule, issues[1].Rule, "Same issue should have same rule");
 
-            // Overlap issue
+            // Overlaping issues
             testString = "            MD5 hash = new MD5CryptoServiceProvider();";
             issues = processor.Analyze(testString, "csharp");
-            Assert.AreEqual(3, issues.Length, "Overlap issue count doesn't add up");
+            Assert.AreEqual(2, issues.Length, "Overlaping issue count doesn't add up");
 
             //Override test
             testString = "strncat(dest, \"this is also bad\", strlen(dest))";
@@ -98,7 +98,7 @@ namespace Microsoft.DevSkim.Tests
             expirationDate = DateTime.Now;
             testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
             issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
-            Assert.AreEqual(3, issues.Length, "Expired all should be flagged");
+            Assert.AreEqual(2, issues.Length, "Expired all should be flagged");
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace Microsoft.DevSkim.Tests
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
             Issue[] issues = processor.Analyze(testString, "csharp");
-            Assert.AreEqual(3, issues.Length, "MD5CryptoServiceProvider should be flagged");
+            Assert.AreEqual(2, issues.Length, "MD5CryptoServiceProvider should be flagged");
             Assert.AreEqual(0, issues[1].Index, "MD5CryptoServiceProvider invalid index");
             Assert.AreEqual(3, issues[1].Length, "MD5CryptoServiceProvider invalid length ");
             Assert.AreEqual("DS126858", issues[1].Rule.Id, "MD5CryptoServiceProvider invalid rule");

@@ -140,6 +140,9 @@
     },
     {
         "id": "DS168931",
+        "overrides": [
+            "DS126858"
+        ],        
         "name": "Do not use broken/weak cryptographic hash algorithms",
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"

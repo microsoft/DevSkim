@@ -55,13 +55,13 @@
         "fix_it": [
             {
                 "type": "regex-substitute",
-                "name": "Use SHA-256",
+                "name": "Change to SHA-256",
                 "search": "CC_(MD2|MD4|MD5|SHA1)",
                 "replace": "CC_SHA256"
             },
             {
                 "type": "regex-substitute",
-                "name": "Use SHA-512",
+                "name": "Change to SHA-512",
                 "search": "CC_(MD2|MD4|MD5|SHA1)",
                 "replace": "CC_SHA512"
             }
@@ -89,13 +89,13 @@
         "fix_it": [
             {
                 "type": "regex-substitute",
-                "name": "Use SHA-256",
+                "name": "Change to SHA-256",
                 "search": "Digest::(MD5|RMD160|SHA1)",
                 "replace": "Digest::SHA256"
             },
             {
                 "type": "regex-substitute",
-                "name": "Use SHA-512",
+                "name": "Change to SHA-512",
                 "search": "Digest::(MD5|RMD160|SHA1)",
                 "replace": "Digest::SHA512"
             }
@@ -126,13 +126,13 @@
         "fix_it": [
             {
                 "type": "regex-substitute",
-                "name": "Use hashlib.sha256",
+                "name": "Change to hashlib.sha256",
                 "search": "(md5|sha)\\.new\\(",
                 "replace": "hashlib.sha256("
             },
             {
                 "type": "regex-substitute",
-                "name": "Use hashlib.sha512",
+                "name": "Change to hashlib.sha512",
                 "search": "(md5|sha)\\.new\\(",
                 "replace": "hashlib.sha512("
             }
@@ -140,6 +140,9 @@
     },
     {
         "id": "DS168931",
+        "overrides": [
+            "DS126858"
+        ],        
         "name": "Do not use broken/weak cryptographic hash algorithms",
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
@@ -160,13 +163,13 @@
         "fix_it": [
             {
                 "type": "regex-substitute",
-                "name": "Use SHA-256",
+                "name": "Change to SHA-256",
                 "search": "MD5CryptoServiceProvider",
                 "replace": "SHA256CryptoServiceProvider"
             },
             {
                 "type": "regex-substitute",
-                "name": "Use SHA-512",
+                "name": "Change to SHA-512",
                 "search": "MD5CryptoServiceProvider",
                 "replace": "SHA512CryptoServiceProvider"
             }
