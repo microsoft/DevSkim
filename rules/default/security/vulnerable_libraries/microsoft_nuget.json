@@ -83,7 +83,7 @@
         "replacement": "Upgrade this package to a later, unaffected version.",
         "rule_info": "https://technet.microsoft.com/en-us/library/security/3214296",
         "applies_to": [
-            ".config"
+            "packages.config"
         ],
         "patterns": [
             {
@@ -104,7 +104,7 @@
         "replacement": "Upgrade this package to a later, unaffected version.",
         "rule_info": "https://technet.microsoft.com/en-us/library/security/4010983",
         "applies_to": [
-            ".config"
+            "packages.config"
         ],
         "patterns": [
             {

@@ -15,10 +15,14 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class RuleProcessor
     {
+        /// <summary>
+        /// Creates instance of RuleProcessor
+        /// </summary>
         public RuleProcessor()
         {            
             _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
-            AllowSuppressions = false;
+            EnableSuppressions = false;
+            EnableCache = true;
 
             SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate |
                             Severity.Low | Severity.Informational | Severity.DefenseInDepth;
@@ -74,12 +78,12 @@ namespace Microsoft.DevSkim
         {
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
-            List<Issue> matchList = new List<Issue>();
+            List<Issue> resultsList = new List<Issue>();
 
             // Go through each rule
             foreach (Rule r in rules)
             {
-                List<Issue> resultList = new List<Issue>();
+                List<Issue> matchList = new List<Issue>();
 
                 // Skip rules that don't apply based on settings
                 if (r.Disabled || !SeverityLevel.HasFlag(r.Severity))
@@ -101,37 +105,43 @@ namespace Microsoft.DevSkim
                     {
                         foreach (System.Text.RegularExpressions.Match m in matches)
                         {
-                            resultList.Add(new Issue() { Index = m.Index, Length = m.Length, Rule = r });
+                            matchList.Add(new Issue() { Index = m.Index, Length = m.Length, Rule = r });
                         }
                         break; // from pattern loop                 
                     }                    
                 }
 
-                // We got matching rule. Let's see if we have a supression on the line
-                if (resultList.Count > 0)
+                // We got matching rule and suppression are enabled,
+                // let's see if we have a supression on the line
+                if (EnableSuppressions && matchList.Count > 0)
                 {
-                    Suppressor supp = new Suppressor(text, languages[0]);
-
-                    foreach (Issue result in resultList)
+                    Suppressor supp = new Suppressor(text, string.Empty);
+                    foreach (Issue result in matchList)
                     {
                         // If rule is NOT being suppressed then useit
-                        if (!(supp.IsRuleSuppressed(result.Rule.Id) && AllowSuppressions))
+                        if (!supp.IsRuleSuppressed(result.Rule.Id))
                         {
-                            matchList.Add(result);
+                            resultsList.Add(result);
                         }
                     }
+                }
+                // Otherwise put matchlist to resultlist 
+                else
+                {
+                    resultsList.AddRange(matchList);
                 }
             }
             
             // Deal with overrides 
             List<Issue> removes = new List<Issue>();
-            foreach (Issue m in matchList)
+            foreach (Issue m in resultsList)
             {
                 if (m.Rule.Overrides != null && m.Rule.Overrides.Length > 0)
                 {
                     foreach(string ovrd in m.Rule.Overrides)
-                    {                        
-                        foreach(Issue om in matchList.FindAll(x => x.Rule.Id == ovrd))
+                    {
+                        // Find all overriden rules and mark them for removal from issues list   
+                        foreach(Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
                         {
                             if (m.Index == om.Index)
                                 removes.Add(om);
@@ -140,10 +150,10 @@ namespace Microsoft.DevSkim
                 }
             }
 
-            // Remove overrided rules
-            matchList.RemoveAll(x => removes.Contains(x));
+            // Remove overriden rules
+            resultsList.RemoveAll(x => removes.Contains(x));
 
-            return matchList.ToArray();
+            return resultsList.ToArray();
         }
 
         #endregion
@@ -157,17 +167,26 @@ namespace Microsoft.DevSkim
         /// <param name="languages">Languages to filter rules for</param>
         /// <returns>List of rules</returns>
         private IEnumerable<Rule> GetRulesForLanguages(string[] languages)
-        {
-            string langid = string.Join(":", languages);
+        {            
+            string langid = string.Empty;
 
-            // Do we have the ruleset alrady in cache? If so return it
-            if (_rulesCache.ContainsKey(langid))
-                return _rulesCache[langid];
-
-            IEnumerable<Rule> filteredRules = _ruleset.ByLanguages(languages); 
+            if (EnableCache)
+            {
+                Array.Sort(languages);
+                // Make language id for cache purposes                
+                langid = string.Join(":", languages);
+                // Do we have the ruleset alrady in cache? If so return it
+                if (_rulesCache.ContainsKey(langid))
+                    return _rulesCache[langid];
+            }
+            
+            IEnumerable<Rule> filteredRules = _ruleset.ByLanguages(languages);
 
             // Add the list to the cache so we save time on the next call
-            _rulesCache.Add(langid, filteredRules);
+            if (EnableCache && filteredRules.Count() > 0)
+            {             
+                _rulesCache.Add(langid, filteredRules);
+            }
 
             return filteredRules;
         }
@@ -176,6 +195,9 @@ namespace Microsoft.DevSkim
 
         #region Properties
 
+        /// <summary>
+        /// Ruleset to be used for analysis
+        /// </summary>
         public Ruleset Rules
         {
             get { return _ruleset; }
@@ -186,9 +208,21 @@ namespace Microsoft.DevSkim
             }
         }
 
-        public bool AllowSuppressions { get; set; }
-
+        /// <summary>
+        /// Sets severity levels for analysis
+        /// </summary>
         public Severity SeverityLevel { get; set; }
+
+        /// <summary>
+        /// Enable suppresion syntax checking during analysis
+        /// </summary>
+        public bool EnableSuppressions { get; set; }
+
+        /// <summary>
+        /// Enables caching of rules queries.
+        /// Increases performance and memory use!
+        /// </summary>
+        public bool EnableCache { get; set; }
         #endregion
 
         #region Fields 

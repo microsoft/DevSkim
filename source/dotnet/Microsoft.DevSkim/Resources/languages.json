@@ -1,118 +1,122 @@
 [
     {
         "name": "c",
-        "extensions": ["c"]    
-    },    
+        "extensions": [ ".c" ]
+    },
     {
         "name": "cpp",
-        "extensions": ["cpp", "h"]    
+        "extensions": [ ".cpp", ".h" ]
     },
     {
         "name": "csharp",
-        "extensions": ["cs"]    
+        "extensions": [ ".cs" ]
     },
     {
         "name": "vb",
-        "extensions": ["vb"]    
+        "extensions": [ ".vb" ]
     },
     {
         "name": "python",
-        "extensions": ["py"]    
+        "extensions": [ ".py" ]
     },
     {
         "name": "javascript",
-        "extensions": ["js"]    
+        "extensions": [ ".js" ]
     },
     {
         "name": "javascriptreact",
-        "extensions": ["jsx"]    
+        "extensions": [ ".jsx" ]
     },
     {
         "name": "typescript",
-        "extensions": ["ts"]    
+        "extensions": [ ".ts" ]
     },
     {
         "name": "typescriptreact",
-        "extensions": ["tsx"]    
+        "extensions": [ ".tsx" ]
     },
     {
         "name": "coffeescript",
-        "extensions": ["coffee"]    
+        "extensions": [ ".coffee" ]
     },
     {
         "name": "java",
-        "extensions": ["java"]    
+        "extensions": [ ".java" ]
     },
     {
         "name": "objective-c",
-        "extensions": ["m"]
+        "extensions": [ ".m" ]
     },
     {
         "name": "swift",
-        "extensions": ["swift"] 
+        "extensions": [ ".swift" ]
     },
     {
         "name": "perl",
-        "extensions": ["pl", "pm", "t", "pod"]
+        "extensions": [ ".pl", ".pm", ".t", ".pod" ]
     },
     {
         "name": "perl6",
-        "extensions": ["pl6", "p6", "pm6"]
+        "extensions": [ ".pl6", ".p6", ".pm6" ]
     },
     {
         "name": "ruby",
-        "extensions": ["rb"]
+        "extensions": [ ".rb" ]
     },
     {
         "name": "lua",
-        "extensions": ["lua"]
+        "extensions": [ ".lua" ]
     },
     {
         "name": "groovy",
-        "extensions": ["groovy"]
+        "extensions": [ ".groovy" ]
     },
     {
         "name": "go",
-        "extensions": ["go"]
+        "extensions": [ ".go" ]
     },
     {
         "name": "rust",
-        "extensions": ["rs", "rlib"]
+        "extensions": [ ".rs", ".rlib" ]
     },
     {
         "name": "jade",
-        "extensions": ["jade"]
+        "extensions": [ ".jade" ]
     },
     {
         "name": "clojure",
-        "extensions": ["clj", "cljs", "cljc", "edn"]
+        "extensions": [ ".clj", ".cljs", ".cljc", ".edn" ]
     },
     {
         "name": "r",
-        "extensions": ["r"]
+        "extensions": [ ".r" ]
     },
     {
         "name": "yaml",
-        "extensions": ["yaml"]
+        "extensions": [ ".yaml" ]
     },
     {
         "name": "fsharp",
-        "extensions": ["fs"]
+        "extensions": [ ".fs" ]
     },
     {
         "name": "php",
-        "extensions": ["php"]
+        "extensions": [ ".php" ]
     },
     {
         "name": "powershell",
-        "extensions": ["ps1", "psm1", "psd1"]
+        "extensions": [ ".ps1", ".psm1", ".psd1" ]
     },
     {
         "name": "shellscript",
-        "extensions": ["sh"]
+        "extensions": [ ".sh" ]
     },
     {
         "name": "plaintext",
-        "extensions": ["txt"]
+        "extensions": [ ".txt" ]
+    },
+    {
+        "name": "packages.config",
+        "extensions": [ "packages.config" ]
     }
 ]

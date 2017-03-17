@@ -67,7 +67,7 @@ namespace Microsoft.DevSkim.Tests
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules);
-            processor.AllowSuppressions = true;
+            processor.EnableSuppressions = true;
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
@@ -108,7 +108,7 @@ namespace Microsoft.DevSkim.Tests
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules);
-            processor.AllowSuppressions = false;
+            processor.EnableSuppressions = false;
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
@@ -243,7 +243,18 @@ namespace Microsoft.DevSkim.Tests
             processor.SeverityLevel |= Severity.ManualReview;
             issues = processor.Analyze(testString, "javascript");            
             Assert.AreEqual(1, issues.Length, "Manual Review should be flagged");
+        }
 
+        [TestMethod]
+        public void LangugeSelectorTest()
+        {
+            Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleProcessor processor = new RuleProcessor(ruleset);
+            string testString = "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"5.1.0\"";
+
+            string lang = Language.FromFileName("project\\packages.config");
+            Issue[] issues = processor.Analyze(testString, lang);
+            Assert.AreEqual(1, issues.Length, "There should be positive hit");
         }
     }
 }

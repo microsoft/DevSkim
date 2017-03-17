@@ -36,7 +36,7 @@
   },
   {
     "language": [
-      "lua",      
+      "lua"
     ],    
     "preffix": "--",
     "suffix": ""
@@ -54,5 +54,5 @@
     ],
     "preffix": "'",
     "suffix": ""
-  },
+  }
 ]

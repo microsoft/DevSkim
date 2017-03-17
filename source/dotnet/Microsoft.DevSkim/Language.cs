@@ -4,6 +4,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 
@@ -39,14 +40,14 @@ namespace Microsoft.DevSkim
         /// <param name="fileName">File name</param>
         /// <returns>Language</returns>
         public static string FromFileName(string fileName)
-        {
-            string ext = Path.GetExtension(fileName);
-            if (ext.StartsWith(".", StringComparison.CurrentCulture))
-                ext = ext.Substring(1);
+        {            
+            string file = Path.GetFileName(fileName).ToLower(CultureInfo.CurrentCulture);
+            string ext = Path.GetExtension(file);
 
             foreach (ContentType item in Instance.ContentTypes)
             {
-                if (Array.Exists(item.Extensions, x => x.Equals(ext)))
+                if (Array.Exists(item.Extensions, x => x.EndsWith(file)) ||
+                    Array.Exists(item.Extensions, x => x.EndsWith(ext)))
                     return item.Name;
             }
 

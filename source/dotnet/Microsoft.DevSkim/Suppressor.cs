@@ -18,18 +18,19 @@ namespace Microsoft.DevSkim
         const string SUPPRESS_RULE_UNTIL = "until";
 
         /// <summary>
-        /// Creates instance of Supressor
+        /// Creates new instance of Supressor
         /// </summary>
-        /// <param name="lineOfCode">Line of code to work with</param>
+        /// <param name="text">Text to work with</param>
         /// <param name="language">Visual Studio content yype</param>
-        public Suppressor(string lineOfCode, string language)
+        public Suppressor(string text, string language)
         {
-            if (lineOfCode == null)
+            if (text == null)
                 throw new ArgumentNullException("lineOfCode");
+
             if (language == null)
                 throw new ArgumentNullException("language");
 
-            _text = lineOfCode;
+            _text = text;
             _language = language;
 
             ParseLine();

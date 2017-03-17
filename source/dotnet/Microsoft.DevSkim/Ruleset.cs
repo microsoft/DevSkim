@@ -15,6 +15,9 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class Ruleset : IEnumerable<Rule>
     {
+        /// <summary>
+        /// Creates instance of Ruleset
+        /// </summary>
         public Ruleset()
         {
             _rules = new List<Rule>();
@@ -155,7 +158,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         /// Filters rules within Ruleset by languages
         /// </summary>
-        /// <param name="language">Languages</param>
+        /// <param name="languages">Languages</param>
         /// <returns>Filtered rules</returns>
         public IEnumerable<Rule> ByLanguages(string[] languages)
         {
