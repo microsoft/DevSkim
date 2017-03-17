@@ -40,6 +40,7 @@ namespace Microsoft.DevSkim
                     svrstr = "manual-review";
                     break;
             }
+
             writer.WriteValue(svrstr);
         }
 
