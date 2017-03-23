@@ -127,10 +127,11 @@ namespace Microsoft.DevSkim.Tests
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until {0:yyyy}-{0:MM}-{0:dd}";
             DateTime expirationDate = DateTime.Now.AddDays(5);
 
-            Suppressor sup = new Suppressor(string.Format(testString, expirationDate));
+            Suppression sup = new Suppression(string.Format(testString, expirationDate));
             Assert.IsTrue(sup.IsIssueSuppressed("DS126858"), "Is suppressed DS126858 should be True");
             Assert.IsTrue(sup.IsIssueSuppressed("DS168931"), "Is suppressed DS168931 should be True");
 
+            Assert.IsTrue(sup.IsInEffect, "Suppression should be in effect");
             Assert.AreEqual(45, sup.Index, "Suppression start index doesn't match");
             Assert.AreEqual(50, sup.Length, "Suppression length doesn't match");
             Assert.AreEqual(expirationDate.ToShortDateString(), sup.ExpirationDate.ToShortDateString(), "Suppression date doesn't match");
@@ -169,6 +170,12 @@ namespace Microsoft.DevSkim.Tests
             lang = Language.FromFileName("project\\packages.config");
             Issue[] issues = processor.Analyze(testString, lang);
             Assert.AreEqual(1, issues.Length, "There should be positive hit");
+
+            bool langExists = Language.GetNames().Contains("csharp");
+            Assert.IsTrue(langExists, "csharp should be in the collection");
+
+            langExists = Language.GetNames().Contains("klyngon");
+            Assert.IsFalse(langExists, "klingon should not be in the collection");
         }
 
         [TestMethod]

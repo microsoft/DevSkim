@@ -115,7 +115,7 @@ namespace Microsoft.DevSkim
                 // let's see if we have a supression on the line
                 if (EnableSuppressions && matchList.Count > 0)
                 {
-                    Suppressor supp = new Suppressor(text);
+                    Suppression supp = new Suppression(text);
                     foreach (Issue result in matchList)
                     {
                         // If rule is NOT being suppressed then useit

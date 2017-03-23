@@ -8,7 +8,7 @@ namespace Microsoft.DevSkim
     /// <summary>
     /// Content Type class
     /// </summary>
-    class ContentType
+    class LanguageInfo
     {
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }

@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="CodeFix.cs" />
     <Compile Include="Comment.cs" />
-    <Compile Include="ContentType.cs" />
+    <Compile Include="LanguageInfo.cs" />
     <Compile Include="FixType.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Issue.cs" />
@@ -60,7 +60,7 @@
     <Compile Include="RuleProcessor.cs" />
     <Compile Include="SearchPattern.cs" />
     <Compile Include="Severity.cs" />
-    <Compile Include="Suppressor.cs" />
+    <Compile Include="Suppression.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\comments.json" />

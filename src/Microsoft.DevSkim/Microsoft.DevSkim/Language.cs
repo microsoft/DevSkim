@@ -31,7 +31,7 @@ namespace Microsoft.DevSkim
             resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.languages.json");
             using (StreamReader file = new StreamReader(resource))
             {
-                ContentTypes = JsonConvert.DeserializeObject<List<ContentType>>(file.ReadToEnd());
+                Languages = JsonConvert.DeserializeObject<List<LanguageInfo>>(file.ReadToEnd());
             }
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.DevSkim
             string file = Path.GetFileName(fileName).ToLower(CultureInfo.CurrentCulture);
             string ext = Path.GetExtension(file);
 
-            foreach (ContentType item in Instance.ContentTypes)
+            foreach (LanguageInfo item in Instance.Languages)
             {
                 if (Array.Exists(item.Extensions, x => x.EndsWith(file)) ||
                     Array.Exists(item.Extensions, x => x.EndsWith(ext)))
@@ -91,6 +91,18 @@ namespace Microsoft.DevSkim
             return result;
         }
 
+        /// <summary>
+        /// Get names of all known lannguages
+        /// </summary>
+        /// <returns>Returns list of names</returns>
+        public static string[] GetNames()
+        {
+            var names = from x in Instance.Languages
+                        select x.Name;
+
+            return names.ToArray();
+        }
+
         private static Language _instance;
         private static Language Instance
         {
@@ -104,7 +116,7 @@ namespace Microsoft.DevSkim
         }
 
         private List<Comment> Comments;
-        private List<ContentType> ContentTypes;      
+        private List<LanguageInfo> Languages;      
     }
 }
 

@@ -12,7 +12,7 @@ namespace Microsoft.DevSkim.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor1FailTest()
         {
-            Suppressor sup = new Suppressor(null);
+            Suppression sup = new Suppression(null);
         }
     }
 }

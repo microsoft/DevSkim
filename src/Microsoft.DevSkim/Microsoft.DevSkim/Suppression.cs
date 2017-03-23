@@ -10,7 +10,7 @@ namespace Microsoft.DevSkim
     /// <summary>
     /// Processor for rule suppressions
     /// </summary>
-    public class Suppressor
+    public class Suppression
     {
         public const string KeywordPrefix = "DevSkim:";
         public const string KeywordIgnore = "ignore";        
@@ -21,7 +21,7 @@ namespace Microsoft.DevSkim
         /// Creates new instance of Supressor
         /// </summary>
         /// <param name="text">Text to work with</param>        
-        public Suppressor(string text)
+        public Suppression(string text)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
@@ -91,13 +91,40 @@ namespace Microsoft.DevSkim
             }
         }
 
+        /// <summary>
+        /// Get issue IDs for the suppression
+        /// </summary>
+        /// <returns>List of issue IDs</returns>
         public virtual string[] GetIssues() 
         {
             return _issues.ToArray();
         }
-                
+        
+        /// <summary>
+        /// Validity of suppression expresion
+        /// </summary>
+        /// <returns>True if suppression is in effect</returns>
+        public bool IsInEffect {
+            get
+            {
+                bool doesItExists = (Index >= 0 && _issues.Count > 0);
+                return (doesItExists && DateTime.Now < _expirationDate);
+            }
+        }
+
+        /// <summary>
+        /// Suppression expiration date
+        /// </summary>
         public DateTime ExpirationDate { get { return _expirationDate; } }
+
+        /// <summary>
+        /// Suppression expresion start index on the given line
+        /// </summary>
         public int Index { get { return _suppressStart; } }
+
+        /// <summary>
+        /// Suppression expression length
+        /// </summary>
         public int Length { get { return _suppressLength; } }
 
         private List<string> _issues = new List<string>();              
