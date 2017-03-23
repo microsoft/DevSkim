@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Microsoft.DevSkim.Tests
 {
@@ -47,14 +48,14 @@ namespace Microsoft.DevSkim.Tests
             testString = "MD5 hash = MD5.Create();";
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "Same issue should be twice on line");
-            Assert.AreEqual(issues[0].Rule, issues[1].Rule, "Same issue should have same rule");
+            Assert.AreEqual(issues[0].Rule, issues[1].Rule, "Same issues should have sames rule IDs");
 
             // Overlaping issues
             testString = "            MD5 hash = new MD5CryptoServiceProvider();";
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "Overlaping issue count doesn't add up");
 
-            //Override test
+            // Override test
             testString = "strncat(dest, \"this is also bad\", strlen(dest))";
             issues = processor.Analyze(testString, new string[] { "c", "cpp" });
             Assert.AreEqual(2, issues.Length, "Override test failed");
@@ -112,6 +113,7 @@ namespace Microsoft.DevSkim.Tests
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
+
             Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "MD5CryptoServiceProvider should be flagged");
             Assert.AreEqual(0, issues[1].Index, "MD5CryptoServiceProvider invalid index");
@@ -120,115 +122,24 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void UseCase_Suppress_Test()
+        public void UseCase_SuppressionExists_Test()
         {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
-            rules.AddDirectory(@"rules\custom", null);
-
-            RuleProcessor processor = new RuleProcessor(rules);
-
-            // Is supressed test
-            string testString = "md5.new()";
-            Issue[] issues = processor.Analyze(testString, "python");
-            Assert.AreEqual(1, issues.Length, "Is suppressed should ve flagged");
-
-            string ruleId = issues[0].Rule.Id;
-            Suppressor sup = new Suppressor(testString, "python");
-            Assert.IsFalse(sup.IsRuleSuppressed(ruleId), "Is suppressed should be false");
-
-            // Suppress Rule test
-            string suppressedString = sup.SuppressRule(ruleId);
-            string expected = "md5.new() #DevSkim: ignore DS196098";
-            Assert.AreEqual(expected, suppressedString, "Supress Rule failed ");
-
-            // Suppress Rule Until test
-            DateTime expirationDate = DateTime.Now.AddDays(5);
-            suppressedString = sup.SuppressRule(ruleId, expirationDate);
-            expected = string.Format("md5.new() #DevSkim: ignore DS196098 until {0:yyyy}-{0:MM}-{0:dd}", expirationDate);
-            Assert.AreEqual(expected, suppressedString, "Supress Rule Until failed ");
-
-            // Suppress All test
-            suppressedString = sup.SuppressAll();
-            expected = "md5.new() #DevSkim: ignore all";
-            Assert.AreEqual(expected, suppressedString, "Supress All failed");
-
-            // Suppress All Until test            
-            suppressedString = sup.SuppressAll(expirationDate);
-            expected = string.Format("md5.new() #DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}", expirationDate);
-            Assert.AreEqual(expected, suppressedString, "Supress All Until failed ");
-        }
-
-        [TestMethod]
-        public void UseCase_SuppressExisting_Test()
-        {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
-            rules.AddDirectory(@"rules\custom", null);
-
-            RuleProcessor processor = new RuleProcessor(rules);
-
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until {0:yyyy}-{0:MM}-{0:dd}";
             DateTime expirationDate = DateTime.Now.AddDays(5);
 
-            Suppressor sup = new Suppressor(string.Format(testString, expirationDate), "csharp");
-            Assert.IsTrue(sup.IsRuleSuppressed("DS126858"), "Is suppressed DS126858 should be True");
-            Assert.IsTrue(sup.IsRuleSuppressed("DS168931"), "Is suppressed DS168931 should be True");
+            Suppressor sup = new Suppressor(string.Format(testString, expirationDate));
+            Assert.IsTrue(sup.IsIssueSuppressed("DS126858"), "Is suppressed DS126858 should be True");
+            Assert.IsTrue(sup.IsIssueSuppressed("DS168931"), "Is suppressed DS168931 should be True");
 
-            // Suppress multiple
-            string suppressedString = sup.SuppressRule("DS196098");
-            string expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931,DS196098 until {0:yyyy}-{0:MM}-{0:dd}";
-            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple failed");
+            Assert.AreEqual(45, sup.Index, "Suppression start index doesn't match");
+            Assert.AreEqual(50, sup.Length, "Suppression length doesn't match");
+            Assert.AreEqual(expirationDate.ToShortDateString(), sup.ExpirationDate.ToShortDateString(), "Suppression date doesn't match");
 
-            // Suppress multiple to all
-            suppressedString = sup.SuppressAll();
-            expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple to all failed");
-
-            // Suppress multiple new date
-            expirationDate = DateTime.Now.AddDays(10);
-            suppressedString = sup.SuppressRule("DS196098", expirationDate);
-            expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931,DS196098 until {0:yyyy}-{0:MM}-{0:dd}";
-            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple new date failed");
-
-            // Suppress multiple to all new date
-            suppressedString = sup.SuppressAll(DateTime.Now.AddDays(10));
-            expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple to all new date failed");
+            string[] issues = sup.GetIssues();
+            Assert.IsTrue(issues.Contains("DS126858"), "Issues list is missing DS126858");
+            Assert.IsTrue(issues.Contains("DS168931"), "Issues list is missing DS168931");            
         }
-
-        [TestMethod]
-        public void UseCase_SuppressExistingPast_Test()
-        {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
-            rules.AddDirectory(@"rules\custom", null);
-
-            RuleProcessor processor = new RuleProcessor(rules);
-            string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until 1980-07-15";
-            Suppressor sup = new Suppressor(testString, "csharp");
-            Assert.IsFalse(sup.IsRuleSuppressed("DS126858"), "Is suppressed DS126858 should be True");
-            Assert.IsFalse(sup.IsRuleSuppressed("DS168931"), "Is suppressed DS168931 should be True");
-
-            // Suppress multiple
-            string suppressedString = sup.SuppressRule("DS196098");
-            string expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931,DS196098 until 1980-07-15";
-            Assert.AreEqual(expected, suppressedString, "Suppress multiple failed");
-
-            // Suppress multiple new date            
-            DateTime expirationDate = DateTime.Now.AddDays(10);
-            suppressedString = sup.SuppressRule("DS196098", expirationDate);
-            expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931,DS196098 until {0:yyyy}-{0:MM}-{0:dd}";
-            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple new date failed");
-
-            // Suppress multiple to all
-            suppressedString = sup.SuppressAll();
-            expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until 1980-07-15";
-            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple to all failed");
-
-            // Suppress multiple to all new date
-            suppressedString = sup.SuppressAll(expirationDate);
-            expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple to all new date failed");
-        }
-
+    
         [TestMethod]
         public void UseCase_ManualReview_Test()
         {
@@ -252,9 +163,26 @@ namespace Microsoft.DevSkim.Tests
             RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"5.1.0\"";
 
-            string lang = Language.FromFileName("project\\packages.config");
+            string lang = Language.FromFileName("helloworld.klingon");
+            Assert.AreEqual(string.Empty, lang, "Klingon language should not be detected");
+
+            lang = Language.FromFileName("project\\packages.config");
             Issue[] issues = processor.Analyze(testString, lang);
             Assert.AreEqual(1, issues.Length, "There should be positive hit");
+        }
+
+        [TestMethod]
+        public void CommentingTest()
+        { 
+            string str = Language.GetCommentPrefix("python");
+            Assert.AreEqual("#", str, "Python comment prefix doesn't match");
+            str = Language.GetCommentSuffix("python");
+            Assert.AreEqual(string.Empty, str, "Python comment suffix doesn't match");
+
+            str = Language.GetCommentPrefix("klyngon");
+            Assert.AreEqual(string.Empty, str, "Klyngon comment prefix doesn't match");
+            str = Language.GetCommentSuffix("klyngon");
+            Assert.AreEqual(string.Empty, str, "Klyngon comment suffix doesn't match");
         }
     }
 }

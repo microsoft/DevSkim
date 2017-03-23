@@ -1,25 +1,51 @@
-   [ {
-        "id": "DS176209",
-        "name": "Suspicious comment",        
-        "tags": [
-            "Hygiene.Comment.Suspicious"
-        ],
-        "severity": "low",
-        "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
-        "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS176209.md",
-        "patterns": [
-            {
-              "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
-              "type": "regex-word",
-              "modifiers": [ "IGNORECASE" ]
-            },
-            {
-              "pattern": "(quick fix|later)",
-              "type": "regex-word",
-              "modifiers": [ "MULTILINE" ]
-            }
-        ],
-        "fix_it": []
-    }
+[
+  {
+    "id": "DS176209",
+    "name": "Suspicious comment",
+    "tags": [
+      "Hygiene.Comment.Suspicious"
+    ],
+    "severity": "low",
+    "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS176209.md",
+    "patterns": [
+      {
+        "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
+        "type": "regex-word",
+        "modifiers": [ "IGNORECASE" ]
+      },
+      {
+        "pattern": "(quick fix|later)",
+        "type": "regex-word",
+        "modifiers": [ "MULTILINE" ]
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "id": "DS176209D",
+    "disabled":  true,
+    "name": "Suspicious comment",
+    "tags": [
+      "Hygiene.Comment.Suspicious"
+    ],
+    "severity": "low",
+    "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS176209.md",
+    "patterns": [
+      {
+        "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
+        "type": "regex-word",
+        "modifiers": [ "IGNORECASE" ]
+      },
+      {
+        "pattern": "(quick fix|later)",
+        "type": "regex-word",
+        "modifiers": [ "MULTILINE" ]
+      }
+    ],
+    "fix_it": []
+  }
 ]

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
 namespace Microsoft.DevSkim
 {
@@ -55,28 +56,36 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Decorates given string with language specific comment prefix/suffix
-        /// </summary>
-        /// <param name="textToComment">Text to be decorated</param>
+        /// Gets comment prefix for given language
+        /// </summary>        
         /// <param name="language">Language</param>
         /// <returns>Commented string</returns>
-        public static string Comment(string textToComment, string language)
+        public static string GetCommentPrefix(string language)
         {
             string result = string.Empty;
 
             foreach (Comment comment in Instance.Comments)
             {
-                foreach (string lang in comment.Languages)
-                {
-                    if (lang == language)
-                    {
-                        result = string.Concat(comment.Preffix, textToComment, comment.Suffix);
-                        break;
-                    }
-                }
+                if (comment.Languages.Contains(language))
+                    return comment.Preffix;
+            }
 
-                if (!string.IsNullOrEmpty(result))
-                    break;
+            return result;
+        }
+
+        /// <summary>
+        /// Gets comment suffix for given language
+        /// </summary>        
+        /// <param name="language">Language</param>
+        /// <returns>Commented string</returns>
+        public static string GetCommentSuffix(string language)
+        {
+            string result = string.Empty;
+
+            foreach (Comment comment in Instance.Comments)
+            {
+                if (comment.Languages.Contains(language))
+                    return comment.Suffix;
             }
 
             return result;

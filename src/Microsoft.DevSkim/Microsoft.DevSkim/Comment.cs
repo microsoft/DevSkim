@@ -18,6 +18,5 @@ namespace Microsoft.DevSkim
 
         [JsonProperty(PropertyName ="suffix")]
         public string Suffix { get; set; }
-
     }
 }

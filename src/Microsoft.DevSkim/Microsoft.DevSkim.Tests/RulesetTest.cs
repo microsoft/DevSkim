@@ -11,6 +11,16 @@ namespace Microsoft.DevSkim.Tests
     public class RulesetTest
     {
         [TestMethod]
+        public void AssignRuleSetTest()
+        {
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleProcessor proc = new RuleProcessor();
+            proc.Rules = rules;
+
+            Assert.AreSame(rules, proc.Rules, "Rulesets needs to match");
+        }
+
+        [TestMethod]
         public void AddRuleRangeTest()
         {
             Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);            
@@ -39,11 +49,11 @@ namespace Microsoft.DevSkim.Tests
 
             // From String
             Ruleset testRules = Ruleset.FromString(rule, "todo.json", null);
-            Assert.AreEqual(1, testRules.Count(), "FromString Count should be 1");
+            Assert.AreEqual(2, testRules.Count(), "FromString Count should be 1");
 
             // From File
             testRules = Ruleset.FromFile(@"rules\custom\todo.json", null);
-            Assert.AreEqual(1, testRules.Count(), "FromFile Count should be 1");
+            Assert.AreEqual(2, testRules.Count(), "FromFile Count should be 1");
 
             foreach (Rule r in testRules)
             {
