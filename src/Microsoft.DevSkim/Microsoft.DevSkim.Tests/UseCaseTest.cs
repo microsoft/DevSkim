@@ -67,8 +67,10 @@ namespace Microsoft.DevSkim.Tests
             Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", null);
 
-            RuleProcessor processor = new RuleProcessor(rules);
-            processor.EnableSuppressions = true;
+            RuleProcessor processor = new RuleProcessor(rules)
+            {
+                EnableSuppressions = true
+            };
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
@@ -108,8 +110,10 @@ namespace Microsoft.DevSkim.Tests
             Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", null);
 
-            RuleProcessor processor = new RuleProcessor(rules);
-            processor.EnableSuppressions = false;
+            RuleProcessor processor = new RuleProcessor(rules)
+            {
+                EnableSuppressions = false
+            };
 
             // MD5CryptoServiceProvider test
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
@@ -142,7 +146,7 @@ namespace Microsoft.DevSkim.Tests
         }
     
         [TestMethod]
-        public void UseCase_ManualReview_Test()
+        public void UseCase_SeverityFilter_Test()
         {
             Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", null);
@@ -155,6 +159,22 @@ namespace Microsoft.DevSkim.Tests
             processor.SeverityLevel |= Severity.ManualReview;
             issues = processor.Analyze(testString, "javascript");            
             Assert.AreEqual(1, issues.Length, "Manual Review should be flagged");
+        }
+
+        [TestMethod]
+        public void UseCase_OnError_Test()
+        {
+            bool error = false;
+
+            Ruleset rules = new Ruleset();                        
+            rules.OnDeserializationError += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+            {                
+                error = true;
+                args.ErrorContext.Handled = true;
+            };
+
+            rules.AddDirectory(@"rules\invalid", null);
+            Assert.IsTrue(error, "Error should be raised");
         }
 
         [TestMethod]

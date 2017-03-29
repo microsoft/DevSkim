@@ -16,6 +16,18 @@ namespace Microsoft.DevSkim
     public class Ruleset : IEnumerable<Rule>
     {
         /// <summary>
+        /// Delegate for deserialization error handler
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Error arguments</param>
+        public delegate void DeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
+        
+        /// <summary>
+        /// Event raised if deserialization error is encoutered while loading JSON rules
+        /// </summary>
+        public event DeserializationError OnDeserializationError;
+
+        /// <summary>
         /// Creates instance of Ruleset
         /// </summary>
         public Ruleset()
@@ -113,28 +125,36 @@ namespace Microsoft.DevSkim
         public void AddString(string jsonstring, string sourcename, string tag)
         {
             List<Rule> ruleList = new List<Rule>();
-            ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring);
-            foreach (Rule r in ruleList)
+            JsonSerializerSettings settings = new JsonSerializerSettings()
             {
-                r.Source = sourcename;
-                r.Tag = tag;
+                Error = HandleDeserializationError
+            };
 
-                foreach (SearchPattern p in r.Patterns)
+            ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring, settings);
+            if (ruleList != null)
+            {
+                foreach (Rule r in ruleList)
                 {
-                    if (p.PatternType == PatternType.RegexWord || p.PatternType == PatternType.String)
+                    r.Source = sourcename;
+                    r.Tag = tag;
+
+                    foreach (SearchPattern p in r.Patterns)
                     {
-                        p.PatternType = PatternType.Regex;
-                        p.Pattern = string.Format(@"\b{0}\b", p.Pattern);
-                    }
-                    else if (p.PatternType == PatternType.Substring)
-                    {
-                        p.PatternType = PatternType.Regex;
-                        p.Pattern = string.Format(@"{0}", p.Pattern);
+                        if (p.PatternType == PatternType.RegexWord || p.PatternType == PatternType.String)
+                        {
+                            p.PatternType = PatternType.Regex;
+                            p.Pattern = string.Format(@"\b{0}\b", p.Pattern);
+                        }
+                        else if (p.PatternType == PatternType.Substring)
+                        {
+                            p.PatternType = PatternType.Regex;
+                            p.Pattern = string.Format(@"{0}", p.Pattern);
+                        }
                     }
                 }
-            }
 
-            _rules.AddRange(ruleList);
+                _rules.AddRange(ruleList);
+            }
         }
 
         /// <summary>
@@ -180,6 +200,16 @@ namespace Microsoft.DevSkim
             }
 
             return filteredRules;
+        }
+
+        /// <summary>
+        /// Handler for deserialization error
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="errorArgs">Error arguments</param>
+        private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
+        {
+            OnDeserializationError?.Invoke(sender, errorArgs);
         }
 
         /// <summary>
