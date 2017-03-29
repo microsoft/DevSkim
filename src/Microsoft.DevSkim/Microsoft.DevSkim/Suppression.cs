@@ -12,10 +12,10 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class Suppression
     {
-        public const string KeywordPrefix = "DevSkim:";
-        public const string KeywordIgnore = "ignore";        
-        public const string KeywordAll = "all";
-        public const string KeywordUntil = "until";
+        const string KeywordPrefix = "DevSkim:";
+        const string KeywordIgnore = "ignore";        
+        const string KeywordAll = "all";
+        const string KeywordUntil = "until";
 
         /// <summary>
         /// Creates new instance of Supressor
@@ -23,10 +23,7 @@ namespace Microsoft.DevSkim
         /// <param name="text">Text to work with</param>        
         public Suppression(string text)
         {
-            if (text == null)
-                throw new ArgumentNullException("text");
-
-            _text = text;            
+            _text = text ?? throw new ArgumentNullException("text");            
 
             ParseLine();
         }
