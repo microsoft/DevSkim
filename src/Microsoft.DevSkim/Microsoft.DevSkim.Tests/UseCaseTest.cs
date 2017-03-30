@@ -42,7 +42,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(4, issues[0].Length, "todo invalid length ");
             Assert.AreEqual("DS176209", issues[0].Rule.Id, "todo invalid rule");
             Assert.AreEqual(0, issues[0].Rule.Fixes.Length, "todo invalid Fixes");
-            Assert.AreEqual("my rules", issues[0].Rule.Tag, "todo invalid tag");
+            Assert.AreEqual("my rules", issues[0].Rule.RuntimeTag, "todo invalid tag");
 
             // Same issue twice test
             testString = "MD5 hash = MD5.Create();";

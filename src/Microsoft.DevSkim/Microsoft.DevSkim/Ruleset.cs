@@ -136,7 +136,7 @@ namespace Microsoft.DevSkim
                 foreach (Rule r in ruleList)
                 {
                     r.Source = sourcename;
-                    r.Tag = tag;
+                    r.RuntimeTag = tag;
 
                     foreach (SearchPattern p in r.Patterns)
                     {

@@ -21,7 +21,10 @@ namespace Microsoft.DevSkim
         /// Optional tag assigned to the rule during runtime
         /// </summary>
         [JsonIgnore]
-        public string Tag { get; set; }
+        public string RuntimeTag { get; set; }
+
+        [JsonProperty(PropertyName = "disabled")]
+        public bool Disabled { get; set; }
 
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
@@ -32,18 +35,11 @@ namespace Microsoft.DevSkim
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "disabled")]
-        public bool Disabled { get; set; }
-
         [JsonProperty(PropertyName = "tags")]
         public string[] Tags { get; set; }
 
         [JsonProperty(PropertyName = "applies_to")]
         public string[] AppliesTo { get; set; }
-
-        [JsonProperty(PropertyName = "severity")]
-        [JsonConverter(typeof(SeverityConverter))]
-        public Severity Severity { get; set; }
 
         [JsonProperty(PropertyName = "description")]
         public string Description { get; set; }
@@ -53,6 +49,10 @@ namespace Microsoft.DevSkim
 
         [JsonProperty(PropertyName = "rule_info")]
         public string RuleInfo { get; set; }
+
+        [JsonProperty(PropertyName = "severity")]
+        [JsonConverter(typeof(SeverityConverter))]
+        public Severity Severity { get; set; }
 
         [JsonProperty(PropertyName = "patterns")]
         public SearchPattern[] Patterns { get; set; }
