@@ -58,7 +58,6 @@ namespace Microsoft.DevSkim.Tests
 
             Rule r = issues[0].Rule;
             Assert.IsTrue(r.Description.Contains("strcpy"), "Invalid decription");
-            Assert.IsTrue(r.Source.Contains("dangerous_api.json"), "Invalid file");
             Assert.IsTrue(r.Name.Contains("strcpy"), "Invalid name");
             Assert.IsTrue(r.Replecement.Contains("strcpy_s"), "Invalid replacement");
             Assert.IsTrue(r.RuleInfo.Contains(r.Id), "Invalid ruleinfo");

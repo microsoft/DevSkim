@@ -1,11 +1,11 @@
 [
     {
         "name": "c",
-        "extensions": [ ".c" ]
+        "extensions": [ ".c", ".h" ]
     },
     {
         "name": "cpp",
-        "extensions": [ ".cpp", ".h" ]
+        "extensions": [ ".cpp", ".hpp" ]
     },
     {
         "name": "csharp",
@@ -114,6 +114,10 @@
     {
         "name": "plaintext",
         "extensions": [ ".txt" ]
+    },
+    {
+        "name": ".config",
+        "extensions": [ ".config" ]
     },
     {
         "name": "packages.config",

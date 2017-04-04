@@ -4,7 +4,7 @@
         "tags": [
             "Hygiene.Network.AccessingLocalhost"
         ],
-        "severity": "informational",
+        "severity": "manual-review",
         "description": "Accessing localhost could indicate debug code, or could hinder scaling.",
         "replacement": "",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS162092.md",

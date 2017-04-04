@@ -4,7 +4,7 @@
         "tags": [
             "Hygiene.Comment.Suspicious"
         ],
-        "severity": "low",
+        "severity": "manual-review",
         "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
         "replacement": "",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS176209.md",

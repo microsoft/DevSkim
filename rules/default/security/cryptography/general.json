@@ -43,7 +43,7 @@
         "tags": [
             "Cryptography.SecurityContext.Initialization"
         ],
-        "severity": "informational",
+        "severity": "manual-review",
         "description": "SecurityContext initialization, look here for cryptography functions.",
         "replacement": "",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101159.md",

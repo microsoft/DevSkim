@@ -1,0 +1,2439 @@
+[
+  {
+    "disabled": false,
+    "id": "DS154189",
+    "overrides": null,
+    "name": "Banned C function detected",
+    "tags": [
+      "API.DangerousAPI.BannedFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "These functions are historically error-prone and have been associated with a significant number of vulnerabilities. Most of these functions have safer alternatives, such as replacing 'strcpy' with 'strlcpy' or 'strcpy_s'.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS154189.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\b(strncat|_getts|_getws|_snprintf|_sntprintf|_snwprintf|_stprintf|_tcsat|_tcscpy|_tcslen|_tcsncpy|_vsnprintf|_vsntprintf|_vsnwprintf|_vstprintf|alloca|asctime|atof|atoi|atoll|bsearch|ctime|fopen|fprintf|freopen|fscanf|fwprintf|fwscanf|getenv|getwd|gmtime|localtime|lstrcat|lstrcpy|mbsrtowcs|mbstowcs|memmove|mktemp|printf|qsort|rewind|scanf|setbuf|snprintf|sprintf|sscanf|strcatbuff|strerror|strlen|strtok|swprintf|swscanf|tmpnam|vfprintf|vfscanf|vfwscanf|vprintf|vscanf|vsnprintf|vsprintf|vsscanf|vswprintf|vswscanf|vwprintf|vwscanf|wcrtomb|wcrtombs|wcscat|wcscpy|wcslen|wcsncat|wcsncpy|wcsrtombs|wcstok|wctomb|wmemcpy|wmemmove|wnsprintf|wprintf|wscanf|wsprintf|wvnsprintf|wvsprintf)\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS185832",
+    "overrides": [
+      "DS154189"
+    ],
+    "name": "Banned C function detected (strcpy)",
+    "tags": [
+      "API.DangerousAPI.BannedFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "strcpy is frequently dangerous, as it will cause a buffer overflow if the source is larger than the destination.",
+    "replacement": "Use strcpy_s or strlcpy if possible. If no safe function is viable, strcpy/strncpy should be proceeded by conditional checks to verify tha that the source string will fit in the destination with a null termnator.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS185832.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,\\)]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to strcpy_s (Recommended for VC++)",
+        "search": "\\bstrcpy\\s*\\(([^,]+),([^,\\)]+)\\)",
+        "replace": "strcpy_s($1, <size of $1>, $2)"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to strlcpy",
+        "search": "\\bstrcpy\\s*\\(([^,]+),([^,\\)]+)\\)",
+        "replace": "strlcpy($1, $2, <size of $1>)"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS111237",
+    "overrides": [
+      "DS154189"
+    ],
+    "name": "Banned C function detected (strncpy)",
+    "tags": [
+      "API.DangerousAPI.BannedFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination.",
+    "replacement": "Use strcpy_s or strlcpy if possible. If no safe function is viable, strcpy/strncpy should be proceeded by conditional checks to verify tha that the source string will fit in the destination with a null termnator.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS111237.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to strcpy_s (Recommended for VC++)",
+        "search": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "replace": "strcpy_s($1, $3, $2)"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to strlcpy",
+        "search": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "replace": "strlcpy($1, $2, $3)"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS141863",
+    "overrides": [
+      "DS154189"
+    ],
+    "name": "Banned C function detected (strcat)",
+    "tags": [
+      "API.DangerousAPI.BannedFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "If the combination of strings is larger than the destination buffer, strcat will cbuffer overflow the destination buffer",
+    "replacement": "Use strcat_s or strlcat if possible. strncat's size parameter excludes the null terminator, which leads to frequent mistakes",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS141863.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bstrcat\\s*\\(([^,]+),([^,\\)]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to strcat_s (Recommended for VC++)",
+        "search": "\\bstrcat\\s*\\(([^,]+),([^,\\)]+)\\)",
+        "replace": "strcat_s($1, <size of $1>, $2)"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to strlcat",
+        "search": "\\bstrcat\\s*\\(([^,]+),([^,\\)]+)\\)",
+        "replace": "strlcat($1, $2, <size of $1>)"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS108330",
+    "overrides": [
+      "DS154189"
+    ],
+    "name": "Banned C function detected (strncat)",
+    "tags": [
+      "API.DangerousAPI.BannedFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "strncat adds the null terminator at character 'n + 1', rather than at the nth character. this frequently leads to the null terminator being added in the memory adjacent to the destination buffer, rather than in the destination buffer.",
+    "replacement": "Use strcat_s or strlcat if possible. ",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS108330.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to strcat_s (Recommended for VC++)",
+        "search": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "replace": "strcat_s($1, $3, $2)"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to strlcat",
+        "search": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "replace": "strlcat($1, $2, $3)"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS181021",
+    "overrides": [
+      "DS154189"
+    ],
+    "name": "Banned C function detected (gets)",
+    "tags": [
+      "API.DangerousAPI.BannedFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "gets will read in as many bytes as are provided, regardless of the size of buffer recieving the bytes.  This allows for conditions that cause a buffer overlow in the destination buffer.",
+    "replacement": "Use gets_s or fgets if possible. fgets has different behavior from gets (may include newline for example), so care should be taken if it is used.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181021.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bgets\\s*\\(([^,\\)]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to gets_s (Recommended for VC++)",
+        "search": "\\bgets\\s*\\(([^,\\)]+)\\)",
+        "replace": "gets_s($1, <size of $1>)"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to fgets",
+        "search": "\\bgets\\s*\\(([^,\\)]+)\\)",
+        "replace": "fgets($1, <size of $1>, stdin)"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS179924",
+    "overrides": null,
+    "name": "Do not copy a FILE object (CERT FIO38-C)",
+    "tags": [
+      "CERT.FIO38-C",
+      "C.DangerousFunctionCall"
+    ],
+    "applies_to": [
+      "cpp",
+      "c"
+    ],
+    "description": "The CERT Secure Coding Standard recommends that FILE objects not be copied.",
+    "replacement": "Copy a pointer to the FILE object instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS179924.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "FILE [a-z0-9_][^=]*=\\s*\\*",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS181731",
+    "overrides": null,
+    "name": "Don't pass user input to this function",
+    "tags": [
+      "PHP.Injection"
+    ],
+    "applies_to": [
+      "php"
+    ],
+    "description": "Don't pass user input to this function.",
+    "replacement": "Validate this data before passing it to the function.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181731.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "(include|require|include_once|require_once|passthru)\\s*\\(.*\\$\\_(GET|POST|REQUEST|COOKIES|FILES)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS161085",
+    "overrides": null,
+    "name": "Problematic C function detected (malloc)",
+    "tags": [
+      "API.DangerousAPI.ProblematicFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "If the value provided to malloc is the result of unsafe integer math, it can result in an exploitable condition. ",
+    "replacement": "calloc handles the most common integer math in memory allocation (# of elements * their size) with error handling to prevent overflows in most implementations, and zeros out memory",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS161085.md",
+    "severity": "defense-in-depth",
+    "patterns": [
+      {
+        "pattern": "\\bmalloc\\s*\\(([^,\\)]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to calloc ",
+        "search": "\\bmalloc\\s*\\(([^,\\)]+)\\)",
+        "replace": "calloc(<number of elements>, <size of each element>)"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS121708",
+    "overrides": null,
+    "name": "Problematic C function detected (memcpy)",
+    "tags": [
+      "API.DangerousAPI.BannedFunction"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "objective-c"
+    ],
+    "description": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer",
+    "replacement": "Use memcpy_s if possible.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS121708.md",
+    "severity": "defense-in-depth",
+    "patterns": [
+      {
+        "pattern": "\\bmemcpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to memcpy_s (Recommended for VC++)",
+        "search": "\\bmemcpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
+        "replace": "memcpy_s($1, <size of $1>, $2, $3)"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS224000",
+    "overrides": null,
+    "name": "Dangerous T-SQL Command",
+    "tags": [
+      "API.T-SQL.Dangerous"
+    ],
+    "applies_to": [],
+    "description": "These stored procedures provide access to system resources and should only be used with trusted data.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS224000.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\b(xp_cmdshell|xp_regread|xp_instance_regread|xp_regwrite|sp_makewebtask|xp_sendmail|sp_configure|sp_executesql|dbcc writepage)\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS137038",
+    "overrides": null,
+    "name": "Notice: Outbound HTTP Connection",
+    "tags": [
+      "ThreatModel.Integration.HTTP"
+    ],
+    "applies_to": [
+      "ruby"
+    ],
+    "description": "Inbound HTTP",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS137038.md",
+    "severity": "manual-review",
+    "patterns": [
+      {
+        "pattern": "\\bNet::HTTP\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS165746",
+    "overrides": null,
+    "name": "Do not execute user-provided JavaScript",
+    "tags": [
+      "Design.Mobile.iOS.WebView.DynamicJavaScript"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "This line of code shows the dynamic evaluation of JavaScript, sourced from a string. It's important that this string not contain unsanitized user-supplied data, as it could be a vector for a cross-site scripting (XSS) attack.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS165746.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bstringByEvaluatingJavaScriptFromString\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS113286",
+    "overrides": null,
+    "name": "Do not include user-input directoy in format strings",
+    "tags": [
+      "ControlFlow.Injection.FormatString",
+      "cert:FIO30-C"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "Do not create NSString objects using a user-provided format string, as this could lead to a security vulnerability. https://www.securecoding.cert.org/confluence/display/c/FIO30-C.+Exclude+user+input+from+format+strings",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS113286.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\[NSString stringWithFormat:\\s*([^@\\\"\\]]+\\])",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Use a predefined format string",
+        "search": "\\[NSString stringWithFormat:\\s*([^@\\\"\\]]+\\])",
+        "replace": "[NSString stringWithFormat:@\"%@\", $1"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS113853",
+    "overrides": null,
+    "name": "Do not set a custom execution policy.",
+    "tags": [
+      "ControlFlow.Permission.Evalation"
+    ],
+    "applies_to": [
+      "powershell"
+    ],
+    "description": "The Set-ExecutionPolicy cmdlet has been used to dynamically change the permissions available to PowerShell.",
+    "replacement": "Avoid elevating privileges if possible.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS113853.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\bSet-ExecutionPolicy\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS104456",
+    "overrides": null,
+    "name": "Use of restricted functions.",
+    "tags": [
+      "Implementation.Scripting.PowerShell.DangeousFunction"
+    ],
+    "applies_to": [
+      "powershell"
+    ],
+    "description": "Use of restricted functions.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS104456.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bGetDelegateForFunctionPointer\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSystem.Runtime.InteropServices.Marshal\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bWriteByte\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bMicrosoft.Win32.UnsafeNativeMethods\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bPtrToStructure\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bStructureToPtr\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\b(NtCreateThreadEx|CreateRemoteThread)\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bInvoke\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bVirtualProtect\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\biex\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\b&\"\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\b& $\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS114352",
+    "overrides": null,
+    "name": "Encryption Marked 'Optional'",
+    "tags": [
+      "Cryptography.Optional"
+    ],
+    "applies_to": null,
+    "description": "Optional encryption or integrity checking can be dangerous.",
+    "replacement": "As a best practice, always enable strong encryption and integrity checking.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "Integrity.*optional",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "Encryption.*optional",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS181865",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181865.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "setValidatesSecureCertificate:\\s*NO",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "setAllowsAnyHTTPSCertificate:\\s*YES",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "allowsAnyHTTPSCertificate\\s*=\\s*YES",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "setValidatesSecureCertificate:\\s*NO",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "validatesSecureCertificate\\s*=\\s*NO",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bcontinueWithoutCredentialForAuthenticationChallenge\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "kCFStreamSSL(Level|AllowsExpiredCertificates|AllowsExpiredRoots|AllowsAnyRoot|ValidatesCertificateChain|PeerName)",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkCFStreamPropertySSLSettings\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS134411",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS134411.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\b.IgnorableServerCertificateErrors.\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\s*{\\s*return true;\\s*};",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\([^\\)]*\\)\\s*{\\s+return[\\s\\(]?true[\\s\\)]?",
+        "type": "regex",
+        "modifiers": [
+          "DOTALL",
+          "MULTILINE",
+          "IGNORECASE"
+        ]
+      },
+      {
+        "pattern": "ServerCertificateValidationCallback\\s*\\+?=\\s*\\([^\\)]*\\)\\s*=>\\s*true",
+        "type": "regex",
+        "modifiers": [
+          "DOTALL",
+          "MULTILINE",
+          "IGNORECASE"
+        ]
+      },
+      {
+        "pattern": "RemoteCertificateValidationCallback\\(delegate\\s*{\\s*return true;\\s*}\\);",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "RemoteCertificateValidationCallback\\(\\s*\\([^\\)]*\\)\\s*=>\\s*{\\s*return true;\\s*}\\s*\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS176603",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "ruby"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\bOpenSSL::SSL::VERIFY_NONE\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS130821",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "python"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "requests\\.(get|post|head|patch|delete|options)\\([^\\)]*\\s+verify\\s*=\\s*False\\)",
+        "type": "regex",
+        "modifiers": [
+          "DOTALL",
+          "MULTILINE",
+          "IGNORECASE"
+        ]
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Set verify to True",
+        "search": "False",
+        "replace": "True"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS130822",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "python"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS130822.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\.check_hostname\\s*=\\s*False",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bdisable_ssl_certificate_validation\\s*=\\s*True\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS159369",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "cpp"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\bSECURITY_FLAG_IGNORE_CERT_CN_INVALID\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_IGNORE_CERT_DATE_INVALID\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_IGNORE_REVOCATION\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_IGNORE_UNKNOWN_CA\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_IGNORE_WRONG_USAGE\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_IGNORE_CERT_WRONG_USAGE\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS101940",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      ".config"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\bcertificateValidationMode=\"None\"\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bcheckCertificateName=\"false\"\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bcheckCertificateRevocationList=\"false\"\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "encryptionPolicy=\"(AllowNoEncryption|NoEncryption)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS125134",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "javascript"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "NODE_TLS_REJECT_UNAUTHORIZED|rejectUnauthorized",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS152094",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "java"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "(TrustManager|getInsecure|HostnameVerifier|AbstractVerifier|AllowAllHostnameVerifier|BrowserCompatHostnameVerifier|StrictHostnameVerifier|onReceivedSslError|insecuresocketfactory|customhostnameverifier)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS126185",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": [
+      "powershell"
+    ],
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS114352.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "::ServerCertificateValidationCallback\\s*=\\s*{\\s*\\$true\\s*}",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS175862",
+    "overrides": null,
+    "name": "Do not use the mcrypt module, use OpenSSL instead.",
+    "tags": [
+      "Cryptography.Library.Abandoned"
+    ],
+    "applies_to": [
+      "php"
+    ],
+    "description": "The PHP mcrypt module is based on libmcrypt, which has been abanonded since 2007.",
+    "replacement": "OpenSSL",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS175862.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\bmcrypt\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS109501",
+    "overrides": [
+      "DS106864"
+    ],
+    "name": "Do not use the 3DES symmetric block cipher.",
+    "tags": [
+      "Cryptography.Symmetric.PotentiallyWeakAlgorithm"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "The 3DES cipher was found, which is only secure if three independent keys are used.",
+    "replacement": "Use AES instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS109501.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\bTripleDESCryptoServiceProvider\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to AESCryptoServiceProvider",
+        "search": "TripleDESCryptoServiceProvider",
+        "replace": "AESCryptoServiceProvider"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS106864",
+    "overrides": null,
+    "name": "Do not use the DES symmetric block cipher.",
+    "tags": [
+      "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "The DES cipher was found, which is widely considered to be broken.",
+    "replacement": "Use AES instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS106864.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\bDESCryptoServiceProvider\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to AESCryptoServiceProvider",
+        "search": "DESCryptoServiceProvider",
+        "replace": "AESCryptoServiceProvider"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS156431",
+    "overrides": null,
+    "name": "Do not use the RC2 symmetric block cipher.",
+    "tags": [
+      "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "The RC2 cipher was found, which is considered to be broken.",
+    "replacement": "Use AES instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS156431.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\bRC2CryptoServiceProvider\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to AESCryptoServiceProvider",
+        "search": "RC2CryptoServiceProvider",
+        "replace": "AESCryptoServiceProvider"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS101155",
+    "overrides": null,
+    "name": "Disabled certificate validation",
+    "tags": [
+      "Cryptography.Certificate.Validation"
+    ],
+    "applies_to": null,
+    "description": "Extend default certificate validation, but do not disable or override default rules.",
+    "replacement": "Always use a valid certificate, even during testing.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101155.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "\\bencrypt=false\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bencryption=false\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "unencrypted.*password",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "TODO.*crypt",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS101159",
+    "overrides": null,
+    "name": "Initializing Security Context",
+    "tags": [
+      "Cryptography.SecurityContext.Initialization"
+    ],
+    "applies_to": [
+      "cpp"
+    ],
+    "description": "SecurityContext initialization, look here for cryptography functions.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101159.md",
+    "severity": "manual-review",
+    "patterns": [
+      {
+        "pattern": "\\bInitializeSecurityContext\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS126858",
+    "overrides": null,
+    "name": "Weak/Broken Hash Algorithm",
+    "tags": [
+      "Cryptography.BannedHashAlgorithm"
+    ],
+    "applies_to": null,
+    "description": "A weak or broken hash algorithm was detected.",
+    "replacement": "Consider switching to use SHA-256 or SHA-512 instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS126858.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to \"SHA256\"",
+        "search": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+        "replace": "SHA256"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to \"SHA512\"",
+        "search": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+        "replace": "SHA512"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS197800",
+    "overrides": [
+      "DS126858"
+    ],
+    "name": "Weak/Broken Hash Algorithm",
+    "tags": [
+      "Cryptography.HashAlgorithm.BrokenOrWeak"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "A weak or broken hash algorithm was detected.",
+    "replacement": "Use CC_SHA256 or CC_SHA512 instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS197800.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "CC_(MD2|MD4|MD5|SHA1)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to SHA-256",
+        "search": "CC_(MD2|MD4|MD5|SHA1)",
+        "replace": "CC_SHA256"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to SHA-512",
+        "search": "CC_(MD2|MD4|MD5|SHA1)",
+        "replace": "CC_SHA512"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS108647",
+    "overrides": null,
+    "name": "Do not use broken/weak cryptographic hash algorithms",
+    "tags": [
+      "Cryptography.HashAlgorithm.BrokenOrWeak"
+    ],
+    "applies_to": [
+      "ruby"
+    ],
+    "description": "Avoid using broken or weak hash algorithms.",
+    "replacement": "Use Digest::SHA256 or Digest::SHA512",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS108647.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "Digest::(MD5|RMD160|SHA1)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to SHA-256",
+        "search": "Digest::(MD5|RMD160|SHA1)",
+        "replace": "Digest::SHA256"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to SHA-512",
+        "search": "Digest::(MD5|RMD160|SHA1)",
+        "replace": "Digest::SHA512"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS196098",
+    "overrides": [
+      "DS126858"
+    ],
+    "name": "Do not use broken/weak cryptographic hash algorithms",
+    "tags": [
+      "Cryptography.HashAlgorithm.BrokenOrWeak"
+    ],
+    "applies_to": [
+      "python"
+    ],
+    "description": "Avoid using broken or weak hash algorithms.",
+    "replacement": "Use hashlib.sha256 instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS196098.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "(md5|sha)\\.new\\(",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to hashlib.sha256",
+        "search": "(md5|sha)\\.new\\(",
+        "replace": "hashlib.sha256("
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to hashlib.sha512",
+        "search": "(md5|sha)\\.new\\(",
+        "replace": "hashlib.sha512("
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS168931",
+    "overrides": [
+      "DS126858"
+    ],
+    "name": "Do not use broken/weak cryptographic hash algorithms",
+    "tags": [
+      "Cryptography.HashAlgorithm.BrokenOrWeak"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "A potentially weak hashing algorithm was used.",
+    "replacement": "Use SHA-256 instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS168931.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "MD5CryptoServiceProvider",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to SHA-256",
+        "search": "MD5CryptoServiceProvider",
+        "replace": "SHA256CryptoServiceProvider"
+      },
+      {
+        "type": "regex-substitute",
+        "name": "Change to SHA-512",
+        "search": "MD5CryptoServiceProvider",
+        "replace": "SHA512CryptoServiceProvider"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS197836",
+    "overrides": null,
+    "name": "Do not take the hash of low-entropy content.",
+    "tags": [
+      "Cryptography.HashAlgorithm.InsufficientEntropy"
+    ],
+    "applies_to": null,
+    "description": "Taking a hash of a time value is suspicious, as there is insufficient entropy to protect against brute-force attacks.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS197836.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "(MD4|MD5|(SHA(1|224|256|384|512))).*Time",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS188250",
+    "overrides": null,
+    "name": "Missing initialization vector",
+    "tags": [
+      "Cryptography.Symmetric.InitializationVector.Missing"
+    ],
+    "applies_to": [
+      "php"
+    ],
+    "description": "The mcrypt_encrypt function was used without an initialization vector.",
+    "replacement": "Add an initialization vector or consider a different cipher mode",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS188250.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "mcrypt_encrypt\\s*\\([^,]+,[^,]+,[^,]+,[^,]+\\);",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Add initialization vector",
+        "search": "(mcrypt_encrypt\\s*\\([^,]+,[^,]+,[^,]+,[^,]+)(\\);)",
+        "replace": "$1, <$iv>$2"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS128921",
+    "overrides": null,
+    "name": "Hardcoded initialization vector size",
+    "tags": [
+      "Cryptography.Symmetric.InitializationVector.HardcodedSize"
+    ],
+    "applies_to": [
+      "php"
+    ],
+    "description": "An initialization vector was created to a static size, rather than determining it based on the encryption algorithm used.",
+    "replacement": "Use mcrypt_get_iv_size to get the correct IV size based on the cipher and mode.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS128921.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "mcrypt_create_iv\\s*\\(\\s*\\d.*",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS144436",
+    "overrides": null,
+    "name": "Do not use outdated SSL/TLS protocols",
+    "tags": [
+      "Cryptography.Protocol.TLS"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific SecurityProtocolType.",
+    "replacement": "Either leave off or set to SecurityProtocolType.Tls12;",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS144436.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bSecurityProtocolType\\.(Ssl3|Tls|Tls11)\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to SecurityProtocolType.Tls12",
+        "search": "\\bSecurityProtocolType\\.(Ssl3|Tls|Tls11)\\b",
+        "replace": "SecurityProtocolType.Tls12"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS127101",
+    "overrides": null,
+    "name": "Hardcoding TLS protocol version",
+    "tags": [
+      "Cryptography.Protocol.TLS"
+    ],
+    "applies_to": [
+      "cpp"
+    ],
+    "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific list of protocols.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS127101.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\bSecPkgCred_SupportedProtocols\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS169125",
+    "overrides": null,
+    "name": "Do not use outdated SSL/TLS protocols",
+    "tags": [
+      "Cryptography.Protocol.TLS"
+    ],
+    "applies_to": [],
+    "description": "An outdated SSL/TLS protocol version is specified.",
+    "replacement": "Use TLS 1.2",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS169125.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\b(SSLv?2|SSLv?3|TLSv?1|TLSv?10)\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS169126",
+    "overrides": null,
+    "name": "An Outdated or Banned SSL/TLS Protocol is Used",
+    "tags": [
+      "Cryptography.Protocol.Banned"
+    ],
+    "applies_to": [],
+    "description": "An Outdated or Banned SSL/TLS Protocol is Used",
+    "replacement": "Use TLS 1.2",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS169126.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "(SSL|TLS)v(2|23|3|1)_(client|server)",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSSLv2\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSSLv3\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bTLSv1\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bTLSv10\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS169127",
+    "overrides": null,
+    "name": "An Outdated or Banned SSL/TLS Protocol is Used",
+    "tags": [
+      "Cryptography.Protocol.Banned"
+    ],
+    "applies_to": [
+      "cpp",
+      "objective-c"
+    ],
+    "description": "An Outdated or Banned SSL/TLS Protocol is Used",
+    "replacement": "Use TLS 1.2",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS169126.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bSECURITY_FLAG_40BIT\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_56BIT\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_NORMALBITNESS\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_PCT\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_PCT4\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_SSL\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_SSL3\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_STRENGTH_MEDIUM\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_STRENGTH_WEAK\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_UNKNOWNBIT\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bWINHTTP_FLAG_SECURE_PROTOCOL_SSL2\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bWINHTTP_FLAG_SECURE_PROTOCOL_SSL3\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bWINHTTP_FLAG_SECURE_PROTOCOL_TLS1\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bWINHTTP_FLAG_SECURE_PROTOCOL_ALL\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_STRENGTH_MEDIUM\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSECURITY_FLAG_STRENGTH_WEAK\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "SP_PROT_(PCT1|SSL2|SSL3|TLS1|TLS1_0)_(CLIENT|SERVER)",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bNSStreamSocketSecurityLevelNone\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bNSStreamSocketSecurityLevelSSLv2\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bNSStreamSocketSecurityLevelSSLv3\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bNSStreamSocketSecurityLevelTLSv1\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkCFStreamSocketSecurityLevelNone\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkCFStreamSocketSecurityLevelSSLv2\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkCFStreamSocketSecurityLevelSSLv3\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkCFStreamSocketSecurityLevelTLSv1\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkSSLProtocolUnknown \\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkSSLProtocol3\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkTLSProtocol1\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkDTLSProtocol1\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkSSLProtocol2\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkSSLProtocol3Only\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkTLSProtocol1Only\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bkSSLProtocolAll\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS169128",
+    "overrides": null,
+    "name": "An Outdated or Banned SSL/TLS Protocol is Used",
+    "tags": [
+      "Cryptography.Protocol.Banned"
+    ],
+    "applies_to": [
+      "python"
+    ],
+    "description": "An Outdated or Banned SSL/TLS Protocol is Used",
+    "replacement": "Use TLS 1.2",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS169126.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bPROTOCOL_SSLv2\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bPROTOCOL_SSLv23\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bPROTOCOL_SSLv3\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bPROTOCOL_TLSv1\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS148264",
+    "overrides": null,
+    "name": "Do not use weak/non-cryptographic random number generators",
+    "tags": [
+      "Cryptography.PRNG.Weak"
+    ],
+    "applies_to": null,
+    "description": "Use cryptographic random numbers generators for anything even close to a security function.",
+    "replacement": "Replacements depend on language.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS148264.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bDUAL_EC_DRBG\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bpseudoRandomBytes\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "rand\\(",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "random_shuffle\\(",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "shuffle\\(",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bRAND_MAX\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "rand\\(\\s*\\)\\s*%",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bmwc1616\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\b(32969|18273)\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bSystem.Random\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\bRandom\\(\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\barc4random\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS149435",
+    "overrides": null,
+    "name": "Do not seed randomness based on system time or a static value.",
+    "tags": [
+      "Cryptography.WeakRandomness"
+    ],
+    "applies_to": null,
+    "description": "Passing a predicable value to srand() is very insecure and should be avoided.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS149435.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "srand\\(\\s*time\\(",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "srand\\(\\s*\\d+\\s*\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS109733",
+    "overrides": null,
+    "name": "Source implementation of a weak/broken cryptography hash function",
+    "tags": [
+      "Cryptography.HashAlgorithm.WeakOrBrokenImplementation"
+    ],
+    "applies_to": null,
+    "description": "An implementation of a weak/broken hash function was found in source code.",
+    "replacement": "Do not use MD5, and always prefer OS- or library-provided cryptography implementations.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS109733.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "242070db|02441453|db702024|53144402|3572445317",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "98BADCFE|FEDCBC98|C3D2E1F0|F0E1D2C3",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": null
+  },
+  {
+    "disabled": false,
+    "id": "DS187371",
+    "overrides": null,
+    "name": "A weak cipher mode of operation was used",
+    "tags": [
+      "Cryptography.Symmetric.CipherMode.Weak"
+    ],
+    "applies_to": null,
+    "description": "A potentially weak cipher mode of operation was used.",
+    "replacement": "Consider using CBC, CTR, or GCM.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS187371.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\b(ECB|OFB|CFB|CTS|PCBC|GMAC|XCBC|IACBC|IAPM|EAX|OCB|CWC|AEAD|LRW|XEX|XTS|CMC|EME|CBCMAC|OMAC|PMAC)\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS182720",
+    "overrides": null,
+    "name": "A weak cipher mode of operation was used",
+    "tags": [
+      "Cryptography.Symmetric.CipherMode.Weak"
+    ],
+    "applies_to": [
+      "php"
+    ],
+    "description": "A potentially weak cipher mode of operation was used.",
+    "replacement": "Consider using CBC, CTR, or GCM.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS182720.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\bMCRYPT_MODE_(ECB|CFB|OFB|NOFB|STREAM)\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change cipher mode to CBC",
+        "search": "MCRYPT_MODE_(ECB|CFB|OFB|NOFB|STREAM)",
+        "replace": "MCRYPT_MODE_CBC"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS184626",
+    "overrides": null,
+    "name": "All Controllers Should Derive From Controller.",
+    "tags": [
+      "Implementation.Web.ASPNET.ControllerWithoutExtendingController"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "All Controllers Should Derive From Controller.",
+    "replacement": "Ensure this class derives from Controller.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS184626.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "class [^\\s]+Controller\\s*:\\s*(?!.*?(Controller)).*",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "class [^\\s]+Controller[\\s{]*$",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Change to inherit from Controller",
+        "search": "(class [^\\s]+Controller)(([\\s{]*$)|(\\s*:\\s*(?!.*?(Controller)).*))",
+        "replace": "$1 : Controller"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS162092",
+    "overrides": null,
+    "name": "Do not leave debug code in production",
+    "tags": [
+      "Hygiene.Network.AccessingLocalhost"
+    ],
+    "applies_to": null,
+    "description": "Accessing localhost could indicate debug code, or could hinder scaling.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS162092.md",
+    "severity": "manual-review",
+    "patterns": [
+      {
+        "pattern": "\\blocalhost\\b",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "\\b127.0.0.1\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS176209",
+    "overrides": null,
+    "name": "Suspicious comment",
+    "tags": [
+      "Hygiene.Comment.Suspicious"
+    ],
+    "applies_to": null,
+    "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS176209.md",
+    "severity": "manual-review",
+    "patterns": [
+      {
+        "pattern": "\\b(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS189424",
+    "overrides": null,
+    "name": "Review eval for untrusted data",
+    "tags": [
+      "Python.DangerousFunctionCall",
+      "JavaScript.DangerousFunctionCall",
+      "TypeScript.DangerousFunctionCall",
+      "PHP.DangerousFunctionCall"
+    ],
+    "applies_to": [
+      "python",
+      "javascript",
+      "typescript",
+      "php"
+    ],
+    "description": "If untrusted data (data from HTTP requests, user submitted files, etc.) is included in an eval statement it can allow enable an attacker to inject their own code.",
+    "replacement": "Edit the eval so that no untrusted date is included.  If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed.  This is not as simple as just escaping quotes.",
+    "rule_info": "https://github.com/microsoft/devskim/blob/master/guidance/DS189424.md",
+    "severity": "manual-review",
+    "patterns": [
+      {
+        "pattern": "\\beval\\(([^,]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS172411",
+    "overrides": null,
+    "name": "Review setTimeout for untrusted data",
+    "tags": [
+      "JavaScript.DangerousFunctionCall",
+      "TypeScript.DangerousFunctionCall"
+    ],
+    "applies_to": [
+      "javascript",
+      "typescript"
+    ],
+    "description": "If untrusted data (data from HTTP requests, user submitted files, etc.) is included in an setTimeout statement it can allow enable an attacker to inject their own code.",
+    "replacement": "Edit the setTimeout so that no untrusted date is included.  If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed.  This is not as simple as just escaping quotes.",
+    "rule_info": "https://github.com/microsoft/devskim/blob/master/guidance/DS172411.md",
+    "severity": "manual-review",
+    "patterns": [
+      {
+        "pattern": "\\bsetTimeout\\(([^,]+)\\)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS172412",
+    "overrides": null,
+    "name": "Review unsafe code",
+    "tags": [
+      "Dotnet.Unsafecode"
+    ],
+    "applies_to": [
+      "csharp",
+      "vb"
+    ],
+    "description": "The unsafe keyword denotes an unsafe context, which is required for any operation involving pointers. Unsafe code in is not necessarily dangerous; it is just code whose safety cannot be verified by the CLR.",
+    "replacement": null,
+    "rule_info": "https://github.com/microsoft/devskim/blob/master/guidance/DS172412.md",
+    "severity": "manual-review",
+    "patterns": [
+      {
+        "pattern": "\\bunsafe\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS165348",
+    "overrides": null,
+    "name": "Do not attempt to access device UDID",
+    "tags": [
+      "Implementation.Mobile.iOS.DataProtection.Privacy.UDID"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "Access to the device UDID (via [[UIDevice currentDevice] uniqueIdentifier]) is deprecated as of iOS 5 and should not be used or relied upon.",
+    "replacement": "[[UIDevice currentDevice] identifierForVendor]",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS165348.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "\\buniqueIdentifier\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS173237",
+    "overrides": null,
+    "name": "Do not store tokens or keys in source code.",
+    "tags": [
+      "Implementation.Privacy.Token"
+    ],
+    "applies_to": null,
+    "description": "A token or key was found in source code. If this represents a secret, it should be moved somewhere else.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS173237.md",
+    "severity": "important",
+    "patterns": [
+      {
+        "pattern": "[a-f0-9]{30,}",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS117838",
+    "overrides": [
+      "DS173237"
+    ],
+    "name": "Do not store tokens or keys in source code.",
+    "tags": [
+      "Implementation.Privacy.Token"
+    ],
+    "applies_to": null,
+    "description": "A token or key was found in source code. If this represents a secret, it should be moved somewhere else.",
+    "replacement": "",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS117838.md",
+    "severity": "critical",
+    "patterns": [
+      {
+        "pattern": "(secret|license|key|pass).*[a-f0-9]{30,}",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS112266",
+    "overrides": null,
+    "name": "ProtectedData used without additional entropy",
+    "tags": [
+      "Storage.Windows.DPAPI"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "description": "The ProtectedData class should be used with additional entropy to reduce the risk of other application calling DPAPI to access the data.",
+    "replacement": "Add additional entropy (per-application secret).",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS112266.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "ProtectedData\\.Protect.*,\\s*null.*",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Add entropy placeholder",
+        "search": "(ProtectedData\\.Protect[^,]+,\\s*)null(.*)",
+        "replace": "$1<entropy>$2"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS191340",
+    "overrides": null,
+    "name": "Do not store sensitive data in NSUserDefaults.",
+    "tags": [
+      "Storage.Apple.iOS.UserDefaults.SensitiveData"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "Do not store sensitive data in NSUserDefaults.",
+    "replacement": "Consider another mechanism instead.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS191340.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "NSUserDefaults \\*(.*) = \\[NSUserDefaults standardUserDefaults\\];(\\n.*){1,5}$1 .*setString:(password|key)",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS378900",
+    "overrides": null,
+    "name": "Vulnerable NuGet Library",
+    "tags": [
+      "Vulerable-Dependency.Library.NuGet"
+    ],
+    "applies_to": [
+      "packages.config"
+    ],
+    "description": "Vulnerabilities in ASP.NET Core View Components Could Allow Elevation of Privilege",
+    "replacement": "Upgrade this package to a later, unaffected version.",
+    "rule_info": "https://technet.microsoft.com/en-us/library/security/3181759",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Abstractions\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.ApiExplorer\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Core\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Cors\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.DataAnnotations\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Formatters.Json\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Formatters.Xml\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Localization\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Razor\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Razor.Host\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.TagHelpers\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.ViewFeatures\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      },
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.WebApiCompatShim\" version=\"1.0.0\"",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS378901",
+    "overrides": null,
+    "name": "Vulnerable NuGet Library",
+    "tags": [
+      "Vulerable-Dependency.Library.NuGet"
+    ],
+    "applies_to": [
+      "packages.config"
+    ],
+    "description": "Vulnerabilities in Identity Model Extensions Token Signing Verification Could Allow Elevation of Privilege",
+    "replacement": "Upgrade this package to a later, unaffected version.",
+    "rule_info": "https://technet.microsoft.com/en-us/library/security/3214296",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"5.1.0\"",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS378902",
+    "overrides": null,
+    "name": "Vulnerable NuGet Library",
+    "tags": [
+      "Vulerable-Dependency.Library.NuGet"
+    ],
+    "applies_to": [
+      "packages.config"
+    ],
+    "description": "Vulnerability in ASP.NET Core MVC 1.1.0 Could Allow Denial of Service",
+    "replacement": "Upgrade this package to a later, unaffected version.",
+    "rule_info": "https://technet.microsoft.com/en-us/library/security/4010983",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Core\" version=\"1.1.0\"",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": []
+  },
+  {
+    "disabled": false,
+    "id": "DS132779",
+    "overrides": null,
+    "name": "Do not enable external entity resolution.",
+    "tags": [
+      "Implementation.iOS.XML.DTDEntityResolution"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "Do not enable external entity resolution.",
+    "replacement": "Set shouldResolveExternalEntities to NO.",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS132779.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\bshouldResolveExternalEntities\\s*=\\s*YES\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Disable external entity resolution",
+        "search": "(shouldResolveExternalEntities\\s*=\\s*)(YES)",
+        "replace": "$1NO"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS132780",
+    "overrides": null,
+    "name": "Do not enable external entity resolution.",
+    "tags": [
+      "Implementation.iOS.XML.DTDEntityResolution"
+    ],
+    "applies_to": [
+      "swift"
+    ],
+    "description": "Do not enable external entity resolution.",
+    "replacement": "x.setShouldResolveExternalEntities = FALSE;",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS132780.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\bshouldResolveExternalEntities\\s*=\\s*TRUE\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Disable external entity resolution",
+        "search": "(shouldResolveExternalEntities\\s*=\\s*)(TRUE)",
+        "replace": "$1FALSE"
+      }
+    ]
+  },
+  {
+    "disabled": false,
+    "id": "DS132790",
+    "overrides": null,
+    "name": "Do not enable external entity resolution.",
+    "tags": [
+      "Implementation.iOS.XML.DTDEntityResolution"
+    ],
+    "applies_to": [
+      "objective-c"
+    ],
+    "description": "Do not enable external entity resolution.",
+    "replacement": "[x setShouldResolveExternalEntities: NO];",
+    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS132790.md",
+    "severity": "moderate",
+    "patterns": [
+      {
+        "pattern": "\\bsetShouldResolveExternalEntities:\\s*YES\\b",
+        "type": "regex",
+        "modifiers": null
+      }
+    ],
+    "fix_it": [
+      {
+        "type": "regex-substitute",
+        "name": "Disable external entity resolution",
+        "search": "(setShouldResolveExternalEntities:\\s*)(YES)",
+        "replace": "$1NO"
+      }
+    ]
+  }
+]

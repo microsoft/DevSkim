@@ -12,13 +12,26 @@ namespace Microsoft.DevSkim
     [Flags]
     public enum Severity 
     {        
+        /// <summary>
+        /// Critial issues
+        /// </summary>
         Critical = 1,
+        /// <summary>
+        /// Important issues
+        /// </summary>
         Important = 2,
+        /// <summary>
+        /// Moderate issues
+        /// </summary>
         Moderate = 4,
-        Low = 8,
-        Informational = 16,
-        DefenseInDepth = 32,
-        ManualReview = 64
+        /// <summary>
+        /// Defense In Depth
+        /// </summary>
+        DefenseInDepth = 8,
+        /// <summary>
+        /// Issues that require manual review
+        /// </summary>
+        ManualReview = 16
     }
 
     /// <summary>

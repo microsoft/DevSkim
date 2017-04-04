@@ -6,8 +6,7 @@
             "Implementation.Web.ASPNET.ControllerWithoutExtendingController"
         ],
         "applies_to": [
-            "csharp",
-            "aspnet"
+            "csharp"
         ],
         "severity": "moderate",
         "description": "All Controllers Should Derive From Controller.",

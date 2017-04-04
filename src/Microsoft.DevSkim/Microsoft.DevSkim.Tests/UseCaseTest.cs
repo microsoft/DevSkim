@@ -15,7 +15,7 @@ namespace Microsoft.DevSkim.Tests
             Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", "my rules");
 
-            RuleProcessor processor = new RuleProcessor(rules);            
+            RuleProcessor processor = new RuleProcessor(rules);
 
             string lang = Language.FromFileName("testfilename.cpp");
             string testString = "strcpy(dest,src);";
@@ -34,15 +34,16 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual("strcpy_s(dest, <size of dest>, src);", fixedCode, "strcpy invalid code fix");
             Assert.IsTrue(fix.Name.Contains("Change to strcpy_s"), "strcpy wrong fix name");
 
-            // TODO test
-            testString = "//TODO: fix this later";
+            // QUICKFIX test
+            processor.SeverityLevel |= Severity.ManualReview;
+            testString = "//QUICKFIX: fix this later";
             issues = processor.Analyze(testString, "csharp");
-            Assert.AreEqual(1, issues.Length, "todo should be flagged");
-            Assert.AreEqual(2, issues[0].Index, "todo invalid index");
-            Assert.AreEqual(4, issues[0].Length, "todo invalid length ");
-            Assert.AreEqual("DS176209", issues[0].Rule.Id, "todo invalid rule");
-            Assert.AreEqual(0, issues[0].Rule.Fixes.Length, "todo invalid Fixes");
-            Assert.AreEqual("my rules", issues[0].Rule.RuntimeTag, "todo invalid tag");
+            Assert.AreEqual(1, issues.Length, "QUICKFIX should be flagged");
+            Assert.AreEqual(2, issues[0].Index, "QUICKFIX invalid index");
+            Assert.AreEqual(8, issues[0].Length, "QUICKFIX invalid length ");
+            Assert.AreEqual("DS276209", issues[0].Rule.Id, "QUICKFIX invalid rule");
+            Assert.AreEqual(0, issues[0].Rule.Fixes.Length, "QUICKFIX invalid Fixes");
+            Assert.AreEqual("my rules", issues[0].Rule.RuntimeTag, "QUICKFIX invalid tag");
 
             // Same issue twice test
             testString = "MD5 hash = MD5.Create();";

@@ -45,10 +45,17 @@ namespace Microsoft.DevSkim
             string file = Path.GetFileName(fileName).ToLower(CultureInfo.CurrentCulture);
             string ext = Path.GetExtension(file);
 
+            // Look for whole filename first
             foreach (LanguageInfo item in Instance.Languages)
             {
-                if (Array.Exists(item.Extensions, x => x.EndsWith(file)) ||
-                    Array.Exists(item.Extensions, x => x.EndsWith(ext)))
+                if (Array.Exists(item.Extensions, x => x.EndsWith(file)))
+                    return item.Name;
+            }
+
+            // Look for extension only
+            foreach (LanguageInfo item in Instance.Languages)
+            {
+                if (Array.Exists(item.Extensions, x => x.EndsWith(ext)))
                     return item.Name;
             }
 

@@ -47,5 +47,26 @@
             }
         ],
         "fix_it": []
-    }
+    },
+    {
+        "id": "DS172412",
+        "name": "Review unsafe code",
+        "tags": [
+            "Dotnet.Unsafecode",            
+        ],
+        "applies_to": [
+            "csharp",
+            "vb"
+        ],
+        "severity": "manual-review",
+        "description": "The unsafe keyword denotes an unsafe context, which is required for any operation involving pointers. Unsafe code in is not necessarily dangerous; it is just code whose safety cannot be verified by the CLR.",        
+        "rule_info": "https://github.com/microsoft/devskim/blob/master/guidance/DS172412.md",
+        "patterns": [
+            {
+                "pattern": "unsafe",
+                "type": "regex-word"
+            }
+        ],
+        "fix_it": []
+    }    
 ]

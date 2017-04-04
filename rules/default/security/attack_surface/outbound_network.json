@@ -5,7 +5,7 @@
         "tags": [
             "ThreatModel.Integration.HTTP"
         ],
-        "severity": "informational",
+        "severity": "manual-review",
         "description": "Inbound HTTP",
         "replacement": "",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS137038.md",

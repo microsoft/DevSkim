@@ -44,16 +44,16 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void AddRuleFromStringAndFile()
         {
-            StreamReader fs = File.OpenText(@"rules\custom\todo.json");
+            StreamReader fs = File.OpenText(@"rules\custom\quickfix.json");
             string rule = fs.ReadToEnd();
 
             // From String
-            Ruleset testRules = Ruleset.FromString(rule, "todo.json", null);
-            Assert.AreEqual(2, testRules.Count(), "FromString Count should be 1");
+            Ruleset testRules = Ruleset.FromString(rule, "string", null);
+            Assert.AreEqual(1, testRules.Count(), "FromString Count should be 1");
 
             // From File
-            testRules = Ruleset.FromFile(@"rules\custom\todo.json", null);
-            Assert.AreEqual(2, testRules.Count(), "FromFile Count should be 1");
+            testRules.AddFile(@"rules\custom\quickfix.json", null);
+            Assert.AreEqual(2, testRules.Count(), "FromFile Count should be 2");
 
             foreach (Rule r in testRules)
             {
