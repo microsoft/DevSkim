@@ -25,9 +25,9 @@ namespace Microsoft.DevSkim
         /// </summary>
         Moderate = 4,
         /// <summary>
-        /// Defense In Depth
+        /// Best Practice 
         /// </summary>
-        DefenseInDepth = 8,
+        BestPractice = 8,
         /// <summary>
         /// Issues that require manual review
         /// </summary>
@@ -46,8 +46,8 @@ namespace Microsoft.DevSkim
 
             switch (svr)
             {
-                case Severity.DefenseInDepth:
-                    svrstr = "defense-in-depth";
+                case Severity.BestPractice:
+                    svrstr = "best-practice";
                     break;
                 case Severity.ManualReview:
                     svrstr = "manual-review";

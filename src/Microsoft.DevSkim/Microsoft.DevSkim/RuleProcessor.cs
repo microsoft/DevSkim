@@ -24,7 +24,7 @@ namespace Microsoft.DevSkim
             EnableSuppressions = false;
             EnableCache = true;
 
-            SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.DefenseInDepth;
+            SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
         }
 
         /// <summary>

@@ -10,7 +10,7 @@
             "cpp",
             "objective-c"
         ],
-        "severity": "defense-in-depth",
+        "severity": "best-practice",
         "description": "If the value provided to malloc is the result of unsafe integer math, it can result in an exploitable condition. ",
         "replacement": "calloc handles the most common integer math in memory allocation (# of elements * their size) with error handling to prevent overflows in most implementations, and zeros out memory",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS161085.md",
@@ -40,7 +40,7 @@
             "cpp",
             "objective-c"
         ],
-        "severity": "defense-in-depth",
+        "severity": "best-practice",
         "description": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer",
         "replacement": "Use memcpy_s if possible.",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS121708.md",
