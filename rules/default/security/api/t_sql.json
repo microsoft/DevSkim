@@ -5,7 +5,7 @@
         "tags": [
             "API.T-SQL.Dangerous"
         ],
-        "applies_to": [
+        "applies_to": ["sql"
         ],
         "severity": "important",
         "description": "These stored procedures provide access to system resources and should only be used with trusted data.",
