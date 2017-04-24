@@ -52,7 +52,7 @@
         "id": "DS172412",
         "name": "Review unsafe code",
         "tags": [
-            "Dotnet.Unsafecode",            
+            "Dotnet.Unsafecode"            
         ],
         "applies_to": [
             "csharp",
