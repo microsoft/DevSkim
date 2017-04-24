@@ -19,7 +19,7 @@ namespace Microsoft.DevSkim
         /// Delegate for deserialization error handler
         /// </summary>
         /// <param name="sender">Sender object</param>
-        /// <param name="args">Error arguments</param>
+        /// <param name="e">Error arguments</param>
         public delegate void DeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
         
         /// <summary>

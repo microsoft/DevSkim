@@ -106,31 +106,31 @@ namespace Microsoft.DevSkim {
         ///   Looks up a localized string similar to [
         ///    {
         ///        &quot;name&quot;: &quot;c&quot;,
-        ///        &quot;extensions&quot;: [&quot;c&quot;]    
-        ///    },    
+        ///        &quot;extensions&quot;: [ &quot;.c&quot;, &quot;.h&quot; ]
+        ///    },
         ///    {
         ///        &quot;name&quot;: &quot;cpp&quot;,
-        ///        &quot;extensions&quot;: [&quot;cpp&quot;, &quot;h&quot;]    
+        ///        &quot;extensions&quot;: [ &quot;.cpp&quot;, &quot;.hpp&quot; ]
         ///    },
         ///    {
         ///        &quot;name&quot;: &quot;csharp&quot;,
-        ///        &quot;extensions&quot;: [&quot;cs&quot;]    
+        ///        &quot;extensions&quot;: [ &quot;.cs&quot; ]
         ///    },
         ///    {
         ///        &quot;name&quot;: &quot;vb&quot;,
-        ///        &quot;extensions&quot;: [&quot;vb&quot;]    
+        ///        &quot;extensions&quot;: [ &quot;.vb&quot; ]
         ///    },
         ///    {
         ///        &quot;name&quot;: &quot;python&quot;,
-        ///        &quot;extensions&quot;: [&quot;py&quot;]    
+        ///        &quot;extensions&quot;: [ &quot;.py&quot; ]
         ///    },
         ///    {
         ///        &quot;name&quot;: &quot;javascript&quot;,
-        ///        &quot;extensions&quot;: [&quot;js&quot;]    
+        ///        &quot;extensions&quot;: [ &quot;.js&quot; ]
         ///    },
         ///    {
         ///        &quot;name&quot;: &quot;javascriptreact&quot;,
-        ///        &quot; [rest of string was truncated]&quot;;.
+        ///        &quot;e [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string languages {
             get {

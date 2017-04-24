@@ -9,6 +9,9 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class Issue
     {
+        /// <summary>
+        /// Creates new instance of Issue
+        /// </summary>
         public Issue()
         {            
             Index = -1;
