@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Microsoft.DevSkim")]
 [assembly: AssemblyDescription("Language analyzers that provide inline security analysis")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft Corporation")]
+[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("Microsoft.DevSkim")]
 [assembly: AssemblyCopyright("Microsoft Corp. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
