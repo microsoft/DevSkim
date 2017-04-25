@@ -4,6 +4,7 @@
     <id>$id$</id>
     <version>$version$</version>
     <title>$title$</title>
+    <authors>$author$</authors>
     <owners>microsoft,nugettwcsecurity</owners>
     <licenseUrl>https://github.com/Microsoft/DevSkim/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/Microsoft/DevSkim</projectUrl>    
