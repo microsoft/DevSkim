@@ -77,7 +77,7 @@
     },
     {
         "name": "rust",
-        "extensions": [ ".rs", ".rlib" ]
+        "extensions": [ ".rs" ]
     },
     {
         "name": "jade",
