@@ -1,1 +1,43 @@
-[]
+[
+{
+        "id": "DS144886",
+        "name": "$_REQUEST should be avoided",
+        "tags": [
+            "Implementation.PHP"
+        ],
+        "applies_to": [
+            "php"
+        ],
+        "severity": "moderate",
+        "description": "$_REQUEST combines POST, GET, and cookie values in one array, making it easy for an attacker to modify a POST or cookie value by instead putting it in a GET and sending the URL to the victim",
+        "replacement": "Use $_POST, $_GET, $_COOKIE to scope to the expected delivery method for a value ",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS144886.md",
+        "patterns": [
+            {
+                "pattern": "\\$_REQUEST",
+                "type": "regex"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex-substitute",
+                "name": "Change to $_GET",
+                "search": "\\$_REQUEST",
+                "replace": "$$_GET"
+            },
+            {
+                "type": "regex-substitute",
+                "name": "Change to $_POST",
+                "search": "\\$_REQUEST",
+                "replace": "$$_POST"
+            },
+            {
+                "type": "regex-substitute",
+                "name": "Change to $_COOKIE",
+                "search": "\\$_REQUEST",
+                "replace": "$$_COOKIE"
+            }
+        ]
+    }
+
+]
