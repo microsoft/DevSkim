@@ -67,6 +67,43 @@
             }
         ]
     },
+     {
+        "id": "DS128420",
+        "overrides": [
+            "DS126858"
+        ],
+        "name": "Weak/Broken Hash Algorithm",
+        "tags": [
+            "Cryptography.HashAlgorithm.BrokenOrWeak"
+        ],
+        "severity": "critical",
+        "description": "A weak or broken hash algorithm was detected.",
+        "replacement": "When using hash(), use sha256 or sha512 as the algorithms instead",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS128420.md",
+        "applies_to": [
+            "php"
+        ],
+        "patterns": [
+            {
+                "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+                "type": "regex"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex-substitute",
+                "name": "Change to SHA-256",
+                "search": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+                "replace": "hash('sha256'$2);"
+            },
+            {
+                "type": "regex-substitute",
+                "name": "Change to SHA-512",
+                "search": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+                "replace": "hash('sha512'$2);"
+            }
+        ]
+    },
     {
         "id": "DS108647",
         "name": "Do not use broken/weak cryptographic hash algorithms",
