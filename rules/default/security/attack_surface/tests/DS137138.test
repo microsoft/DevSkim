@@ -1,0 +1,15 @@
+[NO]
+https://
+
+[YES]
+http://foo.com
+
+[NO] this is "https://foo.com"
+
+[YES] this is "http://foo.com"
+[YES] blah 'http://blah'
+
+[NO] <SCRIPT SRC="//BLAH"></SCRIPT>
+
+
+
