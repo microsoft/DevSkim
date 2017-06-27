@@ -112,6 +112,10 @@
         "extensions": [ ".sh" ]
     },
     {
+        "name": "sql",
+        "extensions": [ ".sql" ]
+    },
+    {
         "name": "plaintext",
         "extensions": [ ".txt" ]
     },

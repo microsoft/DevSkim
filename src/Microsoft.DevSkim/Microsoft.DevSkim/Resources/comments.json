@@ -36,7 +36,8 @@
   },
   {
     "language": [
-      "lua"
+        "lua",
+        "sql"
     ],    
     "preffix": "--",
     "suffix": ""

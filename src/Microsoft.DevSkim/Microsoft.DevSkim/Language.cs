@@ -41,7 +41,10 @@ namespace Microsoft.DevSkim
         /// <param name="fileName">File name</param>
         /// <returns>Language</returns>
         public static string FromFileName(string fileName)
-        {            
+        {
+            if (fileName == null)
+                return string.Empty;
+
             string file = Path.GetFileName(fileName).ToLower(CultureInfo.CurrentCulture);
             string ext = Path.GetExtension(file);
 
@@ -71,10 +74,13 @@ namespace Microsoft.DevSkim
         {
             string result = string.Empty;
 
-            foreach (Comment comment in Instance.Comments)
+            if (language != null)
             {
-                if (comment.Languages.Contains(language))
-                    return comment.Preffix;
+                foreach (Comment comment in Instance.Comments)
+                {
+                    if (comment.Languages.Contains(language))
+                        return comment.Preffix;
+                }
             }
 
             return result;
@@ -89,10 +95,13 @@ namespace Microsoft.DevSkim
         {
             string result = string.Empty;
 
-            foreach (Comment comment in Instance.Comments)
+            if (language != null)
             {
-                if (comment.Languages.Contains(language))
-                    return comment.Suffix;
+                foreach (Comment comment in Instance.Comments)
+                {
+                    if (comment.Languages.Contains(language))
+                        return comment.Suffix;
+                }
             }
 
             return result;
