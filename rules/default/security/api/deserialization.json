@@ -82,5 +82,33 @@
             }
         ],
         "fix_it": []
+    },
+    {
+        "id": "DS425040",
+        "name": "Do not deserialize untrusted data.",
+        "tags": [
+            "Deserialization"
+        ],
+        "applies_to": [
+            "csharp"
+        ],
+        "severity": "manual-review",
+        "description": "Deserializing attacker-supplied data using Newtonsoft.JSON with TypeNameHandling can result in code execution.",
+        "replacement": "Use TypeNameHandling.None",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "patterns": [
+            {
+                "pattern": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
+                "type": "regex"
+            }
+        ],
+        "fix_it": [
+            {
+                "type": "regex-substitute",
+                "name": "Change to TypeNameHandling.None",
+                "search": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
+                "replace": "TypeNameHandling.None"
+            }
+        ]
     }
 ]
