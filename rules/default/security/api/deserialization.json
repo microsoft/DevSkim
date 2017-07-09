@@ -1,0 +1,86 @@
+[
+    {
+        "id": "DS425000",
+        "name": "Do not deserialize untrusted data.",
+        "tags": [
+            "Deserialization"
+        ],
+        "applies_to": [
+            "python"
+        ],
+        "severity": "manual-review",
+        "description": "Deserializing attacker-supplied data using `pickle` or `cPickle` can result in code execution.",
+        "replacement": "Either add integrity protection or use a data format like JSON.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "patterns": [
+            {
+                "pattern": "pickle.load",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS425010",
+        "name": "Do not deserialize untrusted data.",
+        "tags": [
+            "Deserialization"
+        ],
+        "applies_to": [
+            "java"
+        ],
+        "severity": "manual-review",
+        "description": "Deserializing attacker-supplied data using `readObject` can result in code execution.",
+        "replacement": "Either add integrity protection or use a data format like JSON.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "patterns": [
+            {
+                "pattern": ".readObject(",
+                "type": "substring"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS425020",
+        "name": "Do not deserialize untrusted data.",
+        "tags": [
+            "Deserialization"
+        ],
+        "applies_to": [
+            "php"
+        ],
+        "severity": "manual-review",
+        "description": "Deserializing attacker-supplied data using `unserialize` can result in code execution.",
+        "replacement": "Either add integrity protection or use a data format like JSON.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "patterns": [
+            {
+                "pattern": "unserialize(",
+                "type": "string"
+            }
+        ],
+        "fix_it": []
+    },
+    {
+        "id": "DS425030",
+        "name": "Do not deserialize untrusted data.",
+        "tags": [
+            "Deserialization"
+        ],
+        "applies_to": [
+            "ruby"
+        ],
+        "severity": "manual-review",
+        "description": "Deserializing attacker-supplied data using YAML, Syck, or Marshall can result in code execution.",
+        "replacement": "Either add integrity protection or use a data format like JSON.",
+        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "patterns": [
+            {
+                "pattern": "(YAML|Syck|Marshal)\\.load",
+                "type": "regex"
+            }
+        ],
+        "fix_it": []
+    }
+]
