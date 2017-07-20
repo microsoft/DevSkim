@@ -23,7 +23,13 @@ namespace Microsoft.DevSkim
         /// <param name="text">Text to work with</param>        
         public Suppression(string text)
         {
-            _text = text ?? throw new ArgumentNullException("text");            
+            if (text == null)
+            {
+#pragma warning disable IDE0016 // Use 'throw' expression - not supported in < C# 7
+                throw new ArgumentNullException("text");
+#pragma warning restore IDE0016 // Use 'throw' expression
+            }
+            _text = text;
 
             ParseLine();
         }
