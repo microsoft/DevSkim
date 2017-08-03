@@ -9,7 +9,7 @@
         ],
         "severity": "important",
         "description": "These stored procedures provide access to system resources and should only be used with trusted data.",
-        "replacement": "",
+        "replacement": "Ideally, do not use these functions as they are quite unsafe.  If necessary, audit to ensure no untrusted data can reach this stored procedure",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS224000.md",
         "patterns": [
             {

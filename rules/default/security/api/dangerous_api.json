@@ -11,7 +11,7 @@
         ],
         "severity": "moderate",
         "description": "These functions are historically error-prone and have been associated with a significant number of vulnerabilities. Most of these functions have safer alternatives, such as replacing 'strcpy' with 'strlcpy' or 'strcpy_s'.",
-        "replacement": "",
+        "replacement": "Please see https://msdn.microsoft.com/en-us/library/bb288454.aspx for suggested alternitives",
         "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS154189.md",
         "patterns": [
             {
