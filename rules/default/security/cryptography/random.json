@@ -1,92 +1,114 @@
 [
     {
-        "id": "DS148264",
         "name": "Do not use weak/non-cryptographic random number generators",
+        "id": "DS148264",
+        "description": "Use cryptographic random numbers generators for anything even close to a security function.",
+        "recommendation": "Replacements depend on language.",
         "tags": [
             "Cryptography.PRNG.Weak"
         ],
         "severity": "important",
-        "description": "Use cryptographic random numbers generators for anything even close to a security function.",
-        "replacement": "Replacements depend on language.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS148264.md",
+        "_comment": "",
+        "rule_info": "DS148264.md",
         "patterns": [
             {
                 "pattern": "DUAL_EC_DRBG",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
-                "applies_to": [
-                    "javascript"
-                ],
                 "pattern": "pseudoRandomBytes",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "rand\\(",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "random_shuffle\\(",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "shuffle\\(",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "RAND_MAX",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "rand\\(\\s*\\)\\s*%",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "mwc1616",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "(32969|18273)",
-                "type": "regex-word"
+                "type": "regex-word",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "System.Random",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "Random\\(",
                 "type": "regex-word",
-                "applies_to": [
-                    "java"
-                ]
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "arc4random",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     },
     {
-        "id": "DS149435",
         "name": "Do not seed randomness based on system time or a static value.",
+        "id": "DS149435",
+        "description": "Passing a predicable value to srand() is very insecure and should be avoided.",
+        "recommendation": "",
         "tags": [
             "Cryptography.WeakRandomness"
         ],
         "severity": "critical",
-        "description": "Passing a predicable value to srand() is very insecure and should be avoided.",
-        "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS149435.md",
+        "_comment": "",
+        "rule_info": "DS149435.md",
         "patterns": [
             {
                 "pattern": "srand\\(\\s*time\\(",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "srand\\(\\s*\\d+\\s*\\)",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     }
 ]

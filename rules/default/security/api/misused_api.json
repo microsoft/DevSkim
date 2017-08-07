@@ -1,45 +1,50 @@
-[    {
-        "id": "DS179924",
+[
+    {
         "name": "Do not copy a FILE object (CERT FIO38-C)",
-        "tags": [
-            "CERT.FIO38-C",
-            "C.DangerousFunctionCall"
-        ],
+        "id": "DS179924",
+        "description": "The CERT Secure Coding Standard recommends that FILE objects not be copied.",
+        "recommendation": "Copy a pointer to the FILE object instead.",
         "applies_to": [
             "cpp",
             "c"
         ],
+        "tags": [
+            "CERT.FIO38-C",
+            "C.DangerousFunctionCall"
+        ],
         "severity": "important",
-        "description": "The CERT Secure Coding Standard recommends that FILE objects not be copied.",
-        "replacement": "Copy a pointer to the FILE object instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS179924.md",
+        "_comment": "",
+        "rule_info": "DS179924.md",
         "patterns": [
             {
                 "pattern": "FILE [a-z0-9_][^=]*=\\s*\\*",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     },
-     {
-        "id": "DS181731",
+    {
         "name": "Don't pass user input to this function",
-        "tags": [
-            "PHP.Injection"
-        ],
+        "id": "DS181731",
+        "description": "Don't pass user input to this function.",
+        "recommendation": "Validate this data before passing it to the function.",
         "applies_to": [
             "php"
         ],
+        "tags": [
+            "PHP.Injection"
+        ],
         "severity": "critical",
-        "description": "Don't pass user input to this function.",
-        "replacement": "Validate this data before passing it to the function.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS181731.md",
+        "_comment": "",
+        "rule_info": "DS181731.md",
         "patterns": [
             {
                 "pattern": "(include|require|include_once|require_once|passthru)\\s*\\(.*\\$\\_(GET|POST|REQUEST|COOKIES|FILES)",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     }
 ]

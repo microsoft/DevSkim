@@ -1,43 +1,60 @@
 [
-{
-        "id": "DS144886",
+    {
         "name": "$_REQUEST should be avoided",
-        "tags": [
-            "Implementation.PHP"
-        ],
+        "id": "DS144886",
+        "description": "$_REQUEST combines POST, GET, and cookie values in one array, making it easy for an attacker to modify a POST or cookie value by instead putting it in a GET and sending the URL to the victim",
+        "recommendation": "Use $_POST, $_GET, $_COOKIE to scope to the expected delivery method for a value ",
         "applies_to": [
             "php"
         ],
+        "tags": [
+            "Implementation.PHP"
+        ],
         "severity": "moderate",
-        "description": "$_REQUEST combines POST, GET, and cookie values in one array, making it easy for an attacker to modify a POST or cookie value by instead putting it in a GET and sending the URL to the victim",
-        "replacement": "Use $_POST, $_GET, $_COOKIE to scope to the expected delivery method for a value ",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS144886.md",
+        "_comment": "",
+        "rule_info": "DS144886.md",
         "patterns": [
             {
                 "pattern": "\\$_REQUEST",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to $_GET",
-                "search": "\\$_REQUEST",
-                "replace": "$$_GET"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "$$_GET",
+                "pattern": {
+                    "pattern": "\\$_REQUEST",
+                    "type": "regex",
+                    "scope": "code"
+                }
             },
             {
-                "type": "regex-substitute",
                 "name": "Change to $_POST",
-                "search": "\\$_REQUEST",
-                "replace": "$$_POST"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "$$_POST",
+                "pattern": {
+                    "pattern": "\\$_REQUEST",
+                    "type": "regex",
+                    "scope": "code"
+                }
             },
             {
-                "type": "regex-substitute",
                 "name": "Change to $_COOKIE",
-                "search": "\\$_REQUEST",
-                "replace": "$$_COOKIE"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "$$_COOKIE",
+                "pattern": {
+                    "pattern": "\\$_REQUEST",
+                    "type": "regex",
+                    "scope": "code"
+                }
             }
         ]
     }
-
 ]

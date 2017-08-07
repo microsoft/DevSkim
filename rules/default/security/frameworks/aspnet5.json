@@ -1,33 +1,43 @@
 [
     {
-        "id": "DS184626",
         "name": "All Controllers Should Derive From Controller.",
-        "tags": [
-            "Implementation.Web.ASPNET.ControllerWithoutExtendingController"
-        ],
+        "id": "DS184626",
+        "description": "All Controllers Should Derive From Controller.",
+        "recommendation": "Ensure this class derives from Controller.",
         "applies_to": [
             "csharp"
         ],
+        "tags": [
+            "Implementation.Web.ASPNET.ControllerWithoutExtendingController"
+        ],
         "severity": "moderate",
-        "description": "All Controllers Should Derive From Controller.",
-        "replacement": "Ensure this class derives from Controller.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS184626.md",
+        "_comment": "",
+        "rule_info": "DS184626.md",
         "patterns": [
             {
                 "pattern": "class [^\\s]+Controller\\s*:\\s*(?!.*?(Controller)).*",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "class [^\\s]+Controller[\\s{]*$",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to inherit from Controller",
-                "search": "(class [^\\s]+Controller)(([\\s{]*$)|(\\s*:\\s*(?!.*?(Controller)).*))",
-                "replace": "$1 : Controller"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "$1 : Controller",
+                "pattern": {
+                    "pattern": "(class [^\\s]+Controller)(([\\s{]*$)|(\\s*:\\s*(?!.*?(Controller)).*))",
+                    "type": "regex",
+                    "scope": "code"
+                }
             }
         ]
     }

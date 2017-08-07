@@ -1,19 +1,22 @@
-   [ {
-        "id": "DS176209",
+[
+    {
         "name": "Suspicious comment",
+        "id": "DS176209",
+        "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
+        "recommendation": "",
         "tags": [
             "Hygiene.Comment.Suspicious"
         ],
         "severity": "manual-review",
-        "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
-        "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS176209.md",
+        "_comment": "",
+        "rule_info": "DS176209.md",
         "patterns": [
             {
                 "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
-                "type": "regex-word"
+                "type": "regex-word",
+                "scope": "code",
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     }
 ]

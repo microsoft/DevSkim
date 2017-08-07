@@ -1,88 +1,114 @@
 [
     {
-        "id": "DS113853",
         "name": "Do not set a custom execution policy.",
+        "id": "DS113853",
+        "description": "The Set-ExecutionPolicy cmdlet has been used to dynamically change the permissions available to PowerShell.",
+        "recommendation": "Avoid elevating privileges if possible.",
+        "applies_to": [
+            "powershell"
+        ],
         "tags": [
             "ControlFlow.Permission.Evalation"
         ],
-        "applies_to": [
-            "powershell"
-        ],
         "severity": "moderate",
-        "description": "The Set-ExecutionPolicy cmdlet has been used to dynamically change the permissions available to PowerShell.",
-        "replacement": "Avoid elevating privileges if possible.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS113853.md",
+        "_comment": "",
+        "rule_info": "DS113853.md",
         "patterns": [
             {
                 "pattern": "Set-ExecutionPolicy",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     },
     {
-        "id": "DS104456",
         "name": "Use of restricted functions.",
-        "tags": [
-            "Implementation.Scripting.PowerShell.DangeousFunction"
-        ],
+        "id": "DS104456",
+        "description": "Use of restricted functions.",
+        "recommendation": "",
         "applies_to": [
             "powershell"
         ],
+        "tags": [
+            "Implementation.Scripting.PowerShell.DangeousFunction"
+        ],
         "severity": "important",
-        "description": "Use of restricted functions.",
-        "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS104456.md",
+        "_comment": "",
+        "rule_info": "DS104456.md",
         "patterns": [
             {
                 "pattern": "GetDelegateForFunctionPointer",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "System.Runtime.InteropServices.Marshal",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "WriteByte",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "Microsoft.Win32.UnsafeNativeMethods",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "PtrToStructure",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "StructureToPtr",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "(NtCreateThreadEx|CreateRemoteThread)",
-                "type": "regex-word"
+                "type": "regex-word",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "Invoke",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "VirtualProtect",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "iex",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "&\"",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             },
             {
                 "pattern": "& $",
-                "type": "string"
+                "type": "string",
+                "scope": "code",
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     }
 ]

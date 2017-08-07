@@ -1,231 +1,312 @@
 [
     {
-        "id": "DS126858",
         "name": "Weak/Broken Hash Algorithm",
+        "id": "DS126858",
+        "description": "A weak or broken hash algorithm was detected.",
+        "recommendation": "Consider switching to use SHA-256 or SHA-512 instead.",
         "tags": [
             "Cryptography.BannedHashAlgorithm"
         ],
         "severity": "critical",
-        "description": "A weak or broken hash algorithm was detected.",
-        "replacement": "Consider switching to use SHA-256 or SHA-512 instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS126858.md",
+        "_comment": "",
+        "rule_info": "DS126858.md",
         "patterns": [
             {
                 "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to \"SHA256\"",
-                "search": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
-                "replace": "SHA256"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "SHA256",
+                "pattern": {
+                    "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+                    "type": "regex",
+                    "scope": "code"
+                }
             },
             {
-                "type": "regex-substitute",
                 "name": "Change to \"SHA512\"",
-                "search": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
-                "replace": "SHA512"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "SHA512",
+                "pattern": {
+                    "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+                    "type": "regex",
+                    "scope": "code"
+                }
             }
         ]
     },
     {
+        "name": "Weak/Broken Hash Algorithm",
         "id": "DS197800",
+        "description": "A weak or broken hash algorithm was detected.",
+        "recommendation": "Use CC_SHA256 or CC_SHA512 instead.",
         "overrides": [
             "DS126858"
         ],
-        "name": "Weak/Broken Hash Algorithm",
-        "tags": [
-            "Cryptography.HashAlgorithm.BrokenOrWeak"
-        ],
-        "severity": "critical",
-        "description": "A weak or broken hash algorithm was detected.",
-        "replacement": "Use CC_SHA256 or CC_SHA512 instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS197800.md",
         "applies_to": [
             "objective-c"
         ],
+        "tags": [
+            "Cryptography.HashAlgorithm.BrokenOrWeak"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS197800.md",
         "patterns": [
             {
                 "pattern": "CC_(MD2|MD4|MD5|SHA1)",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to SHA-256",
-                "search": "CC_(MD2|MD4|MD5|SHA1)",
-                "replace": "CC_SHA256"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "CC_SHA256",
+                "pattern": {
+                    "pattern": "CC_(MD2|MD4|MD5|SHA1)",
+                    "type": "regex",
+                    "scope": "code"
+                }
             },
             {
-                "type": "regex-substitute",
                 "name": "Change to SHA-512",
-                "search": "CC_(MD2|MD4|MD5|SHA1)",
-                "replace": "CC_SHA512"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "CC_SHA512",
+                "pattern": {
+                    "pattern": "CC_(MD2|MD4|MD5|SHA1)",
+                    "type": "regex",
+                    "scope": "code"
+                }
             }
         ]
     },
-     {
+    {
+        "name": "Weak/Broken Hash Algorithm",
         "id": "DS128420",
+        "description": "A weak or broken hash algorithm was detected.",
+        "recommendation": "When using hash(), use sha256 or sha512 as the algorithms instead",
         "overrides": [
             "DS126858"
         ],
-        "name": "Weak/Broken Hash Algorithm",
-        "tags": [
-            "Cryptography.HashAlgorithm.BrokenOrWeak"
-        ],
-        "severity": "critical",
-        "description": "A weak or broken hash algorithm was detected.",
-        "replacement": "When using hash(), use sha256 or sha512 as the algorithms instead",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS128420.md",
         "applies_to": [
             "php"
         ],
+        "tags": [
+            "Cryptography.HashAlgorithm.BrokenOrWeak"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS128420.md",
         "patterns": [
             {
                 "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to SHA-256",
-                "search": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
-                "replace": "hash('sha256'$2);"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "hash('sha256'$2);",
+                "pattern": {
+                    "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+                    "type": "regex",
+                    "scope": "code"
+                }
             },
             {
-                "type": "regex-substitute",
                 "name": "Change to SHA-512",
-                "search": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
-                "replace": "hash('sha512'$2);"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "hash('sha512'$2);",
+                "pattern": {
+                    "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+                    "type": "regex",
+                    "scope": "code"
+                }
             }
         ]
     },
     {
-        "id": "DS108647",
         "name": "Do not use broken/weak cryptographic hash algorithms",
-        "tags": [
-            "Cryptography.HashAlgorithm.BrokenOrWeak"
-        ],
-        "severity": "critical",
+        "id": "DS108647",
         "description": "Avoid using broken or weak hash algorithms.",
-        "replacement": "Use Digest::SHA256 or Digest::SHA512",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS108647.md",
+        "recommendation": "Use Digest::SHA256 or Digest::SHA512",
         "applies_to": [
             "ruby"
         ],
-        "patterns": [
-            {
-                "pattern": "Digest::(MD5|RMD160|SHA1)",
-                "type": "regex"
-            }
-        ],
-        "fix_it": [
-            {
-                "type": "regex-substitute",
-                "name": "Change to SHA-256",
-                "search": "Digest::(MD5|RMD160|SHA1)",
-                "replace": "Digest::SHA256"
-            },
-            {
-                "type": "regex-substitute",
-                "name": "Change to SHA-512",
-                "search": "Digest::(MD5|RMD160|SHA1)",
-                "replace": "Digest::SHA512"
-            }
-        ]
-    },
-    {
-        "id": "DS196098",
-        "overrides": [
-            "DS126858"
-        ],
-        "name": "Do not use broken/weak cryptographic hash algorithms",
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
         "severity": "critical",
-        "description": "Avoid using broken or weak hash algorithms.",
-        "replacement": "Use hashlib.sha256 instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS196098.md",
-        "applies_to": [
-            "python"
-        ],
+        "_comment": "",
+        "rule_info": "DS108647.md",
         "patterns": [
             {
-                "pattern": "(md5|sha)\\.new\\(",
-                "type": "regex"
+                "pattern": "Digest::(MD5|RMD160|SHA1)",
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
-                "name": "Change to hashlib.sha256",
-                "search": "(md5|sha)\\.new\\(",
-                "replace": "hashlib.sha256("
+                "name": "Change to SHA-256",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "Digest::SHA256",
+                "pattern": {
+                    "pattern": "Digest::(MD5|RMD160|SHA1)",
+                    "type": "regex",
+                    "scope": "code"
+                }
             },
             {
-                "type": "regex-substitute",
-                "name": "Change to hashlib.sha512",
-                "search": "(md5|sha)\\.new\\(",
-                "replace": "hashlib.sha512("
+                "name": "Change to SHA-512",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "Digest::SHA512",
+                "pattern": {
+                    "pattern": "Digest::(MD5|RMD160|SHA1)",
+                    "type": "regex",
+                    "scope": "code"
+                }
             }
         ]
     },
     {
-        "id": "DS168931",
+        "name": "Do not use broken/weak cryptographic hash algorithms",
+        "id": "DS196098",
+        "description": "Avoid using broken or weak hash algorithms.",
+        "recommendation": "Use hashlib.sha256 instead.",
         "overrides": [
             "DS126858"
-        ],        
-        "name": "Do not use broken/weak cryptographic hash algorithms",
+        ],
+        "applies_to": [
+            "python"
+        ],
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS196098.md",
+        "patterns": [
+            {
+                "pattern": "(md5|sha)\\.new\\(",
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Change to hashlib.sha256",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "hashlib.sha256(",
+                "pattern": {
+                    "pattern": "(md5|sha)\\.new\\(",
+                    "type": "regex",
+                    "scope": "code"
+                }
+            },
+            {
+                "name": "Change to hashlib.sha512",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "hashlib.sha512(",
+                "pattern": {
+                    "pattern": "(md5|sha)\\.new\\(",
+                    "type": "regex",
+                    "scope": "code"
+                }
+            }
+        ]
+    },
+    {
+        "name": "Do not use broken/weak cryptographic hash algorithms",
+        "id": "DS168931",
+        "description": "A potentially weak hashing algorithm was used.",
+        "recommendation": "Use SHA-256 instead.",
+        "overrides": [
+            "DS126858"
         ],
         "applies_to": [
             "csharp"
         ],
+        "tags": [
+            "Cryptography.HashAlgorithm.BrokenOrWeak"
+        ],
         "severity": "critical",
-        "description": "A potentially weak hashing algorithm was used.",
-        "replacement": "Use SHA-256 instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS168931.md",
+        "_comment": "",
+        "rule_info": "DS168931.md",
         "patterns": [
             {
                 "pattern": "MD5CryptoServiceProvider",
-                "type": "substring"
+                "type": "substring",
+                "scope": "code",
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to SHA-256",
-                "search": "MD5CryptoServiceProvider",
-                "replace": "SHA256CryptoServiceProvider"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "SHA256CryptoServiceProvider",
+                "pattern": {
+                    "pattern": "MD5CryptoServiceProvider",
+                    "type": "regex",
+                    "scope": "code"
+                }
             },
             {
-                "type": "regex-substitute",
                 "name": "Change to SHA-512",
-                "search": "MD5CryptoServiceProvider",
-                "replace": "SHA512CryptoServiceProvider"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "SHA512CryptoServiceProvider",
+                "pattern": {
+                    "pattern": "MD5CryptoServiceProvider",
+                    "type": "regex",
+                    "scope": "code"
+                }
             }
         ]
     },
     {
-        "id": "DS197836",
         "name": "Do not take the hash of low-entropy content.",
+        "id": "DS197836",
+        "description": "Taking a hash of a time value is suspicious, as there is insufficient entropy to protect against brute-force attacks.",
+        "recommendation": "",
         "tags": [
             "Cryptography.HashAlgorithm.InsufficientEntropy"
         ],
         "severity": "important",
-        "description": "Taking a hash of a time value is suspicious, as there is insufficient entropy to protect against brute-force attacks.",
-        "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS197836.md",
+        "_comment": "",
+        "rule_info": "DS197836.md",
         "patterns": [
             {
                 "pattern": "(MD4|MD5|(SHA(1|224|256|384|512))).*Time",
-                "type": "regex"
+                "type": "regex",
+                "scope": "code",
+                "_comment": ""
             }
         ]
     }
