@@ -19,7 +19,9 @@
             {
                 "pattern": "(sprintf|_getts|_getws|_snprintf|_sntprintf|_snwprintf|_stprintf|_tcsat|_tcscpy|_tcslen|_tcsncpy|_vsnprintf|_vsntprintf|_vsnwprintf|_vstprintf|alloca|asctime|atof|atoi|atoll|bsearch|ctime|fopen|fprintf|freopen|fscanf|fwprintf|fwscanf|getenv|getwd|gmtime|localtime|lstrcat|lstrcpy|mbsrtowcs|mbstowcs|memmove|mktemp|printf|qsort|rewind|scanf|setbuf|sscanf|strcatbuff|strerror|strtok|swprintf|swscanf|tmpnam|vfprintf|vfscanf|vfwscanf|vprintf|vscanf|vsnprintf|vsprintf|vsscanf|vswprintf|vswscanf|vwprintf|vwscanf|wcrtomb|wcrtombs|wcscat|wcscpy|wcslen|wcsncat|wcsncpy|wcsrtombs|wcstok|wctomb|wmemcpy|wmemmove|wnsprintf|wprintf|wscanf|wsprintf|wvnsprintf|wvsprintf)",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -47,7 +49,9 @@
             {
                 "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -60,7 +64,10 @@
                 "pattern": {
                     "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -71,7 +78,10 @@
                 "pattern": {
                     "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -99,7 +109,9 @@
             {
                 "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -112,7 +124,10 @@
                 "pattern": {
                     "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -123,7 +138,10 @@
                 "pattern": {
                     "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -151,7 +169,9 @@
             {
                 "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -164,7 +184,10 @@
                 "pattern": {
                     "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -175,7 +198,10 @@
                 "pattern": {
                     "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -203,7 +229,9 @@
             {
                 "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -216,7 +244,10 @@
                 "pattern": {
                     "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -227,7 +258,10 @@
                 "pattern": {
                     "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -255,7 +289,9 @@
             {
                 "pattern": "\\bgets\\s*\\(([^,\\)]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -268,7 +304,10 @@
                 "pattern": {
                     "pattern": "\\bgets\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -279,7 +318,10 @@
                 "pattern": {
                     "pattern": "\\bgets\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

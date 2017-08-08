@@ -14,13 +14,17 @@
             {
                 "pattern": "Integrity.*optional",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "Encryption.*optional",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -43,49 +47,65 @@
             {
                 "pattern": "setValidatesSecureCertificate:\\s*NO",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "setAllowsAnyHTTPSCertificate:\\s*YES",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "allowsAnyHTTPSCertificate\\s*=\\s*YES",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "setValidatesSecureCertificate:\\s*NO",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "validatesSecureCertificate\\s*=\\s*NO",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "continueWithoutCredentialForAuthenticationChallenge",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "kCFStreamSSL(Level|AllowsExpiredCertificates|AllowsExpiredRoots|AllowsAnyRoot|ValidatesCertificateChain|PeerName)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "kCFStreamPropertySSLSettings",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -108,7 +128,9 @@
             {
                 "pattern": "OpenSSL::SSL::VERIFY_NONE",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -131,13 +153,17 @@
             {
                 "pattern": "\\.check_hostname\\s*=\\s*False",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "disable_ssl_certificate_validation\\s*=\\s*True",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -160,37 +186,49 @@
             {
                 "pattern": "SECURITY_FLAG_IGNORE_CERT_CN_INVALID",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_CERT_DATE_INVALID",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_REVOCATION",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_UNKNOWN_CA",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_WRONG_USAGE",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -213,25 +251,33 @@
             {
                 "pattern": "certificateValidationMode=\"None\"",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "checkCertificateName=\"false\"",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "checkCertificateRevocationList=\"false\"",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "encryptionPolicy=\"(AllowNoEncryption|NoEncryption)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -254,7 +300,9 @@
             {
                 "pattern": "NODE_TLS_REJECT_UNAUTHORIZED|rejectUnauthorized",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -277,7 +325,9 @@
             {
                 "pattern": "(TrustManager|getInsecure|HostnameVerifier|AbstractVerifier|AllowAllHostnameVerifier|BrowserCompatHostnameVerifier|StrictHostnameVerifier|onReceivedSslError|insecuresocketfactory|customhostnameverifier)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -300,7 +350,9 @@
             {
                 "pattern": "::ServerCertificateValidationCallback\\s*=\\s*{\\s*\\$true\\s*}",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]

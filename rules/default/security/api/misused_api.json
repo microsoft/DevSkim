@@ -19,7 +19,9 @@
             {
                 "pattern": "FILE [a-z0-9_][^=]*=\\s*\\*",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -42,7 +44,9 @@
             {
                 "pattern": "(include|require|include_once|require_once|passthru)\\s*\\(.*\\$\\_(GET|POST|REQUEST|COOKIES|FILES)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]

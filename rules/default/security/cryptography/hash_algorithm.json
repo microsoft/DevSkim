@@ -14,7 +14,9 @@
             {
                 "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -27,7 +29,10 @@
                 "pattern": {
                     "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -38,7 +43,10 @@
                 "pattern": {
                     "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -64,7 +72,9 @@
             {
                 "pattern": "CC_(MD2|MD4|MD5|SHA1)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -77,7 +87,10 @@
                 "pattern": {
                     "pattern": "CC_(MD2|MD4|MD5|SHA1)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -88,7 +101,10 @@
                 "pattern": {
                     "pattern": "CC_(MD2|MD4|MD5|SHA1)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -114,7 +130,9 @@
             {
                 "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -127,7 +145,10 @@
                 "pattern": {
                     "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -138,7 +159,10 @@
                 "pattern": {
                     "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -161,7 +185,9 @@
             {
                 "pattern": "Digest::(MD5|RMD160|SHA1)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -174,7 +200,10 @@
                 "pattern": {
                     "pattern": "Digest::(MD5|RMD160|SHA1)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -185,7 +214,10 @@
                 "pattern": {
                     "pattern": "Digest::(MD5|RMD160|SHA1)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -211,7 +243,9 @@
             {
                 "pattern": "(md5|sha)\\.new\\(",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -224,7 +258,10 @@
                 "pattern": {
                     "pattern": "(md5|sha)\\.new\\(",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -235,7 +272,10 @@
                 "pattern": {
                     "pattern": "(md5|sha)\\.new\\(",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -261,7 +301,9 @@
             {
                 "pattern": "MD5CryptoServiceProvider",
                 "type": "substring",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -274,7 +316,10 @@
                 "pattern": {
                     "pattern": "MD5CryptoServiceProvider",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -285,7 +330,10 @@
                 "pattern": {
                     "pattern": "MD5CryptoServiceProvider",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -305,7 +353,9 @@
             {
                 "pattern": "(MD4|MD5|(SHA(1|224|256|384|512))).*Time",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]

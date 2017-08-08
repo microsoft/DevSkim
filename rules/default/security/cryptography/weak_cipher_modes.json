@@ -14,7 +14,9 @@
             {
                 "pattern": "(ECB|OFB|CFB|CTS|PCBC|GMAC|XCBC|IACBC|IAPM|EAX|OCB|CWC|AEAD|LRW|XEX|XTS|CMC|EME|CBCMAC|OMAC|PMAC)",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -37,7 +39,9 @@
             {
                 "pattern": "MCRYPT_MODE_(ECB|CFB|OFB|NOFB|STREAM)",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -50,7 +54,10 @@
                 "pattern": {
                     "pattern": "MCRYPT_MODE_(ECB|CFB|OFB|NOFB|STREAM)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

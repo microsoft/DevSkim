@@ -17,13 +17,17 @@
             {
                 "pattern": "class [^\\s]+Controller\\s*:\\s*(?!.*?(Controller)).*",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "class [^\\s]+Controller[\\s{]*$",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -36,7 +40,10 @@
                 "pattern": {
                     "pattern": "(class [^\\s]+Controller)(([\\s{]*$)|(\\s*:\\s*(?!.*?(Controller)).*))",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

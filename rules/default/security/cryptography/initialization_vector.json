@@ -17,7 +17,9 @@
             {
                 "pattern": "mcrypt_encrypt\\s*\\([^,]+,[^,]+,[^,]+,[^,]+\\);",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -30,7 +32,10 @@
                 "pattern": {
                     "pattern": "(mcrypt_encrypt\\s*\\([^,]+,[^,]+,[^,]+,[^,]+)(\\);)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -53,7 +58,9 @@
             {
                 "pattern": "mcrypt_create_iv\\s*\\(\\s*\\d.*",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]

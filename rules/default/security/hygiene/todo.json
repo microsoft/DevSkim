@@ -14,7 +14,9 @@
             {
                 "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]

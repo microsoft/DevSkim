@@ -14,13 +14,17 @@
             {
                 "pattern": "localhost",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "127.0.0.1",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]

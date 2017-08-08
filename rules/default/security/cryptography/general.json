@@ -14,25 +14,33 @@
             {
                 "pattern": "encrypt=false",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "encryption=false",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "unencrypted.*password",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             },
             {
                 "pattern": "TODO.*crypt",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -55,7 +63,9 @@
             {
                 "pattern": "InitializeSecurityContext",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]

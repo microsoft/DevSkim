@@ -19,7 +19,9 @@
             {
                 "pattern": "\\bmalloc\\s*\\(([^,\\)]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -32,7 +34,10 @@
                 "pattern": {
                     "pattern": "\\bmalloc\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -57,7 +62,9 @@
             {
                 "pattern": "\\bmemcpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -70,7 +77,10 @@
                 "pattern": {
                     "pattern": "\\bmemcpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -98,7 +108,9 @@
             {
                 "pattern": "\\bstrlen\\s*\\(([^,\\)]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -111,7 +123,10 @@
                 "pattern": {
                     "pattern": "\\bstrlen\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -122,7 +137,10 @@
                 "pattern": {
                     "pattern": "\\bstrlen\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

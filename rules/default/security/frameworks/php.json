@@ -17,7 +17,9 @@
             {
                 "pattern": "\\$_REQUEST",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -30,7 +32,10 @@
                 "pattern": {
                     "pattern": "\\$_REQUEST",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -41,7 +46,10 @@
                 "pattern": {
                     "pattern": "\\$_REQUEST",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             },
             {
@@ -52,7 +60,10 @@
                 "pattern": {
                     "pattern": "\\$_REQUEST",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

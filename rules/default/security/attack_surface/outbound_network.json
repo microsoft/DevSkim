@@ -17,7 +17,9 @@
             {
                 "pattern": "Net::HTTP",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -37,7 +39,9 @@
             {
                 "pattern": "http:",
                 "type": "substring",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -50,7 +54,10 @@
                 "pattern": {
                     "pattern": "http:",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

@@ -17,7 +17,9 @@
             {
                 "pattern": "mcrypt",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -43,7 +45,9 @@
             {
                 "pattern": "TripleDESCryptoServiceProvider",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -56,7 +60,10 @@
                 "pattern": {
                     "pattern": "TripleDESCryptoServiceProvider",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -79,7 +86,9 @@
             {
                 "pattern": "DESCryptoServiceProvider",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -92,7 +101,10 @@
                 "pattern": {
                     "pattern": "DESCryptoServiceProvider",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -115,7 +127,9 @@
             {
                 "pattern": "RC2CryptoServiceProvider",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -128,7 +142,10 @@
                 "pattern": {
                     "pattern": "RC2CryptoServiceProvider",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

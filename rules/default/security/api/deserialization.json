@@ -17,7 +17,9 @@
             {
                 "pattern": "pickle.load",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -40,7 +42,9 @@
             {
                 "pattern": ".readObject(",
                 "type": "substring",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -63,7 +67,9 @@
             {
                 "pattern": "unserialize(",
                 "type": "string",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -86,7 +92,9 @@
             {
                 "pattern": "(YAML|Syck|Marshal)\\.load",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -109,7 +117,9 @@
             {
                 "pattern": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -122,7 +132,10 @@
                 "pattern": {
                     "pattern": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

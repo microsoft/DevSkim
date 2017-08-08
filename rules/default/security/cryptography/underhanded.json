@@ -14,13 +14,17 @@
             {
                 "pattern": "242070db|02441453|db702024|53144402|3572445317",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": "MD5"
             },
             {
                 "pattern": "98BADCFE|FEDCBC98|C3D2E1F0|F0E1D2C3",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": "SHA-1"
             }
         ]

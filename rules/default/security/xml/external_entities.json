@@ -17,7 +17,9 @@
             {
                 "pattern": "shouldResolveExternalEntities\\s*=\\s*YES",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -30,7 +32,10 @@
                 "pattern": {
                     "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(YES)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -53,7 +58,9 @@
             {
                 "pattern": "shouldResolveExternalEntities\\s*=\\s*TRUE",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -66,7 +73,10 @@
                 "pattern": {
                     "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(TRUE)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]
@@ -89,7 +99,9 @@
             {
                 "pattern": "setShouldResolveExternalEntities:\\s*YES",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ],
@@ -102,7 +114,10 @@
                 "pattern": {
                     "pattern": "(setShouldResolveExternalEntities:\\s*)(YES)",
                     "type": "regex",
-                    "scope": "code"
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
                 }
             }
         ]

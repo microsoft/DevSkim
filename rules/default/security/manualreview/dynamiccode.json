@@ -23,7 +23,9 @@
             {
                 "pattern": "\\beval\\(([^,]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -48,7 +50,9 @@
             {
                 "pattern": "\\bsetTimeout\\(([^,]+)\\)",
                 "type": "regex",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
@@ -72,7 +76,9 @@
             {
                 "pattern": "unsafe",
                 "type": "regex-word",
-                "scope": "code",
+                "scopes": [
+                    "code"
+                ],
                 "_comment": ""
             }
         ]
