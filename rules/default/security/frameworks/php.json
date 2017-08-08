@@ -67,5 +67,76 @@
                 }
             }
         ]
+    },
+     {
+        "name": "XSS: Do not echo unencoded GET/POST/COOKIE values",
+        "id": "DS163877",
+        "description": "When using $_GET/POST/COOKIE values via echo, failure to  encode the values will lead to Cross Site Scription (XSS), where a malicious party can inject script into the webpage.",
+        "recommendation": "HTML Entity Encode (for content going into HTML) or URL Encode (for content going into JavaScript variables) the data",
+        "applies_to": [
+            "php"
+        ],
+        "tags": [
+            "Implementation.PHP"
+        ],
+        "severity": "moderate",
+        "_comment": "",
+        "rule_info": "DS163877.md",
+        "patterns": [
+            {
+                "pattern": "\becho.*(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\]).*",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "conditions" : [
+            {
+                "pattern" : 
+                {
+                    "pattern": "\\b(htmlentities|htmlspecialchars|rawurlencode|urlencode)\\s*\\(.*(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\]).*\\)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                },
+                "search_in":"finding-only",
+                "negate_finding": true,
+                "_comment": "" 
+            }          
+        ],
+        "fix_its": [
+            {
+                "name": "HTML Entity encode the data",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "htmlentities($1)",
+                "pattern": {
+                    "pattern": "(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            },
+            {
+                "name": "URL encode the data",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "rawurlencode($1)",
+                "pattern": {
+                    "pattern": "(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            }
+        ]
     }
 ]
