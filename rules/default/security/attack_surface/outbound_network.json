@@ -42,8 +42,24 @@
                 "scopes": [
                     "code"
                 ],
+                "modifiers": ["i"],
                 "_comment": ""
             }
+        ],
+        "conditions" : [
+            {
+                "pattern" : 
+                {
+                    "pattern": "xmlns",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                },
+                "negate_finding": true,
+                "_comment": "" 
+            }          
         ],
         "fix_its": [
             {
@@ -57,6 +73,7 @@
                     "scopes": [
                         "code"
                     ],
+                    "modifiers": ["i"],
                     "_comment": ""
                 }
             }
