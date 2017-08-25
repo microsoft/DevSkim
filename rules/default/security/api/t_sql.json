@@ -3,7 +3,7 @@
         "name": "Dangerous T-SQL Command",
         "id": "DS224000",
         "description": "These stored procedures provide access to system resources and should only be used with trusted data.",
-        "recommendation": "",
+        "recommendation": "Ideally, do not use these functions as they are quite unsafe.  If necessary, audit to ensure no untrusted data can reach this stored procedure",
         "applies_to": [
             "sql"
         ],
