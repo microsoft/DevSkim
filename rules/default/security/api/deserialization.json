@@ -1,113 +1,142 @@
 [
     {
-        "id": "DS425000",
         "name": "Do not deserialize untrusted data.",
-        "tags": [
-            "Deserialization"
-        ],
+        "id": "DS425000",
+        "description": "Deserializing attacker-supplied data using `pickle` or `cPickle` can result in code execution.",
+        "recommendation": "Either add integrity protection or use a data format like JSON.",
         "applies_to": [
             "python"
         ],
+        "tags": [
+            "Deserialization"
+        ],
         "severity": "manual-review",
-        "description": "Deserializing attacker-supplied data using `pickle` or `cPickle` can result in code execution.",
-        "replacement": "Either add integrity protection or use a data format like JSON.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "_comment": "",
+        "rule_info": "DS425000.md",
         "patterns": [
             {
                 "pattern": "pickle.load",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     },
     {
-        "id": "DS425010",
         "name": "Do not deserialize untrusted data.",
-        "tags": [
-            "Deserialization"
-        ],
+        "id": "DS425010",
+        "description": "Deserializing attacker-supplied data using `readObject` can result in code execution.",
+        "recommendation": "Either add integrity protection or use a data format like JSON.",
         "applies_to": [
             "java"
         ],
+        "tags": [
+            "Deserialization"
+        ],
         "severity": "manual-review",
-        "description": "Deserializing attacker-supplied data using `readObject` can result in code execution.",
-        "replacement": "Either add integrity protection or use a data format like JSON.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "_comment": "",
+        "rule_info": "DS425000.md",
         "patterns": [
             {
                 "pattern": ".readObject(",
-                "type": "substring"
+                "type": "substring",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     },
     {
-        "id": "DS425020",
         "name": "Do not deserialize untrusted data.",
-        "tags": [
-            "Deserialization"
-        ],
+        "id": "DS425020",
+        "description": "Deserializing attacker-supplied data using `unserialize` can result in code execution.",
+        "recommendation": "Either add integrity protection or use a data format like JSON.",
         "applies_to": [
             "php"
         ],
+        "tags": [
+            "Deserialization"
+        ],
         "severity": "manual-review",
-        "description": "Deserializing attacker-supplied data using `unserialize` can result in code execution.",
-        "replacement": "Either add integrity protection or use a data format like JSON.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "_comment": "",
+        "rule_info": "DS425000.md",
         "patterns": [
             {
                 "pattern": "unserialize(",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
-        ],
-        "fix_it": []
+        ]
     },
     {
-        "id": "DS425030",
         "name": "Do not deserialize untrusted data.",
-        "tags": [
-            "Deserialization"
-        ],
+        "id": "DS425030",
+        "description": "Deserializing attacker-supplied data using YAML, Syck, or Marshall can result in code execution.",
+        "recommendation": "Either add integrity protection or use a data format like JSON.",
         "applies_to": [
             "ruby"
         ],
-        "severity": "manual-review",
-        "description": "Deserializing attacker-supplied data using YAML, Syck, or Marshall can result in code execution.",
-        "replacement": "Either add integrity protection or use a data format like JSON.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
-        "patterns": [
-            {
-                "pattern": "(YAML|Syck|Marshal)\\.load",
-                "type": "regex"
-            }
-        ],
-        "fix_it": []
-    },
-    {
-        "id": "DS425040",
-        "name": "Do not deserialize untrusted data.",
         "tags": [
             "Deserialization"
         ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS425000.md",
+        "patterns": [
+            {
+                "pattern": "(YAML|Syck|Marshal)\\.load",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Do not deserialize untrusted data.",
+        "id": "DS425040",
+        "description": "Deserializing attacker-supplied data using Newtonsoft.JSON with TypeNameHandling can result in code execution.",
+        "recommendation": "Use TypeNameHandling.None",
         "applies_to": [
             "csharp"
         ],
+        "tags": [
+            "Deserialization"
+        ],
         "severity": "manual-review",
-        "description": "Deserializing attacker-supplied data using Newtonsoft.JSON with TypeNameHandling can result in code execution.",
-        "replacement": "Use TypeNameHandling.None",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS425000.md",
+        "_comment": "",
+        "rule_info": "DS425000.md",
         "patterns": [
             {
                 "pattern": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
-                "type": "regex"
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to TypeNameHandling.None",
-                "search": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
-                "replace": "TypeNameHandling.None"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "TypeNameHandling.None",
+                "pattern": {
+                    "pattern": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
             }
         ]
     }

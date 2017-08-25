@@ -1,59 +1,72 @@
 [
     {
-        "id": "DS101155",
         "name": "Disabled certificate validation",
+        "id": "DS101155",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "description": "Extend default certificate validation, but do not disable or override default rules.",
-        "replacement": "Always use a valid certificate, even during testing.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101155.md",
+        "_comment": "",
+        "rule_info": "DS101155.md",
         "patterns": [
             {
                 "pattern": "encrypt=false",
                 "type": "string",
-                "subtype": [
-                    "string"
-                ]
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             },
             {
                 "pattern": "encryption=false",
                 "type": "string",
-                "subtype": [
-                    "string"
-                ]
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             },
             {
                 "pattern": "unencrypted.*password",
-                "type": "regex"
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             },
             {
                 "pattern": "TODO.*crypt",
                 "type": "regex",
-                "subtype": [
-                    "comment"
-                ]
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
         ]
     },
     {
-        "id": "DS101159",
         "name": "Initializing Security Context",
+        "id": "DS101159",
+        "description": "SecurityContext initialization, look here for cryptography functions.",
+        "recommendation": "",
+        "applies_to": [
+            "cpp"
+        ],
         "tags": [
             "Cryptography.SecurityContext.Initialization"
         ],
         "severity": "manual-review",
-        "description": "SecurityContext initialization, look here for cryptography functions.",
-        "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101159.md",
-        "applies_to": [
-            "cpp"
-        ],
+        "_comment": "",
+        "rule_info": "DS101159.md",
         "patterns": [
             {
                 "pattern": "InitializeSecurityContext",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
         ]
     }

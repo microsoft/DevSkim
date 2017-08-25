@@ -1,22 +1,32 @@
-    [{
-        "id": "DS162092",
+[
+    {
         "name": "Do not leave debug code in production",
+        "id": "DS162092",
+        "description": "Accessing localhost could indicate debug code, or could hinder scaling.",
+        "recommendation": "",
         "tags": [
             "Hygiene.Network.AccessingLocalhost"
         ],
         "severity": "manual-review",
-        "description": "Accessing localhost could indicate debug code, or could hinder scaling.",
-        "replacement": "",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS162092.md",
+        "_comment": "",
+        "rule_info": "DS162092.md",
         "patterns": [
             {
                 "pattern": "localhost",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             },
             {
                 "pattern": "127.0.0.1",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
-        ],
-        "fix_it": []
-    }]
+        ]
+    }
+]

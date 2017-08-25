@@ -1,114 +1,153 @@
 [
     {
-        "id": "DS175862",
         "name": "Do not use the mcrypt module, use OpenSSL instead.",
-        "tags": [
-            "Cryptography.Library.Abandoned"
-        ],
+        "id": "DS175862",
+        "description": "The PHP mcrypt module is based on libmcrypt, which has been abanonded since 2007.",
+        "recommendation": "OpenSSL",
         "applies_to": [
             "php"
         ],
+        "tags": [
+            "Cryptography.Library.Abandoned"
+        ],
         "severity": "moderate",
-        "description": "The PHP mcrypt module is based on libmcrypt, which has been abanonded since 2007.",
-        "replacement": "OpenSSL",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS175862.md",
+        "_comment": "",
+        "rule_info": "DS175862.md",
         "patterns": [
             {
                 "pattern": "mcrypt",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
-        ],
-        "fix_it": [
         ]
     },
     {
+        "name": "Do not use the 3DES symmetric block cipher.",
         "id": "DS109501",
+        "description": "The 3DES cipher was found, which is only secure if three independent keys are used.",
+        "recommendation": "Use AES instead.",
         "overrides": [
             "DS106864"
         ],
-        "name": "Do not use the 3DES symmetric block cipher.",
+        "applies_to": [
+            "csharp"
+        ],
         "tags": [
             "Cryptography.Symmetric.PotentiallyWeakAlgorithm"
         ],
-        "applies_to": [
-            "csharp"
-        ],
         "severity": "moderate",
-        "description": "The 3DES cipher was found, which is only secure if three independent keys are used.",
-        "replacement": "Use AES instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS109501.md",
+        "_comment": "",
+        "rule_info": "DS109501.md",
         "patterns": [
             {
                 "pattern": "TripleDESCryptoServiceProvider",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to AESCryptoServiceProvider",
-                "search": "TripleDESCryptoServiceProvider",
-                "replace": "AESCryptoServiceProvider"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "AESCryptoServiceProvider",
+                "pattern": {
+                    "pattern": "TripleDESCryptoServiceProvider",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
             }
         ]
     },
     {
-        "id": "DS106864",
         "name": "Do not use the DES symmetric block cipher.",
-        "tags": [
-            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
-        ],
+        "id": "DS106864",
+        "description": "The DES cipher was found, which is widely considered to be broken.",
+        "recommendation": "Use AES instead.",
         "applies_to": [
             "csharp"
         ],
+        "tags": [
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+        ],
         "severity": "critical",
-        "description": "The DES cipher was found, which is widely considered to be broken.",
-        "replacement": "Use AES instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS106864.md",
+        "_comment": "",
+        "rule_info": "DS106864.md",
         "patterns": [
             {
                 "pattern": "DESCryptoServiceProvider",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to AESCryptoServiceProvider",
-                "search": "DESCryptoServiceProvider",
-                "replace": "AESCryptoServiceProvider"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "AESCryptoServiceProvider",
+                "pattern": {
+                    "pattern": "DESCryptoServiceProvider",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
             }
         ]
     },
     {
-        "id": "DS156431",
         "name": "Do not use the RC2 symmetric block cipher.",
-        "tags": [
-            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
-        ],
+        "id": "DS156431",
+        "description": "The RC2 cipher was found, which is considered to be broken.",
+        "recommendation": "Use AES instead.",
         "applies_to": [
             "csharp"
         ],
+        "tags": [
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+        ],
         "severity": "critical",
-        "description": "The RC2 cipher was found, which is considered to be broken.",
-        "replacement": "Use AES instead.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS156431.md",
+        "_comment": "",
+        "rule_info": "DS156431.md",
         "patterns": [
             {
                 "pattern": "RC2CryptoServiceProvider",
-                "type": "string"
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
         ],
-        "fix_it": [
+        "fix_its": [
             {
-                "type": "regex-substitute",
                 "name": "Change to AESCryptoServiceProvider",
-                "search": "RC2CryptoServiceProvider",
-                "replace": "AESCryptoServiceProvider"
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "AESCryptoServiceProvider",
+                "pattern": {
+                    "pattern": "RC2CryptoServiceProvider",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
             }
         ]
     }
-
-
 ]
-

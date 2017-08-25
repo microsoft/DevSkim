@@ -1,24 +1,31 @@
 [
     {
-        "id": "DS109733",
         "name": "Source implementation of a weak/broken cryptography hash function",
+        "id": "DS109733",
+        "description": "An implementation of a weak/broken hash function was found in source code.",
+        "recommendation": "Do not use MD5, and always prefer OS- or library-provided cryptography implementations.",
         "tags": [
             "Cryptography.HashAlgorithm.WeakOrBrokenImplementation"
         ],
         "severity": "critical",
-        "description": "An implementation of a weak/broken hash function was found in source code.",
-        "replacement": "Do not use MD5, and always prefer OS- or library-provided cryptography implementations.",
-        "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS109733.md",
+        "_comment": "",
+        "rule_info": "DS109733.md",
         "patterns": [
             {
-                "_comment": "MD5",
                 "pattern": "242070db|02441453|db702024|53144402|3572445317",
-                "type": "regex"
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "MD5"
             },
             {
-                "_comment": "SHA-1",
                 "pattern": "98BADCFE|FEDCBC98|C3D2E1F0|F0E1D2C3",
-                "type": "regex"
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "SHA-1"
             }
         ]
     }
