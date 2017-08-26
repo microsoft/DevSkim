@@ -356,5 +356,103 @@
                 "_comment": ""
             }
         ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS126186",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "verify\\s*=\\s*False",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "conditions": [
+            {
+                "pattern" :
+                {
+                    "pattern": "requests.",
+                    "type": "substring",
+                    "search_in": "finding-region(-3, 0)",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                },
+                "negate_finding": false,
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS126187",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "csharp"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "RemoteCertificateValidationCallback\\(delegate\\s*{\\s*return true;\\s*}\\);",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "\\.CertificatePolicy\\s*=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
     }
 ]
