@@ -452,6 +452,14 @@
                     "code"
                 ],
                 "_comment": ""
+            },
+            {
+                "pattern": "X509CertificateValidationMode.None",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
             }
         ]
     }
