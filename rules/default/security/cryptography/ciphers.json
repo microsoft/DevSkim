@@ -110,6 +110,47 @@
         ]
     },
     {
+        "name": "Do not use the DES symmetric block cipher.",
+        "id": "DS106865",
+        "description": "The DES cipher was found, which is widely considered to be broken.",
+        "recommendation": "Use AES instead.",
+        "applies_to": [
+            "javascript"
+        ],
+        "tags": [
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS106865.md",
+        "patterns": [
+            {
+                "pattern": "['\"](?:DES(?:-(?:C(?:BC|FB[18]?)|E(?:CB|DE(?:-(?:C(?:BC|FB)|OFB))?)|OFB))?)['\"]",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Change to AES-128-CBC",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "AES-128-CBC",
+                "pattern": {
+                    "pattern": "(?:DES(?:-(?:C(?:BC|FB[18]?)|E(?:CB|DE(?:-(?:C(?:BC|FB)|OFB))?)|OFB))?)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            }
+        ]
+    },    
+    {
         "name": "Do not use the RC2 symmetric block cipher.",
         "id": "DS156431",
         "description": "The RC2 cipher was found, which is considered to be broken.",
