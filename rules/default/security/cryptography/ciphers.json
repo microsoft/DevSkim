@@ -70,6 +70,46 @@
     },
     {
         "name": "Do not use the DES symmetric block cipher.",
+        "id": "DS106863",
+        "description": "The DES cipher was found, which is widely considered to be broken.",
+        "recommendation": "Use AES instead.",
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS106863.md",
+        "patterns": [
+            {
+                "pattern": "DES",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Change to AES",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "AES",
+                "pattern": {
+                    "pattern": "DES",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            }
+        ]
+    },
+    {
+        "name": "Do not use the DES symmetric block cipher.",
         "id": "DS106864",
         "description": "The DES cipher was found, which is widely considered to be broken.",
         "recommendation": "Use AES instead.",
@@ -118,7 +158,7 @@
             "javascript"
         ],
         "tags": [
-            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm.DES"
         ],
         "severity": "critical",
         "_comment": "",
@@ -149,6 +189,47 @@
                 }
             }
         ]
+    },
+    {
+        "name": "Do not use the DES symmetric block cipher.",
+        "id": "DS106866",
+        "description": "The DES cipher was found, which is widely considered to be broken.",
+        "recommendation": "Use AES instead.",
+        "applies_to": [
+            "java"
+        ],
+        "tags": [
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm.DES"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS106866.md",
+        "patterns": [
+            {
+                "pattern": "DESEngine|DESedeEngine",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Change to AESEngine",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "AESEngine",
+                "pattern": {
+                    "pattern": "DESEngine|DESedeEngine",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            }
+        ]
     },    
     {
         "name": "Do not use the RC2 symmetric block cipher.",
@@ -159,7 +240,7 @@
             "csharp"
         ],
         "tags": [
-            "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
+            "Cryptography.Symmetric.WeakOrBrokenAlgorithm.RC2"
         ],
         "severity": "critical",
         "_comment": "",
