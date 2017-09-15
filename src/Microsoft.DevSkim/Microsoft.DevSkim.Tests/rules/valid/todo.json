@@ -1,7 +1,7 @@
 [
     {
-        "name": "Custom suspicious comment",
-        "id": "DS276209",
+        "name": "Suspicious comment",
+        "id": "DS176209",
         "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
         "recommendation": "",
         "tags": [
@@ -12,15 +12,13 @@
         "rule_info": "DS176209.md",
         "patterns": [
             {
-                "pattern": "(QUICKFIX|REMOVEME|HACK|BLACK MAGIC)",
+                "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
                 "type": "regex-word",
                 "scopes": [
                     "code"
                 ],
                 "_comment": ""
             }
-        ],
-        
-        "fix_its": []
+        ]
     }
 ]

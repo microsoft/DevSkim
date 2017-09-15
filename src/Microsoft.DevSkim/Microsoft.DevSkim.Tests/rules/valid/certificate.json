@@ -1,0 +1,466 @@
+[
+    {
+        "name": "Encryption Marked 'Optional'",
+        "id": "DS114352",
+        "description": "Optional encryption or integrity checking can be dangerous.",
+        "recommendation": "As a best practice, always enable strong encryption and integrity checking.",
+        "tags": [
+            "Cryptography.Optional"
+        ],
+        "severity": "important",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "Integrity.*optional",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "Encryption.*optional",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS181865",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "objective-c"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS181865.md",
+        "patterns": [
+            {
+                "pattern": "setValidatesSecureCertificate:\\s*NO",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "setAllowsAnyHTTPSCertificate:\\s*YES",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "allowsAnyHTTPSCertificate\\s*=\\s*YES",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "setValidatesSecureCertificate:\\s*NO",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "validatesSecureCertificate\\s*=\\s*NO",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "continueWithoutCredentialForAuthenticationChallenge",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "kCFStreamSSL(Level|AllowsExpiredCertificates|AllowsExpiredRoots|AllowsAnyRoot|ValidatesCertificateChain|PeerName)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "kCFStreamPropertySSLSettings",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS176603",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "ruby"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "OpenSSL::SSL::VERIFY_NONE",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS130822",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS130822.md",
+        "patterns": [
+            {
+                "pattern": "\\.check_hostname\\s*=\\s*False",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "disable_ssl_certificate_validation\\s*=\\s*True",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS159369",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "cpp"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_CERT_CN_INVALID",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_CERT_DATE_INVALID",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_REVOCATION",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_UNKNOWN_CA",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_WRONG_USAGE",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS101940",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            ".config"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "certificateValidationMode=\"None\"",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "checkCertificateName=\"false\"",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "checkCertificateRevocationList=\"false\"",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "encryptionPolicy=\"(AllowNoEncryption|NoEncryption)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS125134",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "javascript"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "NODE_TLS_REJECT_UNAUTHORIZED|rejectUnauthorized",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS152094",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "java"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "(TrustManager|getInsecure|HostnameVerifier|AbstractVerifier|AllowAllHostnameVerifier|BrowserCompatHostnameVerifier|StrictHostnameVerifier|onReceivedSslError|insecuresocketfactory|customhostnameverifier)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS126185",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "powershell"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "::ServerCertificateValidationCallback\\s*=\\s*{\\s*\\$true\\s*}",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS126186",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "verify\\s*=\\s*False",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "conditions": [
+            {
+                "pattern" :
+                {
+                    "pattern": "requests.",
+                    "type": "substring",
+                    "search_in": "finding-region(-3, 0)",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                },
+                "negate_finding": false,
+                "_comment": ""
+            }
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS126187",
+        "description": "Extend default certificate validation, but do not disable or override default rules.",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "csharp"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "_comment": "",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "RemoteCertificateValidationCallback\\(delegate\\s*{\\s*return true;\\s*}\\);",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "\\.CertificatePolicy\\s*=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "X509CertificateValidationMode.None",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    }
+]

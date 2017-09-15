@@ -19,7 +19,7 @@ namespace Microsoft.DevSkim {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -61,80 +61,22 @@ namespace Microsoft.DevSkim {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [
-        ///  {
-        ///    &quot;language&quot;: [
-        ///      &quot;c&quot;,
-        ///      &quot;cpp&quot;,
-        ///      &quot;csharp&quot;,
-        ///      &quot;coffeescript&quot;,
-        ///      &quot;fsharp&quot;,
-        ///      &quot;go&quot;,
-        ///      &quot;groovy&quot;,
-        ///      &quot;jade&quot;,
-        ///      &quot;objective-C&quot;,
-        ///      &quot;rust&quot;,
-        ///      &quot;wwift&quot;,
-        ///      &quot;javascript&quot;,
-        ///      &quot;java&quot;,
-        ///      &quot;typescript&quot;,
-        ///      &quot;php&quot;
-        ///    ],    
-        ///    &quot;preffix&quot;: &quot;//&quot;,
-        ///    &quot;suffix&quot;: &quot;&quot;
-        ///  },
-        ///  {
-        ///    &quot;language&quot;: [
-        ///      &quot;perl&quot;,
-        ///      &quot;perl6&quot;,
-        ///      &quot;r&quot;,
-        ///      &quot;shellscript&quot;,
-        ///      &quot;ruby&quot;,
-        ///      &quot;yaml&quot;,
-        ///      &quot;powershell&quot;,      
-        ///      &quot;python&quot;
-        ///    ],    
-        ///   [rest of string was truncated]&quot;;.
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static string comments {
+        internal static byte[] comments {
             get {
-                return ResourceManager.GetString("comments", resourceCulture);
+                object obj = ResourceManager.GetObject("comments", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [
-        ///    {
-        ///        &quot;name&quot;: &quot;c&quot;,
-        ///        &quot;extensions&quot;: [ &quot;.c&quot;, &quot;.h&quot; ]
-        ///    },
-        ///    {
-        ///        &quot;name&quot;: &quot;cpp&quot;,
-        ///        &quot;extensions&quot;: [ &quot;.cpp&quot;, &quot;.hpp&quot; ]
-        ///    },
-        ///    {
-        ///        &quot;name&quot;: &quot;csharp&quot;,
-        ///        &quot;extensions&quot;: [ &quot;.cs&quot; ]
-        ///    },
-        ///    {
-        ///        &quot;name&quot;: &quot;vb&quot;,
-        ///        &quot;extensions&quot;: [ &quot;.vb&quot; ]
-        ///    },
-        ///    {
-        ///        &quot;name&quot;: &quot;python&quot;,
-        ///        &quot;extensions&quot;: [ &quot;.py&quot; ]
-        ///    },
-        ///    {
-        ///        &quot;name&quot;: &quot;javascript&quot;,
-        ///        &quot;extensions&quot;: [ &quot;.js&quot; ]
-        ///    },
-        ///    {
-        ///        &quot;name&quot;: &quot;javascriptreact&quot;,
-        ///        &quot;e [rest of string was truncated]&quot;;.
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static string languages {
+        internal static byte[] languages {
             get {
-                return ResourceManager.GetString("languages", resourceCulture);
+                object obj = ResourceManager.GetObject("languages", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Linq;
 
 namespace Microsoft.DevSkim
@@ -17,18 +16,16 @@ namespace Microsoft.DevSkim
     public class Language
     {
         private Language()
-        {
-            Assembly assembly = typeof(Microsoft.DevSkim.Language).GetTypeInfo().Assembly;
-
+        {            
             // Load comments
-            Stream resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.comments.json");
+            Stream resource = new MemoryStream(Resources.comments);                
             using (StreamReader file = new StreamReader(resource))
             {
                 Comments = JsonConvert.DeserializeObject<List<Comment>>(file.ReadToEnd());
             }
 
             // Load languages
-            resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.languages.json");
+            resource = new MemoryStream(Resources.languages);
             using (StreamReader file = new StreamReader(resource))
             {
                 Languages = JsonConvert.DeserializeObject<List<LanguageInfo>>(file.ReadToEnd());

@@ -47,10 +47,11 @@ namespace Microsoft.DevSkim
         {
             string result = string.Empty;
 
-            if (fixRecord.FixType == FixType.RegexSubstitute)
+            if (fixRecord.FixType == FixType.RegexReplace)
             {
-                Regex regex = new Regex(fixRecord.Search);
-                result = regex.Replace(text, fixRecord.Replace);
+                //TODO: Better pattern search and modifiers
+                Regex regex = new Regex(fixRecord.Pattern.Pattern);
+                result = regex.Replace(text, fixRecord.Replacement);
             }
 
             return result;
@@ -94,8 +95,8 @@ namespace Microsoft.DevSkim
                     RegexOptions reopt = RegexOptions.None;
                     if (p.Modifiers != null && p.Modifiers.Length > 0)
                     {
-                        reopt |= (p.Modifiers.Contains("IGNORECASE")) ? RegexOptions.IgnoreCase : RegexOptions.None;
-                        reopt |= (p.Modifiers.Contains("MULTILINE")) ? RegexOptions.Multiline : RegexOptions.None;
+                        reopt |= (p.Modifiers.Contains("i")) ? RegexOptions.IgnoreCase : RegexOptions.None;
+                        reopt |= (p.Modifiers.Contains("m")) ? RegexOptions.Multiline : RegexOptions.None;
                     }
 
                     Regex patRegx = new Regex(p.Pattern, reopt);

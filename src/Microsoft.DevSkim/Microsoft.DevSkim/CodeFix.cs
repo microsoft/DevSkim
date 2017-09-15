@@ -10,17 +10,17 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class CodeFix
     {
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
+   
         [JsonProperty(PropertyName = "type")]
         [JsonConverter(typeof(FixTypeConverter))]
         public FixType FixType { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        [JsonProperty(PropertyName = "pattern")]
+        public SearchPattern Pattern { get; set; }
 
-        [JsonProperty(PropertyName = "search")]
-        public string Search { get; set; }
-
-        [JsonProperty(PropertyName = "replace")]
-        public string Replace { get; set; }
+        [JsonProperty(PropertyName = "replacement")]
+        public string Replacement { get; set; }
     }
 }

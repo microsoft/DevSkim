@@ -1,0 +1,125 @@
+[
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132779",
+        "description": "Do not enable external entity resolution.",
+        "recommendation": "Set shouldResolveExternalEntities to NO.",
+        "applies_to": [
+            "objective-c"
+        ],
+        "tags": [
+            "Implementation.iOS.XML.DTDEntityResolution"
+        ],
+        "severity": "moderate",
+        "_comment": "",
+        "rule_info": "DS132779.md",
+        "patterns": [
+            {
+                "pattern": "shouldResolveExternalEntities\\s*=\\s*YES",
+                "type": "regex-word",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Disable external entity resolution",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "$1NO",
+                "pattern": {
+                    "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(YES)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            }
+        ]
+    },
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132780",
+        "description": "Do not enable external entity resolution.",
+        "recommendation": "x.setShouldResolveExternalEntities = FALSE;",
+        "applies_to": [
+            "swift"
+        ],
+        "tags": [
+            "Implementation.iOS.XML.DTDEntityResolution"
+        ],
+        "severity": "moderate",
+        "_comment": "",
+        "rule_info": "DS132780.md",
+        "patterns": [
+            {
+                "pattern": "shouldResolveExternalEntities\\s*=\\s*TRUE",
+                "type": "regex-word",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Disable external entity resolution",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "$1FALSE",
+                "pattern": {
+                    "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(TRUE)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            }
+        ]
+    },
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132790",
+        "description": "Do not enable external entity resolution.",
+        "recommendation": "[x setShouldResolveExternalEntities: NO];",
+        "applies_to": [
+            "objective-c"
+        ],
+        "tags": [
+            "Implementation.iOS.XML.DTDEntityResolution"
+        ],
+        "severity": "moderate",
+        "_comment": "",
+        "rule_info": "DS132790.md",
+        "patterns": [
+            {
+                "pattern": "setShouldResolveExternalEntities:\\s*YES",
+                "type": "regex-word",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Disable external entity resolution",
+                "type": "regex-replace",
+                "_comment": "",
+                "replacement": "$1NO",
+                "pattern": {
+                    "pattern": "(setShouldResolveExternalEntities:\\s*)(YES)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": ""
+                }
+            }
+        ]
+    }
+]

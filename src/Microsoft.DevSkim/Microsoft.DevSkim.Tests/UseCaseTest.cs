@@ -83,7 +83,7 @@ namespace Microsoft.DevSkim.Tests
 
             // Ignore until test
             DateTime expirationDate = DateTime.Now.AddDays(5);
-            testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS130821 until {0:yyyy}-{0:MM}-{0:dd}";
+            testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS126186 until {0:yyyy}-{0:MM}-{0:dd}";
             issues = processor.Analyze(string.Format(testString, expirationDate), "python");
             Assert.AreEqual(0, issues.Length, "Ignore until should not be flagged");
 
