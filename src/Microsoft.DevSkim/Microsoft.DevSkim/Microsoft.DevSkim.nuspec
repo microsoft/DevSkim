@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>microsoft,nugettwcsecurity</owners>
+    <licenseUrl>https://github.com/Microsoft/DevSkim/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/DevSkim</projectUrl>    
+    <iconUrl>https://raw.githubusercontent.com/Microsoft/DevSkim/master/media/64x64.png</iconUrl>
+    <copyright>(c) Microsoft Corporation. All rights reserved</copyright>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>DevSkim is a framework and Language analyzer that provide inline security analysis</description>
+    <releaseNotes>Initial release</releaseNotes>    
+    <tags>Security Linter</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="10.0.1" />
+    </dependencies>
+  </metadata>
+</package>
