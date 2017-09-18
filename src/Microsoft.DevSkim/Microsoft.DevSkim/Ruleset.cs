@@ -151,6 +151,9 @@ namespace Microsoft.DevSkim
                             p.Pattern = string.Format(@"{0}", p.Pattern);
                         }
                     }
+
+                    if (r.Conditions == null)
+                        r.Conditions = new List<SearchCondition>().ToArray();
                 }
 
                 _rules.AddRange(ruleList);

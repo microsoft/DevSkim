@@ -25,6 +25,21 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(4, loc.Line);
             Assert.AreEqual(12, loc.Column);
 
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);            
+
+            RuleProcessor processor = new RuleProcessor(rules)
+            {
+                EnableSuppressions = true
+            };
+
+            // MD5CryptoServiceProvider test
+            string testString = "<h:table xmlns:h=\"http://www.w3.org/TR/html4/\">";
+            Issue[] issues = processor.Analyze(testString, "xml");
+            Assert.AreEqual(0, issues.Length);
+
+            testString = "echo(urlencode($_POST['data']);";
+            issues = processor.Analyze(testString, "php");
+            Assert.AreEqual(0, issues.Length);
         }
 
     }

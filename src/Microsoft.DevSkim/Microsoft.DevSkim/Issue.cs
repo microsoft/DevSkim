@@ -13,21 +13,13 @@ namespace Microsoft.DevSkim
         /// Creates new instance of Issue
         /// </summary>
         public Issue()
-        {            
-            Index = -1;
-            Length = 0;
+        {                        
             Rule = null;
+            Boundary = new Boundary();
         }
         
-        /// <summary>
-        /// Start index of the match in the string
-        /// </summary>
-        public int Index { get; set; }
-
-        /// <summary>
-        /// Length of the match
-        /// </summary>
-        public int Length { get; set; }        
+        public Boundary Boundary { get; set; }
+        public Location Location { get; set; }
 
         /// <summary>
         /// Matching rule

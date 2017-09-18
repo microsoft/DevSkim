@@ -42,7 +42,7 @@
         "rule_info": "DS181731.md",
         "patterns": [
             {
-                "pattern": "(include|require|include_once|require_once|passthru)\\s*\\(.*\\$\\_(GET|POST|REQUEST|COOKIES|FILES)",
+                "pattern": "(include|require|include_once|require_once|passthru)\\s*\\(.*\\$_(GET|POST|REQUEST|COOKIES|FILES)",
                 "type": "regex",
                 "scopes": [
                     "code"
