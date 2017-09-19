@@ -1,7 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>    
+    <PackageId>Microsoft.DevSkim</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Microsoft</Authors>
+    <PackageTags>Security Linter</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/Microsoft/DevSkim/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <Copyright>(c) Microsoft Corporation. All rights reserved</Copyright>
+    <Description>DevSkim is a framework and Language analyzer that provide inline security analysis</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/Microsoft/DevSkim/master/media/64x64.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageReleaseNotes>First public release</PackageReleaseNotes>    
   </PropertyGroup>
 
   <ItemGroup>
