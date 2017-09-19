@@ -126,7 +126,7 @@ namespace Microsoft.DevSkim
                                 Issue issue = new Issue()
                                 {
                                     Boundary = match,
-                                    Location = textContainer.GetLocation(match.Start),
+                                    Location = textContainer.GetLocation(match.Index),
                                     Rule = rule
                                 };
 
@@ -169,7 +169,7 @@ namespace Microsoft.DevSkim
                         // Find all overriden rules and mark them for removal from issues list   
                         foreach(Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
                         {
-                            if (m.Boundary.Start == om.Boundary.Start)
+                            if (m.Boundary.Index == om.Boundary.Index)
                                 removes.Add(om);
                         }
                     }

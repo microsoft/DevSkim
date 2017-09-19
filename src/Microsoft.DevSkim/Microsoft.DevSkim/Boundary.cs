@@ -5,7 +5,7 @@ namespace Microsoft.DevSkim
 {
     public class Boundary
     {
-        public int Start { get; set; }
-        public int End { get; set; }
+        public int Index { get; set; }
+        public int Length { get; set; }
     }
 }

@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Microsoft.DevSkim.CLI": {
+      "commandName": "Project"
+    }
+  }
+}

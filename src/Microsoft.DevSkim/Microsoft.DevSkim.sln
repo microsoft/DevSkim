@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim", "Microsoft.DevSkim\Microsoft.DevSkim.csproj", "{A93959C2-B623-4305-B147-861F87C56800}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim", "Microsoft.DevSkim\Microsoft.DevSkim.csproj", "{A93959C2-B623-4305-B147-861F87C56800}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.Tests", "Microsoft.DevSkim.Tests\Microsoft.DevSkim.Tests.csproj", "{D4B1B6B8-5270-49C2-9150-C4B0AA2CBEE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.Tests", "Microsoft.DevSkim.Tests\Microsoft.DevSkim.Tests.csproj", "{D4B1B6B8-5270-49C2-9150-C4B0AA2CBEE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.CLI", "Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.csproj", "{3E9F262B-9851-47E1-96C1-070DBE10E28B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D4B1B6B8-5270-49C2-9150-C4B0AA2CBEE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4B1B6B8-5270-49C2-9150-C4B0AA2CBEE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4B1B6B8-5270-49C2-9150-C4B0AA2CBEE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E9F262B-9851-47E1-96C1-070DBE10E28B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E9F262B-9851-47E1-96C1-070DBE10E28B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E9F262B-9851-47E1-96C1-070DBE10E28B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E9F262B-9851-47E1-96C1-070DBE10E28B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

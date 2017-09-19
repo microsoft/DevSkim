@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>devskim</AssemblyName>
+    <StartupObject>Microsoft.DevSkim.CLI.Program</StartupObject>
+    <RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
+    <ApplicationIcon />    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj" />
+  </ItemGroup>
+
+</Project>
