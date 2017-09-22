@@ -13,7 +13,7 @@ namespace Microsoft.DevSkim.CLI
             string pathToScan = null;
             string customRulesPath = null;
             string outputFormat = null;
-            string textOutputFormat = "%f:%l [%n] %z";
+            string textOutputFormat = "%f:%l [%n] %s";
             
             // Parse Arguments
             for (var i = 0; i < args.Length; i++)
