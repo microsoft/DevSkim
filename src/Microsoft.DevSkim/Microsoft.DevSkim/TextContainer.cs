@@ -16,8 +16,9 @@ namespace Microsoft.DevSkim
         /// Creates new instance
         /// </summary>
         /// <param name="content">Text to work with</param>
-        public TextContainer(string content)
+        public TextContainer(string content, string language)
         {
+            _language = language;
             _content = content;
             _lineEnds = new List<int>(){ 0 };            
 
@@ -152,11 +153,40 @@ namespace Microsoft.DevSkim
             {
                 foreach (Match m in matches)
                 {
-                    matchList.Add(new Boundary() { Index = m.Index, Length = m.Length });
+                    Boundary bound = new Boundary() { Index = m.Index, Length = m.Length };
+                    if (ScopeMatch(pattern, bound, text))
+                        matchList.Add(bound);
                 }
             }
 
             return matchList;
+        }
+
+        private bool ScopeMatch(SearchPattern pattern, Boundary boundary, string text)
+        {
+            if (pattern.Scopes.Contains(PatternScope.All))
+                return true;
+
+            bool isInComment = (  IsBetween(text, boundary.Index, Language.GetCommentPreffix(_language), Language.GetCommentSuffix(_language))
+                               || IsBetween(text, boundary.Index, Language.GetCommentInline(_language), "\n"));
+
+            return !(isInComment && !pattern.Scopes.Contains(PatternScope.Comment));
+        }
+
+        private bool IsBetween(string text, int index, string preffix, string suffix)
+        {
+            bool result = false;
+            string preText = string.Concat(text.Substring(0, index));
+            int lastPreffix = preText.LastIndexOf(preffix);
+            if (lastPreffix >= 0)
+            {
+                preText = preText.Substring(lastPreffix);
+                int lastSuffix = preText.IndexOf(suffix);
+                if (lastSuffix < 0)
+                    result = true;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -247,5 +277,6 @@ namespace Microsoft.DevSkim
 
         private string _content;
         private List<int> _lineEnds;
+        private string _language;
     }
 }

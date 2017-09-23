@@ -13,8 +13,11 @@ namespace Microsoft.DevSkim
         [JsonProperty(PropertyName ="language")]
         public string[] Languages { get; set; }
 
-        [JsonProperty(PropertyName ="preffix")]
-        public string Preffix{ get; set; }
+        [JsonProperty(PropertyName ="inline")]
+        public string Inline{ get; set; }
+
+        [JsonProperty(PropertyName = "preffix")]
+        public string Preffix { get; set; }
 
         [JsonProperty(PropertyName ="suffix")]
         public string Suffix { get; set; }

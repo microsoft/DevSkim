@@ -63,11 +63,32 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Gets comment prefix for given language
+        /// Gets comment inline for given language
         /// </summary>        
         /// <param name="language">Language</param>
         /// <returns>Commented string</returns>
-        public static string GetCommentPrefix(string language)
+        public static string GetCommentInline(string language)
+        {
+            string result = string.Empty;
+
+            if (language != null)
+            {
+                foreach (Comment comment in Instance.Comments)
+                {
+                    if (comment.Languages.Contains(language))
+                        return comment.Inline;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets comment preffix for given language
+        /// </summary>        
+        /// <param name="language">Language</param>
+        /// <returns>Commented string</returns>
+        public static string GetCommentPreffix(string language)
         {
             string result = string.Empty;
 

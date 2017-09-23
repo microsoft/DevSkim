@@ -202,12 +202,12 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void Commenting_Test()
         { 
-            string str = Language.GetCommentPrefix("python");
+            string str = Language.GetCommentInline("python");
             Assert.AreEqual("#", str, "Python comment prefix doesn't match");
             str = Language.GetCommentSuffix("python");
             Assert.AreEqual(string.Empty, str, "Python comment suffix doesn't match");
 
-            str = Language.GetCommentPrefix("klyngon");
+            str = Language.GetCommentInline("klyngon");
             Assert.AreEqual(string.Empty, str, "Klyngon comment prefix doesn't match");
             str = Language.GetCommentSuffix("klyngon");
             Assert.AreEqual(string.Empty, str, "Klyngon comment suffix doesn't match");
@@ -251,5 +251,34 @@ namespace Microsoft.DevSkim.Tests
             issues = processor.Analyze(testString, "php");
             Assert.AreEqual(0, issues.Length, "$_POST should not be flagged");
         }
+
+        [TestMethod]
+        public void Scope_Test()
+        {
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+
+            RuleProcessor processor = new RuleProcessor(rules)
+            {
+                EnableSuppressions = true
+            };
+
+            // Ignore inline comment
+            string testString = "var hash = SHA512.Create(); // MD5 is not allowed";
+            Issue[] issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(0, issues.Length, "MD5 in inline comment should be ignored");
+
+            // ignore multinline comment
+            testString = "/* MD5 is not allowed */ var hash = SHA512.Create();";
+            issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(0, issues.Length, "MD5 in multi line comment should be ignored");
+
+            // TODO test
+            testString = "//TODO: fix it later";
+            processor.SeverityLevel |= Severity.ManualReview;
+            issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(1, issues.Length, "TODO should be flagged");
+
+        }
+
     }
 }

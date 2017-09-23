@@ -79,7 +79,7 @@ namespace Microsoft.DevSkim
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
             List<Issue> resultsList = new List<Issue>();
-            TextContainer textContainer = new TextContainer(text);
+            TextContainer textContainer = new TextContainer(text, languages[0]);
 
             // Go through each rule
             foreach (Rule rule in rules)
