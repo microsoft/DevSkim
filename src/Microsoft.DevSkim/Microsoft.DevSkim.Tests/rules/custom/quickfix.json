@@ -15,7 +15,7 @@
                 "pattern": "(QUICKFIX|REMOVEME|HACK|BLACK MAGIC)",
                 "type": "regex-word",
                 "scopes": [
-                    "code"
+                    "code", "comment"
                 ],
                 "_comment": ""
             }

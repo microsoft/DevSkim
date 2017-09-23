@@ -88,7 +88,7 @@ namespace Microsoft.DevSkim
         /// </summary>        
         /// <param name="language">Language</param>
         /// <returns>Commented string</returns>
-        public static string GetCommentPreffix(string language)
+        public static string GetCommentPrefix(string language)
         {
             string result = string.Empty;
 

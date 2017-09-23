@@ -19,12 +19,12 @@ namespace Microsoft.DevSkim.Tests
 
             string lang = Language.FromFileName("testfilename.cpp");
             string testString = "strcpy(dest,src);";
-
+            
             // strcpy test
             Issue[] issues = processor.Analyze(testString, lang);
-            //Assert.AreEqual(1, issues.Length, "strcpy should be flagged");
+            Assert.AreEqual(1, issues.Length, "strcpy should be flagged");
             Assert.AreEqual(0, issues[0].Boundary.Index, "strcpy invalid index");
-            //Assert.AreEqual(16, issues[0].Length, "strcpy invalid length ");
+            Assert.AreEqual(16, issues[0].Boundary.Length, "strcpy invalid length ");
             Assert.AreEqual("DS185832", issues[0].Rule.Id, "strcpy invalid rule");
 
             // Fix it test
@@ -33,14 +33,14 @@ namespace Microsoft.DevSkim.Tests
             string fixedCode = RuleProcessor.Fix(testString, fix);
             Assert.AreEqual("strcpy_s(dest, <size of dest>, src);", fixedCode, "strcpy invalid code fix");
             Assert.IsTrue(fix.Name.Contains("Change to strcpy_s"), "strcpy wrong fix name");
-
+            
             // QUICKFIX test
             processor.SeverityLevel |= Severity.ManualReview;
             testString = "//QUICKFIX: fix this later";
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "QUICKFIX should be flagged");
             Assert.AreEqual(2, issues[0].Boundary.Index, "QUICKFIX invalid index");
-            //Assert.AreEqual(8, issues[0].Length, "QUICKFIX invalid length ");
+            Assert.AreEqual(8, issues[0].Boundary.Length, "QUICKFIX invalid length ");
             Assert.AreEqual("DS276209", issues[0].Rule.Id, "QUICKFIX invalid rule");
             Assert.AreEqual(0, issues[0].Rule.Fixes.Length, "QUICKFIX invalid Fixes");
             Assert.AreEqual("my rules", issues[0].Rule.RuntimeTag, "QUICKFIX invalid tag");
@@ -205,7 +205,7 @@ namespace Microsoft.DevSkim.Tests
             string str = Language.GetCommentInline("python");
             Assert.AreEqual("#", str, "Python comment prefix doesn't match");
             str = Language.GetCommentSuffix("python");
-            Assert.AreEqual(string.Empty, str, "Python comment suffix doesn't match");
+            Assert.AreEqual("\n", str, "Python comment suffix doesn't match");
 
             str = Language.GetCommentInline("klyngon");
             Assert.AreEqual(string.Empty, str, "Klyngon comment prefix doesn't match");
@@ -263,21 +263,22 @@ namespace Microsoft.DevSkim.Tests
             };
 
             // Ignore inline comment
-            string testString = "var hash = SHA512.Create(); // MD5 is not allowed";
+            string testString = "var hash = MD5.Create(); // MD5 is not allowed";
             Issue[] issues = processor.Analyze(testString, "csharp");
-            Assert.AreEqual(0, issues.Length, "MD5 in inline comment should be ignored");
+            Assert.AreEqual(1, issues.Length, "MD5 in inline comment should be ignored");
+            Assert.AreEqual(11, issues[0].Boundary.Index, "MD5 inline index is wrong");
 
             // ignore multinline comment
-            testString = "/* MD5 is not allowed */ var hash = SHA512.Create();";
+            testString = "/* MD5 is not allowed */ var hash = MD5.Create();";
             issues = processor.Analyze(testString, "csharp");
-            Assert.AreEqual(0, issues.Length, "MD5 in multi line comment should be ignored");
+            Assert.AreEqual(1, issues.Length, "MD5 in multi line comment should be ignored");
+            Assert.AreEqual(36, issues[0].Boundary.Index, "MD5 multi line index is wrong");
 
             // TODO test
             testString = "//TODO: fix it later";
             processor.SeverityLevel |= Severity.ManualReview;
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "TODO should be flagged");
-
         }
 
     }

@@ -164,20 +164,24 @@ namespace Microsoft.DevSkim
 
         private bool ScopeMatch(SearchPattern pattern, Boundary boundary, string text)
         {
-            if (pattern.Scopes.Contains(PatternScope.All))
+            string prefix = Language.GetCommentPrefix(_language);
+            string suffix = Language.GetCommentSuffix(_language);
+            string inline = Language.GetCommentInline(_language);
+
+            if (pattern.Scopes.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
 
-            bool isInComment = (  IsBetween(text, boundary.Index, Language.GetCommentPreffix(_language), Language.GetCommentSuffix(_language))
+            bool isInComment = (  IsBetween(text, boundary.Index, Language.GetCommentPrefix(_language), Language.GetCommentSuffix(_language))
                                || IsBetween(text, boundary.Index, Language.GetCommentInline(_language), "\n"));
 
             return !(isInComment && !pattern.Scopes.Contains(PatternScope.Comment));
         }
 
-        private bool IsBetween(string text, int index, string preffix, string suffix)
+        private bool IsBetween(string text, int index, string prefix, string suffix)
         {
             bool result = false;
             string preText = string.Concat(text.Substring(0, index));
-            int lastPreffix = preText.LastIndexOf(preffix);
+            int lastPreffix = preText.LastIndexOf(prefix);
             if (lastPreffix >= 0)
             {
                 preText = preText.Substring(lastPreffix);

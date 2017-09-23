@@ -74,11 +74,11 @@ namespace Microsoft.DevSkim.Tests
         {
             string lang = "csharp";
             string suffix = Language.GetCommentSuffix(lang);
-            Assert.AreEqual("", suffix, "Incorect suffix for " + lang);
+            Assert.AreEqual("*/", suffix, "Incorect suffix for " + lang);
 
             lang = "python";
             suffix = Language.GetCommentSuffix(lang);
-            Assert.AreEqual("", suffix, "Incorect suffix for " + lang);
+            Assert.AreEqual("\n", suffix, "Incorect suffix for " + lang);
 
             lang = "klyngon";
             suffix = Language.GetCommentSuffix(lang);
