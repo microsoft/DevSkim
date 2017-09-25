@@ -269,10 +269,10 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(11, issues[0].Boundary.Index, "MD5 inline index is wrong");
 
             // ignore multinline comment
-            testString = "/* MD5 is not allowed */ var hash = MD5.Create();";
+            testString = " /*\r\nMD5 is not allowed\r\n */ \r\nvar hash = MD5.Create();";
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "MD5 in multi line comment should be ignored");
-            Assert.AreEqual(36, issues[0].Boundary.Index, "MD5 multi line index is wrong");
+            Assert.AreEqual(42, issues[0].Boundary.Index, "MD5 multi line index is wrong");
 
             // TODO test
             testString = "//TODO: fix it later";
@@ -280,6 +280,5 @@ namespace Microsoft.DevSkim.Tests
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "TODO should be flagged");
         }
-
     }
 }
