@@ -19,12 +19,12 @@ namespace Microsoft.DevSkim.Tests
 
             string lang = Language.FromFileName("testfilename.cpp");
             string testString = "strcpy(dest,src);";
-
+            
             // strcpy test
             Issue[] issues = processor.Analyze(testString, lang);
             Assert.AreEqual(1, issues.Length, "strcpy should be flagged");
-            Assert.AreEqual(0, issues[0].Index, "strcpy invalid index");
-            Assert.AreEqual(16, issues[0].Length, "strcpy invalid length ");
+            Assert.AreEqual(0, issues[0].Boundary.Index, "strcpy invalid index");
+            Assert.AreEqual(16, issues[0].Boundary.Length, "strcpy invalid length ");
             Assert.AreEqual("DS185832", issues[0].Rule.Id, "strcpy invalid rule");
 
             // Fix it test
@@ -33,14 +33,14 @@ namespace Microsoft.DevSkim.Tests
             string fixedCode = RuleProcessor.Fix(testString, fix);
             Assert.AreEqual("strcpy_s(dest, <size of dest>, src);", fixedCode, "strcpy invalid code fix");
             Assert.IsTrue(fix.Name.Contains("Change to strcpy_s"), "strcpy wrong fix name");
-
+            
             // QUICKFIX test
             processor.SeverityLevel |= Severity.ManualReview;
             testString = "//QUICKFIX: fix this later";
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "QUICKFIX should be flagged");
-            Assert.AreEqual(2, issues[0].Index, "QUICKFIX invalid index");
-            Assert.AreEqual(8, issues[0].Length, "QUICKFIX invalid length ");
+            Assert.AreEqual(2, issues[0].Boundary.Index, "QUICKFIX invalid index");
+            Assert.AreEqual(8, issues[0].Boundary.Length, "QUICKFIX invalid length ");
             Assert.AreEqual("DS276209", issues[0].Rule.Id, "QUICKFIX invalid rule");
             Assert.AreEqual(0, issues[0].Rule.Fixes.Length, "QUICKFIX invalid Fixes");
             Assert.AreEqual("my rules", issues[0].Rule.RuntimeTag, "QUICKFIX invalid tag");
@@ -77,13 +77,13 @@ namespace Microsoft.DevSkim.Tests
             string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
             Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "MD5CryptoServiceProvider should be flagged");
-            Assert.AreEqual(15, issues[0].Index, "MD5CryptoServiceProvider invalid index");
-            Assert.AreEqual(24, issues[0].Length, "MD5CryptoServiceProvider invalid length ");
+            Assert.AreEqual(15, issues[0].Boundary.Index, "MD5CryptoServiceProvider invalid index");
+            Assert.AreEqual(24, issues[0].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
             Assert.AreEqual("DS168931", issues[0].Rule.Id, "MD5CryptoServiceProvider invalid rule");
 
             // Ignore until test
             DateTime expirationDate = DateTime.Now.AddDays(5);
-            testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS130821 until {0:yyyy}-{0:MM}-{0:dd}";
+            testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS126186 until {0:yyyy}-{0:MM}-{0:dd}";
             issues = processor.Analyze(string.Format(testString, expirationDate), "python");
             Assert.AreEqual(0, issues.Length, "Ignore until should not be flagged");
 
@@ -121,8 +121,8 @@ namespace Microsoft.DevSkim.Tests
 
             Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "MD5CryptoServiceProvider should be flagged");
-            Assert.AreEqual(0, issues[1].Index, "MD5CryptoServiceProvider invalid index");
-            Assert.AreEqual(3, issues[1].Length, "MD5CryptoServiceProvider invalid length ");
+            Assert.AreEqual(0, issues[1].Boundary.Index, "MD5CryptoServiceProvider invalid index");
+            Assert.AreEqual(3, issues[1].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
             Assert.AreEqual("DS126858", issues[1].Rule.Id, "MD5CryptoServiceProvider invalid rule");
         }
 
@@ -179,7 +179,7 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void LangugeSelectorTest()
+        public void LangugeSelector_Test()
         {
             Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
             RuleProcessor processor = new RuleProcessor(ruleset);
@@ -200,17 +200,85 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void CommentingTest()
+        public void Commenting_Test()
         { 
-            string str = Language.GetCommentPrefix("python");
+            string str = Language.GetCommentInline("python");
             Assert.AreEqual("#", str, "Python comment prefix doesn't match");
             str = Language.GetCommentSuffix("python");
-            Assert.AreEqual(string.Empty, str, "Python comment suffix doesn't match");
+            Assert.AreEqual("\n", str, "Python comment suffix doesn't match");
 
-            str = Language.GetCommentPrefix("klyngon");
+            str = Language.GetCommentInline("klyngon");
             Assert.AreEqual(string.Empty, str, "Klyngon comment prefix doesn't match");
             str = Language.GetCommentSuffix("klyngon");
             Assert.AreEqual(string.Empty, str, "Klyngon comment suffix doesn't match");
+        }
+
+        [TestMethod]
+        public void Conditions_Test()
+        {
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+
+            RuleProcessor processor = new RuleProcessor(rules)
+            {
+                EnableSuppressions = true
+            };
+
+            // http test
+            string testString = "<h:table xmlns:h=\"http://www.w3.org/TR/html4/\">";
+            Issue[] issues = processor.Analyze(testString, "xml");
+            Assert.AreEqual(0, issues.Length, "http should not be flagged");
+
+            // http test
+            testString = "<h:table src=\"http://www.w3.org/TR/html4/\">";
+            issues = processor.Analyze(testString, "xml");
+            Assert.AreEqual(1, issues.Length, "http should be flagged");
+            Assert.AreEqual(1, issues[0].Location.Line, "http location line doesn't match");
+            Assert.AreEqual(14, issues[0].Boundary.Index, "http index doesn't match");
+            Assert.AreEqual(5, issues[0].Boundary.Length, "http length doesn't match");
+            Assert.AreEqual("DS137138", issues[0].Rule.Id, "http rule doesn't match");
+
+            // $POST test
+            testString = "require_once($_POST['t']);";
+            issues = processor.Analyze(testString, "php");
+            Assert.AreEqual(1, issues.Length, "$_POST should be flagged");
+            Assert.AreEqual(1, issues[0].Location.Line, "$_POST location line doesn't match");
+            Assert.AreEqual(0, issues[0].Boundary.Index, "$_POST index doesn't match");
+            Assert.AreEqual(19, issues[0].Boundary.Length, "$_POST length doesn't match");
+            Assert.AreEqual("DS181731", issues[0].Rule.Id, "$_POST rule doesn't match");
+
+            // $POST test
+            testString = "echo(urlencode($_POST['data']);";
+            issues = processor.Analyze(testString, "php");
+            Assert.AreEqual(0, issues.Length, "$_POST should not be flagged");
+        }
+
+        [TestMethod]
+        public void Scope_Test()
+        {
+            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+
+            RuleProcessor processor = new RuleProcessor(rules)
+            {
+                EnableSuppressions = true
+            };
+
+            // Ignore inline comment
+            string testString = "var hash = MD5.Create(); // MD5 is not allowed";
+            Issue[] issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(1, issues.Length, "MD5 in inline comment should be ignored");
+            Assert.AreEqual(11, issues[0].Boundary.Index, "MD5 inline index is wrong");
+
+            // ignore multinline comment
+            testString = " /*\r\nMD5 is not allowed\r\n */ \r\nvar hash = MD5.Create();";
+            issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(1, issues.Length, "MD5 in multi line comment should be ignored");
+            Assert.AreEqual(42, issues[0].Boundary.Index, "MD5 multi line index is wrong");
+
+            // TODO test
+            testString = "//TODO: fix it later";
+            processor.SeverityLevel |= Severity.ManualReview;
+            issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(1, issues.Length, "TODO should be flagged");
         }
     }
 }

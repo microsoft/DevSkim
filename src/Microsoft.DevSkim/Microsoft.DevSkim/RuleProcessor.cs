@@ -47,10 +47,11 @@ namespace Microsoft.DevSkim
         {
             string result = string.Empty;
 
-            if (fixRecord.FixType == FixType.RegexSubstitute)
+            if (fixRecord.FixType == FixType.RegexReplace)
             {
-                Regex regex = new Regex(fixRecord.Search);
-                result = regex.Replace(text, fixRecord.Replace);
+                //TODO: Better pattern search and modifiers
+                Regex regex = new Regex(fixRecord.Pattern.Pattern);
+                result = regex.Replace(text, fixRecord.Replacement);
             }
 
             return result;
@@ -78,46 +79,72 @@ namespace Microsoft.DevSkim
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
             List<Issue> resultsList = new List<Issue>();
+            TextContainer textContainer = new TextContainer(text, languages[0]);
 
             // Go through each rule
-            foreach (Rule r in rules)
+            foreach (Rule rule in rules)
             {
                 List<Issue> matchList = new List<Issue>();
 
                 // Skip rules that don't apply based on settings
-                if (r.Disabled || !SeverityLevel.HasFlag(r.Severity))
+                if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
                     continue;
 
                 // Go through each matching pattern of the rule
-                foreach (SearchPattern p in r.Patterns)
+                foreach (SearchPattern pattern in rule.Patterns)
                 {
-                    RegexOptions reopt = RegexOptions.None;
-                    if (p.Modifiers != null && p.Modifiers.Length > 0)
-                    {
-                        reopt |= (p.Modifiers.Contains("IGNORECASE")) ? RegexOptions.IgnoreCase : RegexOptions.None;
-                        reopt |= (p.Modifiers.Contains("MULTILINE")) ? RegexOptions.Multiline : RegexOptions.None;
-                    }
+                    // Get all matches for the patttern
+                    List<Boundary> matches = textContainer.MatchPattern(pattern);
 
-                    Regex patRegx = new Regex(p.Pattern, reopt);
-                    MatchCollection matches = patRegx.Matches(text);
                     if (matches.Count > 0)
                     {
-                        foreach (System.Text.RegularExpressions.Match m in matches)
+                        foreach (Boundary match in matches)
                         {
-                            matchList.Add(new Issue() { Index = m.Index, Length = m.Length, Rule = r });
+                            bool passedConditions = true;
+                            foreach (SearchCondition condition in rule.Conditions)
+                            {
+                                bool res = textContainer.MatchPattern(condition.Pattern, match, condition.SearchIn);                                
+                                if (res && condition.NegateFinding)
+                                {
+                                    passedConditions = false;
+                                    break;
+                                }
+                                if (!res && condition.NegateFinding)
+                                {
+                                    passedConditions = true;
+                                    break;
+                                }
+                                if (!res)
+                                {
+                                    passedConditions = false;
+                                    break;
+                                }
+                            }
+
+                            if (passedConditions)
+                            {
+                                Issue issue = new Issue()
+                                {
+                                    Boundary = match,
+                                    Location = textContainer.GetLocation(match.Index),
+                                    Rule = rule
+                                };
+
+                                matchList.Add(issue);
+                            }
                         }
-                        break; // from pattern loop                 
-                    }                    
+                    }
                 }
 
                 // We got matching rule and suppression are enabled,
                 // let's see if we have a supression on the line
                 if (EnableSuppressions && matchList.Count > 0)
                 {
-                    Suppression supp = new Suppression(text);
+                    Suppression supp;
                     foreach (Issue result in matchList)
                     {
-                        // If rule is NOT being suppressed then useit
+                        supp = new Suppression(textContainer.GetLineContent(result.Location.Line));
+                        // If rule is NOT being suppressed then use it
                         if (!supp.IsIssueSuppressed(result.Rule.Id))
                         {
                             resultsList.Add(result);
@@ -142,7 +169,7 @@ namespace Microsoft.DevSkim
                         // Find all overriden rules and mark them for removal from issues list   
                         foreach(Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
                         {
-                            if (m.Index == om.Index)
+                            if (m.Boundary.Index == om.Boundary.Index)
                                 removes.Add(om);
                         }
                     }

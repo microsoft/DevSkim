@@ -19,5 +19,8 @@ namespace Microsoft.DevSkim
 
         [JsonProperty(PropertyName = "modifiers")]
         public string[] Modifiers { get; set; }
+
+        [JsonProperty(PropertyName = "scopes")]        
+        public PatternScope[] Scopes { get; set; }
     }
 }

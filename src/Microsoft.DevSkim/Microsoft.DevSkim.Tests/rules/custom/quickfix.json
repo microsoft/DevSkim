@@ -1,26 +1,26 @@
 [
-  {
-    "id": "DS276209",
-    "name": "Suspicious comment",
-    "tags": [
-      "Hygiene.Comment.Suspicious"
-    ],
-    "severity": "manual-review",
-    "description": "A \"QUICK FIX\" or similar was left in source code, possibly indicating incomplete functionality",
-    "replacement": "",
-    "rule_info": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS176209.md",
-    "patterns": [
-      {
-        "pattern": "(QUICKFIX|REMOVEME|HACK|BLACK MAGIC)",
-        "type": "regex-word",
-        "modifiers": [ "IGNORECASE" ]
-      },
-      {
-        "pattern": "(quick fix)",
-        "type": "regex-word",
-        "modifiers": [ "MULTILINE" ]
-      }
-    ],
-    "fix_it": []
-  }
+    {
+        "name": "Custom suspicious comment",
+        "id": "DS276209",
+        "description": "A \"TODO\" or similar was left in source code, possibly indicating incomplete functionality",
+        "recommendation": "",
+        "tags": [
+            "Hygiene.Comment.Suspicious"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS176209.md",
+        "patterns": [
+            {
+                "pattern": "(QUICKFIX|REMOVEME|HACK|BLACK MAGIC)",
+                "type": "regex-word",
+                "scopes": [
+                    "code", "comment"
+                ],
+                "_comment": ""
+            }
+        ],
+        
+        "fix_its": []
+    }
 ]

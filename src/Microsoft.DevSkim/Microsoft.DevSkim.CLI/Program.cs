@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.DevSkim;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Microsoft.DevSkim.CLI
 {
     class Program
     {
-        private static string pathToScan;
-        private static string customRulesPath;
-        private static string outputFormat;
-        private static string textOutputFormat = "%f:%l [%n] %z";
-
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+            string pathToScan = null;
+            string customRulesPath = null;
+            string outputFormat = null;
+            string textOutputFormat = "%f:%l [%n] %s";
+            
             // Parse Arguments
-            for (var i=0; i<args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] == "--add-rules")
                 {
@@ -39,7 +36,7 @@ namespace Microsoft.DevSkim.CLI
                 if (args[i] == "--help" || args[i] == "/help" || args[i] == "/?")
                 {
                     ShowUsage();
-                    System.Environment.Exit(1);
+                    return 1;
                 }
 
                 pathToScan = args[i];
@@ -49,7 +46,7 @@ namespace Microsoft.DevSkim.CLI
             {
                 Console.Error.WriteLine("Path or file specified does not exist.");
                 ShowUsage();
-                System.Environment.Exit(1);
+                return 1;
             }
 
             // Set up the rules
@@ -68,7 +65,7 @@ namespace Microsoft.DevSkim.CLI
             {
                 Console.Error.WriteLine("No rules found. Either pass --add-rules or ensure that directory 'rules' exists.");
                 ShowUsage();
-                System.Environment.Exit(1);
+                return 1;
             }
 
             // Initialize the processor
@@ -83,20 +80,16 @@ namespace Microsoft.DevSkim.CLI
                 var fileText = File.ReadAllText(filename);
 
                 // Iterate through each rule
-                foreach (var issue in processor.Analyze(fileText, Language.FromFileName(filename)))
+                foreach (Issue issue in processor.Analyze(fileText, Language.FromFileName(filename)))
                 {
-                    // Get the line number based on the issue's index (byte offset)
-                    int lineNumber = fileText.Substring(0, issue.Index).Count(s => s == '\n') + 1;
-
                     if (outputFormat == "json")
                     {
                         // Store the result in the result list
                         jsonResult.Add(new Dictionary<string, string>()
                         {
                             { "filename", filename },
-                            { "line_number", Convert.ToString(lineNumber) },
-                            { "line", GetLineFromLineNumber(fileText, lineNumber, 100) },
-                            { "matching_section", fileText.Substring(issue.Index, issue.Length).Trim() },
+                            { "line_number", issue.Location.Line.ToString() },                            
+                            { "matching_section", fileText.Substring(issue.Boundary.Index, issue.Boundary.Length) },
                             { "rule_name", issue.Rule.Name },
                             { "rule_description", issue.Rule.Description }
                         });
@@ -105,13 +98,12 @@ namespace Microsoft.DevSkim.CLI
                     {
                         string output = textOutputFormat;
                         output = output.Replace("%f", filename);
-                        output = output.Replace("%l", Convert.ToString(lineNumber));
-                        output = output.Replace("%i", Convert.ToString(issue.Index));
-                        output = output.Replace("%j", Convert.ToString(issue.Length));
+                        output = output.Replace("%l", issue.Location.Line.ToString());
+                        output = output.Replace("%i", issue.Boundary.Index.ToString());
+                        output = output.Replace("%j", issue.Boundary.Length.ToString());
                         output = output.Replace("%n", issue.Rule.Name);
                         output = output.Replace("%d", issue.Rule.Description);
-                        output = output.Replace("%s", fileText.Substring(issue.Index, issue.Length).Trim());
-                        output = output.Replace("%z", GetLineFromLineNumber(fileText, lineNumber, 100));
+                        output = output.Replace("%s", fileText.Substring(issue.Boundary.Index, issue.Boundary.Length).Trim());                        
                         Console.WriteLine(output);
                     }
                 }
@@ -120,33 +112,14 @@ namespace Microsoft.DevSkim.CLI
             {
                 Console.Write(JsonConvert.SerializeObject(jsonResult, Formatting.Indented));
             }
+
+            return 0;
         }
 
-        /**
-         * Return the entire line from a string based on the line number given. Newlines
-         * are separated by '\n'.
-         * This function is not optimized for large files.
-         * If maxLength is specified, then the line will be cut to that max length.
-         */
-        static string GetLineFromLineNumber(string text, int lineNumber, int maxLength=-1)
-        {
-            var s = text.Split(new char[] { '\n' })[lineNumber - 1];
-            s = s.Trim();
-            if (maxLength == -1 || maxLength > s.Length)
-            {
-                return s;
-            }
-            else
-            {
-                return s.Substring(0, Math.Min(s.Length, maxLength)).Trim();
-            }
-        }
-        
         static void ShowUsage()
         {
             Console.Error.WriteLine("Usage: DevSkim.exe [--custom-rules PATH] [--output-format (text|json)] [--text-format-specifier SPECIFIER] PATH-TO-SCAN");
-            Console.Error.WriteLine("See the wiki for details.");
+            Console.Error.WriteLine("See the wiki for details.");            
         }
-        
     }
 }
