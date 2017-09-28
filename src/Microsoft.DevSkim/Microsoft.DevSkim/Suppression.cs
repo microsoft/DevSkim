@@ -49,6 +49,18 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
+        /// Get list of suppressions string from text
+        /// </summary>
+        /// <param name="text">Regex matches</param>
+        /// <returns></returns>
+        public static MatchCollection GetMatches(string text)
+        {
+            string pattern = @"\s*" + KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
+            Regex reg = new Regex(pattern);
+            return reg.Matches(text);
+        }
+
+        /// <summary>
         /// Parse the line of code to find rule suppressors
         /// </summary>
         private void ParseLine()
@@ -57,23 +69,20 @@ namespace Microsoft.DevSkim
             if (!_text.Contains(KeywordPrefix))
                 return;
 
-            string pattern = @"\s*" + KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([^\s]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
-            Regex reg = new Regex(pattern);
+            MatchCollection matches = GetMatches(_text);            
 
-            Match match = reg.Match(_text);
-
-            if (match.Success)
+            if (matches.Count > 0 && matches[0].Success)
             {                
-                _suppressStart = match.Index;
-                _suppressLength = match.Length;
-                                
-                string idString = match.Groups[1].Value.Trim();
+                _suppressStart = matches[0].Index;
+                _suppressLength = matches[0].Length;
+                
+                string idString = matches[0].Groups[1].Value.Trim();                
 
                 // Parse date
-                if (match.Groups.Count > 2)
+                if (matches[0].Groups.Count > 2)
                 {
-                    string date = match.Groups[2].Value;
-                    reg = new Regex(@"(\d{4}-\d{2}-\d{2})");
+                    string date = matches[0].Groups[2].Value;
+                    Regex reg = new Regex(@"(\d{4}-\d{2}-\d{2})");
                     Match m = reg.Match(date);
                     if (m.Success)
                     {
@@ -128,7 +137,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         /// Suppression expression length
         /// </summary>
-        public int Length { get { return _suppressLength; } }
+        public int Length { get { return _suppressLength; } }               
 
         private List<string> _issues = new List<string>();              
         private DateTime _expirationDate = DateTime.MaxValue;

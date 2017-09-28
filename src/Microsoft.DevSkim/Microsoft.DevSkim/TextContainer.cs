@@ -110,7 +110,7 @@ namespace Microsoft.DevSkim
             {
                 if (_lineEnds[i] >= index)
                 {
-                    result.Index = (i > 0) ? _lineEnds[i - 1] : 0;
+                    result.Index = (i > 0 && _lineEnds[i - 1] > 0) ? _lineEnds[i - 1] + 1 : 0;
                     result.Length = _lineEnds[i] - result.Index + 1;
                     break;
                 }
@@ -126,7 +126,8 @@ namespace Microsoft.DevSkim
         /// <returns>Text</returns>
         public string GetLineContent(int line)
         {
-            Boundary bound = GetLineBoundary(line);
+            int index = _lineEnds[line];
+            Boundary bound = GetLineBoundary(index);
             return _content.Substring(bound.Index, bound.Length);
         }
 

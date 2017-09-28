@@ -74,23 +74,27 @@ namespace Microsoft.DevSkim.Tests
             };
 
             // MD5CryptoServiceProvider test
-            string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858";
+            string testString = "var a = 10;\nMD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858\nvar b = 20;";
+
             Issue[] issues = processor.Analyze(testString, "csharp");
-            Assert.AreEqual(1, issues.Length, "MD5CryptoServiceProvider should be flagged");
-            Assert.AreEqual(15, issues[0].Boundary.Index, "MD5CryptoServiceProvider invalid index");
+            Assert.AreEqual(2, issues.Length, "MD5CryptoServiceProvider should be flagged");
+            Assert.AreEqual(27, issues[0].Boundary.Index, "MD5CryptoServiceProvider invalid index");
             Assert.AreEqual(24, issues[0].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
             Assert.AreEqual("DS168931", issues[0].Rule.Id, "MD5CryptoServiceProvider invalid rule");
+            Assert.AreEqual(true, issues[1].IsSuppressionInfo, "MD5CryptoServiceProvider second issue should be info");
 
             // Ignore until test
             DateTime expirationDate = DateTime.Now.AddDays(5);
             testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS126186 until {0:yyyy}-{0:MM}-{0:dd}";
             issues = processor.Analyze(string.Format(testString, expirationDate), "python");
-            Assert.AreEqual(0, issues.Length, "Ignore until should not be flagged");
+            Assert.AreEqual(1, issues.Length, "Ignore until should not be flagged");
+            Assert.AreEqual(true, issues[0].IsSuppressionInfo, "Ignore until second issue should be info");
 
             // Expired until test
             expirationDate = DateTime.Now;
             issues = processor.Analyze(string.Format(testString, expirationDate), "python");
-            Assert.AreEqual(1, issues.Length, "Expired until should be flagged");
+            Assert.AreEqual(2, issues.Length, "Expired until should be flagged");
+            Assert.AreEqual(true, issues[1].IsSuppressionInfo, "Expired until issue should be info");
 
             // Ignore all until test
             expirationDate = DateTime.Now.AddDays(5);
