@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim
@@ -39,25 +40,17 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="issueId">Rule ID</param>
         /// <returns>True is rule is suppressed</returns>
-        public bool IsIssueSuppressed(string issueId)
+        public SuppressedIssue GetSuppressedIssue(string issueId)
         {
             bool result = false;
-            if (_issues.Contains(KeywordAll) || _issues.Contains(issueId))
+            SuppressedIssue issue = _issues.FirstOrDefault(x => x.ID == issueId || x.ID == KeywordAll);
+            if (issue != null)
                 result = true;
-             
-            return (DateTime.Now < _expirationDate && result);
-        }
 
-        /// <summary>
-        /// Get list of suppressions string from text
-        /// </summary>
-        /// <param name="text">Regex matches</param>
-        /// <returns></returns>
-        public static MatchCollection GetMatches(string text)
-        {
-            string pattern = @"\s*" + KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
-            Regex reg = new Regex(pattern);
-            return reg.Matches(text);
+            if (DateTime.Now < _expirationDate && result)
+                return issue;
+            else
+                return null;
         }
 
         /// <summary>
@@ -69,20 +62,23 @@ namespace Microsoft.DevSkim
             if (!_text.Contains(KeywordPrefix))
                 return;
 
-            MatchCollection matches = GetMatches(_text);            
+            string pattern = @"\s*" + KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
+            Regex reg = new Regex(pattern);            
+            Match match = reg.Match(_text);
 
-            if (matches.Count > 0 && matches[0].Success)
+            if (match.Success)
             {                
-                _suppressStart = matches[0].Index;
-                _suppressLength = matches[0].Length;
+                _suppressStart = match.Index;
+                _suppressLength = match.Length;
                 
-                string idString = matches[0].Groups[1].Value.Trim();                
+                string idString = match.Groups[1].Value.Trim();
+                IssuesListIndex = match.Groups[1].Index;
 
                 // Parse date
-                if (matches[0].Groups.Count > 2)
+                if (match.Groups.Count > 2)
                 {
-                    string date = matches[0].Groups[2].Value;
-                    Regex reg = new Regex(@"(\d{4}-\d{2}-\d{2})");
+                    string date = match.Groups[2].Value;
+                    reg = new Regex(@"(\d{4}-\d{2}-\d{2})");
                     Match m = reg.Match(date);
                     if (m.Success)
                     {
@@ -93,12 +89,34 @@ namespace Microsoft.DevSkim
                 // parse Ids.                
                 if (idString == KeywordAll)
                 {
-                    _issues.Add(KeywordAll);
+                    _issues.Add(new SuppressedIssue()
+                                {
+                                    ID = KeywordAll,
+                                    Boundary = new Boundary()
+                                    {
+                                        Index = IssuesListIndex,
+                                        Length = KeywordAll.Length
+                                    }
+                                }); 
                 }
                 else
                 {
                     string[] ids = idString.Split(',');
-                    _issues.AddRange(ids);
+                    int index = IssuesListIndex;
+                    foreach (string id in ids)
+                    {
+
+                        _issues.Add(new SuppressedIssue()
+                                    {
+                                        ID = id,
+                                        Boundary = new Boundary()
+                                        {
+                                            Index = index,
+                                            Length = id.Length
+                                        }
+                                    });
+                        index += id.Length + 1;
+                    }
                 }
             }
         }
@@ -107,7 +125,7 @@ namespace Microsoft.DevSkim
         /// Get issue IDs for the suppression
         /// </summary>
         /// <returns>List of issue IDs</returns>
-        public virtual string[] GetIssues() 
+        public virtual SuppressedIssue[] GetIssues() 
         {
             return _issues.ToArray();
         }
@@ -132,14 +150,19 @@ namespace Microsoft.DevSkim
         /// <summary>
         /// Suppression expresion start index on the given line
         /// </summary>
-        public int Index { get { return _suppressStart; } }
+        public int Index { get { return _suppressStart; } }        
 
         /// <summary>
         /// Suppression expression length
         /// </summary>
-        public int Length { get { return _suppressLength; } }               
+        public int Length { get { return _suppressLength; } }
 
-        private List<string> _issues = new List<string>();              
+        /// <summary>
+        /// Position of issues list
+        /// </summary>
+        public int IssuesListIndex { get; set; } = -1;
+
+        private List<SuppressedIssue> _issues = new List<SuppressedIssue>();
         private DateTime _expirationDate = DateTime.MaxValue;
         private string _text = string.Empty;
 

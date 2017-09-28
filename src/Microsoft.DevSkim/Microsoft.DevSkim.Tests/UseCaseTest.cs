@@ -93,18 +93,18 @@ namespace Microsoft.DevSkim.Tests
             // Expired until test
             expirationDate = DateTime.Now;
             issues = processor.Analyze(string.Format(testString, expirationDate), "python");
-            Assert.AreEqual(2, issues.Length, "Expired until should be flagged");
-            Assert.AreEqual(true, issues[1].IsSuppressionInfo, "Expired until issue should be info");
+            Assert.AreEqual(1, issues.Length, "Expired until should be flagged");
+            Assert.AreEqual(false, issues[0].IsSuppressionInfo, "Expired until issue should NOT be info");
 
             // Ignore all until test
             expirationDate = DateTime.Now.AddDays(5);
-            testString = "MD5 hash  = new MD5.Create(); #DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
+            testString = "encryption=false; MD5 hash  = MD5.Create(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
             issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
-            Assert.AreEqual(0, issues.Length, "Ignore all until should not be flagged");
+            Assert.AreEqual(2, issues.Length, "Ignore all should flag two infos");
 
             // Expired all test
             expirationDate = DateTime.Now;
-            testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
+            testString = "MD5 hash =  new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
             issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
             Assert.AreEqual(2, issues.Length, "Expired all should be flagged");
         }
@@ -137,17 +137,17 @@ namespace Microsoft.DevSkim.Tests
             DateTime expirationDate = DateTime.Now.AddDays(5);
 
             Suppression sup = new Suppression(string.Format(testString, expirationDate));
-            Assert.IsTrue(sup.IsIssueSuppressed("DS126858"), "Is suppressed DS126858 should be True");
-            Assert.IsTrue(sup.IsIssueSuppressed("DS168931"), "Is suppressed DS168931 should be True");
+            Assert.IsNotNull(sup.GetSuppressedIssue("DS126858"), "Is suppressed DS126858 should be True");
+            Assert.IsNotNull(sup.GetSuppressedIssue("DS168931"), "Is suppressed DS168931 should be True");
 
             Assert.IsTrue(sup.IsInEffect, "Suppression should be in effect");
             Assert.AreEqual(45, sup.Index, "Suppression start index doesn't match");
             Assert.AreEqual(50, sup.Length, "Suppression length doesn't match");
             Assert.AreEqual(expirationDate.ToShortDateString(), sup.ExpirationDate.ToShortDateString(), "Suppression date doesn't match");
 
-            string[] issues = sup.GetIssues();
-            Assert.IsTrue(issues.Contains("DS126858"), "Issues list is missing DS126858");
-            Assert.IsTrue(issues.Contains("DS168931"), "Issues list is missing DS168931");            
+            SuppressedIssue[] issues = sup.GetIssues();
+            Assert.IsNotNull(issues.FirstOrDefault(x => x.ID == "DS126858"), "Issues list is missing DS126858");
+            Assert.IsNotNull(issues.FirstOrDefault(x => x.ID == "DS168931"), "Issues list is missing DS168931");            
         }
     
         [TestMethod]
