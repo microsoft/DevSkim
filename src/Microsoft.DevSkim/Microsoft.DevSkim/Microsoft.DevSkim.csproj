@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>    
     <PackageId>Microsoft.DevSkim</PackageId>
-    <PackageVersion>1.0.3</PackageVersion>
+    <PackageVersion>1.0.5</PackageVersion>
     <Authors>Microsoft</Authors>
     <PackageTags>Security Linter</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>

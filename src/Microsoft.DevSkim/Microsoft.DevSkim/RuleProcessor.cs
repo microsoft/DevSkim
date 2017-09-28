@@ -145,10 +145,31 @@ namespace Microsoft.DevSkim
                     {
                         supp = new Suppression(textContainer.GetLineContent(result.Location.Line));
                         // If rule is NOT being suppressed then use it
-                        if (!supp.IsIssueSuppressed(result.Rule.Id))
+                        SuppressedIssue supissue = supp.GetSuppressedIssue(result.Rule.Id);
+                        if (supissue == null)
                         {
                             resultsList.Add(result);
-                        } 
+                        }
+                        // Otherwise add the suppression info instead
+                        else
+                        {                            
+                            Boundary bound = textContainer.GetLineBoundary(result.Boundary.Index);
+                            bound.Index += supissue.Boundary.Index;
+                            bound.Length = supissue.Boundary.Length;
+
+                            //resultsList.Add();
+                            Issue info = new Issue()
+                            {
+                                IsSuppressionInfo = true,
+                                Boundary = bound,
+                                Location = textContainer.GetLocation(bound.Index),
+                                Rule = result.Rule
+                            };
+
+                            // Add info only if it's not exists on the same location
+                            if (resultsList.FirstOrDefault(x => x.Rule.Id == info.Rule.Id && x.Boundary.Index == info.Boundary.Index) == null)
+                                resultsList.Add(info);
+                        }
                     }
 
                 }
@@ -179,46 +200,6 @@ namespace Microsoft.DevSkim
 
             // Remove overriden rules
             resultsList.RemoveAll(x => removes.Contains(x));
-
-            // Collect IDS from suppression commands
-            if (EnableSuppressions)
-            {
-                MatchCollection matches = Suppression.GetMatches(text);
-
-                foreach (Match match in matches)
-                {
-                    int suppressStart = match.Index;
-                    int suppressLength = match.Length;
-
-                    string idString = matches[0].Groups[1].Value.Trim();
-                    int index = matches[0].Groups[1].Index;
-
-                    // parse Ids.
-                    string[] ids = idString.Split(',');
-
-                    // Add rules listed in suppression string                    
-                    foreach (string id in ids)
-                    {
-                        Issue issue = new Issue()
-                        {
-                            Boundary = new Boundary()
-                            {
-                                Index = index,
-                                Length = id.Length,
-                            },
-                            Location = textContainer.GetLocation(index),
-                            IsSuppressionInfo = true,
-                            Rule = _ruleset.FirstOrDefault(x => x.Id == id)
-                        };
-
-                        if (issue.Rule != null)
-                            resultsList.Add(issue);
-
-                        index += id.Length + 1;
-                    }
-
-                }
-            }
 
             return resultsList.ToArray();
         }
