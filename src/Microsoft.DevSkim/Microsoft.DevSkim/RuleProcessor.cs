@@ -148,8 +148,9 @@ namespace Microsoft.DevSkim
                         if (!supp.IsIssueSuppressed(result.Rule.Id))
                         {
                             resultsList.Add(result);
-                        }
+                        } 
                     }
+
                 }
                 // Otherwise put matchlist to resultlist 
                 else
@@ -179,12 +180,52 @@ namespace Microsoft.DevSkim
             // Remove overriden rules
             resultsList.RemoveAll(x => removes.Contains(x));
 
+            // Collect IDS from suppression commands
+            if (EnableSuppressions)
+            {
+                MatchCollection matches = Suppression.GetMatches(text);
+
+                foreach (Match match in matches)
+                {
+                    int suppressStart = match.Index;
+                    int suppressLength = match.Length;
+
+                    string idString = matches[0].Groups[1].Value.Trim();
+                    int index = matches[0].Groups[1].Index;
+
+                    // parse Ids.
+                    string[] ids = idString.Split(',');
+
+                    // Add rules listed in suppression string                    
+                    foreach (string id in ids)
+                    {
+                        Issue issue = new Issue()
+                        {
+                            Boundary = new Boundary()
+                            {
+                                Index = index,
+                                Length = id.Length,
+                            },
+                            Location = textContainer.GetLocation(index),
+                            IsSuppressionInfo = true,
+                            Rule = _ruleset.FirstOrDefault(x => x.Id == id)
+                        };
+
+                        if (issue.Rule != null)
+                            resultsList.Add(issue);
+
+                        index += id.Length + 1;
+                    }
+
+                }
+            }
+
             return resultsList.ToArray();
         }
 
         #endregion
 
-        #region Private Methods
+        #region Private Methods      
 
         /// <summary>
         /// Filters the rules for those matching the content type.

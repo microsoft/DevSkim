@@ -13,11 +13,13 @@ namespace Microsoft.DevSkim
         /// Creates new instance of Issue
         /// </summary>
         public Issue()
-        {                        
+        {
             Rule = null;
             Boundary = new Boundary();
+            Location = new Location();
+            IsSuppressionInfo = false;
         }
-        
+
         public Boundary Boundary { get; set; }
         public Location Location { get; set; }
 
@@ -25,5 +27,7 @@ namespace Microsoft.DevSkim
         /// Matching rule
         /// </summary>
         public Rule Rule { get; set; }
+
+        public bool IsSuppressionInfo { get; set; }
     }
 }
