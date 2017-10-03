@@ -85,8 +85,9 @@ namespace Microsoft.DevSkim.CLI
                     result = (list == null) ? string.Empty : string.Join(",", list);
                     break;
                 case "SearchPattern[]":
+                case "SearchCondition[]":
                 case "CodeFix[]":
-                    result = "#PROPERTY NOT SUPPORTED";
+                    result = "#UNSUPPORTED PROPERTY";
                     break;
                 default:
                     result = property.GetValue(rule).ToString();

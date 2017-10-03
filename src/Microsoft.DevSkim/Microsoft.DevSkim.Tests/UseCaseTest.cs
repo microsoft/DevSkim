@@ -60,6 +60,12 @@ namespace Microsoft.DevSkim.Tests
             testString = "strncat(dest, \"this is also bad\", strlen(dest))";
             issues = processor.Analyze(testString, new string[] { "c", "cpp" });
             Assert.AreEqual(2, issues.Length, "Override test failed");
+
+            // Empty string test
+            testString = "";
+            issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(0, issues.Length, "Empty test failed");
+
         }
 
         [TestMethod]
