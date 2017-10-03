@@ -24,10 +24,13 @@ namespace Microsoft.DevSkim
 
             // Find line end in the text
             int pos = 0;
-            while(pos > -1)
+            while(pos > -1 && pos < _content.Length)
             {
-                pos =_content.IndexOf('\n', pos+1);
-                _lineEnds.Add(pos);
+                if (++pos < _content.Length)
+                {
+                    pos = _content.IndexOf('\n', pos);
+                    _lineEnds.Add(pos);
+                }
             }
 
             // Text can end with \n or not

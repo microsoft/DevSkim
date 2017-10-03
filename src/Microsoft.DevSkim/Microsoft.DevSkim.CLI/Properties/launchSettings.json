@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Microsoft.DevSkim.CLI": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "scan d:\\GitHub\\DevSkim -r d:\\rules"
     }
   }
 }

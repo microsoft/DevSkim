@@ -52,11 +52,14 @@ namespace Microsoft.DevSkim
                     return item.Name;
             }
 
-            // Look for extension only
-            foreach (LanguageInfo item in Instance.Languages)
+            // Look for extension only ext is defined
+            if (!string.IsNullOrEmpty(ext))
             {
-                if (Array.Exists(item.Extensions, x => x.EndsWith(ext)))
-                    return item.Name;
+                foreach (LanguageInfo item in Instance.Languages)
+                {
+                    if (Array.Exists(item.Extensions, x => x.EndsWith(ext)))
+                        return item.Name;
+                }
             }
 
             return string.Empty;
