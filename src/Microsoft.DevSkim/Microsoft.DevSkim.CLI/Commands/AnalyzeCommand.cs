@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
-    public class ScanCommand : ICommand
+    public class AnalyzeCommand : ICommand
     {
         public static void Configure(CommandLineApplication command)
         {
@@ -26,13 +26,13 @@ namespace Microsoft.DevSkim.CLI.Commands
                                               CommandOptionType.MultipleValue);
 
             command.OnExecute(() => {
-                return (new ScanCommand(locationArgument.Value,
+                return (new AnalyzeCommand(locationArgument.Value,
                                  outputArgument.Value,
                                  rulesOption.Values)).Run();                
             });
         }
 
-        public ScanCommand(string path, string output, List<string> rules)
+        public AnalyzeCommand(string path, string output, List<string> rules)
         {
             _path = path;
             _outputfile = output;
@@ -43,33 +43,31 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             if (!Directory.Exists(_path) && !File.Exists(_path))
             {
-                Console.Error.WriteLine("Error: Path or file specified does not exist.");                
+                Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);                
                 return 1;
             }
 
             // Set up the rules
-            Ruleset rules = new Ruleset();
-            foreach (string rulesPath in _rulespath)
-            {
-                if (Directory.Exists(rulesPath))
-                    rules.AddDirectory(rulesPath, null);
-                else if (File.Exists(rulesPath))
-                    rules.AddFile(rulesPath, null);
-                else
-                    Console.Error.WriteLine("Warning: Path {0} does not exists", rulesPath);
-            }
+            Compiler compiler = new Compiler(_rulespath);
+            if (!compiler.Compile())
+                return 1;
 
-            if (rules.Count() == 0)
+            if (compiler.CompiledRuleset.Count() == 0)
             {
                 Console.Error.WriteLine("Error: No rules were loaded. ");                
                 return 1;
             }
 
             // Initialize the processor
-            RuleProcessor processor = new RuleProcessor(rules);
+            RuleProcessor processor = new RuleProcessor(compiler.CompiledRuleset);
 
             // Store the results here (JSON only)
             var jsonResult = new List<Dictionary<string, string>>();
+
+            int filesAnalyzed = 0;
+            int filesSkipped = 0;
+            int filesAffected = 0;
+            int issuesCount = 0;
 
             // Iterate through all files
             foreach (string filename in Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories))
@@ -78,26 +76,37 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 // Skip files written in unknown language
                 if (string.IsNullOrEmpty(language))
-                    continue;
-
-                string fileText = File.ReadAllText(filename);
-
-                // Iterate through each issue
-                foreach (Issue issue in processor.Analyze(fileText, language))
                 {
-                    if (string.IsNullOrEmpty(_outputfile))
+                    filesSkipped++;
+                    continue;
+                }
+
+                filesAnalyzed++;
+                string fileText = File.ReadAllText(filename);
+                Issue[] issues = processor.Analyze(fileText, language);
+
+                if (issues.Count() > 0)
+                {
+                    filesAffected++;
+                    issuesCount += issues.Count();
+                    Console.WriteLine("file:{0}", filename);
+
+                    // Iterate through each issue
+                    foreach (Issue issue in issues)
                     {
-                        Console.WriteLine(string.Format("{0}:{1},{2} {3} {4}",
-                                                      filename,
-                                                      issue.Location.Line,
-                                                      issue.Location.Column,
-                                                      issue.Rule.Id,
-                                                      issue.Rule.Name));                        
-                    }
-                    else
-                    {
-                        // Store the result in the result list
-                        jsonResult.Add(new Dictionary<string, string>()
+                        if (string.IsNullOrEmpty(_outputfile))
+                        {
+                            Console.WriteLine("\tline:{0},{1} - {2} [{3}] - {4}",                                                          
+                                                          issue.Location.Line,
+                                                          issue.Location.Column,
+                                                          issue.Rule.Id,
+                                                          issue.Rule.Severity,
+                                                          issue.Rule.Name);
+                        }
+                        else
+                        {
+                            // Store the result in the result list
+                            jsonResult.Add(new Dictionary<string, string>()
                         {
                             { "filename", filename },
                             { "line_number", issue.Location.Line.ToString() },
@@ -107,7 +116,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                             { "rule_name", issue.Rule.Name },
                             { "rule_description", issue.Rule.Description }
                         });
+                        }
                     }
+
+                    if (string.IsNullOrEmpty(_outputfile))
+                        Console.WriteLine();
+
                 }
             }
 
@@ -115,6 +129,10 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 File.WriteAllText(_outputfile, JsonConvert.SerializeObject(jsonResult, Formatting.Indented));
             }
+
+            Console.WriteLine("Issues found: {0} in {1} files", issuesCount, filesAffected);
+            Console.WriteLine("Files analyzed: {0}", filesAnalyzed);
+            Console.WriteLine("Files skipped: {0}", filesSkipped);
 
             return 0;
         }

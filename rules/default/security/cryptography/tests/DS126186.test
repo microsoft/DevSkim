@@ -1,0 +1,4 @@
+line: 2
+===============================================
+requests.get('https://kennethreitz.com',
+             verify=False)

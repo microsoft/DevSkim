@@ -12,7 +12,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void UseCase_Normal_Test()
         {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", "my rules");
 
             RuleProcessor processor = new RuleProcessor(rules);
@@ -71,7 +71,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void UseCase_IgnoreRules_Test()
         {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules)
@@ -118,7 +118,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void UseCase_IgnoreSuppression_Test()
         {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules)
@@ -159,7 +159,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void UseCase_SeverityFilter_Test()
         {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
             rules.AddDirectory(@"rules\custom", null);
 
             RuleProcessor processor = new RuleProcessor(rules);
@@ -177,7 +177,7 @@ namespace Microsoft.DevSkim.Tests
         {
             bool error = false;
 
-            Ruleset rules = new Ruleset();                        
+            RuleSet rules = new RuleSet();                        
             rules.OnDeserializationError += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
             {                
                 error = true;
@@ -191,7 +191,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void LangugeSelector_Test()
         {
-            Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet ruleset = RuleSet.FromDirectory(@"rules\valid", null);
             RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"5.1.0\"";
 
@@ -226,7 +226,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void Conditions_Test()
         {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
 
             RuleProcessor processor = new RuleProcessor(rules)
             {
@@ -265,7 +265,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void Scope_Test()
         {
-            Ruleset rules = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
 
             RuleProcessor processor = new RuleProcessor(rules)
             {

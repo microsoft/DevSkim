@@ -15,11 +15,11 @@ namespace Microsoft.DevSkim.CLI.Commands
             app.Name = "devskim";
             app.HelpOption("-?|-h|--help");
 
-            app.Command("scan", ScanCommand.Configure);
+            app.Command("analyze", AnalyzeCommand.Configure);
             app.Command("compile", CompileCommand.Configure);
             app.Command("pack", PackCommand.Configure);
             app.Command("catalogue", CatalogueCommand.Configure);
-            //app.Command("test", TestCommand.Configure);
+            app.Command("test", TestCommand.Configure);
 
             app.OnExecute(() => {
                 return (new RootCommand(app)).Run();                

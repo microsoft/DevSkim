@@ -55,11 +55,11 @@ namespace Microsoft.DevSkim
         /// <param name="boundary">Content boundary</param>
         /// <param name="searchIn">Search in command</param>
         /// <returns></returns>
-        public bool MatchPattern(SearchPattern pattern, Boundary boundary, string searchIn)
+        public bool MatchPattern(SearchPattern pattern, Boundary boundary, SearchCondition condition)
         {
             bool result = false;
 
-            Boundary scope = ParseSearchBoundary(boundary, searchIn);
+            Boundary scope = ParseSearchBoundary(boundary, condition.SearchIn);
 
             string text = _content.Substring(scope.Index, scope.Length);
             List<Boundary> macthes = MatchPattern(pattern, text);
@@ -265,9 +265,9 @@ namespace Microsoft.DevSkim
             if (m.Success)
             {
                 result = true;
-                foreach (Group group in m.Groups)
+                for (int i=1; i < m.Groups.Count; i++)
                 {
-                    if (int.TryParse(group.Value, out int value))
+                    if (int.TryParse(m.Groups[i].Value, out int value))
                     {
                         arglist.Add(value);
                     }

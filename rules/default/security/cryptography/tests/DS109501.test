@@ -1,3 +1,5 @@
+line: 1
+===============================================
 using (var myTripleDES = new TripleDESCryptoServiceProvider())
 {
     ...

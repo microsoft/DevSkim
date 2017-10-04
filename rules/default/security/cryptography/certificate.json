@@ -386,13 +386,13 @@
                 "pattern" :
                 {
                     "pattern": "requests.",
-                    "type": "substring",
-                    "search_in": "finding-region(-3, 0)",
+                    "type": "substring",                    
                     "scopes": [
                         "code"
                     ],
                     "_comment": ""
                 },
+                "search_in": "finding-region(-3, 0)",
                 "negate_finding": false,
                 "_comment": ""
             }

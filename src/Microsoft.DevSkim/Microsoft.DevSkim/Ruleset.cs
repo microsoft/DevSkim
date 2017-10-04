@@ -7,13 +7,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim
 {
     /// <summary>
     /// Storage for rules
     /// </summary>
-    public class Ruleset : IEnumerable<Rule>
+    public class RuleSet : IEnumerable<Rule>
     {
         /// <summary>
         /// Delegate for deserialization error handler
@@ -30,7 +31,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         /// Creates instance of Ruleset
         /// </summary>
-        public Ruleset()
+        public RuleSet()
         {
             _rules = new List<Rule>();
         }
@@ -41,9 +42,9 @@ namespace Microsoft.DevSkim
         /// <param name="path">Path to rules folder</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static Ruleset FromDirectory(string path, string tag)
+        public static RuleSet FromDirectory(string path, string tag)
         {
-            Ruleset result = new Ruleset();
+            RuleSet result = new RuleSet();
             result.AddDirectory(path, tag);
 
             return result;
@@ -55,9 +56,9 @@ namespace Microsoft.DevSkim
         /// <param name="filename">Filename with rules</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static Ruleset FromFile(string filename, string tag)
+        public static RuleSet FromFile(string filename, string tag)
         {
-            Ruleset result = new Ruleset();
+            RuleSet result = new RuleSet();
             result.AddFile(filename, tag);
 
             return result;
@@ -70,9 +71,9 @@ namespace Microsoft.DevSkim
         /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static Ruleset FromString(string jsonstring, string sourcename, string tag)
+        public static RuleSet FromString(string jsonstring, string sourcename, string tag)
         {
-            Ruleset result = new Ruleset();
+            RuleSet result = new RuleSet();
             result.AddString(jsonstring, sourcename, tag);
 
             return result;
@@ -140,15 +141,20 @@ namespace Microsoft.DevSkim
 
                     foreach (SearchPattern p in r.Patterns)
                     {
-                        if (p.PatternType == PatternType.RegexWord || p.PatternType == PatternType.String)
+                        if (p.PatternType == PatternType.RegexWord)
                         {
                             p.PatternType = PatternType.Regex;
                             p.Pattern = string.Format(@"\b{0}\b", p.Pattern);
                         }
+                        else if (p.PatternType == PatternType.String)
+                        {
+                            p.PatternType = PatternType.Regex;
+                            p.Pattern = string.Format(@"\b{0}\b", Regex.Escape(p.Pattern));
+                        }
                         else if (p.PatternType == PatternType.Substring)
                         {
                             p.PatternType = PatternType.Regex;
-                            p.Pattern = string.Format(@"{0}", p.Pattern);
+                            p.Pattern = string.Format(@"{0}", Regex.Escape(p.Pattern));
                         }
                     }
 

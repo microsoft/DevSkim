@@ -1,3 +1,5 @@
+line: 2
+===============================================
 // Flag these
 exec master.dbo.xp_cmdshell 'dir c:\temp\*.sql'
 

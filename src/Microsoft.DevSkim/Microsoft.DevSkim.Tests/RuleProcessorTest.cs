@@ -11,7 +11,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]        
         public void IsMatch_FalseTest()
         {
-            Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet ruleset = RuleSet.FromDirectory(@"rules\valid", null);
             RuleProcessor processor = new RuleProcessor(ruleset);            
             string testString = "this is a test string";
 
@@ -49,7 +49,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void RuleInfoTest()
         {
-            Ruleset ruleset = Ruleset.FromDirectory(@"rules\valid", null);
+            RuleSet ruleset = RuleSet.FromDirectory(@"rules\valid", null);
             RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "strcpy(dest,src);";
             

@@ -1,13 +1,16 @@
+line: 2
+line: 3
+line: 4
+===============================================
+[YES]
+http://foo.com
+[YES] this is "http://foo.com"
+[YES] blah 'http://blah'
+
 [NO]
 https://
 
-[YES]
-http://foo.com
-
 [NO] this is "https://foo.com"
-
-[YES] this is "http://foo.com"
-[YES] blah 'http://blah'
 
 [NO] <SCRIPT SRC="//BLAH"></SCRIPT>
 
