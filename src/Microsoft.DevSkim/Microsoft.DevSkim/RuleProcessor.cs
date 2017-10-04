@@ -30,7 +30,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         /// Creates instance of RuleProcessor
         /// </summary>
-        public RuleProcessor(Ruleset rules) : this()
+        public RuleProcessor(RuleSet rules) : this()
         {
             this.Rules = rules;
         }       
@@ -79,7 +79,7 @@ namespace Microsoft.DevSkim
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
             List<Issue> resultsList = new List<Issue>();
-            TextContainer textContainer = new TextContainer(text, languages[0]);
+            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty);
 
             // Go through each rule
             foreach (Rule rule in rules)
@@ -103,7 +103,7 @@ namespace Microsoft.DevSkim
                             bool passedConditions = true;
                             foreach (SearchCondition condition in rule.Conditions)
                             {
-                                bool res = textContainer.MatchPattern(condition.Pattern, match, condition.SearchIn);                                
+                                bool res = textContainer.MatchPattern(condition.Pattern, match, condition);                                
                                 if (res && condition.NegateFinding)
                                 {
                                     passedConditions = false;
@@ -246,7 +246,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         /// Ruleset to be used for analysis
         /// </summary>
-        public Ruleset Rules
+        public RuleSet Rules
         {
             get { return _ruleset; }
             set
@@ -275,7 +275,7 @@ namespace Microsoft.DevSkim
 
         #region Fields 
 
-        private Ruleset _ruleset;
+        private RuleSet _ruleset;
 
         /// <summary>
         /// Cache for rules filtered by content type

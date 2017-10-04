@@ -8,31 +8,34 @@ namespace Microsoft.DevSkim.CLI
 {
     class Compiler
     {
-        public Compiler(string path)
+        public Compiler(string[] paths)
         {
             _messages = new List<ErrorMessage>();
-            _rules = new Ruleset();
-            _path = path;
+            _rules = new RuleSet();
+            _paths = paths;
+        }
+
+        public Compiler(string path) 
+            : this(new string[] { path })
+        {
         }
 
         public bool Compile()
         {
             bool isCompiled = true;
-
-            if (string.IsNullOrEmpty(_path))
+            
+            foreach (string rulesPath in _paths)
             {
-                Console.Error.WriteLine("Error: Path to rules is missing");
-                return false;
-            }
-
-            if (File.Exists(_path))
-                isCompiled = LoadFile(_path);
-            else if (Directory.Exists(_path))
-                isCompiled = LoadDirectory(_path);
-            else
-            {
-                Console.Error.WriteLine("Error: Invalid path to rules");
-                return false;
+                if (Directory.Exists(rulesPath))
+                    _rules.AddDirectory(rulesPath, null);
+                else if (File.Exists(rulesPath))
+                    _rules.AddFile(rulesPath, null);
+                else
+                {
+                    Console.Error.WriteLine("Error: Not a valid file or directory {0}", rulesPath);
+                    isCompiled = false;
+                    break;
+                }
             }
 
             if (isCompiled)
@@ -42,15 +45,17 @@ namespace Microsoft.DevSkim.CLI
 
             foreach (ErrorMessage message in _messages)
             {
-                Console.Error.WriteLine("{0}: {1}", (message.Warning) ? "Warning" : "Error", message.Message);
+                Console.Error.WriteLine("file: {0}", message.File);                
 
                 if (!string.IsNullOrEmpty(message.Path))
-                    Console.Error.WriteLine("Property: {0}", message.Path);
+                    Console.Error.WriteLine("\tproperty: {0}", message.Path);
 
                 if (!string.IsNullOrEmpty(message.RuleID))
-                    Console.Error.WriteLine("Rule: {0}", message.RuleID);
+                    Console.Error.WriteLine("\trule: {0}", message.RuleID);
 
-                Console.Error.WriteLine("File: {0}", message.File);
+                Console.Error.WriteLine("\tseverity: {0}", (message.Warning) ? "warning" : "error");
+                Console.Error.WriteLine("\tmessage: {1}", message.Message);
+
                 Console.Error.WriteLine();
             }            
 
@@ -82,7 +87,7 @@ namespace Microsoft.DevSkim.CLI
                     {
                         _messages.Add(new ErrorMessage()
                         {
-                            Message = "Two or more rules have same ID",
+                            Message = "Two or more rules have a same ID",
                             RuleID = sameRule.Id,
                             File = sameRule.Source,
                             Warning = true
@@ -90,7 +95,7 @@ namespace Microsoft.DevSkim.CLI
 
                         _messages.Add(new ErrorMessage()
                         {
-                            Message = "Two or more rules have same ID",
+                            Message = "Two or more rules have a same ID",
                             RuleID = rule.Id,
                             File = rule.Source,
                             Warning = true
@@ -133,7 +138,7 @@ namespace Microsoft.DevSkim.CLI
 
         private bool LoadFile(string file)
         {
-            Ruleset rules = new Ruleset();
+            RuleSet rules = new RuleSet();
             bool noProblem = true;
             rules.OnDeserializationError += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
@@ -170,13 +175,13 @@ namespace Microsoft.DevSkim.CLI
             get { return _messages.ToArray(); }
         }
 
-        public Ruleset CompiledRuleset
+        public RuleSet CompiledRuleset
         {
             get { return _rules; }
         }
 
         private List<ErrorMessage> _messages = new List<ErrorMessage>();
-        private Ruleset _rules;
-        private string _path;
+        private RuleSet _rules;        
+        private string[] _paths;
     }
 }

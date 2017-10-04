@@ -1,9 +1,6 @@
-﻿using Microsoft.DevSkim;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using Newtonsoft.Json;
 using System.IO;
@@ -12,7 +9,7 @@ namespace Microsoft.DevSkim.CLI
 {
     class Catalogue
     {
-        public Catalogue(Ruleset rules)
+        public Catalogue(RuleSet rules)
         {
             _rules = rules;
         }
@@ -85,8 +82,9 @@ namespace Microsoft.DevSkim.CLI
                     result = (list == null) ? string.Empty : string.Join(",", list);
                     break;
                 case "SearchPattern[]":
+                case "SearchCondition[]":
                 case "CodeFix[]":
-                    result = "#PROPERTY NOT SUPPORTED";
+                    result = "#UNSUPPORTED PROPERTY";
                     break;
                 default:
                     result = property.GetValue(rule).ToString();
@@ -96,6 +94,6 @@ namespace Microsoft.DevSkim.CLI
             return result;
         }
 
-        private Ruleset _rules;
+        private RuleSet _rules;
     }
 }

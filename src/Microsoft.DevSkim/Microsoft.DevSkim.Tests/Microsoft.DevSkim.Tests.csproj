@@ -5,41 +5,6 @@
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="rules\custom\quickfix.json" />
-    <None Remove="rules\invalid\invalid_todo.json" />
-    <None Remove="rules\valid\aspnet5.json" />
-    <None Remove="rules\valid\certificate.json" />
-    <None Remove="rules\valid\ciphers.json" />
-    <None Remove="rules\valid\dangerous_api.json" />
-    <None Remove="rules\valid\deserialization.json" />
-    <None Remove="rules\valid\device_restrictions.json" />
-    <None Remove="rules\valid\devskim-indent.json" />
-    <None Remove="rules\valid\dynamiccode.json" />
-    <None Remove="rules\valid\dynamic_execution.json" />
-    <None Remove="rules\valid\external_entities.json" />
-    <None Remove="rules\valid\format_string.json" />
-    <None Remove="rules\valid\general.json" />
-    <None Remove="rules\valid\hash_algorithm.json" />
-    <None Remove="rules\valid\initialization_vector.json" />
-    <None Remove="rules\valid\localhost.json" />
-    <None Remove="rules\valid\microsoft_nuget.json" />
-    <None Remove="rules\valid\misused_api.json" />
-    <None Remove="rules\valid\outbound_network.json" />
-    <None Remove="rules\valid\permission_evelation.json" />
-    <None Remove="rules\valid\php.json" />
-    <None Remove="rules\valid\protocol.json" />
-    <None Remove="rules\valid\random.json" />
-    <None Remove="rules\valid\secrets.json" />
-    <None Remove="rules\valid\secure_storage.json" />
-    <None Remove="rules\valid\suggested_api.json" />
-    <None Remove="rules\valid\todo.json" />
-    <None Remove="rules\valid\t_sql.json" />
-    <None Remove="rules\valid\underhanded.json" />
-    <None Remove="rules\valid\weak_cipher_modes.json" />
-  </ItemGroup>
-
   <ItemGroup>
     <Content Include="rules\custom\quickfix.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -47,88 +12,7 @@
     <Content Include="rules\invalid\invalid_todo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="rules\valid\aspnet5.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\certificate.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\ciphers.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\dangerous_api.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\deserialization.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\device_restrictions.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\dynamiccode.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\dynamic_execution.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\external_entities.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\format_string.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\general.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\hash_algorithm.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\initialization_vector.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\localhost.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\microsoft_nuget.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\misused_api.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\outbound_network.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\permission_evelation.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\php.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\protocol.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\random.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\secrets.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\secure_storage.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\suggested_api.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\todo.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\t_sql.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\underhanded.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rules\valid\weak_cipher_modes.json">
+    <Content Include="rules\valid\devskim-rules.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
