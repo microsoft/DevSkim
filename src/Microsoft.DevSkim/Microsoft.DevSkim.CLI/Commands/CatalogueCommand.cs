@@ -7,7 +7,7 @@ namespace Microsoft.DevSkim.CLI.Commands
     {
         public static void Configure(CommandLineApplication command)
         {
-            command.Description = "Catalogue rules into a csv file";
+            command.Description = "Create csv file catalogue of rules";
             command.HelpOption("-?|-h|--help");
 
             var locationArgument = command.Argument("[path]",
@@ -36,12 +36,12 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
-            Compiler compiler = new Compiler(_path);
+            Verifier verifier = new Verifier(_path);
 
-            if (!compiler.Compile())
+            if (!verifier.Verify())
                 return 1;
             
-            Catalogue catalogue = new Catalogue(compiler.CompiledRuleset);
+            Catalogue catalogue = new Catalogue(verifier.CompiledRuleset);
             catalogue.ToCsv(_outputfile, _columns);
 
             return 0;

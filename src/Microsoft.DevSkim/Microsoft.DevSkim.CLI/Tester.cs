@@ -76,10 +76,10 @@ namespace Microsoft.DevSkim.CLI
                 }
             }
             
-            if (unexpected.Count > 0 || expecations.All(x => x.Value.Count > 0))
+            if (unexpected.Count > 0 || expecations.Any(x => x.Value.Count > 0))
             {
                 result = false;
-                Console.WriteLine("file: {0}", fileName);
+                Console.WriteLine("file:{0}", fileName);
                 foreach(KeyValuePair<Location, string> pair in unexpected)
                 {                    
                     Console.WriteLine("\tline:{0},{1} unexpected {2}", pair.Key.Line, pair.Key.Column, pair.Value);

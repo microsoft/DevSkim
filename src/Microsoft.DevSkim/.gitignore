@@ -12,3 +12,4 @@ Microsoft.DevSkim.CLI/obj
 TestResults
 packages
 .vs/
+*.log

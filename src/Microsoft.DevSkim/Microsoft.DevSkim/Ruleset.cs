@@ -139,27 +139,21 @@ namespace Microsoft.DevSkim
                     r.Source = sourcename;
                     r.RuntimeTag = tag;
 
-                    foreach (SearchPattern p in r.Patterns)
+                    if (r.Patterns == null)
+                        r.Patterns = new SearchPattern[] { };
+
+                    foreach (SearchPattern pattern in r.Patterns)
                     {
-                        if (p.PatternType == PatternType.RegexWord)
-                        {
-                            p.PatternType = PatternType.Regex;
-                            p.Pattern = string.Format(@"\b{0}\b", p.Pattern);
-                        }
-                        else if (p.PatternType == PatternType.String)
-                        {
-                            p.PatternType = PatternType.Regex;
-                            p.Pattern = string.Format(@"\b{0}\b", Regex.Escape(p.Pattern));
-                        }
-                        else if (p.PatternType == PatternType.Substring)
-                        {
-                            p.PatternType = PatternType.Regex;
-                            p.Pattern = string.Format(@"{0}", Regex.Escape(p.Pattern));
-                        }
+                        SanitizePatternRegex(pattern);
                     }
 
                     if (r.Conditions == null)
-                        r.Conditions = new List<SearchCondition>().ToArray();
+                        r.Conditions = new SearchCondition[] { };
+
+                    foreach (SearchCondition condition in r.Conditions)
+                    {                                             
+                        SanitizePatternRegex(condition.Pattern);                        
+                    }
                 }
 
                 _rules.AddRange(ruleList);
@@ -209,6 +203,29 @@ namespace Microsoft.DevSkim
             }
 
             return filteredRules;
+        }
+
+        /// <summary>
+        /// Method santizes pattern to be a valid regex
+        /// </summary>
+        /// <param name="pattern"></param>
+        private void SanitizePatternRegex(SearchPattern pattern)
+        {
+            if (pattern.PatternType == PatternType.RegexWord)
+            {
+                pattern.PatternType = PatternType.Regex;
+                pattern.Pattern = string.Format(@"\b{0}\b", pattern.Pattern);
+            }
+            else if (pattern.PatternType == PatternType.String)
+            {
+                pattern.PatternType = PatternType.Regex;
+                pattern.Pattern = string.Format(@"\b{0}\b", Regex.Escape(pattern.Pattern));
+            }
+            else if (pattern.PatternType == PatternType.Substring)
+            {
+                pattern.PatternType = PatternType.Regex;
+                pattern.Pattern = string.Format(@"{0}", Regex.Escape(pattern.Pattern));
+            }
         }
 
         /// <summary>

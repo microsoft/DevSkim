@@ -38,13 +38,13 @@ namespace Microsoft.DevSkim.CLI.Commands
         }
 
         public int Run()
-        {
-            Compiler compiler = new Compiler(_path);
+        {            
+            Verifier verifier = new Verifier(_path);
 
-            if (!compiler.Compile())
+            if (!verifier.Verify())
                 return 1;
 
-            List<Rule> list = new List<Rule>(compiler.CompiledRuleset.AsEnumerable());
+            List<Rule> list = new List<Rule>(verifier.CompiledRuleset.AsEnumerable());
 
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.Formatting = (_indent) ? Formatting.Indented : Formatting.None;

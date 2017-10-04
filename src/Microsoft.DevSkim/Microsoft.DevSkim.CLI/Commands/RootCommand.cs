@@ -1,10 +1,6 @@
 ﻿using Microsoft.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text;
+using System.Reflection;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -12,14 +8,24 @@ namespace Microsoft.DevSkim.CLI.Commands
     {
         public static void Configure(CommandLineApplication app)
         {
-            app.Name = "devskim";
-            app.HelpOption("-?|-h|--help");
+            app.FullName = Assembly.GetEntryAssembly()
+                               .GetCustomAttribute<AssemblyProductAttribute>()
+                               .Product;
 
-            app.Command("analyze", AnalyzeCommand.Configure);
-            app.Command("compile", CompileCommand.Configure);
-            app.Command("pack", PackCommand.Configure);
-            app.Command("catalogue", CatalogueCommand.Configure);
-            app.Command("test", TestCommand.Configure);
+            app.Name = Assembly.GetEntryAssembly()
+                               .GetCustomAttribute<AssemblyTitleAttribute>()
+                               .Title;
+
+            app.HelpOption("-?|-h|--help");            
+            app.VersionOption("-v|--version", Assembly.GetEntryAssembly()
+                                                      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                                                      .InformationalVersion);
+
+            app.Command("analyze", AnalyzeCommand.Configure, false);
+            app.Command("verify", VerifyCommand.Configure, false);
+            app.Command("pack", PackCommand.Configure, false);
+            app.Command("catalogue", CatalogueCommand.Configure, false);
+            app.Command("test", TestCommand.Configure, false);
 
             app.OnExecute(() => {
                 return (new RootCommand(app)).Run();                
@@ -28,15 +34,16 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public RootCommand(CommandLineApplication app)
         {
-            _app = app;
+            _app = app;            
         }
 
         public int Run()
-        {
-            _app.ShowHelp();
+        {                     
+            _app.ShowHelp();            
+
             return 0;
         }
 
-        CommandLineApplication _app;
+        CommandLineApplication _app;        
     }
 }
