@@ -8,7 +8,7 @@
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <ApplicationIcon />
     <PackageId>Microsoft.DevSkim.CLI</PackageId>
-    <Product>Microsoft.DevSkim.CLI</Product>    
+    <Product>Microsoft DevSkim Command Line Interface</Product>
     <Version>0.3.5</Version>
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>

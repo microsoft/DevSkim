@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.CommandLineUtils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -9,7 +7,6 @@ namespace Microsoft.DevSkim.CLI.Commands
    {
         public static void Configure(CommandLineApplication command)
         {
-
             command.Description = "Verify integrity and syntax of rules";
             command.HelpOption("-?|-h|--help");
 

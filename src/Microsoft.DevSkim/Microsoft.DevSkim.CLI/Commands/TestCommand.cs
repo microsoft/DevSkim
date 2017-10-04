@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System;
 
@@ -10,20 +7,19 @@ namespace Microsoft.DevSkim.CLI.Commands
     public class TestCommand : ICommand
     {
         public static void Configure(CommandLineApplication command)
-        {
+        {            
             command.Description = "Run tests for rules";
             command.HelpOption("-?|-h|--help");
-
+            
             var locationArgument = command.Argument("[path]",
                                                     "Path to rules");
-
 
             command.OnExecute(() => {
                 return (new TestCommand(locationArgument.Value)).Run();
             });
         }
 
-        public TestCommand(string path)
+        public TestCommand(string path)            
         {
             _path = path;
         }

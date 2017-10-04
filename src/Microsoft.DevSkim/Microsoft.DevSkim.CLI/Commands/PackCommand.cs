@@ -38,7 +38,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         }
 
         public int Run()
-        {
+        {            
             Verifier verifier = new Verifier(_path);
 
             if (!verifier.Verify())

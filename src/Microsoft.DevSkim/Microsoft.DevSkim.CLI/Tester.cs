@@ -76,7 +76,7 @@ namespace Microsoft.DevSkim.CLI
                 }
             }
             
-            if (unexpected.Count > 0 || expecations.All(x => x.Value.Count > 0))
+            if (unexpected.Count > 0 || expecations.Any(x => x.Value.Count > 0))
             {
                 result = false;
                 Console.WriteLine("file:{0}", fileName);
