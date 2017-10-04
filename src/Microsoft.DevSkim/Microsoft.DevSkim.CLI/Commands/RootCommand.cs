@@ -16,7 +16,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             app.HelpOption("-?|-h|--help");
 
             app.Command("analyze", AnalyzeCommand.Configure);
-            app.Command("compile", CompileCommand.Configure);
+            app.Command("verify", VerifyCommand.Configure);
             app.Command("pack", PackCommand.Configure);
             app.Command("catalogue", CatalogueCommand.Configure);
             app.Command("test", TestCommand.Configure);

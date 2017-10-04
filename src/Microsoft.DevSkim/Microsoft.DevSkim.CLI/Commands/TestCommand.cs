@@ -36,11 +36,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return 1;
             }
 
-            Compiler compiler = new Compiler(_path);
-            if (!compiler.Compile())
+            Verifier verifier = new Verifier(_path);
+            if (!verifier.Verify())
                 return 1;
 
-            Tester tester = new Tester(compiler.CompiledRuleset);
+            Tester tester = new Tester(verifier.CompiledRuleset);
             tester.Run(_path);
 
             return 0;

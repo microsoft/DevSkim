@@ -12,7 +12,7 @@ namespace Microsoft.DevSkim.CLI.Commands
     {
         public static void Configure(CommandLineApplication command)
         {
-            command.Description = "Scan source code";
+            command.Description = "Analyze source code";
             command.HelpOption("-?|-h|--help");
 
             var locationArgument = command.Argument("[path]",
@@ -48,18 +48,18 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
 
             // Set up the rules
-            Compiler compiler = new Compiler(_rulespath);
-            if (!compiler.Compile())
+            Verifier verifier = new Verifier(_rulespath);
+            if (!verifier.Verify())
                 return 1;
 
-            if (compiler.CompiledRuleset.Count() == 0)
+            if (verifier.CompiledRuleset.Count() == 0)
             {
                 Console.Error.WriteLine("Error: No rules were loaded. ");                
                 return 1;
             }
 
             // Initialize the processor
-            RuleProcessor processor = new RuleProcessor(compiler.CompiledRuleset);
+            RuleProcessor processor = new RuleProcessor(verifier.CompiledRuleset);
 
             // Store the results here (JSON only)
             var jsonResult = new List<Dictionary<string, string>>();
