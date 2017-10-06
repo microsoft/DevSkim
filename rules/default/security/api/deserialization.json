@@ -40,7 +40,7 @@
         "rule_info": "DS425000.md",
         "patterns": [
             {
-                "pattern": ".readObject(",
+                "pattern": ".readObject\\(",
                 "type": "substring",
                 "scopes": [
                     "code"
@@ -65,7 +65,7 @@
         "rule_info": "DS425000.md",
         "patterns": [
             {
-                "pattern": "unserialize(",
+                "pattern": "unserialize\\(",
                 "type": "string",
                 "scopes": [
                     "code"
