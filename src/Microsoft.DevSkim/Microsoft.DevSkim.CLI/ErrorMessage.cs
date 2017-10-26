@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (C) Microsoft. All rights reserved.
+// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 namespace Microsoft.DevSkim.CLI
 {
