@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.CommandLineUtils;
-using System;
+﻿// Copyright (C) Microsoft. All rights reserved.
+// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+
+using Microsoft.Extensions.CommandLineUtils;
 using System.Reflection;
 
 namespace Microsoft.DevSkim.CLI.Commands

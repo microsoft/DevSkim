@@ -1,9 +1,13 @@
-﻿using Microsoft.Extensions.CommandLineUtils;
+﻿// Copyright (C) Microsoft. All rights reserved.
+// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+
+using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Reflection;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -24,18 +28,27 @@ namespace Microsoft.DevSkim.CLI.Commands
                                               "Rules to use",
                                               CommandOptionType.MultipleValue);
 
+            var ignoreOption = command.Option("-i|--ignore-default-rules",
+                                              "Ignore rules bundled with DevSkim",
+                                              CommandOptionType.NoValue);
+
             command.OnExecute(() => {
                 return (new AnalyzeCommand(locationArgument.Value,
                                  outputArgument.Value,
-                                 rulesOption.Values)).Run();                
+                                 rulesOption.Values,
+                                 ignoreOption.HasValue())).Run();                
             });
         }
 
-        public AnalyzeCommand(string path, string output, List<string> rules)
+        public AnalyzeCommand(string path, 
+                              string output, 
+                              List<string> rules,
+                              bool ignoreDefault)
         {
             _path = path;
             _outputfile = output;
             _rulespath = rules.ToArray();
+            _ignoreDefaultRules = ignoreDefault;
         }
 
         public int Run()
@@ -46,19 +59,38 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return 1;
             }
 
-            // Set up the rules
-            Verifier verifier = new Verifier(_rulespath);
-            if (!verifier.Verify())
-                return 1;
-
-            if (verifier.CompiledRuleset.Count() == 0)
+            Verifier verifier = null;
+            if (_rulespath.Count() > 0)
             {
-                Console.Error.WriteLine("Error: No rules were loaded. ");                
-                return 1;
+                // Setup the rules
+                verifier = new Verifier(_rulespath);
+                if (!verifier.Verify())
+                    return 1;
+
+                if (verifier.CompiledRuleset.Count() == 0 && _ignoreDefaultRules)
+                {
+                    Console.Error.WriteLine("Error: No rules were loaded. ");
+                    return 1;
+                }
+            }
+
+            RuleSet rules = new RuleSet();
+            if (verifier != null)
+                rules = verifier.CompiledRuleset;
+
+            if (!_ignoreDefaultRules)
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                string filePath = "Microsoft.DevSkim.CLI.Resources.devskim-rules.json";
+                Stream resource = assembly.GetManifestResourceStream(filePath);
+                using (StreamReader file = new StreamReader(resource))
+                {
+                    rules.AddString(file.ReadToEnd(), filePath, null);
+                }                
             }
 
             // Initialize the processor
-            RuleProcessor processor = new RuleProcessor(verifier.CompiledRuleset);
+            RuleProcessor processor = new RuleProcessor(rules);
 
             // Store the results here (JSON only)
             var jsonResult = new List<Dictionary<string, string>>();
@@ -139,5 +171,6 @@ namespace Microsoft.DevSkim.CLI.Commands
         private string _path;
         private string _outputfile;
         private string[] _rulespath;
+        private bool _ignoreDefaultRules;
     }
 }
