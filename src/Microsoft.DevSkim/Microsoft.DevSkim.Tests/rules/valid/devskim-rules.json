@@ -386,7 +386,7 @@
     "rule_info": "DS425000.md",
     "patterns": [
       {
-        "pattern": "\\.readObject\\(",
+        "pattern": "\\.readObject\\\\\\(",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -415,7 +415,7 @@
     "rule_info": "DS425000.md",
     "patterns": [
       {
-        "pattern": "\\bunserialize\\(\\b",
+        "pattern": "\\bunserialize\\\\\\(\\b",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1504,8 +1504,8 @@
     "conditions": [
       {
         "pattern": {
-          "pattern": "requests.",
-          "type": "substring",
+          "pattern": "requests\\.",
+          "type": "regex",
           "modifiers": null,
           "scopes": [
             "code",

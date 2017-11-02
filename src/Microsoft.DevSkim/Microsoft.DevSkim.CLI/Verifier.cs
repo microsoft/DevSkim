@@ -183,7 +183,7 @@ namespace Microsoft.DevSkim.CLI
         }
 
         private List<ErrorMessage> _messages = new List<ErrorMessage>();
-        private RuleSet _rules;        
+        private RuleSet _rules;
         private string[] _paths;
     }
 }
