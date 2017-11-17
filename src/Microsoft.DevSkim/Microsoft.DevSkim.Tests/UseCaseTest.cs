@@ -15,10 +15,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void UseCase_Normal_Test()
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
-            rules.AddDirectory(@"rules\custom", "my rules");
-
-            RuleProcessor processor = new RuleProcessor(rules);
+            RuleProcessor processor = new RuleProcessor(LoadRules(true));
 
             string lang = Language.FromFileName("testfilename.cpp");
             string testString = "strcpy(dest,src);";
@@ -29,55 +26,76 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(0, issues[0].Boundary.Index, "strcpy invalid index");
             Assert.AreEqual(16, issues[0].Boundary.Length, "strcpy invalid length ");
             Assert.AreEqual("DS185832", issues[0].Rule.Id, "strcpy invalid rule");
-
+        
             // Fix it test
             Assert.AreNotEqual(issues[0].Rule.Fixes.Length, 0, "strcpy invalid Fixes");
             CodeFix fix = issues[0].Rule.Fixes[0];
             string fixedCode = RuleProcessor.Fix(testString, fix);
             Assert.AreEqual("strcpy_s(dest, <size of dest>, src);", fixedCode, "strcpy invalid code fix");
             Assert.IsTrue(fix.Name.Contains("Change to strcpy_s"), "strcpy wrong fix name");
-            
+        }
+
+        [TestMethod]
+        public void UseCase_ManualReview_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true));
             // QUICKFIX test
             processor.SeverityLevel |= Severity.ManualReview;
-            testString = "//QUICKFIX: fix this later";
-            issues = processor.Analyze(testString, "csharp");
+            string testString = "//QUICKFIX: fix this later";
+            Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "QUICKFIX should be flagged");
             Assert.AreEqual(2, issues[0].Boundary.Index, "QUICKFIX invalid index");
             Assert.AreEqual(8, issues[0].Boundary.Length, "QUICKFIX invalid length ");
             Assert.AreEqual("DS276209", issues[0].Rule.Id, "QUICKFIX invalid rule");
             Assert.AreEqual(0, issues[0].Rule.Fixes.Length, "QUICKFIX invalid Fixes");
             Assert.AreEqual("my rules", issues[0].Rule.RuntimeTag, "QUICKFIX invalid tag");
+        }
 
+        [TestMethod]
+        public void UseCase_IssueTwice_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true));
             // Same issue twice test
-            testString = "MD5 hash = MD5.Create();";
-            issues = processor.Analyze(testString, "csharp");
+            string testString = "MD5 hash = MD5.Create();";
+            Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "Same issue should be twice on line");
             Assert.AreEqual(issues[0].Rule, issues[1].Rule, "Same issues should have sames rule IDs");
+        }
 
+        [TestMethod]
+        public void UseCase_OverlapingIssues_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true));
             // Overlaping issues
-            testString = "            MD5 hash = new MD5CryptoServiceProvider();";
-            issues = processor.Analyze(testString, "csharp");
+            string testString = "            MD5 hash = new MD5CryptoServiceProvider();";
+            Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "Overlaping issue count doesn't add up");
+        }
 
+        [TestMethod]
+        public void UseCase_OverrideTest_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true));
             // Override test
-            testString = "strncat(dest, \"this is also bad\", strlen(dest))";
-            issues = processor.Analyze(testString, new string[] { "c", "cpp" });
+            string testString = "strncat(dest, \"this is also bad\", strlen(dest))";
+            Issue[] issues = processor.Analyze(testString, new string[] { "c", "cpp" });
             Assert.AreEqual(2, issues.Length, "Override test failed");
+        }
 
+        [TestMethod]
+        public void UseCase_EmptyString_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true));
             // Empty string test
-            testString = "";
-            issues = processor.Analyze(testString, "csharp");
+            string testString = "";
+            Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(0, issues.Length, "Empty test failed");
-
         }
 
         [TestMethod]
         public void UseCase_IgnoreRules_Test()
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
-            rules.AddDirectory(@"rules\custom", null);
-
-            RuleProcessor processor = new RuleProcessor(rules)
+            RuleProcessor processor = new RuleProcessor(LoadRules(true))
             {
                 EnableSuppressions = true
             };
@@ -91,40 +109,74 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(24, issues[0].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
             Assert.AreEqual("DS168931", issues[0].Rule.Id, "MD5CryptoServiceProvider invalid rule");
             Assert.AreEqual(true, issues[1].IsSuppressionInfo, "MD5CryptoServiceProvider second issue should be info");
+        }
+
+        [TestMethod]
+        public void UseCase_IgnoreRulesUntil_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true))
+            {
+                EnableSuppressions = true
+            };
 
             // Ignore until test
             DateTime expirationDate = DateTime.Now.AddDays(5);
-            testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS126186 until {0:yyyy}-{0:MM}-{0:dd}";
-            issues = processor.Analyze(string.Format(testString, expirationDate), "python");
+            string testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS126186 until {0:yyyy}-{0:MM}-{0:dd}";
+            Issue[] issues = processor.Analyze(string.Format(testString, expirationDate), "python");
             Assert.AreEqual(1, issues.Length, "Ignore until should not be flagged");
             Assert.AreEqual(true, issues[0].IsSuppressionInfo, "Ignore until second issue should be info");
+        }
+
+        [TestMethod]
+        public void UseCase_IgnoreRulesExpired_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true))
+            {
+                EnableSuppressions = true
+            };
 
             // Expired until test
-            expirationDate = DateTime.Now;
-            issues = processor.Analyze(string.Format(testString, expirationDate), "python");
+            DateTime expirationDate = DateTime.Now;
+            string testString = "requests.get('somelink', verify = False) #DevSkim: ignore DS126186 until {0:yyyy}-{0:MM}-{0:dd}";
+            Issue[] issues = processor.Analyze(string.Format(testString, expirationDate), "python");
             Assert.AreEqual(1, issues.Length, "Expired until should be flagged");
             Assert.AreEqual(false, issues[0].IsSuppressionInfo, "Expired until issue should NOT be info");
+        }
+
+        [TestMethod]
+        public void UseCase_IgnoreAllRules_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true))
+            {
+                EnableSuppressions = true
+            };
 
             // Ignore all until test
-            expirationDate = DateTime.Now.AddDays(5);
-            testString = "encryption=false; MD5 hash  = MD5.Create(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
+            DateTime expirationDate = DateTime.Now.AddDays(5);
+            string testString = "encryption=false; MD5 hash  = MD5.Create(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
+            Issue[] issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
             Assert.AreEqual(2, issues.Length, "Ignore all should flag two infos");
+        }
+
+        [TestMethod]
+        public void UseCase_IgnoreAllRulesExpired_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(true))
+            {
+                EnableSuppressions = true
+            };
 
             // Expired all test
-            expirationDate = DateTime.Now;
-            testString = "MD5 hash =  new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
+            DateTime expirationDate = DateTime.Now;
+            string testString = "MD5 hash =  new MD5CryptoServiceProvider(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
+            Issue[] issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
             Assert.AreEqual(2, issues.Length, "Expired all should be flagged");
         }
 
         [TestMethod]
         public void UseCase_IgnoreSuppression_Test()
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
-            rules.AddDirectory(@"rules\custom", null);
-
-            RuleProcessor processor = new RuleProcessor(rules)
+            RuleProcessor processor = new RuleProcessor(LoadRules(true))
             {
                 EnableSuppressions = false
             };
@@ -162,10 +214,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void UseCase_SeverityFilter_Test()
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
-            rules.AddDirectory(@"rules\custom", null);
-
-            RuleProcessor processor = new RuleProcessor(rules);
+            RuleProcessor processor = new RuleProcessor(LoadRules(true));
             string testString = "eval(something)";
             Issue[] issues = processor.Analyze(testString, "javascript");
             Assert.AreEqual(0, issues.Length, "Manual Review should not be flagged");
@@ -193,9 +242,8 @@ namespace Microsoft.DevSkim.Tests
 
         [TestMethod]
         public void LangugeSelector_Test()
-        {
-            RuleSet ruleset = RuleSet.FromDirectory(@"rules\valid", null);
-            RuleProcessor processor = new RuleProcessor(ruleset);
+        {            
+            RuleProcessor processor = new RuleProcessor(LoadRules(false));
             string testString = "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"5.1.0\"";
 
             string lang = Language.FromFileName("helloworld.klingon");
@@ -227,11 +275,9 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void Conditions_Test()
-        {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
-
-            RuleProcessor processor = new RuleProcessor(rules)
+        public void Conditions1_Test()
+        {            
+            RuleProcessor processor = new RuleProcessor(LoadRules(false))
             {
                 EnableSuppressions = true
             };
@@ -239,7 +285,7 @@ namespace Microsoft.DevSkim.Tests
             // http test
             string testString = "<h:table xmlns:h=\"http://www.w3.org/TR/html4/\">";
             Issue[] issues = processor.Analyze(testString, "xml");
-            Assert.AreEqual(0, issues.Length, "http should not be flagged");
+            Assert.AreEqual(0, issues.Length, "http should NOT be flagged");
 
             // http test
             testString = "<h:table src=\"http://www.w3.org/TR/html4/\">";
@@ -249,10 +295,19 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(14, issues[0].Boundary.Index, "http index doesn't match");
             Assert.AreEqual(5, issues[0].Boundary.Length, "http length doesn't match");
             Assert.AreEqual("DS137138", issues[0].Rule.Id, "http rule doesn't match");
+        }
+
+        [TestMethod]
+        public void Conditions2_Test()
+        {
+            RuleProcessor processor = new RuleProcessor(LoadRules(false))
+            {
+                EnableSuppressions = true
+            };
 
             // $POST test
-            testString = "require_once($_POST['t']);";
-            issues = processor.Analyze(testString, "php");
+            string testString = "require_once($_POST['t']);";
+            Issue[] issues = processor.Analyze(testString, "php");
             Assert.AreEqual(1, issues.Length, "$_POST should be flagged");
             Assert.AreEqual(1, issues[0].Location.Line, "$_POST location line doesn't match");
             Assert.AreEqual(0, issues[0].Boundary.Index, "$_POST index doesn't match");
@@ -268,9 +323,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void Scope_Test()
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
-
-            RuleProcessor processor = new RuleProcessor(rules)
+            RuleProcessor processor = new RuleProcessor(LoadRules(false))
             {
                 EnableSuppressions = true
             };
@@ -293,5 +346,15 @@ namespace Microsoft.DevSkim.Tests
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "TODO should be flagged");
         }
+
+        public RuleSet LoadRules(bool loadCustomRules)
+        {
+            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
+
+            if (loadCustomRules)
+                rules.AddDirectory(@"rules\custom", "my rules");
+
+            return rules;        
+        }        
     }
 }
