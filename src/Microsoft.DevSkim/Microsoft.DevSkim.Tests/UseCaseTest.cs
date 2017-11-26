@@ -5,6 +5,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.IO;
 
 namespace Microsoft.DevSkim.Tests
 {
@@ -236,7 +237,7 @@ namespace Microsoft.DevSkim.Tests
                 args.ErrorContext.Handled = true;
             };
 
-            rules.AddDirectory(@"rules\invalid", null);
+            rules.AddDirectory(Path.Combine("rules","invalid"), null);
             Assert.IsTrue(error, "Error should be raised");
         }
 
@@ -249,7 +250,7 @@ namespace Microsoft.DevSkim.Tests
             string lang = Language.FromFileName("helloworld.klingon");
             Assert.AreEqual(string.Empty, lang, "Klingon language should not be detected");
 
-            lang = Language.FromFileName("project\\packages.config");
+            lang = Language.FromFileName(Path.Combine("project","packages.config"));
             Issue[] issues = processor.Analyze(testString, lang);
             Assert.AreEqual(1, issues.Length, "There should be positive hit");
 
@@ -349,10 +350,10 @@ namespace Microsoft.DevSkim.Tests
 
         public RuleSet LoadRules(bool loadCustomRules)
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);
 
             if (loadCustomRules)
-                rules.AddDirectory(@"rules\custom", "my rules");
+                rules.AddDirectory(Path.Combine("rules","custom"), "my rules");
 
             return rules;        
         }        
