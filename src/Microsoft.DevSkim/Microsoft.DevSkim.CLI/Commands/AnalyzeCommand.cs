@@ -22,11 +22,20 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                     "Path to source code");
 
             var outputArgument = command.Argument("[output]",
-                                                    "Output file");
+                                                  "Output file");
+
+            /*
+            var outputFileFormat = command.Option("[-o|--fileformat]",
+                                                  "Output file format\njson",
+                                                  CommandOptionType.SingleValue);*/            
+
+            var severityOption = command.Option("-s|--severity",
+                                                "Severity: [critical,important,moderate,practice,review]",
+                                                CommandOptionType.MultipleValue);
 
             var rulesOption = command.Option("-r|--rules",
-                                              "Rules to use",
-                                              CommandOptionType.MultipleValue);
+                                             "Rules to use",
+                                             CommandOptionType.MultipleValue);
 
             var ignoreOption = command.Option("-i|--ignore-default-rules",
                                               "Ignore rules bundled with DevSkim",
@@ -35,18 +44,21 @@ namespace Microsoft.DevSkim.CLI.Commands
             command.OnExecute(() => {
                 return (new AnalyzeCommand(locationArgument.Value,
                                  outputArgument.Value,
+                                 severityOption.Values,
                                  rulesOption.Values,
                                  ignoreOption.HasValue())).Run();                
             });
         }
 
         public AnalyzeCommand(string path, 
-                              string output, 
+                              string output,
+                              List<string> severities,
                               List<string> rules,
                               bool ignoreDefault)
         {
-            _path = path;
+            _path = path;            
             _outputfile = output;
+            _severities = severities.ToArray();
             _rulespath = rules.ToArray();
             _ignoreDefaultRules = ignoreDefault;
         }
@@ -56,7 +68,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             if (!Directory.Exists(_path) && !File.Exists(_path))
             {
                 Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);                
-                return 1;
+                return 2;
             }
 
             Verifier verifier = null;
@@ -65,12 +77,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                 // Setup the rules
                 verifier = new Verifier(_rulespath);
                 if (!verifier.Verify())
-                    return 1;
+                    return 2;
 
                 if (verifier.CompiledRuleset.Count() == 0 && _ignoreDefaultRules)
                 {
                     Console.Error.WriteLine("Error: No rules were loaded. ");
-                    return 1;
+                    return 2;
                 }
             }
 
@@ -91,6 +103,24 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             // Initialize the processor
             RuleProcessor processor = new RuleProcessor(rules);
+
+            if (_severities.Count() > 0)
+            {
+                processor.SeverityLevel = 0;
+                foreach (string severityText in _severities)
+                {
+                    Severity severity;
+                    if (ParseSeverity(severityText, out severity))
+                    {
+                        processor.SeverityLevel |= severity;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid severity: {0}", severityText);
+                        return 2;
+                    }
+                }
+            }
 
             // Store the results here (JSON only)
             var jsonResult = new List<Dictionary<string, string>>();
@@ -152,7 +182,6 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                     if (string.IsNullOrEmpty(_outputfile))
                         Console.WriteLine();
-
                 }
             }
 
@@ -168,9 +197,39 @@ namespace Microsoft.DevSkim.CLI.Commands
             return 0;
         }
 
+        private bool ParseSeverity(string severityText, out Severity severity)
+        {
+            severity = Severity.Critical;
+            bool result = true;
+            switch (severityText.ToLower())
+            {
+                case "critical":
+                    severity = Severity.Critical;
+                    break;
+                case "important":
+                    severity = Severity.Important;
+                    break;
+                case "moderate":
+                    severity = Severity.Moderate;
+                    break;
+                case "practice":
+                    severity = Severity.BestPractice;
+                    break;
+                case "manual":
+                    severity = Severity.ManualReview;
+                    break;
+                default:
+                    result = false;
+                    break;
+            }
+
+            return result;
+        }
+
         private string _path;
         private string _outputfile;
         private string[] _rulespath;
+        private string[] _severities;
         private bool _ignoreDefaultRules;
     }
 }

@@ -42,7 +42,7 @@ namespace Microsoft.DevSkim
         /// <param name="path">Path to rules folder</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static RuleSet FromDirectory(string path, string tag)
+        public static RuleSet FromDirectory(string path, string tag = null)
         {
             RuleSet result = new RuleSet();
             result.AddDirectory(path, tag);
@@ -56,7 +56,7 @@ namespace Microsoft.DevSkim
         /// <param name="filename">Filename with rules</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static RuleSet FromFile(string filename, string tag)
+        public static RuleSet FromFile(string filename, string tag = null)
         {
             RuleSet result = new RuleSet();
             result.AddFile(filename, tag);
@@ -71,7 +71,7 @@ namespace Microsoft.DevSkim
         /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static RuleSet FromString(string jsonstring, string sourcename, string tag)
+        public static RuleSet FromString(string jsonstring, string sourcename = "string", string tag = null)
         {
             RuleSet result = new RuleSet();
             result.AddString(jsonstring, sourcename, tag);
@@ -84,7 +84,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="path">Path to rules folder</param>
         /// <param name="tag">Tag for the rules</param>        
-        public void AddDirectory(string path, string tag)
+        public void AddDirectory(string path, string tag = null)
         {
             if (path == null)
                 throw new ArgumentNullException("path");
@@ -103,7 +103,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="filename">Filename with rules</param>
         /// <param name="tag">Tag for the rules</param>
-        public void AddFile(string filename, string tag)
+        public void AddFile(string filename, string tag = null)
         {
             if (string.IsNullOrEmpty(filename))
                 throw new ArgumentException("filename");
@@ -123,7 +123,7 @@ namespace Microsoft.DevSkim
         /// <param name="jsonstring">JSON string</param>
         /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
         /// <param name="tag">Tag for the rules</param>
-        public void AddString(string jsonstring, string sourcename, string tag)
+        public void AddString(string jsonstring, string sourcename, string tag = null)
         {
             List<Rule> ruleList = new List<Rule>();
             JsonSerializerSettings settings = new JsonSerializerSettings()

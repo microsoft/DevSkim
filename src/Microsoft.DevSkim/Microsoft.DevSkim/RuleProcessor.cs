@@ -144,7 +144,7 @@ namespace Microsoft.DevSkim
                     foreach (Issue result in matchList)
                     {
                         supp = new Suppression(textContainer.GetLineContent(result.Location.Line));
-                        // If rule is NOT being suppressed then use it
+                        // If rule is NOT being suppressed then report it
                         SuppressedIssue supissue = supp.GetSuppressedIssue(result.Rule.Id);
                         if (supissue == null)
                         {
