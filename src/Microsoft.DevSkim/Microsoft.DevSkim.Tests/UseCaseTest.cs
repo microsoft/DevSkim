@@ -26,6 +26,10 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(1, issues.Length, "strcpy should be flagged");
             Assert.AreEqual(0, issues[0].Boundary.Index, "strcpy invalid index");
             Assert.AreEqual(16, issues[0].Boundary.Length, "strcpy invalid length ");
+            Assert.AreEqual(1, issues[0].StartLocation.Line, "strcpy invalid start location line ");
+            Assert.AreEqual(1, issues[0].StartLocation.Column, "strcpy invalid start location column ");
+            Assert.AreEqual(1, issues[0].EndLocation.Line, "strcpy invalid end location line ");
+            Assert.AreEqual(16, issues[0].EndLocation.Column, "strcpy invalid end location column ");
             Assert.AreEqual("DS185832", issues[0].Rule.Id, "strcpy invalid rule");
         
             // Fix it test
@@ -108,6 +112,10 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(2, issues.Length, "MD5CryptoServiceProvider should be flagged");
             Assert.AreEqual(27, issues[0].Boundary.Index, "MD5CryptoServiceProvider invalid index");
             Assert.AreEqual(24, issues[0].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
+            Assert.AreEqual(2, issues[0].StartLocation.Line, "MD5CryptoServiceProvider invalid start location line");
+            Assert.AreEqual(16, issues[0].StartLocation.Column, "MD5CryptoServiceProvider invalid start location column");
+            Assert.AreEqual(2, issues[0].EndLocation.Line, "MD5CryptoServiceProvider invalid end location line");
+            Assert.AreEqual(40, issues[0].EndLocation.Column, "MD5CryptoServiceProvider invalid end location column");
             Assert.AreEqual("DS168931", issues[0].Rule.Id, "MD5CryptoServiceProvider invalid rule");
             Assert.AreEqual(true, issues[1].IsSuppressionInfo, "MD5CryptoServiceProvider second issue should be info");
         }
@@ -292,7 +300,7 @@ namespace Microsoft.DevSkim.Tests
             testString = "<h:table src=\"http://www.w3.org/TR/html4/\">";
             issues = processor.Analyze(testString, "xml");
             Assert.AreEqual(1, issues.Length, "http should be flagged");
-            Assert.AreEqual(1, issues[0].Location.Line, "http location line doesn't match");
+            Assert.AreEqual(1, issues[0].StartLocation.Line, "http location line doesn't match");
             Assert.AreEqual(14, issues[0].Boundary.Index, "http index doesn't match");
             Assert.AreEqual(5, issues[0].Boundary.Length, "http length doesn't match");
             Assert.AreEqual("DS137138", issues[0].Rule.Id, "http rule doesn't match");
@@ -310,7 +318,7 @@ namespace Microsoft.DevSkim.Tests
             string testString = "require_once($_POST['t']);";
             Issue[] issues = processor.Analyze(testString, "php");
             Assert.AreEqual(1, issues.Length, "$_POST should be flagged");
-            Assert.AreEqual(1, issues[0].Location.Line, "$_POST location line doesn't match");
+            Assert.AreEqual(1, issues[0].StartLocation.Line, "$_POST location line doesn't match");
             Assert.AreEqual(0, issues[0].Boundary.Index, "$_POST index doesn't match");
             Assert.AreEqual(19, issues[0].Boundary.Length, "$_POST length doesn't match");
             Assert.AreEqual("DS181731", issues[0].Rule.Id, "$_POST rule doesn't match");

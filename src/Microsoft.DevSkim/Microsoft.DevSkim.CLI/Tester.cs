@@ -66,7 +66,7 @@ namespace Microsoft.DevSkim.CLI
             foreach (Issue issue in issues)
             {
                 // if issue on this line was expected remove it from expecations
-                int line = issue.Location.Line;
+                int line = issue.StartLocation.Line;
                 if (expecations.ContainsKey(line) && expecations[line].Contains(issue.Rule.Id))
                 {
                     expecations[line].Remove(issue.Rule.Id);
@@ -74,7 +74,7 @@ namespace Microsoft.DevSkim.CLI
                 // otherwise add it to unexpected
                 else
                 {
-                    unexpected.Add(new KeyValuePair<Location, string>(issue.Location, issue.Rule.Id));
+                    unexpected.Add(new KeyValuePair<Location, string>(issue.StartLocation, issue.Rule.Id));
                 }
             }
             

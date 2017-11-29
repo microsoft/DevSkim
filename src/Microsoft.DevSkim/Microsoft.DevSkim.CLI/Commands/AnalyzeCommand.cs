@@ -157,9 +157,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                     {
                         if (string.IsNullOrEmpty(_outputfile))
                         {
-                            Console.WriteLine("\tline:{0},{1} - {2} [{3}] - {4}",                                                          
-                                                          issue.Location.Line,
-                                                          issue.Location.Column,
+                            Console.WriteLine("\tline:{0},{1},{2},{3} - {4} [{5}] - {6}",                                                          
+                                                          issue.StartLocation.Line,
+                                                          issue.StartLocation.Column,
+                                                          issue.EndLocation.Line,
+                                                          issue.EndLocation.Column,
                                                           issue.Rule.Id,
                                                           issue.Rule.Severity,
                                                           issue.Rule.Name);
@@ -170,8 +172,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                             jsonResult.Add(new Dictionary<string, string>()
                         {
                             { "filename", filename },
-                            { "line_number", issue.Location.Line.ToString() },
-                            { "line_position", issue.Location.Column.ToString() },
+                            { "line_number", issue.StartLocation.Line.ToString() },
+                            { "line_position", issue.StartLocation.Column.ToString() },
                             { "matching_section", fileText.Substring(issue.Boundary.Index, issue.Boundary.Length) },
                             { "rule_id", issue.Rule.Id },
                             { "rule_name", issue.Rule.Name },

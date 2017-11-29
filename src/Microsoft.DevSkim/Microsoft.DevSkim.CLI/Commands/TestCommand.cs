@@ -32,7 +32,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             if (!Directory.Exists(_path))
             {
                 Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);
-                return 1;
+                return 2;
             }
 
             Verifier verifier = new Verifier(_path);

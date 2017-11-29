@@ -32,10 +32,10 @@ namespace Microsoft.DevSkim.CLI.Commands
             if (verifier.Verify())
             {
                 Console.Error.WriteLine("No errors found.");
-                return 1;
+                return 0;
             }
 
-            return 0;
+            return 1;
         }
 
         private string _path;

@@ -126,7 +126,8 @@ namespace Microsoft.DevSkim
                                 Issue issue = new Issue()
                                 {
                                     Boundary = match,
-                                    Location = textContainer.GetLocation(match.Index),
+                                    StartLocation = textContainer.GetLocation(match.Index),
+                                    EndLocation = textContainer.GetLocation(match.Index + match.Length),
                                     Rule = rule
                                 };
 
@@ -143,7 +144,7 @@ namespace Microsoft.DevSkim
                     Suppression supp;
                     foreach (Issue result in matchList)
                     {
-                        supp = new Suppression(textContainer.GetLineContent(result.Location.Line));
+                        supp = new Suppression(textContainer.GetLineContent(result.StartLocation.Line));
                         // If rule is NOT being suppressed then report it
                         SuppressedIssue supissue = supp.GetSuppressedIssue(result.Rule.Id);
                         if (supissue == null)
@@ -162,7 +163,8 @@ namespace Microsoft.DevSkim
                             {
                                 IsSuppressionInfo = true,
                                 Boundary = bound,
-                                Location = textContainer.GetLocation(bound.Index),
+                                StartLocation = textContainer.GetLocation(bound.Index),
+                                EndLocation = textContainer.GetLocation(bound.Index + bound.Length),
                                 Rule = result.Rule
                             };
 
