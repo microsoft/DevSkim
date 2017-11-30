@@ -45,7 +45,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Verifier verifier = new Verifier(_path);
 
             if (!verifier.Verify())
-                return 1;
+                return (int)ExitCode.IssuesExists;
 
             List<Rule> list = new List<Rule>(verifier.CompiledRuleset.AsEnumerable());
 
@@ -64,7 +64,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 fs.Close();
             }
 
-            return 0;
+            return (int)ExitCode.NoIssues;
         }
 
         private string _path;

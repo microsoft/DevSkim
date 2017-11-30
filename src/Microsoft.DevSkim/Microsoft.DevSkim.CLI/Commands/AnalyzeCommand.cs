@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Reflection;
+using Microsoft.DevSkim.CLI.Writers;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -23,11 +24,14 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             var outputArgument = command.Argument("[output]",
                                                   "Output file");
+            
+            var outputFileFormat = command.Option("-f|--file-format",
+                                                  "Output file format: [text,json,sarif]",
+                                                  CommandOptionType.SingleValue);
 
-            /*
-            var outputFileFormat = command.Option("[-o|--fileformat]",
-                                                  "Output file format\njson",
-                                                  CommandOptionType.SingleValue);*/            
+            var outputTextFormat = command.Option("-o|--output-format",
+                                                  "Output text format",
+                                                  CommandOptionType.SingleValue);
 
             var severityOption = command.Option("-s|--severity",
                                                 "Severity: [critical,important,moderate,practice,review]",
@@ -41,9 +45,15 @@ namespace Microsoft.DevSkim.CLI.Commands
                                               "Ignore rules bundled with DevSkim",
                                               CommandOptionType.NoValue);
 
-            command.OnExecute(() => {
+            command.ExtendedHelpText = "\nOutput format options:\n%F\tfile path\n%L\tstart line number\n" +
+                "%C\tstart column\n%l\tend line number\n%c\tend column\n%I\tlocation inside file\n" +
+                "%i\tmatch length\n%m\tmatch\n%R\trule id\n%N\trule name\n%S\tseverity\n%T\ttags(comma-separated)";
+
+            command.OnExecute(() => {                
                 return (new AnalyzeCommand(locationArgument.Value,
                                  outputArgument.Value,
+                                 outputFileFormat.Value(),
+                                 outputTextFormat.Value(),
                                  severityOption.Values,
                                  rulesOption.Values,
                                  ignoreOption.HasValue())).Run();                
@@ -52,12 +62,16 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public AnalyzeCommand(string path, 
                               string output,
+                              string outputFileFormat,
+                              string outputTextFormat,
                               List<string> severities,
                               List<string> rules,
                               bool ignoreDefault)
         {
             _path = path;            
-            _outputfile = output;
+            _outputFile = output;
+            _fileFormat = outputFileFormat;
+            _outputFormat = outputTextFormat;
             _severities = severities.ToArray();
             _rulespath = rules.ToArray();
             _ignoreDefaultRules = ignoreDefault;
@@ -67,8 +81,9 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             if (!Directory.Exists(_path) && !File.Exists(_path))
             {
-                Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);                
-                return 2;
+                Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);
+
+                return (int)ExitCode.CriticalError;
             }
 
             Verifier verifier = null;
@@ -77,12 +92,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                 // Setup the rules
                 verifier = new Verifier(_rulespath);
                 if (!verifier.Verify())
-                    return 2;
+                    return (int)ExitCode.CriticalError;
 
                 if (verifier.CompiledRuleset.Count() == 0 && _ignoreDefaultRules)
                 {
                     Console.Error.WriteLine("Error: No rules were loaded. ");
-                    return 2;
+                    return (int)ExitCode.CriticalError;
                 }
             }
 
@@ -116,15 +131,18 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                     else
                     {
-                        Console.WriteLine("Invalid severity: {0}", severityText);
-                        return 2;
+                        Console.Error.WriteLine("Invalid severity: {0}", severityText);
+                        return (int)ExitCode.CriticalError;
                     }
                 }
             }
 
-            // Store the results here (JSON only)
-            var jsonResult = new List<Dictionary<string, string>>();
-
+            Writer outputWriter = WriterFactory.GetWriter(_fileFormat, _outputFormat);            
+            if (string.IsNullOrEmpty(_outputFile))
+                outputWriter.TextWriter= Console.Out;
+            else            
+                outputWriter.TextWriter = File.CreateText(_outputFile);            
+            
             int filesAnalyzed = 0;
             int filesSkipped = 0;
             int filesAffected = 0;
@@ -143,60 +161,49 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
 
                 filesAnalyzed++;
-                string fileText = File.ReadAllText(filename);
+                string fileText = File.ReadAllText(filename);                
                 Issue[] issues = processor.Analyze(fileText, language);
 
                 if (issues.Count() > 0)
                 {
                     filesAffected++;
                     issuesCount += issues.Count();
-                    Console.WriteLine("file:{0}", filename);
+                    Console.Error.WriteLine("file:{0}", filename);
 
                     // Iterate through each issue
                     foreach (Issue issue in issues)
                     {
-                        if (string.IsNullOrEmpty(_outputfile))
+                        Console.Error.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",                                                          
+                                                  issue.StartLocation.Line,
+                                                  issue.StartLocation.Column,
+                                                  issue.EndLocation.Line,
+                                                  issue.EndLocation.Column,
+                                                  issue.Rule.Id,
+                                                  issue.Rule.Severity,
+                                                  issue.Rule.Name);
+
+                        IssueRecord record = new IssueRecord()
                         {
-                            Console.WriteLine("\tline:{0},{1},{2},{3} - {4} [{5}] - {6}",                                                          
-                                                          issue.StartLocation.Line,
-                                                          issue.StartLocation.Column,
-                                                          issue.EndLocation.Line,
-                                                          issue.EndLocation.Column,
-                                                          issue.Rule.Id,
-                                                          issue.Rule.Severity,
-                                                          issue.Rule.Name);
-                        }
-                        else
-                        {
-                            // Store the result in the result list
-                            jsonResult.Add(new Dictionary<string, string>()
-                        {
-                            { "filename", filename },
-                            { "line_number", issue.StartLocation.Line.ToString() },
-                            { "line_position", issue.StartLocation.Column.ToString() },
-                            { "matching_section", fileText.Substring(issue.Boundary.Index, issue.Boundary.Length) },
-                            { "rule_id", issue.Rule.Id },
-                            { "rule_name", issue.Rule.Name },
-                            { "rule_description", issue.Rule.Description }
-                        });
-                        }
+                            Filename = filename,
+                            Filesize = fileText.Length,
+                            TextSample = fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
+                            Issue = issue
+                        };
+
+                        outputWriter.WriteIssue(record);
                     }
 
-                    if (string.IsNullOrEmpty(_outputfile))
-                        Console.WriteLine();
+                    Console.Error.WriteLine();
                 }
             }
 
-            if (!string.IsNullOrEmpty(_outputfile))
-            {
-                File.WriteAllText(_outputfile, JsonConvert.SerializeObject(jsonResult, Formatting.Indented));
-            }
+            outputWriter.FlushAndClose();            
 
-            Console.WriteLine("Issues found: {0} in {1} files", issuesCount, filesAffected);
-            Console.WriteLine("Files analyzed: {0}", filesAnalyzed);
-            Console.WriteLine("Files skipped: {0}", filesSkipped);
+            Console.Error.WriteLine("Issues found: {0} in {1} files", issuesCount, filesAffected);
+            Console.Error.WriteLine("Files analyzed: {0}", filesAnalyzed);
+            Console.Error.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return 0;
+            return (int)ExitCode.NoIssues;
         }
 
         private bool ParseSeverity(string severityText, out Severity severity)
@@ -229,7 +236,9 @@ namespace Microsoft.DevSkim.CLI.Commands
         }
 
         private string _path;
-        private string _outputfile;
+        private string _outputFile;
+        private string _fileFormat;
+        private string _outputFormat;
         private string[] _rulespath;
         private string[] _severities;
         private bool _ignoreDefaultRules;

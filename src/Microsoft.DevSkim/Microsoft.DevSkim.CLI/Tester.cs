@@ -26,8 +26,8 @@ namespace Microsoft.DevSkim.CLI
                 failedFiles += (TestFile(filename)) ? 0 : 1;
             }
 
-            Console.WriteLine("Tests: {0}", totalFiles);
-            Console.WriteLine("Failed: {0}", failedFiles);
+            Console.Error.WriteLine("Tests: {0}", totalFiles);
+            Console.Error.WriteLine("Failed: {0}", failedFiles);
         }
 
         private bool TestFile(string fileName)
@@ -81,10 +81,10 @@ namespace Microsoft.DevSkim.CLI
             if (unexpected.Count > 0 || expecations.Any(x => x.Value.Count > 0))
             {
                 result = false;
-                Console.WriteLine("file:{0}", fileName);
+                Console.Error.WriteLine("file:{0}", fileName);
                 foreach(KeyValuePair<Location, string> pair in unexpected)
                 {                    
-                    Console.WriteLine("\tline:{0},{1} unexpected {2}", pair.Key.Line, pair.Key.Column, pair.Value);
+                    Console.Error.WriteLine("\tline:{0},{1} unexpected {2}", pair.Key.Line, pair.Key.Column, pair.Value);
                 }
 
                 foreach (int line in expecations.Keys)
@@ -97,12 +97,12 @@ namespace Microsoft.DevSkim.CLI
                             if (_rules.FirstOrDefault(x => x.Id == id) == null)
                                 exists = " (no such rule) ";
 
-                            Console.WriteLine("\tline:{0} expecting {1}{2}", line, id, exists);
+                            Console.Error.WriteLine("\tline:{0} expecting {1}{2}", line, id, exists);
                         }
                     }
                 }
 
-                Console.WriteLine();
+                Console.Error.WriteLine();
             }
 
             return result;

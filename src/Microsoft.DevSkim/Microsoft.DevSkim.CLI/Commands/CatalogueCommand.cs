@@ -42,12 +42,12 @@ namespace Microsoft.DevSkim.CLI.Commands
             Verifier verifier = new Verifier(_path);
 
             if (!verifier.Verify())
-                return 1;
+                return (int)ExitCode.IssuesExists;
             
             Catalogue catalogue = new Catalogue(verifier.CompiledRuleset);
             catalogue.ToCsv(_outputfile, _columns);
 
-            return 0;
+            return (int)ExitCode.NoIssues;
         }
 
         private string _path;
