@@ -26,8 +26,8 @@ namespace Microsoft.DevSkim.CLI
                 failedFiles += (TestFile(filename)) ? 0 : 1;
             }
 
-            Console.WriteLine("Tests: {0}", totalFiles);
-            Console.WriteLine("Failed: {0}", failedFiles);
+            Console.Error.WriteLine("Tests: {0}", totalFiles);
+            Console.Error.WriteLine("Failed: {0}", failedFiles);
         }
 
         private bool TestFile(string fileName)
@@ -66,7 +66,7 @@ namespace Microsoft.DevSkim.CLI
             foreach (Issue issue in issues)
             {
                 // if issue on this line was expected remove it from expecations
-                int line = issue.Location.Line;
+                int line = issue.StartLocation.Line;
                 if (expecations.ContainsKey(line) && expecations[line].Contains(issue.Rule.Id))
                 {
                     expecations[line].Remove(issue.Rule.Id);
@@ -74,17 +74,17 @@ namespace Microsoft.DevSkim.CLI
                 // otherwise add it to unexpected
                 else
                 {
-                    unexpected.Add(new KeyValuePair<Location, string>(issue.Location, issue.Rule.Id));
+                    unexpected.Add(new KeyValuePair<Location, string>(issue.StartLocation, issue.Rule.Id));
                 }
             }
             
             if (unexpected.Count > 0 || expecations.Any(x => x.Value.Count > 0))
             {
                 result = false;
-                Console.WriteLine("file:{0}", fileName);
+                Console.Error.WriteLine("file:{0}", fileName);
                 foreach(KeyValuePair<Location, string> pair in unexpected)
                 {                    
-                    Console.WriteLine("\tline:{0},{1} unexpected {2}", pair.Key.Line, pair.Key.Column, pair.Value);
+                    Console.Error.WriteLine("\tline:{0},{1} unexpected {2}", pair.Key.Line, pair.Key.Column, pair.Value);
                 }
 
                 foreach (int line in expecations.Keys)
@@ -97,12 +97,12 @@ namespace Microsoft.DevSkim.CLI
                             if (_rules.FirstOrDefault(x => x.Id == id) == null)
                                 exists = " (no such rule) ";
 
-                            Console.WriteLine("\tline:{0} expecting {1}{2}", line, id, exists);
+                            Console.Error.WriteLine("\tline:{0} expecting {1}{2}", line, id, exists);
                         }
                     }
                 }
 
-                Console.WriteLine();
+                Console.Error.WriteLine();
             }
 
             return result;

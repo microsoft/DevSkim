@@ -16,7 +16,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void AssignRuleSetTest()
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);
+            RuleSet rules = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);
             RuleProcessor proc = new RuleProcessor();
             proc.Rules = rules;
 
@@ -26,7 +26,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void AddRuleRangeTest()
         {
-            RuleSet rules = RuleSet.FromDirectory(@"rules\valid", null);            
+            RuleSet rules = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);            
 
             // Add Range
             RuleSet testRules = new RuleSet();
@@ -47,7 +47,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void AddRuleFromStringAndFile()
         {
-            StreamReader fs = File.OpenText(@"rules\custom\quickfix.json");
+            StreamReader fs = File.OpenText(Path.Combine("rules","custom","quickfix.json"));
             string rule = fs.ReadToEnd();
 
             // From String
@@ -55,7 +55,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(1, testRules.Count(), "FromString Count should be 1");
 
             // From File
-            testRules.AddFile(@"rules\custom\quickfix.json", null);
+            testRules.AddFile(Path.Combine("rules","custom","quickfix.json"), null);
             Assert.AreEqual(2, testRules.Count(), "FromFile Count should be 2");
 
             foreach (Rule r in testRules)
@@ -68,7 +68,7 @@ namespace Microsoft.DevSkim.Tests
         [ExpectedException(typeof(FileNotFoundException))]
         public void InvalidRuleFileFailTest()
         {            
-            RuleSet ruleset = RuleSet.FromFile("x:\\file.txt", null);
+            RuleSet ruleset = RuleSet.FromFile("non-existent-file.txt", null);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace Microsoft.DevSkim.Tests
         [ExpectedException(typeof(DirectoryNotFoundException))]
         public void InvalidRuleDirectoryFailTest()
         {
-            RuleSet ruleset = RuleSet.FromDirectory("x:\\invalid_directory", null);
+            RuleSet ruleset = RuleSet.FromDirectory("invalid_directory", null);
         }
 
         [TestMethod]

@@ -43,7 +43,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         {                     
             _app.ShowHelp();            
 
-            return 0;
+            return (int)ExitCode.NoIssues;
         }
 
         CommandLineApplication _app;        

@@ -32,10 +32,10 @@ namespace Microsoft.DevSkim.CLI.Commands
             if (verifier.Verify())
             {
                 Console.Error.WriteLine("No errors found.");
-                return 1;
+                return (int)ExitCode.NoIssues;
             }
 
-            return 0;
+            return (int)ExitCode.IssuesExists;
         }
 
         private string _path;

@@ -4,6 +4,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace Microsoft.DevSkim.Tests
 {
@@ -14,7 +15,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]        
         public void IsMatch_FalseTest()
         {
-            RuleSet ruleset = RuleSet.FromDirectory(@"rules\valid", null);
+            RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);
             RuleProcessor processor = new RuleProcessor(ruleset);            
             string testString = "this is a test string";
 
@@ -52,7 +53,7 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void RuleInfoTest()
         {
-            RuleSet ruleset = RuleSet.FromDirectory(@"rules\valid", null);
+            RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);
             RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "strcpy(dest,src);";
             
