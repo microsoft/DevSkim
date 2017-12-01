@@ -9,8 +9,13 @@ namespace Microsoft.DevSkim.CLI.Writers
     {
         public static Writer GetWriter(string writerName, string format = null)
         {
+            if (string.IsNullOrEmpty(writerName))
+                writerName = "_dummy";
+
             switch (writerName.ToLowerInvariant())
-            {
+            {  
+                case "_dummy":
+                    return new DummyWriter();
                 case "json":
                     return new JsonWriter(format);                    
                 case "text":
