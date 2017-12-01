@@ -12,7 +12,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             switch (writerName.ToLowerInvariant())
             {
                 case "json":
-                    return new JsonWriter();                    
+                    return new JsonWriter(format);                    
                 case "text":
                     return new SimpleTextWriter(format);
                 case "sarif":
