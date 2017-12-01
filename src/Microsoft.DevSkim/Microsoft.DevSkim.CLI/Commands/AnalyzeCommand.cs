@@ -47,7 +47,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             command.ExtendedHelpText = "\nOutput format options:\n%F\tfile path\n%L\tstart line number\n" +
                 "%C\tstart column\n%l\tend line number\n%c\tend column\n%I\tlocation inside file\n" +
-                "%i\tmatch length\n%m\tmatch\n%R\trule id\n%N\trule name\n%S\tseverity\n%T\ttags(comma-separated)";
+                "%i\tmatch length\n%m\tmatch\n%R\trule id\n%N\trule name\n%S\tseverity\n%D\tissue description\n%T\ttags(comma-separated)";
 
             command.OnExecute(() => {                
                 return (new AnalyzeCommand(locationArgument.Value,
