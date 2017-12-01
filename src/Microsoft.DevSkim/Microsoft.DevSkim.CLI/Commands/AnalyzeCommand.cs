@@ -140,7 +140,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Writer outputWriter = WriterFactory.GetWriter(_fileFormat, _outputFormat);            
             if (string.IsNullOrEmpty(_outputFile))
                 outputWriter.TextWriter= Console.Out;
-            else            
+            else 
                 outputWriter.TextWriter = File.CreateText(_outputFile);            
             
             int filesAnalyzed = 0;
