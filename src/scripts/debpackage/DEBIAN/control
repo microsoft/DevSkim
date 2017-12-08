@@ -1,0 +1,9 @@
+Package: devskim
+Version: 0.1.7
+Section: devel
+Depends: libunwind8
+Priority: optional
+Architecture: amd64
+Maintainer: Microsoft Corporation <devskim@microsoft.com>
+Description: DevSkim security linter
+
