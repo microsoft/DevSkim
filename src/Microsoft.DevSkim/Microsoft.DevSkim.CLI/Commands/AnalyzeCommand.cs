@@ -136,10 +136,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                 }
             }
-
-            Writer outputWriter = WriterFactory.GetWriter(_fileFormat, _outputFormat);            
+                        
+            Writer outputWriter = WriterFactory.GetWriter(_fileFormat, 
+                                                          (string.IsNullOrEmpty(_outputFile)) ? null : "text", 
+                                                           _outputFormat);        
             if (string.IsNullOrEmpty(_outputFile))
-                outputWriter.TextWriter= Console.Out;
+                outputWriter.TextWriter = Console.Out;
             else 
                 outputWriter.TextWriter = File.CreateText(_outputFile);            
             

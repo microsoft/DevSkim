@@ -22,7 +22,7 @@ namespace Microsoft.DevSkim.CLI.Writers
         public SimpleTextWriter(string formatString)
         {
             if (string.IsNullOrEmpty(formatString))
-                _formatString = "%F:%L:%C [%S] %R %N";            
+                _formatString = "%F:%L:%C:%l:%c [%S] %R %N";            
             else
                 _formatString = formatString;
         }
