@@ -386,7 +386,7 @@
     "rule_info": "DS425000.md",
     "patterns": [
       {
-        "pattern": "\\.readObject\\\\\\(",
+        "pattern": "\\.readObject\\(",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -415,7 +415,7 @@
     "rule_info": "DS425000.md",
     "patterns": [
       {
-        "pattern": "\\bunserialize\\\\\\(\\b",
+        "pattern": "unserialize\\(",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -445,6 +445,15 @@
     "patterns": [
       {
         "pattern": "(YAML|Syck|Marshal)\\.load",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "(YAML|Syck|Marshal)::load",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1143,15 +1152,6 @@
         ]
       },
       {
-        "pattern": "setValidatesSecureCertificate:\\s*NO",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
         "pattern": "validatesSecureCertificate\\s*=\\s*NO",
         "type": "regex",
         "modifiers": null,
@@ -1246,7 +1246,7 @@
         ]
       },
       {
-        "pattern": "\\bdisable_ssl_certificate_validation\\\\s\\*=\\\\s\\*True\\b",
+        "pattern": "disable_ssl_certificate_validation\\s*=\\s*True",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1349,7 +1349,7 @@
     "rule_info": "DS114352.md",
     "patterns": [
       {
-        "pattern": "\\bcertificateValidationMode=\"None\"\\b",
+        "pattern": "certificateValidationMode\\s*=\\s*\"None\"",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1358,7 +1358,7 @@
         ]
       },
       {
-        "pattern": "\\bcheckCertificateName=\"false\"\\b",
+        "pattern": "checkCertificateName\\s*=\\s*\"false\"",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1367,7 +1367,7 @@
         ]
       },
       {
-        "pattern": "\\bcheckCertificateRevocationList=\"false\"\\b",
+        "pattern": "checkCertificateRevocationList\\s*=\\s*\"false\"",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1376,7 +1376,7 @@
         ]
       },
       {
-        "pattern": "encryptionPolicy=\"(AllowNoEncryption|NoEncryption)",
+        "pattern": "encryptionPolicy\\s*=\\s*\"(AllowNoEncryption|NoEncryption)",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1535,7 +1535,7 @@
     "rule_info": "DS114352.md",
     "patterns": [
       {
-        "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\s*{\\s*return true;\\s*};",
+        "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*delegate\\s*{\\s*return true;\\s*};",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1544,7 +1544,7 @@
         ]
       },
       {
-        "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
+        "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1553,7 +1553,7 @@
         ]
       },
       {
-        "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
+        "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1609,7 +1609,7 @@
     "rule_info": "DS175862.md",
     "patterns": [
       {
-        "pattern": "\\bmcrypt\\b",
+        "pattern": "mcrypt",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1900,7 +1900,7 @@
     "rule_info": "DS101155.md",
     "patterns": [
       {
-        "pattern": "\\bencrypt=false\\b",
+        "pattern": "encrypt\\s*=\\s*false",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -1909,7 +1909,7 @@
         ]
       },
       {
-        "pattern": "\\bencryption=false\\b",
+        "pattern": "encryption\\s*=\\s*false",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -2103,7 +2103,7 @@
     "rule_info": "DS128420.md",
     "patterns": [
       {
-        "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+        "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -2118,7 +2118,7 @@
         "name": "Change to SHA-256",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+          "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -2147,7 +2147,9 @@
   {
     "id": "DS108647",
     "name": "Do not use broken/weak cryptographic hash algorithms",
-    "overrides": null,
+    "overrides": [
+      "DS126858"
+    ],
     "schema_version": 0,
     "tags": [
       "Cryptography.HashAlgorithm.BrokenOrWeak"
@@ -2339,7 +2341,9 @@
       {
         "pattern": "(MD4|MD5|(SHA(1|224|256|384|512))).*Time",
         "type": "regex",
-        "modifiers": null,
+        "modifiers": [
+          "i"
+        ],
         "scopes": [
           "code",
           "code"
@@ -2352,7 +2356,9 @@
   {
     "id": "DS188250",
     "name": "Missing initialization vector",
-    "overrides": null,
+    "overrides": [
+      "DS175862"
+    ],
     "schema_version": 0,
     "tags": [
       "Cryptography.Symmetric.InitializationVector.Missing"
@@ -2396,7 +2402,9 @@
   {
     "id": "DS128921",
     "name": "Hardcoded initialization vector size",
-    "overrides": null,
+    "overrides": [
+      "DS175862"
+    ],
     "schema_version": 0,
     "tags": [
       "Cryptography.Symmetric.InitializationVector.HardcodedSize"
@@ -3370,7 +3378,7 @@
     "rule_info": "DS163877.md",
     "patterns": [
       {
-        "pattern": "\\becho.*(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\]).*;",
+        "pattern": "\\becho.*(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -3630,7 +3638,7 @@
     "rule_info": "DS173237.md",
     "patterns": [
       {
-        "pattern": "[a-f0-9]{30,}",
+        "pattern": "[\"'][a-f0-9]{30,}[\"']",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -3936,35 +3944,6 @@
     "fix_its": null
   },
   {
-    "id": "DS300004",
-    "name": "Vulnerable NuGet Library",
-    "overrides": null,
-    "schema_version": 0,
-    "tags": [
-      "Vulerable-Dependency.Library.NuGet"
-    ],
-    "applies_to": [
-      "packages.config"
-    ],
-    "severity": "moderate",
-    "description": "Vulnerability in ASP.NET Core MVC 1.1.0 Could Allow Denial of Service",
-    "recommendation": "Upgrade this package to a later, unaffected version.",
-    "rule_info": "4010983",
-    "patterns": [
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Core\" version=\"(1\\.1\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      }
-    ],
-    "conditions": [],
-    "fix_its": null
-  },
-  {
     "id": "DS300005",
     "name": "Vulnerable NuGet Library",
     "overrides": null,
@@ -3982,152 +3961,6 @@
     "patterns": [
       {
         "pattern": "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"(5\\.1\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      }
-    ],
-    "conditions": [],
-    "fix_its": null
-  },
-  {
-    "id": "DS300006",
-    "name": "Vulnerable NuGet Library",
-    "overrides": null,
-    "schema_version": 0,
-    "tags": [
-      "Vulerable-Dependency.Library.NuGet"
-    ],
-    "applies_to": [
-      "packages.config"
-    ],
-    "severity": "moderate",
-    "description": "Vulnerabilities in ASP.NET Core View Components Could Allow Elevation of Privilege",
-    "recommendation": "Upgrade this package to a later, unaffected version.",
-    "rule_info": "3181759",
-    "patterns": [
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Abstractions\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.ApiExplorer\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Core\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Cors\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.DataAnnotations\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Formatters.Json\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Formatters.Xml\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Localization\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Razor\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Razor.Host\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.TagHelpers\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.ViewFeatures\" version=\"(1\\.0\\.0)\"",
-        "type": "regex",
-        "modifiers": null,
-        "scopes": [
-          "code",
-          "code"
-        ]
-      },
-      {
-        "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.WebApiCompatShim\" version=\"(1\\.0\\.0)\"",
         "type": "regex",
         "modifiers": null,
         "scopes": [

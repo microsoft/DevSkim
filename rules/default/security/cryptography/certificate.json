@@ -69,14 +69,6 @@
                 "_comment": ""
             },
             {
-                "pattern": "setValidatesSecureCertificate:\\s*NO",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
                 "pattern": "validatesSecureCertificate\\s*=\\s*NO",
                 "type": "regex",
                 "scopes": [

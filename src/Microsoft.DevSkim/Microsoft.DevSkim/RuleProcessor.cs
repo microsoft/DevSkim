@@ -193,7 +193,8 @@ namespace Microsoft.DevSkim
                         // Find all overriden rules and mark them for removal from issues list   
                         foreach(Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
                         {
-                            if (m.Boundary.Index == om.Boundary.Index)
+                            if (om.Boundary.Index >= m.Boundary.Index && 
+                                om.Boundary.Index <= m.Boundary.Index + m.Boundary.Length )
                                 removes.Add(om);
                         }
                     }

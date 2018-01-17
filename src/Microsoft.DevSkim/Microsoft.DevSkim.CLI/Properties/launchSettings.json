@@ -2,7 +2,7 @@
   "profiles": {
     "Microsoft.DevSkim.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "test d:\\projects\\DevSkim\\rules"
+      "commandLineArgs": "test d:\\A\\rules -c"
     }
   }
 }
