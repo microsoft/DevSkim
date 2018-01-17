@@ -8,6 +8,8 @@ Microsoft.DevSkim.Tests/bin
 Microsoft.DevSkim.Tests/obj
 Microsoft.DevSkim.CLI/bin
 Microsoft.DevSkim.CLI/obj
+Microsoft.DevSkim.CLI.Tests/bin
+Microsoft.DevSkim.CLI.Tests/obj
 TestResults
 packages
 .vs/

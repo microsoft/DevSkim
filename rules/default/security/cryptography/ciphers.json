@@ -16,7 +16,7 @@
         "patterns": [
             {
                 "pattern": "mcrypt",
-                "type": "string",
+                "type": "substring",
                 "scopes": [
                     "code"
                 ],

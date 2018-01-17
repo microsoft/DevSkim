@@ -1,0 +1,3 @@
+line: 1
+=====
+res = Net::HTTP.get_response(uri)

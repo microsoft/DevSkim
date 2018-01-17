@@ -170,31 +170,6 @@
     },
     {
         "name": "Vulnerable NuGet Library",
-        "id": "DS300004",
-        "description": "Vulnerability in ASP.NET Core MVC 1.1.0 Could Allow Denial of Service",
-        "recommendation": "Upgrade this package to a later, unaffected version.",
-        "applies_to": [
-            "packages.config"
-        ],
-        "tags": [
-            "Vulerable-Dependency.Library.NuGet"
-        ],
-        "severity": "moderate",
-        "_comment": "",
-        "rule_info": "4010983",
-        "patterns": [
-            {
-                "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Core\" version=\"(1\\.1\\.0)\"",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            }
-        ]
-    },
-    {
-        "name": "Vulnerable NuGet Library",
         "id": "DS300005",
         "description": " Vulnerabilities in Identity Model Extensions Token Signing Verification Could Allow Elevation of Privilege",
         "recommendation": "Upgrade this package to a later, unaffected version.",
@@ -233,14 +208,6 @@
         "_comment": "",
         "rule_info": "3181759",
         "patterns": [
-            {
-                "pattern": "<package id=\"Microsoft.AspNetCore.Mvc\" version=\"(1\\.0\\.0)\"",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Abstractions\" version=\"(1\\.0\\.0)\"",
                 "type": "regex",

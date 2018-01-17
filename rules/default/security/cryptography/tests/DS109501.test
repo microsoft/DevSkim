@@ -1,7 +1,13 @@
-line: 1
-===============================================
-using (var myTripleDES = new TripleDESCryptoServiceProvider())
+line: 5
+=====
+static void Main()
 {
-    ...
-
+    try
+    {
+        var tDESalg = new TripleDESCryptoServiceProvider();
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e.Message);
+    }    
 }

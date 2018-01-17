@@ -8,14 +8,10 @@ line: 7
 line: 8
 line: 9
 line: 10
-line: 12
-line: 13
-line: 14
-line: 15
-line: 17 expect DS169125
-line: 18 expect DS169125
-line: 19 expect DS169125
-line: 21 expect DS101159
+line: 12 expect DS169125
+line: 13 expect DS169125
+line: 14 expect DS169125
+line: 16 expect DS101159
 ===============================================
 SP_PROT_PCT1_CLIENT
 SP_PROT_PCT1_SERVER
@@ -27,11 +23,6 @@ SP_PROT_TLS1_CLIENT
 SP_PROT_TLS1_SERVER
 SP_PROT_TLS1_0_CLIENT
 SP_PROT_TLS1_0_SERVER
-
-SP_PROT_TLS_1_1_CLIENT
-SP_PROT_TLS_1_1_SERVER
-SP_PROT_TLS_1_2_CLIENT
-SP_PROT_TLS_1_2_SERVER
 
 TLS1
 SSL2

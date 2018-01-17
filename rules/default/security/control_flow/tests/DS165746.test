@@ -1,0 +1,3 @@
+line: 1
+====
+NSString *title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"]; 

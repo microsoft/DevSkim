@@ -160,7 +160,7 @@
             },
             {
                 "pattern": "disable_ssl_certificate_validation\\s*=\\s*True",
-                "type": "string",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
@@ -249,31 +249,31 @@
         "rule_info": "DS114352.md",
         "patterns": [
             {
-                "pattern": "certificateValidationMode=\"None\"",
-                "type": "string",
+                "pattern": "certificateValidationMode\\s*=\\s*\"None\"",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
                 "_comment": ""
             },
             {
-                "pattern": "checkCertificateName=\"false\"",
-                "type": "string",
+                "pattern": "checkCertificateName\\s*=\\s*\"false\"",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
                 "_comment": ""
             },
             {
-                "pattern": "checkCertificateRevocationList=\"false\"",
-                "type": "string",
+                "pattern": "checkCertificateRevocationList\\s*=\\s*\"false\"",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
                 "_comment": ""
             },
             {
-                "pattern": "encryptionPolicy=\"(AllowNoEncryption|NoEncryption)",
+                "pattern": "encryptionPolicy\\s*=\\s*\"(AllowNoEncryption|NoEncryption)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -414,7 +414,7 @@
         "rule_info": "DS114352.md",
         "patterns": [
             {
-                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*delegate\\s*{\\s*return true;\\s*};",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -422,7 +422,7 @@
                 "_comment": ""
             },
             {
-                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
+                "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -430,7 +430,7 @@
                 "_comment": ""
             },
             {
-                "pattern": "\\.ServerCertificateValidationCallback\\s*\\+?=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
+                "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
                 "type": "regex",
                 "scopes": [
                     "code"
