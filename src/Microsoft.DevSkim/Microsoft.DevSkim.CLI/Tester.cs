@@ -16,8 +16,9 @@ namespace Microsoft.DevSkim.CLI
             _rules = rules;
         }
 
-        public void Run(string directory)
+        public int Run(string directory)
         {
+            int result = (int)ExitCode.NoIssues;
             int totalFiles = 0;
             int failedFiles = 0;
             foreach (string filename in Directory.EnumerateFileSystemEntries(directory, "*.test", SearchOption.AllDirectories))
@@ -26,8 +27,37 @@ namespace Microsoft.DevSkim.CLI
                 failedFiles += (TestFile(filename)) ? 0 : 1;
             }
 
+            if (DoCoverage)
+            {
+                List<string> missingTest = new List<string>();
+
+                foreach (Rule r in _rules)
+                {
+                    if (!_coverageList.Contains(r.Id))
+                        missingTest.Add(r.Id);
+                }
+
+                if (missingTest.Count > 0)
+                {
+                    foreach (string id in missingTest)
+                    {
+                        Console.Error.WriteLine("{0} test is missing", id);
+                    }
+
+                    result = (int)ExitCode.IssuesExists;
+                }
+
+                float percentage = 100 - ((_rules.Count() / (float)100) * missingTest.Count);
+                Console.Error.WriteLine("\nCoverage: {0:00.00}%", percentage);
+            }
+
             Console.Error.WriteLine("Tests: {0}", totalFiles);
             Console.Error.WriteLine("Failed: {0}", failedFiles);
+
+            if (failedFiles > 0)
+                result = (int)ExitCode.NoIssues;
+
+            return result;
         }
 
         private bool TestFile(string fileName)
@@ -65,8 +95,10 @@ namespace Microsoft.DevSkim.CLI
             
             foreach (Issue issue in issues)
             {
+                AddToCoverageList(issue.Rule.Id);
+
                 // if issue on this line was expected remove it from expecations
-                int line = issue.StartLocation.Line;
+                int line = issue.StartLocation.Line;                
                 if (expecations.ContainsKey(line) && expecations[line].Contains(issue.Rule.Id))
                 {
                     expecations[line].Remove(issue.Rule.Id);
@@ -161,7 +193,16 @@ namespace Microsoft.DevSkim.CLI
 
             return result;
         }
-        
+
+        private void AddToCoverageList(string id)
+        {
+            if (!_coverageList.Contains(id))
+                _coverageList.Add(id);
+        }
+
+        public bool DoCoverage { get; set; }
+
         private RuleSet _rules;
+        private List<string> _coverageList = new List<string>();
     }
 }

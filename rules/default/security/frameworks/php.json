@@ -84,7 +84,7 @@
         "rule_info": "DS163877.md",
         "patterns": [
             {
-                "pattern": "\\becho.*(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\]).*;",
+                "pattern": "\\becho.*(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",
                 "type": "regex",
                 "scopes": [
                     "code"

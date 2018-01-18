@@ -7,8 +7,11 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public class WriterFactory
     {
-        public static Writer GetWriter(string writerName, string format = null)
+        public static Writer GetWriter(string writerName, string defaultWritter, string format = null)
         {
+            if (string.IsNullOrEmpty(writerName))
+                writerName = defaultWritter;
+            
             if (string.IsNullOrEmpty(writerName))
                 writerName = "_dummy";
 

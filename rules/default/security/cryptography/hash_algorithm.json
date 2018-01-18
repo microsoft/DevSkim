@@ -128,7 +128,7 @@
         "rule_info": "DS128420.md",
         "patterns": [
             {
-                "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+                "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -143,7 +143,7 @@
                 "_comment": "",
                 "replacement": "hash('sha256'$2);",
                 "pattern": {
-                    "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
+                    "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -171,10 +171,13 @@
         "name": "Do not use broken/weak cryptographic hash algorithms",
         "id": "DS108647",
         "description": "Avoid using broken or weak hash algorithms.",
-        "recommendation": "Use Digest::SHA256 or Digest::SHA512",
+        "recommendation": "Use Digest::SHA256 or Digest::SHA512",                
         "applies_to": [
             "ruby"
         ],
+        "overrides": [
+            "DS126858"
+            ],        
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
@@ -352,6 +355,7 @@
         "patterns": [
             {
                 "pattern": "(MD4|MD5|(SHA(1|224|256|384|512))).*Time",
+                "modifiers" : ["i"],
                 "type": "regex",
                 "scopes": [
                     "code"

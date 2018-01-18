@@ -1,0 +1,9 @@
+line: 1 expect DS169125,DS169126
+line: 2 expect DS169125,DS169126
+line: 3 expect DS169125,DS169126
+line: 4 expect DS169126
+====
+SSLv3
+TLSv1
+TLSv10
+SSLv2_client

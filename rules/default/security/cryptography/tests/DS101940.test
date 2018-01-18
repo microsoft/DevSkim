@@ -1,0 +1,5 @@
+line: 2
+=====
+<clientCertificate>
+    <authentication certificateValidationMode = "None" revocationMode="NoCheck" />
+</clientCertificate>

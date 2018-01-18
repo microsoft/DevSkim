@@ -1,0 +1,4 @@
+line: 2
+=====
+if (sInsecureFactory == null) {
+    sInsecureFactory = SSLCertificateSocketFactory.getInsecure(0, null);

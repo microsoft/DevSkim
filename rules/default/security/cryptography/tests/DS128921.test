@@ -1,0 +1,3 @@
+line: 1
+=====
+$iv = mcrypt_create_iv(5000, MCRYPT_RAND);

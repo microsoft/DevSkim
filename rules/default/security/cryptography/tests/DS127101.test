@@ -1,0 +1,4 @@
+line: 2
+=====
+#define SECPKG_ATTR_SUPPORTED_PROTOCOLS  0x58  
+returns SecPkgCred_SupportedProtocols

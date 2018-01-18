@@ -17,14 +17,20 @@ namespace Microsoft.DevSkim.CLI.Commands
             var locationArgument = command.Argument("[path]",
                                                     "Path to rules");
 
+            var coverageOption = command.Option("-c|--coverage",
+                                              "Test coverage information",
+                                              CommandOptionType.NoValue);
+
             command.OnExecute(() => {
-                return (new TestCommand(locationArgument.Value)).Run();
+                return (new TestCommand(locationArgument.Value, 
+                                        coverageOption.HasValue())).Run();
             });
         }
 
-        public TestCommand(string path)            
+        public TestCommand(string path, bool coverage)
         {
             _path = path;
+            _coverage = coverage;
         }
 
         public int Run()
@@ -40,11 +46,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return (int)ExitCode.IssuesExists;
 
             Tester tester = new Tester(verifier.CompiledRuleset);
-            tester.Run(_path);
-
-            return (int)ExitCode.NoIssues;
+            tester.DoCoverage = _coverage;
+            return tester.Run(_path);            
         }
 
         private string _path;
+        private bool _coverage;
     }
 }

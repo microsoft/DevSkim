@@ -1,0 +1,4 @@
+line: 2
+=====
+tdes.Key = keyArray;
+tdes.Mode = CipherMode.ECB;

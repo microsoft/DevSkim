@@ -1,0 +1,6 @@
+line: 3
+=====
+private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException {
+    in.defaultReadObject();
+    this.author = (String)in.readObject();
+}

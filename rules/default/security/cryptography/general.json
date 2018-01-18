@@ -12,16 +12,16 @@
         "rule_info": "DS101155.md",
         "patterns": [
             {
-                "pattern": "encrypt=false",
-                "type": "string",
+                "pattern": "encrypt\\s*=\\s*false",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
                 "_comment": ""
             },
             {
-                "pattern": "encryption=false",
-                "type": "string",
+                "pattern": "encryption\\s*=\\s*false",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],

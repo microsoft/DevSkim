@@ -1,0 +1,3 @@
+line: 1
+=====
+$session_data = unserialize($tmp[0]);

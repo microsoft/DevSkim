@@ -40,8 +40,8 @@
         "rule_info": "DS425000.md",
         "patterns": [
             {
-                "pattern": ".readObject\\(",
-                "type": "substring",
+                "pattern": "\\.readObject\\(",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
@@ -66,7 +66,7 @@
         "patterns": [
             {
                 "pattern": "unserialize\\(",
-                "type": "string",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
@@ -96,7 +96,15 @@
                     "code"
                 ],
                 "_comment": ""
-            }
+            },
+            {
+                "pattern": "(YAML|Syck|Marshal)::load",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }            
         ]
     },
     {

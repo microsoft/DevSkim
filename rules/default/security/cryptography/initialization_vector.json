@@ -4,6 +4,7 @@
         "id": "DS188250",
         "description": "The mcrypt_encrypt function was used without an initialization vector.",
         "recommendation": "Add an initialization vector or consider a different cipher mode",
+        "overrides" : [ "DS175862" ],
         "applies_to": [
             "php"
         ],
@@ -45,6 +46,7 @@
         "id": "DS128921",
         "description": "An initialization vector was created to a static size, rather than determining it based on the encryption algorithm used.",
         "recommendation": "Use mcrypt_get_iv_size to get the correct IV size based on the cipher and mode.",
+        "overrides" : [ "DS175862" ],
         "applies_to": [
             "php"
         ],
