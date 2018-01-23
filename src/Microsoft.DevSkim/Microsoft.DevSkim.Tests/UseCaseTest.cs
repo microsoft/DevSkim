@@ -250,7 +250,7 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void LangugeSelector_Test()
+        public void LangugeSelectorTest()
         {            
             RuleProcessor processor = new RuleProcessor(LoadRules(false));
             string testString = "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"5.1.0\"";
@@ -270,7 +270,7 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void Commenting_Test()
+        public void CommentingTest()
         { 
             string str = Language.GetCommentInline("python");
             Assert.AreEqual("#", str, "Python comment prefix doesn't match");
@@ -284,7 +284,7 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void Conditions1_Test()
+        public void Conditions1Test()
         {            
             RuleProcessor processor = new RuleProcessor(LoadRules(false))
             {
@@ -307,7 +307,7 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void Conditions2_Test()
+        public void Conditions2Test()
         {
             RuleProcessor processor = new RuleProcessor(LoadRules(false))
             {
@@ -330,7 +330,7 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void Scope_Test()
+        public void ScopeTest()
         {
             RuleProcessor processor = new RuleProcessor(LoadRules(false))
             {

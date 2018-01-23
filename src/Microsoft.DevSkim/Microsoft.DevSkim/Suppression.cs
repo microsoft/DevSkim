@@ -39,7 +39,7 @@ namespace Microsoft.DevSkim
         /// Test if given rule Id is being suppressed
         /// </summary>
         /// <param name="issueId">Rule ID</param>
-        /// <returns>True is rule is suppressed</returns>
+        /// <returns>True if rule is suppressed</returns>
         public SuppressedIssue GetSuppressedIssue(string issueId)
         {
             bool result = false;
