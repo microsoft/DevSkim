@@ -150,8 +150,18 @@ namespace Microsoft.DevSkim.CLI.Commands
             int filesAffected = 0;
             int issuesCount = 0;
 
+            // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
+            IEnumerable<string> fileListing;
+            if (!Directory.Exists(_path))
+            {
+                fileListing = new List<string>() { _path };
+            }
+            else
+            {
+                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories);
+            }
             // Iterate through all files
-            foreach (string filename in Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories))
+            foreach (string filename in fileListing)
             {
                 string language = Language.FromFileName(filename);
 
