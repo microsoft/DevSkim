@@ -36,7 +36,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             var severityOption = command.Option("-s|--severity",
                                                 "Severity: [critical,important,moderate,practice,review]",
                                                 CommandOptionType.MultipleValue);
-
+            
             var rulesOption = command.Option("-r|--rules",
                                              "Rules to use",
                                              CommandOptionType.MultipleValue);
@@ -79,6 +79,13 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
+            // If we're writing a formatted file, then suppress stderr output
+            if (string.IsNullOrEmpty(_outputFile) && 
+                _fileFormat != null && (_fileFormat.Equals("json") || _fileFormat.Equals("sarif")))
+            {
+                Console.SetError(StreamWriter.Null);
+            }
+
             if (!Directory.Exists(_path) && !File.Exists(_path))
             {
                 Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);
