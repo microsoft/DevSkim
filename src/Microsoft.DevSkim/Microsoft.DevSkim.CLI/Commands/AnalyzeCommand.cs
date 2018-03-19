@@ -36,7 +36,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             var severityOption = command.Option("-s|--severity",
                                                 "Severity: [critical,important,moderate,practice,review]",
                                                 CommandOptionType.MultipleValue);
-
+            
             var rulesOption = command.Option("-r|--rules",
                                              "Rules to use",
                                              CommandOptionType.MultipleValue);
@@ -79,6 +79,13 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
+            // If we're writing a formatted file, then suppress stderr output
+            if (string.IsNullOrEmpty(_outputFile) && 
+                _fileFormat != null && (_fileFormat.Equals("json") || _fileFormat.Equals("sarif")))
+            {
+                Console.SetError(StreamWriter.Null);
+            }
+
             if (!Directory.Exists(_path) && !File.Exists(_path))
             {
                 Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);
@@ -150,8 +157,18 @@ namespace Microsoft.DevSkim.CLI.Commands
             int filesAffected = 0;
             int issuesCount = 0;
 
+            // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
+            IEnumerable<string> fileListing;
+            if (!Directory.Exists(_path))
+            {
+                fileListing = new List<string>() { _path };
+            }
+            else
+            {
+                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories);
+            }
             // Iterate through all files
-            foreach (string filename in Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories))
+            foreach (string filename in fileListing)
             {
                 string language = Language.FromFileName(filename);
 
