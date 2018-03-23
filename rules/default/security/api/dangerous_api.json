@@ -47,7 +47,7 @@
         "rule_info": "DS185832.md",
         "patterns": [
             {
-                "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
+                "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -62,7 +62,7 @@
                 "_comment": "",
                 "replacement": "strcpy_s($1, <size of $1>, $2)",
                 "pattern": {
-                    "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
+                    "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -76,7 +76,7 @@
                 "_comment": "",
                 "replacement": "strlcpy($1, $2, <size of $1>)",
                 "pattern": {
-                    "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
+                    "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -107,7 +107,7 @@
         "rule_info": "DS111237.md",
         "patterns": [
             {
-                "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+                "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -122,7 +122,7 @@
                 "_comment": "",
                 "replacement": "strcpy_s($1, $3, $2)",
                 "pattern": {
-                    "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+                    "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -136,7 +136,7 @@
                 "_comment": "",
                 "replacement": "strlcpy($1, $2, $3)",
                 "pattern": {
-                    "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+                    "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -167,7 +167,7 @@
         "rule_info": "DS141863.md",
         "patterns": [
             {
-                "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
+                "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -182,7 +182,7 @@
                 "_comment": "",
                 "replacement": "strcat_s($1, <size of $1>, $2)",
                 "pattern": {
-                    "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
+                    "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -196,7 +196,7 @@
                 "_comment": "",
                 "replacement": "strlcat($1, $2, <size of $1>)",
                 "pattern": {
-                    "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
+                    "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -227,7 +227,7 @@
         "rule_info": "DS108330.md",
         "patterns": [
             {
-                "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+                "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -242,7 +242,7 @@
                 "_comment": "",
                 "replacement": "strcat_s($1, $3, $2)",
                 "pattern": {
-                    "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+                    "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -256,7 +256,7 @@
                 "_comment": "",
                 "replacement": "strlcat($1, $2, $3)",
                 "pattern": {
-                    "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+                    "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
