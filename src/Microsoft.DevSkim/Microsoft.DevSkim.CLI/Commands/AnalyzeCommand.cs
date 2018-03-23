@@ -45,6 +45,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                                               "Ignore rules bundled with DevSkim",
                                               CommandOptionType.NoValue);
 
+            var errorOption = command.Option("-e|--suppress-standard-error",
+                                              "Suppress output to standard error",
+                                              CommandOptionType.NoValue);
+
             command.ExtendedHelpText = "\nOutput format options:\n%F\tfile path\n%L\tstart line number\n" +
                 "%C\tstart column\n%l\tend line number\n%c\tend column\n%I\tlocation inside file\n" +
                 "%i\tmatch length\n%m\tmatch\n%R\trule id\n%N\trule name\n%S\tseverity\n%D\tissue description\n%T\ttags(comma-separated)";
@@ -56,7 +60,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                  outputTextFormat.Value(),
                                  severityOption.Values,
                                  rulesOption.Values,
-                                 ignoreOption.HasValue())).Run();                
+                                 ignoreOption.HasValue(),
+                                 errorOption.HasValue())).Run();                
             });
         }
 
@@ -66,7 +71,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                               string outputTextFormat,
                               List<string> severities,
                               List<string> rules,
-                              bool ignoreDefault)
+                              bool ignoreDefault,
+                              bool suppressError)
         {
             _path = path;            
             _outputFile = output;
@@ -75,10 +81,16 @@ namespace Microsoft.DevSkim.CLI.Commands
             _severities = severities.ToArray();
             _rulespath = rules.ToArray();
             _ignoreDefaultRules = ignoreDefault;
+            _suppressError = suppressError;
         }
 
         public int Run()
         {
+            if (_suppressError)
+            {
+                Console.SetError(StreamWriter.Null);
+            }
+
             if (!Directory.Exists(_path) && !File.Exists(_path))
             {
                 Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);
@@ -150,8 +162,19 @@ namespace Microsoft.DevSkim.CLI.Commands
             int filesAffected = 0;
             int issuesCount = 0;
 
+            // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
+            IEnumerable <string> fileListing;
+            if (!Directory.Exists(_path))
+            {
+                fileListing = new List<string>() { _path };
+            }
+            else
+            {
+                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories);
+            }
+
             // Iterate through all files
-            foreach (string filename in Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories))
+            foreach (string filename in fileListing)
             {
                 string language = Language.FromFileName(filename);
 
@@ -244,5 +267,6 @@ namespace Microsoft.DevSkim.CLI.Commands
         private string[] _rulespath;
         private string[] _severities;
         private bool _ignoreDefaultRules;
+        private bool _suppressError;
     }
 }
