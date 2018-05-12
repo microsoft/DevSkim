@@ -1,0 +1,2040 @@
+{
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "DevSkim",
+        "fullName": "Microsoft DevSkim CLI",
+        "version": "0.1.9"
+      },
+      "results": [
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 61,
+                  "endLine": 75,
+                  "endColumn": 85,
+                  "offset": 3705,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3705,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3705,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 62,
+                  "endLine": 109,
+                  "endColumn": 86,
+                  "offset": 5075,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5075,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5075,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 112,
+                  "startColumn": 48,
+                  "endLine": 112,
+                  "endColumn": 72,
+                  "offset": 5266,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5266,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5266,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 113,
+                  "startColumn": 60,
+                  "endLine": 113,
+                  "endColumn": 84,
+                  "offset": 5372,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5372,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5372,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 114,
+                  "startColumn": 61,
+                  "endLine": 114,
+                  "endColumn": 85,
+                  "offset": 5475,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5475,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5475,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 115,
+                  "startColumn": 63,
+                  "endLine": 115,
+                  "endColumn": 87,
+                  "offset": 5582,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5582,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5582,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 116,
+                  "startColumn": 66,
+                  "endLine": 116,
+                  "endColumn": 90,
+                  "offset": 5704,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5704,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5704,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 117,
+                  "startColumn": 61,
+                  "endLine": 117,
+                  "endColumn": 85,
+                  "offset": 5823,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5823,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5823,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 118,
+                  "startColumn": 64,
+                  "endLine": 118,
+                  "endColumn": 88,
+                  "offset": 5941,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5941,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5941,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 119,
+                  "startColumn": 61,
+                  "endLine": 119,
+                  "endColumn": 85,
+                  "offset": 6058,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 6058,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 6058,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 120,
+                  "startColumn": 65,
+                  "endLine": 120,
+                  "endColumn": 89,
+                  "offset": 6164,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 6164,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 6164,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 180,
+                  "startColumn": 50,
+                  "endLine": 180,
+                  "endColumn": 74,
+                  "offset": 8816,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8816,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8816,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 194,
+                  "startColumn": 49,
+                  "endLine": 194,
+                  "endColumn": 73,
+                  "offset": 9426,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9426,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9426,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 197,
+                  "startColumn": 48,
+                  "endLine": 197,
+                  "endColumn": 72,
+                  "offset": 9604,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9604,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9604,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 198,
+                  "startColumn": 59,
+                  "endLine": 198,
+                  "endColumn": 83,
+                  "offset": 9709,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9709,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9709,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 199,
+                  "startColumn": 60,
+                  "endLine": 199,
+                  "endColumn": 84,
+                  "offset": 9811,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9811,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9811,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 200,
+                  "startColumn": 61,
+                  "endLine": 200,
+                  "endColumn": 85,
+                  "offset": 9916,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9916,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9916,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS168931",
+          "level": "error",
+          "message": "Do not use broken/weak cryptographic hash algorithms",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 206,
+                  "startColumn": 49,
+                  "endLine": 206,
+                  "endColumn": 73,
+                  "offset": 10106,
+                  "length": 24
+                }
+              }
+            }
+          ],
+          "snippet": "MD5CryptoServiceProvider",
+          "fixes": [
+            {
+              "description": "Change to SHA-256",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 10106,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA256CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to SHA-512",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 10106,
+                      "deletedLength": 24,
+                      "insertedBytes": "SHA512CryptoServiceProvider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.HashAlgorithm.BrokenOrWeak"]
+          }
+        },
+        {
+          "ruleId": "DS137138",
+          "level": "error",
+          "message": "Insecure URL",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 300,
+                  "startColumn": 42,
+                  "endLine": 300,
+                  "endColumn": 47,
+                  "offset": 14677,
+                  "length": 5
+                }
+              }
+            }
+          ],
+          "snippet": "http:",
+          "fixes": [
+            {
+              "description": "Change to HTTPS ",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 14677,
+                      "deletedLength": 5,
+                      "insertedBytes": "https:"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["ThreatModel.Integration.HTTP"]
+          }
+        },
+        {
+          "ruleId": "DS101155",
+          "level": "error",
+          "message": "Disabled certificate validation",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 34,
+                  "endLine": 165,
+                  "endColumn": 50,
+                  "offset": 8143,
+                  "length": 16
+                }
+              }
+            }
+          ],
+          "snippet": "encryption=false",
+          "fixes": [],
+          "properties": {
+            "tags": ["Cryptography.Certificate.Validation"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 34,
+                  "endLine": 64,
+                  "endColumn": 37,
+                  "offset": 3148,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3148,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3148,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 45,
+                  "endLine": 64,
+                  "endColumn": 48,
+                  "offset": 3159,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3159,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3159,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 46,
+                  "endLine": 75,
+                  "endColumn": 49,
+                  "offset": 3690,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3690,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 3690,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 47,
+                  "endLine": 109,
+                  "endColumn": 50,
+                  "offset": 5060,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5060,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 5060,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 52,
+                  "endLine": 165,
+                  "endColumn": 55,
+                  "offset": 8161,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8161,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8161,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 64,
+                  "endLine": 165,
+                  "endColumn": 67,
+                  "offset": 8173,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8173,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8173,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 180,
+                  "startColumn": 34,
+                  "endLine": 180,
+                  "endColumn": 37,
+                  "offset": 8800,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8800,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 8800,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 194,
+                  "startColumn": 34,
+                  "endLine": 194,
+                  "endColumn": 37,
+                  "offset": 9411,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9411,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 9411,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 206,
+                  "startColumn": 34,
+                  "endLine": 206,
+                  "endColumn": 37,
+                  "offset": 10091,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 10091,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 10091,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 341,
+                  "startColumn": 45,
+                  "endLine": 341,
+                  "endColumn": 48,
+                  "offset": 16595,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 16595,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 16595,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 343,
+                  "startColumn": 48,
+                  "endLine": 343,
+                  "endColumn": 51,
+                  "offset": 16752,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 16752,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 16752,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 344,
+                  "startColumn": 60,
+                  "endLine": 344,
+                  "endColumn": 63,
+                  "offset": 16855,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 16855,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 16855,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 347,
+                  "startColumn": 75,
+                  "endLine": 347,
+                  "endColumn": 78,
+                  "offset": 17003,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 17003,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 17003,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 349,
+                  "startColumn": 48,
+                  "endLine": 349,
+                  "endColumn": 51,
+                  "offset": 17130,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 17130,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 17130,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS126858",
+          "level": "error",
+          "message": "Weak/Broken Hash Algorithm",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                "region": {
+                  "startLine": 350,
+                  "startColumn": 60,
+                  "endLine": 350,
+                  "endColumn": 63,
+                  "offset": 17237,
+                  "length": 3
+                }
+              }
+            }
+          ],
+          "snippet": "MD5",
+          "fixes": [
+            {
+              "description": "Change to \"SHA256\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 17237,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "Change to \"SHA512\"",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.Tests/UseCaseTest.cs",
+                  "replacements": [
+                    {
+                      "offset": 17237,
+                      "deletedLength": 3,
+                      "insertedBytes": "SHA512"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["Cryptography.BannedHashAlgorithm"]
+          }
+        },
+        {
+          "ruleId": "DS137138",
+          "level": "error",
+          "message": "Insecure URL",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/packages/Newtonsoft.Json.10.0.1/tools/install.ps1",
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 11,
+                  "endLine": 8,
+                  "endColumn": 16,
+                  "offset": 178,
+                  "length": 5
+                }
+              }
+            }
+          ],
+          "snippet": "http:",
+          "fixes": [
+            {
+              "description": "Change to HTTPS ",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/packages/Newtonsoft.Json.10.0.1/tools/install.ps1",
+                  "replacements": [
+                    {
+                      "offset": 178,
+                      "deletedLength": 5,
+                      "insertedBytes": "https:"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["ThreatModel.Integration.HTTP"]
+          }
+        },
+        {
+          "ruleId": "DS137138",
+          "level": "error",
+          "message": "Insecure URL",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/packages/Newtonsoft.Json.10.0.2/tools/install.ps1",
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 11,
+                  "endLine": 8,
+                  "endColumn": 16,
+                  "offset": 178,
+                  "length": 5
+                }
+              }
+            }
+          ],
+          "snippet": "http:",
+          "fixes": [
+            {
+              "description": "Change to HTTPS ",
+              "fileChanges": [
+                {
+                  "uri": "file:///d:/GitHub/DevSkim/src/Microsoft.DevSkim/packages/Newtonsoft.Json.10.0.2/tools/install.ps1",
+                  "replacements": [
+                    {
+                      "offset": 178,
+                      "deletedLength": 5,
+                      "insertedBytes": "https:"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "tags": ["ThreatModel.Integration.HTTP"]
+          }
+        }
+      ],
+      "rules": {
+        "DS168931": {
+          "id": null,
+          "name": "Do not use broken/weak cryptographic hash algorithms",
+          "fullDescription": "A potentially weak hashing algorithm was used.",
+          "defaultLevel": "error",
+          "helpUri": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS168931.md"
+        },
+        "DS137138": {
+          "id": null,
+          "name": "Insecure URL",
+          "fullDescription": "An HTTP-based URL without TLS was detected.",
+          "defaultLevel": "error",
+          "helpUri": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS137138.md"
+        },
+        "DS101155": {
+          "id": null,
+          "name": "Disabled certificate validation",
+          "fullDescription": "Extend default certificate validation, but do not disable or override default rules.",
+          "defaultLevel": "error",
+          "helpUri": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS101155.md"
+        },
+        "DS126858": {
+          "id": null,
+          "name": "Weak/Broken Hash Algorithm",
+          "fullDescription": "A weak or broken hash algorithm was detected.",
+          "defaultLevel": "error",
+          "helpUri": "https://github.com/Microsoft/DevSkim/blob/master/guidance/DS126858.md"
+        }
+      }
+    }
+  ]
+}
