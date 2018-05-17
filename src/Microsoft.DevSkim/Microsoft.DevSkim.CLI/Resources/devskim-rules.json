@@ -51,7 +51,7 @@
     "rule_info": "DS185832.md",
     "patterns": [
       {
-        "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
+        "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -66,7 +66,7 @@
         "name": "Change to strcpy_s (Recommended for VC++)",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
+          "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -80,7 +80,7 @@
         "name": "Change to strlcpy",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+)\\)",
+          "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -113,7 +113,7 @@
     "rule_info": "DS111237.md",
     "patterns": [
       {
-        "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+        "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -128,7 +128,7 @@
         "name": "Change to strcpy_s (Recommended for VC++)",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+          "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -142,7 +142,7 @@
         "name": "Change to strlcpy",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+          "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -175,7 +175,7 @@
     "rule_info": "DS141863.md",
     "patterns": [
       {
-        "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
+        "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -190,7 +190,7 @@
         "name": "Change to strcat_s (Recommended for VC++)",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
+          "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -204,7 +204,7 @@
         "name": "Change to strlcat",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+)\\)",
+          "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -237,7 +237,7 @@
     "rule_info": "DS108330.md",
     "patterns": [
       {
-        "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+        "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
         "type": "regex",
         "modifiers": null,
         "scopes": [
@@ -252,7 +252,7 @@
         "name": "Change to strcat_s (Recommended for VC++)",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+          "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -266,7 +266,7 @@
         "name": "Change to strlcat",
         "type": "regex-replace",
         "pattern": {
-          "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+)\\)+",
+          "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
           "type": "regex",
           "modifiers": null,
           "scopes": [
@@ -872,7 +872,7 @@
   },
   {
     "id": "DS113286",
-    "name": "Do not include user-input directoy in format strings",
+    "name": "Do not include user-input directly in format strings",
     "overrides": null,
     "schema_version": 0,
     "tags": [

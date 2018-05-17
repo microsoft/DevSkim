@@ -9,17 +9,12 @@
     <ApplicationIcon />
     <PackageId>Microsoft.DevSkim.CLI</PackageId>
     <Product>Microsoft DevSkim Command Line Interface</Product>
-    <Version>0.1.9</Version>
+    <Version>0.1.10</Version>
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>
     <Copyright>(c) Microsoft Corporation. All rights reserved</Copyright>
     <Description>DevSkim is a framework and Language analyzer that provide inline security analysis</Description>    
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\devskim-rules.json" />
-    <None Remove="soubor.txt" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\devskim-rules.json" />

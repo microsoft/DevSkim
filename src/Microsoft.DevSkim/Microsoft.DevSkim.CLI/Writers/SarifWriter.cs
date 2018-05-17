@@ -33,7 +33,9 @@ namespace Microsoft.DevSkim.CLI.Writers
                                                                  issue.Issue.Boundary.Length
                                                        ));
             resultItem.Snippet = issue.TextSample;
-            resultItem.Fixes = GetFixits(issue);
+
+            if (issue.Issue.Rule.Fixes != null)
+                resultItem.Fixes = GetFixits(issue);
 
             resultItem.Locations = new List<CodeAnalysis.Sarif.Location>();
             resultItem.Locations.Add(loc);
@@ -47,11 +49,16 @@ namespace Microsoft.DevSkim.CLI.Writers
             sarifLog.Version = SarifVersion.OneZeroZero;
             Run runItem = new Run();
             runItem.Tool = new Tool();
-            runItem.Tool.FullName = "Microsoft DevSkim CLI";
-            runItem.Tool.Name = "DevSkim";
-            runItem.Tool.Version = Assembly.GetEntryAssembly()
-                                           .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                                           .InformationalVersion;
+            Assembly entryAssembly = Assembly.GetEntryAssembly();
+
+            runItem.Tool.Name = entryAssembly.GetName()
+                                 .Name;
+
+            runItem.Tool.FullName = entryAssembly.GetCustomAttribute<AssemblyProductAttribute>()
+                                                 .Product;
+
+            runItem.Tool.Version = entryAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                                                .InformationalVersion;
             
             runItem.Results = _results;
             runItem.Rules = _rules;
@@ -122,6 +129,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             if (!_rules.ContainsKey(devskimRule.Id))
             {
                 CodeAnalysis.Sarif.Rule sarifRule = new CodeAnalysis.Sarif.Rule();
+                sarifRule.Id = devskimRule.Id;
                 sarifRule.Name = devskimRule.Name;
                 sarifRule.FullDescription = devskimRule.Description;
                 sarifRule.HelpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/master/guidance/" + devskimRule.RuleInfo);
