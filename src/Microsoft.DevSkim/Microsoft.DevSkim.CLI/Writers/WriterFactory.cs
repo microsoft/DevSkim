@@ -24,7 +24,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 case "text":
                     return new SimpleTextWriter(format);
                 case "sarif":
-                    throw new NotImplementedException("sarif not supported");
+                    return new SarifWriter();
                 default:
                     throw new Exception("wrong output");
             }
