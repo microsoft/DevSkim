@@ -34,7 +34,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                   CommandOptionType.SingleValue);
 
             var severityOption = command.Option("-s|--severity",
-                                                "Severity: [critical,important,moderate,practice,review]",
+                                                "Severity: [critical,important,moderate,practice,manual]",
                                                 CommandOptionType.MultipleValue);
 
             var rulesOption = command.Option("-r|--rules",
