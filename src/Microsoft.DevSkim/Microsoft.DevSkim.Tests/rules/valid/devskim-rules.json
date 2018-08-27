@@ -3540,7 +3540,7 @@
     ],
     "severity": "manual-review",
     "description": "If untrusted data (data from HTTP requests, user submitted files, etc.) is included in an setTimeout statement it can allow enable an attacker to inject their own code.",
-    "recommendation": "Edit the setTimeout so that no untrusted data is included.  If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed.  This is not as simple as just escaping quotes.",
+    "recommendation": "Edit the setTimeout so that no untrusted data is included. If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed. This is not as simple as just escaping quotes.",
     "rule_info": "DS172411.md",
     "patterns": [
       {
