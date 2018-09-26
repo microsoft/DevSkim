@@ -37,7 +37,7 @@
         "rule_info": "DS137138.md",
         "patterns": [
             {
-                "pattern": "http:",
+                "pattern": "http:\/",
                 "type": "substring",
                 "scopes": [
                     "code"
