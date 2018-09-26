@@ -21,6 +21,8 @@ dotnet publish Microsoft.DevSkim.CLI --configuration Release --framework netcore
 dotnet publish Microsoft.DevSkim.CLI --configuration Release --framework netcoreapp2.0 --runtime linux-x64
 dotnet publish Microsoft.DevSkim.CLI --configuration Release --framework netcoreapp2.0 --runtime osx-x64
 
+d:\nuget pack Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.nuspec -OutputDirectory Microsoft.DevSkim.CLI\bin\Release\netcoreapp2.0
+
 rem echo CREATING TEMP DIRECTORY FOR .DEB PACKAGE
 rem mkdir temp\devskim-ver_amd64
 rem xcopy Microsoft.DevSkim.CLI\Packaging\LinuxDeb\*.* temp\devskim-ver_amd64 /E
