@@ -1,6 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,7 +29,7 @@ namespace Microsoft.DevSkim
             {
                 if (++pos < _content.Length)
                 {
-                    pos = _content.IndexOf('\n', pos);
+                    pos = _content.IndexOf("\n", pos, StringComparison.Ordinal);
                     _lineEnds.Add(pos);
                 }
             }
@@ -185,11 +186,11 @@ namespace Microsoft.DevSkim
         {
             bool result = false;
             string preText = string.Concat(text.Substring(0, index));
-            int lastPreffix = preText.LastIndexOf(prefix);
+            int lastPreffix = preText.LastIndexOf(prefix, StringComparison.Ordinal);
             if (lastPreffix >= 0)
             {
                 preText = preText.Substring(lastPreffix);
-                int lastSuffix = preText.IndexOf(suffix);
+                int lastSuffix = preText.IndexOf(suffix, StringComparison.Ordinal);
                 if (lastSuffix < 0)
                     result = true;
             }
