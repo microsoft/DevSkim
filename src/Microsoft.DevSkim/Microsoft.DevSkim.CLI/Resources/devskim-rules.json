@@ -796,7 +796,7 @@
     "rule_info": "DS137138.md",
     "patterns": [
       {
-        "pattern": "http:",
+        "pattern": "http:/",
         "type": "regex",
         "modifiers": [
           "i"
@@ -3592,6 +3592,49 @@
       }
     ],
     "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS113854",
+    "name": "Do not extract untrusted zip archives",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "CSharp.DangerousFunctionCall"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "severity": "manual-review",
+    "description": "Zip archive can contain file names with directory stepping sequence",
+    "recommendation": "Make sure that ZipArchiveEntry.FullName doesn't directory stepping characters ..\\",
+    "rule_info": "DS113854.md",
+    "patterns": [
+      {
+        "pattern": "ExtractToFile",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "pattern": {
+          "pattern": "ZipArchiveEntry",
+          "type": "regex",
+          "modifiers": null,
+          "scopes": [
+            "code",
+            "code"
+          ]
+        },
+        "search_in": "finding-region(-15,0)",
+        "negate_finding": false
+      }
+    ],
     "fix_its": null
   },
   {
