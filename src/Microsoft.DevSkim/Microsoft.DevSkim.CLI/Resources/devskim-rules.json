@@ -3517,7 +3517,7 @@
     ],
     "severity": "manual-review",
     "description": "If untrusted data (data from HTTP requests, user submitted files, etc.) is included in an eval statement it can allow enable an attacker to inject their own code.",
-    "recommendation": "Edit the eval so that no untrusted date is included.  If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed.  This is not as simple as just escaping quotes.",
+    "recommendation": "Edit the eval so that no untrusted data is included. If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed. This is not as simple as just escaping quotes.",
     "rule_info": "DS189424.md",
     "patterns": [
       {
@@ -3548,7 +3548,7 @@
     ],
     "severity": "manual-review",
     "description": "If untrusted data (data from HTTP requests, user submitted files, etc.) is included in an setTimeout statement it can allow enable an attacker to inject their own code.",
-    "recommendation": "Edit the setTimeout so that no untrusted date is included.  If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed.  This is not as simple as just escaping quotes.",
+    "recommendation": "Edit the setTimeout so that no untrusted data is included. If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed. This is not as simple as just escaping quotes.",
     "rule_info": "DS172411.md",
     "patterns": [
       {
@@ -3592,6 +3592,49 @@
       }
     ],
     "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS113854",
+    "name": "Do not extract untrusted zip archives",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "CSharp.DangerousFunctionCall"
+    ],
+    "applies_to": [
+      "csharp"
+    ],
+    "severity": "manual-review",
+    "description": "Zip archive can contain file names with directory stepping sequence",
+    "recommendation": "Make sure that ZipArchiveEntry.FullName doesn't directory stepping characters ..\\",
+    "rule_info": "DS113854.md",
+    "patterns": [
+      {
+        "pattern": "ExtractToFile",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "pattern": {
+          "pattern": "ZipArchiveEntry",
+          "type": "regex",
+          "modifiers": null,
+          "scopes": [
+            "code",
+            "code"
+          ]
+        },
+        "search_in": "finding-region(-15,0)",
+        "negate_finding": false
+      }
+    ],
     "fix_its": null
   },
   {

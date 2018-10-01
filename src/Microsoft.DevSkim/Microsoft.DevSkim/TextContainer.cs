@@ -166,6 +166,13 @@ namespace Microsoft.DevSkim
             return matchList;
         }
 
+        /// <summary>
+        /// Check whether the boundary in a text matches the scope of a search pattern (code, comment etc.)
+        /// </summary>
+        /// <param name="pattern">Pattern with scope</param>
+        /// <param name="boundary">Boundary in a text</param>
+        /// <param name="text">Text</param>
+        /// <returns>True if boundary is matching the pattern scope</returns>
         private bool ScopeMatch(SearchPattern pattern, Boundary boundary, string text)
         {
             string prefix = Language.GetCommentPrefix(_language);
@@ -175,12 +182,20 @@ namespace Microsoft.DevSkim
             if (pattern.Scopes.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
 
-            bool isInComment = (  IsBetween(text, boundary.Index, Language.GetCommentPrefix(_language), Language.GetCommentSuffix(_language))
-                               || IsBetween(text, boundary.Index, Language.GetCommentInline(_language), "\n"));
+            bool isInComment = (  IsBetween(text, boundary.Index, prefix, suffix)
+                               || IsBetween(text, boundary.Index, inline, "\n"));
 
             return !(isInComment && !pattern.Scopes.Contains(PatternScope.Comment));
         }
 
+        /// <summary>
+        /// Checks if the index in the string lies between preffix and suffix
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <param name="index">Index to check</param>
+        /// <param name="prefix">Prefix</param>
+        /// <param name="suffix">Suffix</param>
+        /// <returns>True if the index is between prefix and suffix</returns>
         private bool IsBetween(string text, int index, string prefix, string suffix)
         {
             bool result = false;
