@@ -29,7 +29,7 @@ namespace Microsoft.DevSkim
             {
                 if (++pos < _content.Length)
                 {
-                    pos = _content.IndexOf("\n", pos, StringComparison.Ordinal);
+                    pos = _content.IndexOf('\n', pos);
                     _lineEnds.Add(pos);
                 }
             }

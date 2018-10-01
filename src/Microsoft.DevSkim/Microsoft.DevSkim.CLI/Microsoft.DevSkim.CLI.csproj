@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,7 +9,7 @@
     <ApplicationIcon />
     <PackageId>Microsoft.DevSkim.CLI</PackageId>
     <Product>Microsoft DevSkim Command Line Interface</Product>
-    <Version>0.1.10</Version>
+    <Version>0.1.11</Version>
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>
     <Copyright>(c) Microsoft Corporation. All rights reserved</Copyright>
