@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Microsoft.DevSkim.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "analyze d:\\t"
+    }
+  }
+}
