@@ -37,6 +37,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                 "Severity: [critical,important,moderate,practice,manual]",
                                                 CommandOptionType.MultipleValue);
 
+            var disableSuppressionOption = command.Option("-d|--disable-suppression",
+                                                   "Disable suppression of findings with ignore comments",
+                                                   CommandOptionType.NoValue);
+
             var rulesOption = command.Option("-r|--rules",
                                              "Rules to use",
                                              CommandOptionType.MultipleValue);
@@ -61,7 +65,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                  severityOption.Values,
                                  rulesOption.Values,
                                  ignoreOption.HasValue(),
-                                 errorOption.HasValue())).Run();                
+                                 errorOption.HasValue(),
+                                 disableSuppressionOption.HasValue())).Run();                
             });
         }
 
@@ -72,7 +77,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                               List<string> severities,
                               List<string> rules,
                               bool ignoreDefault,
-                              bool suppressError)
+                              bool suppressError,
+                              bool disableSuppression)
         {
             _path = path;            
             _outputFile = output;
@@ -82,6 +88,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _rulespath = rules.ToArray();
             _ignoreDefaultRules = ignoreDefault;
             _suppressError = suppressError;
+            _disableSuppression = disableSuppression;
         }
 
         public int Run()
@@ -130,6 +137,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             // Initialize the processor
             RuleProcessor processor = new RuleProcessor(rules);
+            processor.EnableSuppressions = !_disableSuppression;
 
             if (_severities.Count() > 0)
             {
@@ -186,36 +194,41 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
 
                 filesAnalyzed++;
-                string fileText = File.ReadAllText(filename);                
+                string fileText = File.ReadAllText(filename);
                 Issue[] issues = processor.Analyze(fileText, language);
 
-                if (issues.Count() > 0)
+                bool issuesFound = issues.Any(iss => iss.IsSuppressionInfo == false) || _disableSuppression && issues.Count() > 0;
+
+                if (issuesFound)
                 {
                     filesAffected++;
-                    issuesCount += issues.Count();
                     Console.Error.WriteLine("file:{0}", filename);
 
                     // Iterate through each issue
                     foreach (Issue issue in issues)
                     {
-                        Console.Error.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",                                                          
-                                                  issue.StartLocation.Line,
-                                                  issue.StartLocation.Column,
-                                                  issue.EndLocation.Line,
-                                                  issue.EndLocation.Column,
-                                                  issue.Rule.Id,
-                                                  issue.Rule.Severity,
-                                                  issue.Rule.Name);
-
-                        IssueRecord record = new IssueRecord()
+                        if (!issue.IsSuppressionInfo || _disableSuppression)
                         {
-                            Filename = filename,
-                            Filesize = fileText.Length,
-                            TextSample = fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
-                            Issue = issue
-                        };
+                            issuesCount++;
+                            Console.Error.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",                                                          
+                                                    issue.StartLocation.Line,
+                                                    issue.StartLocation.Column,
+                                                    issue.EndLocation.Line,
+                                                    issue.EndLocation.Column,
+                                                    issue.Rule.Id,
+                                                    issue.Rule.Severity,
+                                                    issue.Rule.Name);
 
-                        outputWriter.WriteIssue(record);
+                            IssueRecord record = new IssueRecord()
+                            {
+                                Filename = filename,
+                                Filesize = fileText.Length,
+                                TextSample = fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
+                                Issue = issue
+                            };
+
+                            outputWriter.WriteIssue(record);
+                        }
                     }
 
                     Console.Error.WriteLine();
@@ -268,5 +281,6 @@ namespace Microsoft.DevSkim.CLI.Commands
         private string[] _severities;
         private bool _ignoreDefaultRules;
         private bool _suppressError;
+        private bool _disableSuppression;
     }
 }
