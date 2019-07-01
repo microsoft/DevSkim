@@ -56,6 +56,9 @@ namespace Microsoft.DevSkim
 
         [JsonProperty(PropertyName = "recommendation")]
         public string Recommendation { get; set; }
+        
+         [JsonProperty(PropertyName = "confidence")]
+        public string Confidence { get; set; }
 
         [JsonProperty(PropertyName = "rule_info")]
         public string RuleInfo { get; set; }
@@ -68,5 +71,10 @@ namespace Microsoft.DevSkim
 
         [JsonProperty(PropertyName = "fix_its")]
         public CodeFix[] Fixes { get; set; }
+        
+        public Rule()
+        {
+            Confidence = "medium";
+        }
     }
 }
