@@ -1,0 +1,99 @@
+[
+    {
+        "name": "Generic: Do not hardcode SSL/TLS versions within an application.",
+        "id": "DS440000",
+        "description": "SSL/TLS version usage should be based on an OS or external configuration.",
+        "recommendation": "",
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "important",
+        "_comment": "",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "(SSL|D?TLS)v?[123_\\.]*",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers" : ["i"],
+                "_comment": "Generic reference to a SSL/TLS version"
+            }
+        ]
+    },    
+    {
+        "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
+        "id": "DS440010",
+        "description": "SSL/TLS version usage should be based on an OS or external configuration.",
+        "recommendation": "",
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "important",
+        "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "SSLv2?3_method|D?TLSv1_([123]_)?(client_|server_)?method",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "OpenSSL functions that implement specific protocol versions"
+            },
+            {
+                "pattern": "DTLSv1_listen|SSL_stateless",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "OpenSSL functions that implicitly call specific protocol versions"
+            },
+            {
+                "pattern": "SSL_(CTX_)?set_(min|max)_proto_version",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SSL_EXT_TLS_ONLY|SSL_EXT_DTLS_ONLY|SSL_EXT_TLS_IMPLEMENTATION_ONLY|SSL_EXT_SSL3_ALLOWED|SSL_EXT_TLS1_2_AND_BELOW_ONLY|SSL_EXT|TLS1_3_ONLY|SSL_EXT_TLS1_2_SERVER_HELLO|SSL_EXT_TLS1_3_SERVER_HELLO",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "OpenSSL extension / options"
+            },
+            {
+                "pattern": "SSL_OP_(NO_(SSLv3|TLSv1|TLSv1_1|TLSv1_2|TLSv1_3|DTLSv1|DTLSv1_2))",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "OpenSSL extension / options"
+            },
+            {
+                "pattern": "SSL_OP_[A-Z0-9_]+",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "OpenSSL extension / options"
+            },
+            {
+                "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "OpenSSL cipher suite"
+            }
+        ]
+    }
+]

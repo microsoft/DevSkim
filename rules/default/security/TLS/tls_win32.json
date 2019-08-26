@@ -1,0 +1,33 @@
+[
+  {
+
+        "name": "Win32- Do not hardcode TLS protocol versions.",
+        "id": "DS440071",
+        "description": "Win32- Do not hardcode TLS protocol versions.",
+        "recommendation": "",
+        "overrides": ["DS440000"],
+        "applies_to": [
+            "c",
+            "cpp",
+            "csharp"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "important",
+        "_comment": "",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "SP_PROT_[A-Z0-9_]+_(SERVER|CLIENT)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+        ]
+    }    
+]

@@ -1,0 +1,21 @@
+line: 1 expect DS112835,DS144436,DS440000
+line: 2
+line: 3 expect DS112835,DS144436,DS440000
+line: 4 expect DS112835,DS112835,DS144436,DS440000
+line: 5 expect DS112835,DS112835,DS440000
+line: 6 expect DS112835,DS112835,DS440000
+line: 8 expect DS112835,DS440000
+line: 9 expect DS112835,DS440000
+line: 10
+====
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.Tls11;
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.Tls12;
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.SystemDefault;
+

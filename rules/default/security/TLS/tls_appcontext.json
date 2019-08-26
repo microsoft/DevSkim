@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Possibly hardcoded TLS protocol",
+        "id": "DS112837",
+        "description": "Possibly hardcoded TLS protocol",
+        "recommendation": "Review for security purposes",
+        "applies_to": [
+            "csharp",
+            "powershell",
+            "vb"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS112837.md",
+        "patterns": [
+            {
+                "pattern": "TestSwitch.LocalAppContext.DisableCaching",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    }
+]
