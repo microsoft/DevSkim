@@ -16,7 +16,7 @@
         "patterns": [
             {
                 "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -24,7 +24,7 @@
             },
             {
                 "pattern": "Switch.System.ServiceModel.DisableUsingServicePointManagerSecurityProtocol",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -32,7 +32,7 @@
             },
             {
                 "pattern": "Switch.System.Net.DontEnableSystemDefaultTlsVersions",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -40,7 +40,7 @@
             },
             {
                 "pattern": "Switch.System.ServiceModel.DontEnableSystemDefaultTlsVersions",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],

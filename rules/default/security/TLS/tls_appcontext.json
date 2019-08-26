@@ -18,7 +18,7 @@
         "patterns": [
             {
                 "pattern": "TestSwitch.LocalAppContext.DisableCaching",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -26,7 +26,7 @@
             },
             {
                 "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
