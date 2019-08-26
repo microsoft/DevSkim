@@ -1,0 +1,142 @@
+[
+    {
+        "name": "Possibly hardcoded TLS protocol",
+        "id": "DS112835",
+        "description": "Possibly hardcoded TLS protocol",
+        "recommendation": "Review for security purposes",
+        "applies_to": [
+            "csharp",
+            "powershell",
+            "vb"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS112835.md",
+        "patterns": [
+            {
+                "pattern": "SecurityProtocolType.Ssl3",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)48",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolType.SystemDefault",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)0",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolType.Tls",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)192",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolType.Tls11",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)768",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolType.Tls12",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)3072",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },            
+            {
+                "pattern": "SecurityProtocolType.Tls13",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },            
+            {
+                "pattern": "(SecurityProtocolType)12288",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolTypeExtensions.Tls11",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolTypeExtensions.Tls12",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolTypeExtensions.SystemDefault",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+
+        ]
+    }
+]

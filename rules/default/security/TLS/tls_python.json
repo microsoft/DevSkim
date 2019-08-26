@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Python- Do not hardcode TLS protocol versions.",
+        "id": "DS440070",
+        "description": "Python- Do not hardcode TLS protocol versions.",
+        "recommendation": "",
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "important",
+        "_comment": "",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "PROTOCOL_(SSL|TLS)v[123_]+(_CLIENT|SERVER)?",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "ssl_version",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+        ]
+    }
+]

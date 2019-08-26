@@ -1,0 +1,25 @@
+line: 3 expect DS112836,DS440000,DS440000,DS440000
+line: 4 expect DS112836,DS440000,DS440000,DS440000
+line: 5 expect DS112836,DS440000,DS440000
+line: 6 expect DS112836,DS440000,DS440000
+line: 7 expect DS112836,DS440000,DS440000,DS440000
+line: 8 expect DS112836,DS440000,DS440000,DS440000
+line: 9 expect DS112836,DS440000,DS440000,DS440000
+line: 10 expect DS112836,DS112836,DS440000,DS440000,DS440000
+line: 11 expect DS112836,DS112836,DS440000,DS440000,DS440000
+line: 12 expect DS112836,DS112836,DS440000,DS440000,DS440000
+====
+NetTcpBinding b = new NetTcpBinding();  
+b.Security.Mode = SecurityMode.Transport;  
+b.Security.Transport.SslProtocols = SslProtocolsExtensions.Tls11;
+b.Security.Transport.SslProtocols = SslProtocolsExtensions.Tls12;
+b.Security.Transport.SslProtocols = SslProtocols.Default ;
+b.Security.Transport.SslProtocols = SslProtocols.None;
+b.Security.Transport.SslProtocols = SslProtocols.Ssl2 ;
+b.Security.Transport.SslProtocols = SslProtocols.Ssl3;
+b.Security.Transport.SslProtocols = SslProtocols.Tls;
+b.Security.Transport.SslProtocols = SslProtocols.Tls11;
+b.Security.Transport.SslProtocols = SslProtocols.Tls12;
+b.Security.Transport.SslProtocols = SslProtocols.Tls13;
+
+

@@ -1,0 +1,12 @@
+line: 2
+line: 3
+line: 4 expect DS112838,DS440000
+line: 5 expect DS112838,DS440000
+====
+<xml>
+  <AppContextSwitchOverrides value="Switch.System.Net.DontEnableSchUseStrongCrypto=true"/>
+  <AppContextSwitchOverrides value="Switch.System.ServiceModel.DisableUsingServicePointManagerSecurityProtocols=true"/>
+  <AppContextSwitchOverrides value="Switch.System.Net.DontEnableSystemDefaultTlsVersions=true"/>
+  <AppContextSwitchOverrides value="Switch.System.ServiceModel.DontEnableSystemDefaultTlsVersions=true"/>
+</xml>
+
