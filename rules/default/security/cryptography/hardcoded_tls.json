@@ -97,9 +97,9 @@
         ]
     },    
     {
-        "name": "Do not hardcode SSL/TLS versions within an application.",
+        "name": ".NET - Do not hardcode SSL/TLS versions within an application.",
         "id": "DS440020",
-        "description": "SSL/TLS version usage should be based on an OS or external configuration.",
+        "description": ".NET- Do not hardcode SSL/TLS versions within an application.",
         "recommendation": "",
         "applies_to": [
             "csharp",
@@ -133,7 +133,7 @@
             "typescript"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Harcoded"
+            "Cryptography.Protocol.TLS.Hardcoded"
         ],
         "severity": "critical",
         "_comment": "These rules are all encompassed by DS440000 and DS440010.",
@@ -146,20 +146,20 @@
     {
         "name": "Python- Do not hardcode TLS protocol versions.",
         "id": "DS440070",
-        "description": "Node- Do not hardcode TLS protocol versions.",
+        "description": "Python- Do not hardcode TLS protocol versions.",
         "recommendation": "",
         "applies_to": [
             "python"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Harcoded"
+            "Cryptography.Protocol.TLS.Hardcoded"
         ],
         "severity": "important",
         "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
-                "pattern": "PROTOCOL_(SSL|TLS)v[123_]+",
+                "pattern": "PROTOCOL_(SSL|TLS)v[123_]+(_CLIENT|SERVER)?",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -190,7 +190,7 @@
             "csharp"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Harcoded"
+            "Cryptography.Protocol.TLS.Hardcoded"
         ],
         "severity": "important",
         "_comment": "",
@@ -199,14 +199,6 @@
             {
                 "pattern": "SP_PROT_[A-Z0-9_]+_(SERVER|CLIENT)",
                 "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "ssl_version",
-                "type": "string",
                 "scopes": [
                     "code"
                 ],
