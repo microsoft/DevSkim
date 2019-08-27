@@ -1,24 +1,27 @@
 [
     {
-        "name": "Possibly hardcoded TLS protocol",
+        "name": ".NET - Hard-coded SSL/TLS Protocol",
         "id": "DS112836",
-        "description": "Possibly hardcoded TLS protocol",
-        "recommendation": "Review for security purposes",
+        "description": ".NET - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
             "csharp",           
             "powershell",
             "vb"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
         "_comment": "",
-        "rule_info": "DS112836.md",
+        "rule_info": "DS440000.md",
         "patterns": [
             {
                 "pattern": "SslProtocolsExtensions.Tls11",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -26,7 +29,7 @@
             },
             {
                 "pattern": "SslProtocolsExtensions.Tls12",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -34,7 +37,7 @@
             },
             {
                 "pattern": "SslProtocols.Default",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -42,7 +45,7 @@
             },
             {
                 "pattern": "(SslProtocols)240",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -50,7 +53,7 @@
             },
             {
                 "pattern": "SslProtocols.None",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -58,7 +61,7 @@
             },
             {
                 "pattern": "(SslProtocols)0",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -66,7 +69,7 @@
             },
             {
                 "pattern": "SslProtocols.Ssl2",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -74,7 +77,7 @@
             },
             {
                 "pattern": "(SslProtocols)12",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -82,7 +85,7 @@
             },
             {
                 "pattern": "SslProtocols.Ssl3",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -90,7 +93,7 @@
             },
             {
                 "pattern": "(SslProtocols)48",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -98,7 +101,7 @@
             },            
             {
                 "pattern": "SslProtocols.Tls",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -106,7 +109,7 @@
             },            
             {
                 "pattern": "(SslProtocols)192",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -114,7 +117,7 @@
             },
             {
                 "pattern": "SslProtocols.Tls11",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -122,7 +125,7 @@
             },
             {
                 "pattern": "(SslProtocols)768",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -130,7 +133,7 @@
             },
             {
                 "pattern": "SslProtocols.Tls12",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -138,7 +141,7 @@
             },
             {
                 "pattern": "(SslProtocols)3072",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -146,7 +149,7 @@
             },
             {
                 "pattern": "SslProtocols.Tls13",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -154,7 +157,7 @@
             },
             {
                 "pattern": "(SslProtocols)12288",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],

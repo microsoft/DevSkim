@@ -1,20 +1,20 @@
 [
     {
-        "name": "Generic: Do not hardcode SSL/TLS versions within an application.",
+        "name": "Generic: Hard-coded SSL/TLS Protocol",
         "id": "DS440000",
-        "description": "SSL/TLS version usage should be based on an OS or external configuration.",
+        "description": "Generic: Hard-coded SSL/TLS Protocol",
         "recommendation": "",
         "applies_to": [
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "important",
+        "severity": "manual-review",
         "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
-                "pattern": "(SSL|D?TLS)v?[123_\\.]*",
+                "pattern": "\\b(SSL|D?TLS)v?[0123_\\.]*",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -23,18 +23,21 @@
                 "_comment": "Generic reference to a SSL/TLS version"
             }
         ]
-    },    
+    },
     {
-        "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
+        "name": "OpenSSL: Hard-coded SSL/TLS Protocol",
         "id": "DS440010",
-        "description": "SSL/TLS version usage should be based on an OS or external configuration.",
+        "description": "OpenSSL: Hard-coded SSL/TLS Protocol",
         "recommendation": "",
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "important",
+        "severity": "manual-review",
         "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -60,7 +63,7 @@
                 "scopes": [
                     "code"
                 ],
-                "_comment": ""
+                "_comment": "OpenSSL functions that explictly set protocol versions"
             },
             {
                 "pattern": "SSL_EXT_TLS_ONLY|SSL_EXT_DTLS_ONLY|SSL_EXT_TLS_IMPLEMENTATION_ONLY|SSL_EXT_SSL3_ALLOWED|SSL_EXT_TLS1_2_AND_BELOW_ONLY|SSL_EXT|TLS1_3_ONLY|SSL_EXT_TLS1_2_SERVER_HELLO|SSL_EXT_TLS1_3_SERVER_HELLO",
@@ -79,15 +82,7 @@
                 "_comment": "OpenSSL extension / options"
             },
             {
-                "pattern": "SSL_OP_[A-Z0-9_]+",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "OpenSSL extension / options"
-            },
-            {
-                "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
+                "pattern": "(TLS_)?(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-_]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
                 "type": "regex",
                 "scopes": [
                     "code"
