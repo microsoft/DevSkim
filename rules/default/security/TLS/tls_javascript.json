@@ -5,8 +5,8 @@
         "description": "Node - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "applies_to": [
-            ".js",
-            "*.ts"
+            "javascript",
+            "typescript"
         ],
         "overrides": [
             "DS440000"

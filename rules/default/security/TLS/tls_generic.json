@@ -3,7 +3,7 @@
         "name": "Generic: Hard-coded SSL/TLS Protocol",
         "id": "DS440000",
         "description": "Generic: Hard-coded SSL/TLS Protocol",
-        "recommendation": "",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "applies_to": [
         ],
         "tags": [

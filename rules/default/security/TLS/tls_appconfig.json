@@ -1,14 +1,14 @@
 [
     {
-        "name": "Possibly hardcoded TLS protocol",
+        "name": ".NET - Hard-coded SSL/TLS Protocol",
         "id": "DS112838",
-        "description": "Possibly hardcoded TLS protocol",
-        "recommendation": "Review for security purposes",
+        "description": ".NET - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "applies_to": [
             ".config"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
         "_comment": "",
