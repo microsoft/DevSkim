@@ -1,10 +1,10 @@
  [
   {
 
-        "name": "Win32- Do not hardcode TLS protocol versions.",
+        "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440071",
-        "description": "Win32- Do not hardcode TLS protocol versions.",
-        "recommendation": "",
+        "description": "Win32 - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],
         "applies_to": [
             "c",
@@ -12,9 +12,9 @@
             "csharp"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "important",
+        "severity": "manual-review",
         "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -32,17 +32,17 @@
     },
     {
 
-        "name": "Win32- Do not hardcode TLS protocol versions.",
+        "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440072",
-        "description": "Win32- Do not hardcode TLS protocol versions.",
-        "recommendation": "",
+        "description": "Win32 - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],
         "applies_to": [
             "c",
             "cpp"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "important",
         "_comment": "",
@@ -62,17 +62,17 @@
     },
     {
 
-        "name": "Win32- Do not hardcode TLS protocol versions.",
+        "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440073",
-        "description": "Win32- Do not hardcode TLS protocol versions.",
-        "recommendation": "",
+        "description": "Win32 - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],
         "applies_to": [
             "c",
             "cpp"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "important",
         "_comment": "",
@@ -140,32 +140,40 @@
                 "scopes": [
                     "code"
                 ],
-                "_comment": "NULL-SHA256|AES128-SHA256|AES256-SHA256|AES128-GCM-SHA256|AES256-GCM-SHA384|DH-RSA-AES128-SHA256|DH-RSA-AES256-SHA256|DH-RSA-AES128-GCM-SHA256|DH-RSA-AES256-GCM-SHA384|DH-DSS-AES128-SHA256|DH-DSS-AES256-SHA256|DH-DSS-AES128-GCM-SHA256|DH-DSS-AES256-GCM-SHA384|DHE-RSA-AES128-SHA256|DHE-RSA-AES256-SHA256|DHE-RSA-AES128-GCM-SHA256|DHE-RSA-AES256-GCM-SHA384|DHE-DSS-AES128-SHA256|DHE-DSS-AES256-SHA256|DHE-DSS-AES128-GCM-SHA256|DHE-DSS-AES256-GCM-SHA384|ECDH-RSA-AES128-SHA256|ECDH-RSA-AES256-SHA384|ECDH-RSA-AES128-GCM-SHA256|ECDH-RSA-AES256-GCM-SHA384|ECDH-ECDSA-AES128-SHA256|ECDH-ECDSA-AES256-SHA384|ECDH-ECDSA-AES128-GCM-SHA256|ECDH-ECDSA-AES256-GCM-SHA384|ECDHE-RSA-AES128-SHA256|ECDHE-RSA-AES256-SHA384|ECDHE-RSA-AES128-GCM-SHA256|ECDHE-RSA-AES256-GCM-SHA384|ECDHE-ECDSA-AES128-SHA256|ECDHE-ECDSA-AES256-SHA384|ECDHE-ECDSA-AES128-GCM-SHA256|ECDHE-ECDSA-AES256-GCM-SHA384|ADH-AES128-SHA256|ADH-AES256-SHA256|ADH-AES128-GCM-SHA256|ADH-AES256-GCM-SHA384"
-            }            
+                "_comment": ""
+            },            
+            {
+                "pattern": "NULL-SHA256NULL-SHA256|AES128-SHA256|AES256-SHA256|AES128-GCM-SHA256|AES256-GCM-SHA384|DH-RSA-AES128-SHA256|DH-RSA-AES256-SHA256|DH-RSA-AES128-GCM-SHA256|DH-RSA-AES256-GCM-SHA384|DH-DSS-AES128-SHA256|DH-DSS-AES256-SHA256|DH-DSS-AES128-GCM-SHA256|DH-DSS-AES256-GCM-SHA384|DHE-RSA-AES128-SHA256|DHE-RSA-AES256-SHA256|DHE-RSA-AES128-GCM-SHA256|DHE-RSA-AES256-GCM-SHA384|DHE-DSS-AES128-SHA256|DHE-DSS-AES256-SHA256|DHE-DSS-AES128-GCM-SHA256|DHE-DSS-AES256-GCM-SHA384|ECDH-RSA-AES128-SHA256|ECDH-RSA-AES256-SHA384|ECDH-RSA-AES128-GCM-SHA256|ECDH-RSA-AES256-GCM-SHA384|ECDH-ECDSA-AES128-SHA256|ECDH-ECDSA-AES256-SHA384|ECDH-ECDSA-AES128-GCM-SHA256|ECDH-ECDSA-AES256-GCM-SHA384|ECDHE-RSA-AES128-SHA256|ECDHE-RSA-AES256-SHA384|ECDHE-RSA-AES128-GCM-SHA256|ECDHE-RSA-AES256-GCM-SHA384|ECDHE-ECDSA-AES128-SHA256|ECDHE-ECDSA-AES256-SHA384|ECDHE-ECDSA-AES128-GCM-SHA256|ECDHE-ECDSA-AES256-GCM-SHA384|ADH-AES128-SHA256|ADH-AES256-SHA256|ADH-AES128-GCM-SHA256|ADH-AES256-GCM-SHA384",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
         ],
         "fix_its": [
         ]
     },
     {
 
-        "name": "Win32- Do not hardcode TLS protocol versions.",
+        "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440074",
-        "description": "Win32- Do not hardcode TLS protocol versions.",
-        "recommendation": "",
+        "description": "Win32 - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],
         "applies_to": [
             "c",
             "cpp"
         ],
         "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "important",
         "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
-                "pattern": "CONF_modules_load_file|SSL_CTX_config|SSL_config|SSL_CONF_cmd|SSL_CONF_cmd_value_type|",
+                "pattern": "CONF_modules_load_file|SSL_CTX_config|SSL_config|SSL_CONF_cmd|SSL_CONF_cmd_value_type",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -181,7 +189,7 @@
                 "_comment": ""
             },
             {
-                "pattern": "SSL_set_max_proto_version|SSL_set_min_proto_version|SSL_CTX_set_max_proto_version|SSL_CTX_set_min_proto_version",
+                "pattern": "SSL_(CTX_)?set_(min|max)_proto_version",
                 "type": "regex",
                 "scopes": [
                     "code"
