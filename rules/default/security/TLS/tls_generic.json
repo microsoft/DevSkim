@@ -198,7 +198,7 @@
                 "_comment": "mbedTLS functions that implement specific protocol versions"
             },
             {
-                "pattern": "MBEDTLS_SSL_(MAJOR|MINOR)_VERSION_[0123])",
+                "pattern": "MBEDTLS_SSL_(MAJOR|MINOR)_VERSION_[0123]",
                 "type": "regex",
                 "scopes": [
                     "code"
