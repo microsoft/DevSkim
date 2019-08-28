@@ -14,7 +14,7 @@
         "rule_info": "DS440000.md",
         "patterns": [
             {
-                "pattern": "\\b(SSL|D?TLS)v?[0123_\\.]*",
+                "pattern": "\\b(SSL|D?TLS) ?v?[0123_\\.]*",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -88,6 +88,67 @@
                     "code"
                 ],
                 "_comment": "OpenSSL cipher suite"
+            }
+        ]
+
+        
+    },
+    {
+        "name": "Generic: Hard-coded SSL/TLS Protocol",
+        "id": "DS440015",
+        "description": "Generic: Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],        
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "--secure-protocol=",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "wget"
+            },
+            {
+                "pattern": "--(sslv2|sslv3|tlsv1|tlsv11|tlsv1\\.1|tlsv1\\.2)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "curl"
+            },
+            {
+                "pattern": "ssl_protocols\\s+[^;]+;",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Nginx"
+            },
+            {
+                "pattern": "SSLProtocol\\s.+",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Apache"
+            },
+            {
+                "pattern": "sslEnabledProtocols\\s*=",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Generic"
             }
         ]
     }
