@@ -52,23 +52,7 @@
                 "_comment": ""
             },
             {
-                "pattern": "SecurityProtocolType.Tls",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
                 "pattern": "(SecurityProtocolType)192",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "SecurityProtocolType.Tls11",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -84,7 +68,7 @@
                 "_comment": ""
             },
             {
-                "pattern": "SecurityProtocolType.Tls12",
+                "pattern": "SecurityProtocolType\\.Tls[123]?",
                 "type": "regex",
                 "scopes": [
                     "code"
