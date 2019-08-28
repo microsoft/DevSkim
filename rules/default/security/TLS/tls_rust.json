@@ -1,14 +1,14 @@
 [
     {
-        "name": "Python - Hard-coded SSL/TLS Protocol",
+        "name": "Rust - Hard-coded SSL/TLS Protocol",
         "id": "DS440070",
-        "description": "Python - Hard-coded SSL/TLS Protocol",
+        "description": "Rust - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
             "DS440000"
         ],
         "applies_to": [
-            "python"
+            "rust"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -18,12 +18,12 @@
         "rule_info": "DS440000.md",
         "patterns": [
             {
-                "pattern": "PROTOCOL_(SSL|TLS)v?[0123_\\.]*(_CLIENT|SERVER)?",
+                "pattern": "ProtocolVersion::(SSLv2|SSLv3|TLSv1_[0123])",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ],
-                "_comment": ""
+                "_comment": "RustTLS Enumeration: https://github.com/ctz/rustls/blob/1d70e45af6c7f0d6940f4c7b641daacc70ac9ce8/rustls/src/msgs/enums.rs"
             }
         ],
         "fix_its": [

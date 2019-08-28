@@ -28,7 +28,7 @@
         "name": "OpenSSL: Hard-coded SSL/TLS Protocol",
         "id": "DS440010",
         "description": "OpenSSL: Hard-coded SSL/TLS Protocol",
-        "recommendation": "",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
             "DS440000"
         ],
@@ -90,9 +90,88 @@
                 "_comment": "OpenSSL cipher suite"
             }
         ]
-
-        
     },
+    {
+        "name": "BoringSSL: Hard-coded SSL/TLS Protocol",
+        "id": "DS440011",
+        "description": "BoringSSL: Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "\\b(SSL|D?TLS) ?v?[0123_\\.]*_VERSION(_MAJOR)?",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "BoringSSL functions that implement specific protocol versions"
+            }
+        ]
+    },    
+    {
+        "name": "GnuTLS: Hard-coded SSL/TLS Protocol",
+        "id": "DS440012",
+        "description": "GnuTLS: Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "Applies to all languages since many just wrap GnuTLS constructs.",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "GNUTLS_(SSL|D?TLS)[01239_\\.]+",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "GnuTLS functions that implement specific protocol versions"
+            }
+        ]
+    },        
+    {
+        "name": "LibreSSL: Hard-coded SSL/TLS Protocol",
+        "id": "DS440013",
+        "description": "LibreSSL: Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "Applies to all languages since many just wrap LibreSSL constructs.",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "(SSL|D?TLS)[01239_\\.]+_VERSION(_MAJOR|_MINOR)?",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "LibreSSL functions that implement specific protocol versions"
+            }
+        ]
+    },         
     {
         "name": "Generic: Hard-coded SSL/TLS Protocol",
         "id": "DS440015",
@@ -135,6 +214,14 @@
                 "_comment": "Nginx"
             },
             {
+                "pattern": "ssl_version",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }            
+            {
                 "pattern": "SSLProtocol\\s.+",
                 "type": "regex",
                 "scopes": [
@@ -149,6 +236,30 @@
                     "code"
                 ],
                 "_comment": "Generic"
+            }
+        ]
+    },
+    {
+        "name": "Generic: Hard-coded Elliptic Curve",
+        "id": "DS440100",
+        "description": "Generic: Hard-coded Elliptic Curve",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Elliptic-Curve.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS440100.md",
+        "patterns": [
+            {
+                "pattern": "arbitrary_explicit_char2_curves|arbitrary_explicit_prime_curves|brainpoolP160r1|brainpoolP160t1|brainpoolP192r1|brainpoolP192t1|brainpoolP224r1|brainpoolP224t1|brainpoolP256r1|brainpoolp256r1|brainpoolP256t1|brainpoolP320r1|brainpoolP320t1|brainpoolP384r1|brainpoolp384r1|brainpoolP384t1|brainpoolP512r1|brainpoolp512r1|brainpoolP512t1|curve25519|ec192wapi|nistP192|nistP224|nistP256|nistP384|nistP521|numsP256t1|numsP384t1|numsP512t1|secP160k1|secp160k1|secP160r1|secp160r1|secP160r2|secp160r2|secP192k1|secp192k1|secP192r1|secp192r1|secP224k1|secp224k1|secP224r1|secp224r1|secP256k1|secp256k1|secP256r1|secp256r1|secP384r1|secp384r1|secP521r1|secp521r1|sect163k1|sect163r1|sect163r2|sect193r1|sect193r2|sect233k1|sect233r1|sect239k1|sect283k1|sect283r1|sect409k1|sect409r1|sect571k1|sect571r1|wtls12|wtls7|wtls9|X25519|X448|x962P192v1|x962P192v2|x962P192v3|x962P239v1|x962P239v2|x962P239v3|x962P256v1",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Named curves from RustTLS, CNG, and others."
             }
         ]
     }
