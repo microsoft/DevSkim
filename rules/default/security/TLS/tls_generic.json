@@ -172,6 +172,42 @@
             }
         ]
     },         
+    ,        
+    {
+        "name": "mbedTLS: Hard-coded SSL/TLS Protocol",
+        "id": "DS440014",
+        "description": "mbedTLS: Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
+        "applies_to": [
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "Applies to all languages since many just wrap mbedTLS constructs.",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "MBEDTLS_SSL_PROTO_(SSL|D?TLS)[123_]+",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "mbedTLS functions that implement specific protocol versions"
+            },
+            {
+                "pattern": "MBEDTLS_SSL_(MAJOR|MINOR)_VERSION_[0123])",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "mbedTLS functions that implement specific protocol versions"
+            }            
+        ]
+    },          
     {
         "name": "Generic: Hard-coded SSL/TLS Protocol",
         "id": "DS440015",
@@ -204,6 +240,14 @@
                     "code"
                 ],
                 "_comment": "curl"
+            },
+            {
+                "pattern": "CURL_SSLVERSION_(MAX_)?(SSL|TLS)v[0123_]+",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "curl (library)"
             },
             {
                 "pattern": "ssl_protocols\\s+[^;]+;",
