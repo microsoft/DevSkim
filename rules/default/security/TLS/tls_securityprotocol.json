@@ -21,7 +21,7 @@
         "patterns": [
             {
                 "pattern": "SecurityProtocolType.Ssl3",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -29,7 +29,7 @@
             },
             {
                 "pattern": "(SecurityProtocolType)48",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -37,7 +37,7 @@
             },
             {
                 "pattern": "SecurityProtocolType.SystemDefault",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -45,7 +45,7 @@
             },
             {
                 "pattern": "(SecurityProtocolType)0",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -53,7 +53,7 @@
             },
             {
                 "pattern": "(SecurityProtocolType)192",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -61,7 +61,7 @@
             },
             {
                 "pattern": "(SecurityProtocolType)768",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -77,7 +77,7 @@
             },
             {
                 "pattern": "(SecurityProtocolType)3072",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -85,7 +85,7 @@
             },            
             {
                 "pattern": "SecurityProtocolType.Tls13",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -93,7 +93,7 @@
             },            
             {
                 "pattern": "(SecurityProtocolType)12288",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -101,7 +101,7 @@
             },
             {
                 "pattern": "SecurityProtocolTypeExtensions.Tls11",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -109,7 +109,7 @@
             },
             {
                 "pattern": "SecurityProtocolTypeExtensions.Tls12",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],
@@ -117,7 +117,7 @@
             },
             {
                 "pattern": "SecurityProtocolTypeExtensions.SystemDefault",
-                "type": "regex",
+                "type": "string",
                 "scopes": [
                     "code"
                 ],

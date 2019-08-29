@@ -74,7 +74,7 @@
                 "_comment": "OpenSSL extension / options"
             },
             {
-                "pattern": "SSL_OP_(NO_(SSLv3|TLSv1|TLSv1_1|TLSv1_2|TLSv1_3|DTLSv1|DTLSv1_2))",
+                "pattern": "SSL_OP_(NO_(SSLv2|SSLv3|TLSv1|TLSv1_1|TLSv1_2|TLSv1_3|DTLSv1|DTLSv1_2))",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -264,6 +264,14 @@
                 ],
                 "_comment": ""
             },
+            {
+                "pattern": "DISABLE_SSL_([^\\b]+)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },            
             {
                 "pattern": "SSLProtocol\\s.+",
                 "type": "regex",
