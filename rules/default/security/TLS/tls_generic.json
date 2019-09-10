@@ -172,7 +172,6 @@
             }
         ]
     },         
-    ,        
     {
         "name": "mbedTLS: Hard-coded SSL/TLS Protocol",
         "id": "DS440014",
@@ -264,7 +263,7 @@
                     "code"
                 ],
                 "_comment": ""
-            }            
+            }            ,
             {
                 "pattern": "SSLProtocol\\s.+",
                 "type": "regex",
