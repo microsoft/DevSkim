@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Do not target .NET Framework versions less than 4.7.2.",
+        "id": "DS450000",
+        "description": "Do not target .NET Framework versions less than 4.7.2.",
+        "recommendation": "",
+        "applies_to": [
+            ".csproj"
+        ],
+        "tags": [
+            "Framework.NET.Outdated"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS450000.md",
+        "patterns": [
+            {
+                "pattern": "<TargetFramework>.*\\b(net11|net20|net35|net40|net403|net45|net451|net452|net46|net461|net462|net47|net471)\\b.*</TargetFramework>",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers" : ["i"],
+                "_comment": ""
+            }
+        ]
+    }   
+]
+    
