@@ -185,8 +185,16 @@ namespace Microsoft.DevSkim.CLI.Commands
                     continue;
                 }
 
-                filesAnalyzed++;
-                string fileText = File.ReadAllText(filename);                
+                string fileText = string.Empty;
+                try
+                {
+                    fileText = File.ReadAllText(filename);
+                    filesAnalyzed++;
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine("\nFile either empty or invalid dangling pointer.\n");
+                }
                 Issue[] issues = processor.Analyze(fileText, language);
 
                 if (issues.Count() > 0)
