@@ -193,8 +193,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 catch (Exception e)
                 {
-                    Console.Error.WriteLine("\nFile either empty or invalid dangling pointer.\n");
+                    // Skip files we can't parse
+                    filesSkipped++;
+                    continue;
                 }
+                
                 Issue[] issues = processor.Analyze(fileText, language);
 
                 if (issues.Count() > 0)
