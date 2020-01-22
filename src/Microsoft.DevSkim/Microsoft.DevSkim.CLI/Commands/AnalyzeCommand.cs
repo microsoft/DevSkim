@@ -228,7 +228,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Console.Error.WriteLine("Files analyzed: {0}", filesAnalyzed);
             Console.Error.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return (int)ExitCode.NoIssues;
+            return issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues;
         }
 
         private bool ParseSeverity(string severityText, out Severity severity)
