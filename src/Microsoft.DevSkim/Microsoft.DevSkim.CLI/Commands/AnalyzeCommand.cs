@@ -193,8 +193,19 @@ namespace Microsoft.DevSkim.CLI.Commands
                     continue;
                 }
 
-                filesAnalyzed++;
-                string fileText = File.ReadAllText(filename);
+                string fileText = string.Empty;
+                try
+                {
+                    fileText = File.ReadAllText(filename);
+                    filesAnalyzed++;
+                }
+                catch (Exception e)
+                {
+                    // Skip files we can't parse
+                    filesSkipped++;
+                    continue;
+                }
+                
                 Issue[] issues = processor.Analyze(fileText, language);
 
                 bool issuesFound = issues.Any(iss => iss.IsSuppressionInfo == false) || _disableSuppression && issues.Count() > 0;
@@ -241,7 +252,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Console.Error.WriteLine("Files analyzed: {0}", filesAnalyzed);
             Console.Error.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return (int)ExitCode.NoIssues;
+            return issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues;
         }
 
         private bool ParseSeverity(string severityText, out Severity severity)
