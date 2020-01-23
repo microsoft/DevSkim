@@ -13,16 +13,15 @@ DevSkim is currently in *public preview*. We're looking forward to working with 
 to improve both the scanning engines and rules over the next few months, and welcome your feedback
 and contributions!
 
-### Repositories
+### Repository Structure
 
-DevSkim consists of multiple repositories (one for the rules, and one per plugin):
+DevSkim and its plugins/extensions are currently being merged here into a single repository.
 
-* [DevSkim](https://github.com/Microsoft/DevSkim/) - This repository, plus common rules and guidance
-* [DevSkim-VisualStudio-Extension](https://github.com/Microsoft/DevSkim-VisualStudio-Extension/) - Visual Studio Extension
-* [DevSkim-Sublime-Plugin](https://github.com/Microsoft/DevSkim-Sublime-Plugin/) - Sublime Text Plugin
-* [DevSkim-VSCode-Plugin](https://github.com/Microsoft/DevSkim-VSCode-Plugin/) - VS Code Plugin
+This repository contains DevSkim and its plugins each within their own folder. Issues and contributions are accepted here for all of these tools:
 
-Please access those projects to download the plugin, open issues, or contribute content.
+* DevSkim - CLI tool, plus common rules and guidance
+* DevSkim-VisualStudio-Extension
+* DevSkim-VSCode-Plugin
 
 ### Writing Rules
 
