@@ -1,0 +1,38 @@
+{
+  "name": "devskim-analyzer",
+  "description": "Devskim Security Analyzer",
+  "version": "0.3.0",
+  "author": "Microsoft Corporation",
+  "publisher": "MS-DevSkim",
+  "private": true,
+  "license": "MIT",
+  "main": "./out/cli.js",
+  "bin": {
+    "devskim": "./out/cli.js"
+  },
+  "preferGlobal": true,
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "clean": "rm -rf *.log out node_modules package-lock.json yarn.lock"
+  },
+  "dependencies": {
+    "@schemastore/sarif-2.1.0-rtm.4": "0.0.2",
+    "commander": "^2.20.0",
+    "git-repo-info": "^2.1.0",
+    "glob-promise": "^3.4.0",
+    "mkdirp": "^0.5.1",
+    "node-dir": ">=0.1.17",
+    "vscode-languageserver": "^5.2.1",
+    "vscode-languageserver-protocol": "^3.14.1",
+    "xregexp": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.16",
+    "@types/node": "^6.14.4",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.3"
+  }
+}
