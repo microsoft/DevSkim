@@ -23,12 +23,11 @@ jobs:
       command: 'build'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
       workingDirectory: '$(SolutionDirectory)'
-  - task: DotNetCoreCLI@2
+  - task: CmdLine@2
     displayName: Pack Rules
+    enabled: false
     inputs:
-      command: 'custom'
-      custom: 'Microsoft.DevSkim.CLI/bin/Release/netcoreapp2.0/devskim.dll pack'
-      arguments: '../../rules Microsoft.DevSkim.CLI/Resources/devskim-rules.json --indent'
+      script: ''
       workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Dotnet Publish Linux x64
@@ -80,11 +79,11 @@ jobs:
       command: 'build'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
       workingDirectory: '$(SolutionDirectory)'
-  - task: DotNetCoreCLI@2
+  - task: CmdLine@2
     displayName: Pack Rules
+    enabled: false
     inputs:
-      command: 'Microsoft.DevSkim.CLI\bin\Release\netcoreapp2.0\devskim.dll pack'
-      arguments: '..\..\rules Microsoft.DevSkim.CLI\Resources\devskim-rules.json --indent'
+      script: ''
       workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Clean
@@ -233,11 +232,11 @@ jobs:
       command: 'build'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
       workingDirectory: '$(SolutionDirectory)'
-  - task: DotNetCoreCLI@2
+  - task: CmdLine@2
     displayName: Pack Rules
+    enabled: false
     inputs:
-      command: 'Microsoft.DevSkim.CLI\bin\Release\netcoreapp2.0\devskim.dll pack'
-      arguments: '..\..\rules Microsoft.DevSkim.CLI\Resources\devskim-rules.json --indent'
+      script: ''
       workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Clean
