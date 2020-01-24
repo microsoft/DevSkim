@@ -1,1 +1,295 @@
-# Placeholder
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_Core_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+- master
+   paths:
+     include:
+	 - DevSkim
+
+jobs:
+- job: publish_nix
+  displayName: Publish Linux & Mac
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: First CLI Build
+    inputs:
+      command: 'build'
+      arguments: 'Microsoft.DevSkim.CLI -c Release'
+  - task: DotNetCoreCLI@2
+    displayName: Pack Rules
+    inputs:
+      command: 'Microsoft.DevSkim.CLI/bin/Release/netcoreapp2.0/devskim.dll pack'
+      arguments: '../../rules Microsoft.DevSkim.CLI/Resources/devskim-rules.json --indent'
+  - task: DotNetCoreCLI@2
+    displayName: Dotnet Publish Linux x64
+    inputs:
+      command: 'publish'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r linux-x64 /p:DebugType=None'
+      publishWebProjects: false
+      zipAfterPublish: false
+  - task: DotNetCoreCLI@2
+    displayName: Dotnet Publish MacOS x64
+    inputs:
+      command: 'publish'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r osx-x64 /p:DebugType=None'
+      publishWebProjects: false
+      zipAfterPublish: false
+  - task: ArchiveFiles@2
+    displayName: Archive Artifact - Linux
+    inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.StagingDirectory)/DevSkim_linux_$(ReleaseVersion).zip'
+      replaceExistingArchive: true
+  - task: ArchiveFiles@2
+    displayName: Archive Artifact - MacOS
+    inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.StagingDirectory)/DevSkim_macos_$(ReleaseVersion).zip'
+      replaceExistingArchive: true
+  - task: PublishBuildArtifacts@1
+    displayName: Store Linux & Mac Archives
+    inputs:
+      PathtoPublish: '$(Build.StagingDirectory)'
+      ArtifactName: 'NixArchives'
+      publishLocation: 'Container'
+
+- job: publish_win
+  displayName: Publish Windows, NetCore, Nupkg
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: First CLI Build
+    inputs:
+      command: 'build'
+      arguments: 'Microsoft.DevSkim.CLI -c Release'
+  - task: DotNetCoreCLI@2
+    displayName: Pack Rules
+    inputs:
+      command: 'Microsoft.DevSkim.CLI\bin\Release\netcoreapp2.0\devskim.dll pack'
+      arguments: '..\..\rules Microsoft.DevSkim.CLI\Resources\devskim-rules.json --indent'
+  - task: DotNetCoreCLI@2
+    displayName: Clean
+    inputs:
+      command: 'custom'
+      custom: 'clean'
+      arguments: 'Microsoft.DevSkim.CLI -c Release'
+  - task: DotNetCoreCLI@2
+    displayName: Dotnet Publish Windows x86
+    inputs:
+      command: 'publish'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r win-x86 /p:DebugType=None'
+      publishWebProjects: false
+      zipAfterPublish: false
+  - task: DotNetCoreCLI@2
+    displayName: Dotnet Build .NET Core App
+    inputs:
+      command: 'build'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp2.0\DevSkim_$(ReleaseVersion) -f netcoreapp2.0 /p:DebugType=None'
+      publishWebProjects: false
+      zipAfterPublish: false
+  - task: DotNetCoreCLI@2
+    displayName: Pack NuGet
+    inputs:
+      command: 'pack'
+      arguments: 'Microsoft.DevSkim -c Release -o $(Build.BinariesDirectory)\nuget\DevSkim_$(ReleaseVersion)'
+  - task: AntiMalware@3
+    displayName: Anti-Malware Scan
+    inputs:
+      InputType: 'Basic'
+      ScanType: 'CustomScan'
+      FileDirPath: '$(Build.BinariesDirectory)'
+      EnableServices: true
+      SupportLogOnError: false
+      TreatSignatureUpdateFailureAs: 'Warning'
+      SignatureFreshness: 'UpToDate'
+      TreatStaleSignatureAs: 'Error'
+  - task: EsrpCodeSigning@1
+    displayName: Code Sign
+	enabled: false
+    inputs:
+      ConnectedServiceName: ''
+      FolderPath: '$(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion)'
+      Pattern: ''
+      signConfigType: 'inlineSignParams'
+      inlineOperation: |
+        [ ]
+      SessionTimeout: '60'
+      MaxConcurrency: '50'
+      MaxRetryAttempts: '5'
+  - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+    displayName: 'Delete Code Sign Summaries'
+  - task: ArchiveFiles@2
+    displayName: Archive Artifact - Windows
+    inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.StagingDirectory)\DevSkim_windows_$(ReleaseVersion).zip'
+      replaceExistingArchive: true
+  - task: ArchiveFiles@2
+    displayName: Archive Artifact - .NET Core App
+    inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)\netcoreapp2.0\DevSkim_$(ReleaseVersion)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.StagingDirectory)\DevSkim_netcoreapp2.0_$(ReleaseVersion).zip'
+      replaceExistingArchive: true
+  - task: ArchiveFiles@2
+    displayName: Archive Artifact - Nupkg
+    inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)\nuget\DevSkim_$(ReleaseVersion)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.StagingDirectory)\DevSkim_nupkg_$(ReleaseVersion).zip'
+      replaceExistingArchive: true
+  - task: PublishBuildArtifacts@1
+    displayName: Store Windows, NetCoreApp, Nupkg Archives
+    inputs:
+      PathtoPublish: '$(Build.StagingDirectory)'
+      ArtifactName: 'WinCoreArchives'
+      publishLocation: 'Container'
+
+- job: hashes
+  displayName: Generate Hashes
+  dependsOn:
+  - publish_nix
+  - publish_win
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: DownloadBuildArtifacts@0
+    displayName: Retrieve Linux & Mac Archives
+    inputs:
+      buildType: 'current'
+      downloadType: 'specific'
+      itemPattern: 'NixArchives/*.zip'
+      downloadPath: '$(Build.BinariesDirectory)'
+  - task: DownloadBuildArtifacts@0
+    displayName: Retrieve Windows, NetCoreApp, Nupkg Archives
+    inputs:
+      buildType: 'current'
+      downloadType: 'specific'
+      itemPattern: 'WinCoreArchives/*.zip'
+      downloadPath: '$(Build.BinariesDirectory)'
+  - task: PowerShell@2
+    displayName: Move Linux & Mac Archives
+    inputs:
+      targetType: 'inline'
+      script: 'mv $env:BUILD_BINARIESDIRECTORY/NixArchives/*.zip $env:BUILD_STAGINGDIRECTORY'
+  - task: PowerShell@2
+    displayName: Move Windows & NetCoreApp Archives
+    inputs:
+      targetType: 'inline'
+      script: 'mv $env:BUILD_BINARIESDIRECTORY/WinCoreArchives/*.zip $env:BUILD_STAGINGDIRECTORY'
+  - task: PowerShell@2
+    displayName: Generate Archive Hashes
+    inputs:
+      targetType: 'inline'
+      script: |
+        Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+          $name = $_.Name
+          $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+          Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+        }
+  - task: PublishPipelineArtifact@1
+    displayName: Publish All Artifacts
+    inputs:
+      targetPath: '$(Build.StagingDirectory)'
+      artifact: 'Binaries'
+
+- job: sdl
+  displayName: SDL Tools
+  dependsOn: hashes
+  condition: and(succeeded(), eq(variables['RunSDL'], 'TRUE'))
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: First CLI Build
+    inputs:
+      command: 'build'
+      arguments: 'Microsoft.DevSkim.CLI -c Release'
+  - task: DotNetCoreCLI@2
+    displayName: Pack Rules
+    inputs:
+      command: 'Microsoft.DevSkim.CLI\bin\Release\netcoreapp2.0\devskim.dll pack'
+      arguments: '..\..\rules Microsoft.DevSkim.CLI\Resources\devskim-rules.json --indent'
+  - task: DotNetCoreCLI@2
+    displayName: Clean
+    inputs:
+      command: 'custom'
+      custom: 'clean'
+      arguments: 'Microsoft.DevSkim.CLI -c Release'
+  - task: AntiMalware@3
+    displayName: Anti-Malware Scan
+    inputs:
+      InputType: 'Basic'
+      ScanType: 'CustomScan'
+      FileDirPath: '$(Build.StagingDirectory)'
+      EnableServices: true
+      SupportLogOnError: false
+      TreatSignatureUpdateFailureAs: 'Warning'
+      SignatureFreshness: 'UpToDate'
+      TreatStaleSignatureAs: 'Error'
+  - task: ComponentGovernanceComponentDetection@0
+    displayName: Component Governance
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'Low'
+  - task: notice@0
+    displayName: Notice File Generator
+    inputs:
+      outputformat: 'text'
+    continueOnError: true
+  - task: PoliCheck@1
+    displayName: PoliCheck
+    inputs:
+      inputType: 'Basic'
+      targetType: 'F'
+      targetArgument: '$(Build.SourcesDirectory)'
+      result: 'PoliCheck.xml'
+  - task: BinSkim@3
+    displayName: BinSkim
+    inputs:
+      InputType: 'CommandLine'
+    continueOnError: true
+  - task: Semmle@0
+    displayName: Semmle Scan
+    inputs:
+      sourceCodeDirectory: '$(Build.SourcesDirectory)'
+      language: 'csharp'
+      cleanupBuildCommands: 'dotnet clean Microsoft.DevSkim.CLI -c Release'
+      buildCommands: 'dotnet build Microsoft.DevSkim.CLI -c Release'
+      querySuite: 'Recommended'
+      timeout: '1800'
+      ram: '16384'
+      addProjectDirToScanningExclusionList: true
+    continueOnError: true
+  - task: PublishPipelineArtifact@1
+    displayName: Publish PoliCheck Result
+    inputs:
+      targetPath: '$(Pipeline.Workspace)\_sdt\logs\PoliCheck\PoliCheck.xml'
+      artifact: 'PoliCheck.xml'
+  - task: PublishPipelineArtifact@1
+    displayName: Publish BinSkim Result
+    inputs:
+      targetPath: '$(Pipeline.Workspace)\_sdt\logs\BinSkim\BinSkim.sarif'
+      artifact: 'BinSkim.sarif'
+    continueOnError: true
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Semmle Result
+    inputs:
+      targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\csharp\Microsoft.DevSkim.CLI-csharp-1.sarif'
+      artifact: 'Semmle.sarif'
+    continueOnError: true
+ 
