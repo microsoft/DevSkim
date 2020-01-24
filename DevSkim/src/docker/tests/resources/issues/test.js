@@ -1,0 +1,1 @@
+var url = "http://www.example.com";
