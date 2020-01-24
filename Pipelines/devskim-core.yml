@@ -26,7 +26,8 @@ jobs:
   - task: DotNetCoreCLI@2
     displayName: Pack Rules
     inputs:
-      command: 'Microsoft.DevSkim.CLI/bin/Release/netcoreapp2.0/devskim.dll pack'
+      command: 'custom'
+      custom: 'Microsoft.DevSkim.CLI/bin/Release/netcoreapp2.0/devskim.dll pack'
       arguments: '../../rules Microsoft.DevSkim.CLI/Resources/devskim-rules.json --indent'
       workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
