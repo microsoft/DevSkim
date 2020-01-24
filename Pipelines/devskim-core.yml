@@ -19,16 +19,19 @@ jobs:
     inputs:
       command: 'build'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
+      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Pack Rules
     inputs:
       command: 'Microsoft.DevSkim.CLI/bin/Release/netcoreapp2.0/devskim.dll pack'
       arguments: '../../rules Microsoft.DevSkim.CLI/Resources/devskim-rules.json --indent'
+      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Dotnet Publish Linux x64
     inputs:
       command: 'publish'
       arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r linux-x64 /p:DebugType=None'
+      workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
   - task: DotNetCoreCLI@2
@@ -36,6 +39,7 @@ jobs:
     inputs:
       command: 'publish'
       arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r osx-x64 /p:DebugType=None'
+      workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
   - task: ArchiveFiles@2
@@ -71,22 +75,26 @@ jobs:
     inputs:
       command: 'build'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
+      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Pack Rules
     inputs:
       command: 'Microsoft.DevSkim.CLI\bin\Release\netcoreapp2.0\devskim.dll pack'
       arguments: '..\..\rules Microsoft.DevSkim.CLI\Resources\devskim-rules.json --indent'
+      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Clean
     inputs:
       command: 'custom'
       custom: 'clean'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
+      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Dotnet Publish Windows x86
     inputs:
       command: 'publish'
       arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r win-x86 /p:DebugType=None'
+      workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
   - task: DotNetCoreCLI@2
@@ -94,6 +102,7 @@ jobs:
     inputs:
       command: 'build'
       arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp2.0\DevSkim_$(ReleaseVersion) -f netcoreapp2.0 /p:DebugType=None'
+      workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
   - task: DotNetCoreCLI@2
@@ -101,6 +110,7 @@ jobs:
     inputs:
       command: 'pack'
       arguments: 'Microsoft.DevSkim -c Release -o $(Build.BinariesDirectory)\nuget\DevSkim_$(ReleaseVersion)'
+      workingDirectory: '$(SolutionDirectory)'
   - task: AntiMalware@3
     displayName: Anti-Malware Scan
     inputs:
@@ -218,17 +228,20 @@ jobs:
     inputs:
       command: 'build'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
+      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Pack Rules
     inputs:
       command: 'Microsoft.DevSkim.CLI\bin\Release\netcoreapp2.0\devskim.dll pack'
       arguments: '..\..\rules Microsoft.DevSkim.CLI\Resources\devskim-rules.json --indent'
+      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Clean
     inputs:
       command: 'custom'
       custom: 'clean'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
+      workingDirectory: '$(SolutionDirectory)'
   - task: AntiMalware@3
     displayName: Anti-Malware Scan
     inputs:
@@ -256,7 +269,7 @@ jobs:
     inputs:
       inputType: 'Basic'
       targetType: 'F'
-      targetArgument: '$(Build.SourcesDirectory)'
+      targetArgument: '$(Build.SourcesDirectory)\DevSkim\src\Microsoft.DevSkim'
       result: 'PoliCheck.xml'
   - task: BinSkim@3
     displayName: BinSkim
@@ -266,7 +279,7 @@ jobs:
   - task: Semmle@0
     displayName: Semmle Scan
     inputs:
-      sourceCodeDirectory: '$(Build.SourcesDirectory)'
+      sourceCodeDirectory: '$(Build.SourcesDirectory)\DevSkim\src\Microsoft.DevSkim'
       language: 'csharp'
       cleanupBuildCommands: 'dotnet clean Microsoft.DevSkim.CLI -c Release'
       buildCommands: 'dotnet build Microsoft.DevSkim.CLI -c Release'
