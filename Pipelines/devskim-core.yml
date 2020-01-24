@@ -127,7 +127,7 @@ jobs:
       TreatStaleSignatureAs: 'Error'
   - task: EsrpCodeSigning@1
     displayName: Code Sign
-	enabled: false
+    enabled: false
     inputs:
       ConnectedServiceName: ''
       FolderPath: '$(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion)'
