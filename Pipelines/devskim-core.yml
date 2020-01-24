@@ -18,18 +18,6 @@ jobs:
     vmImage: 'ubuntu-latest'
   steps:
   - task: DotNetCoreCLI@2
-    displayName: First CLI Build
-    inputs:
-      command: 'build'
-      arguments: 'Microsoft.DevSkim.CLI -c Release'
-      workingDirectory: '$(SolutionDirectory)'
-  - task: CmdLine@2
-    displayName: Pack Rules
-    enabled: false
-    inputs:
-      script: ''
-      workingDirectory: '$(SolutionDirectory)'
-  - task: DotNetCoreCLI@2
     displayName: Dotnet Publish Linux x64
     inputs:
       command: 'publish'
@@ -73,25 +61,6 @@ jobs:
   pool:
     vmImage: 'windows-latest'
   steps:
-  - task: DotNetCoreCLI@2
-    displayName: First CLI Build
-    inputs:
-      command: 'build'
-      arguments: 'Microsoft.DevSkim.CLI -c Release'
-      workingDirectory: '$(SolutionDirectory)'
-  - task: CmdLine@2
-    displayName: Pack Rules
-    enabled: false
-    inputs:
-      script: ''
-      workingDirectory: '$(SolutionDirectory)'
-  - task: DotNetCoreCLI@2
-    displayName: Clean
-    inputs:
-      command: 'custom'
-      custom: 'clean'
-      arguments: 'Microsoft.DevSkim.CLI -c Release'
-      workingDirectory: '$(SolutionDirectory)'
   - task: DotNetCoreCLI@2
     displayName: Dotnet Publish Windows x86
     inputs:
@@ -227,22 +196,9 @@ jobs:
     vmImage: 'windows-latest'
   steps:
   - task: DotNetCoreCLI@2
-    displayName: First CLI Build
+    displayName: CLI Build
     inputs:
       command: 'build'
-      arguments: 'Microsoft.DevSkim.CLI -c Release'
-      workingDirectory: '$(SolutionDirectory)'
-  - task: CmdLine@2
-    displayName: Pack Rules
-    enabled: false
-    inputs:
-      script: ''
-      workingDirectory: '$(SolutionDirectory)'
-  - task: DotNetCoreCLI@2
-    displayName: Clean
-    inputs:
-      command: 'custom'
-      custom: 'clean'
       arguments: 'Microsoft.DevSkim.CLI -c Release'
       workingDirectory: '$(SolutionDirectory)'
   - task: AntiMalware@3
