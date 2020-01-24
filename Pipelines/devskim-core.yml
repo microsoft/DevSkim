@@ -78,9 +78,10 @@ jobs:
       publishWebProjects: false
       zipAfterPublish: false
   - task: DotNetCoreCLI@2
-    displayName: Pack NuGet
+    displayName: Pack Nupkg
     inputs:
-      command: 'pack'
+      command: 'custom'
+      custom: 'pack'
       arguments: 'Microsoft.DevSkim -c Release -o $(Build.BinariesDirectory)\nuget\DevSkim_$(ReleaseVersion)'
       workingDirectory: '$(SolutionDirectory)'
   - task: AntiMalware@3
