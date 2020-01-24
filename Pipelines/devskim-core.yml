@@ -3,10 +3,11 @@
 
 name: DevSkim_Core_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
-- master
-   paths:
-     include:
-	 - DevSkim
+  - master
+  batch: true
+  paths:
+    include:
+    - DevSkim/*
 
 jobs:
 - job: publish_nix
