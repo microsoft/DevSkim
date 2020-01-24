@@ -3290,6 +3290,37 @@
     ]
   },
   {
+    "id": "DS450000",
+    "name": "Do not target .NET Framework versions less than 4.7.2.",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "Framework.NET.Outdated"
+    ],
+    "applies_to": [
+      ".csproj"
+    ],
+    "severity": "manual-review",
+    "description": "Do not target .NET Framework versions less than 4.7.2.",
+    "recommendation": "",
+    "rule_info": "DS450000.md",
+    "patterns": [
+      {
+        "pattern": "<TargetFramework>.*\\b(net11|net20|net35|net40|net403|net45|net451|net452|net46|net461|net462|net47|net471)\\b.*</TargetFramework>",
+        "type": "regex",
+        "modifiers": [
+          "i"
+        ],
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
     "id": "DS144886",
     "name": "$_REQUEST should be avoided",
     "overrides": null,
@@ -3794,6 +3825,1410 @@
     ],
     "conditions": [],
     "fix_its": null
+  },
+  {
+    "id": "DS112838",
+    "name": ".NET - Hard-coded SSL/TLS Protocol",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      ".config"
+    ],
+    "severity": "manual-review",
+    "description": ".NET - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS112838.md",
+    "patterns": [
+      {
+        "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "Switch.System.ServiceModel.DisableUsingServicePointManagerSecurityProtocol",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "Switch.System.Net.DontEnableSystemDefaultTlsVersions",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "Switch.System.ServiceModel.DontEnableSystemDefaultTlsVersions",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112837",
+    "name": ".NET - Hard-coded SSL/TLS Protocol",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "csharp",
+      "powershell",
+      "vb"
+    ],
+    "severity": "manual-review",
+    "description": ".NET - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\bTestSwitch\\.LocalAppContext\\.DisableCaching\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSwitch\\.System\\.Net\\.DontEnableSchUseStrongCrypto\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112851",
+    "name": "COBOL - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      ".cbl",
+      ".cob",
+      ".cpy"
+    ],
+    "severity": "manual-review",
+    "description": "COBOL - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "GSK_PROTOCOL_(SSL|TLS)V[123_]+",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112839",
+    "name": ".NET - Hard-coded SSL/TLS Protocol",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "csharp",
+      "powershell",
+      "vb"
+    ],
+    "severity": "manual-review",
+    "description": ".NET - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\bSslStream\\.AuthenticateAsClient\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslStream\\.AuthenticateAsClientAsync\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bBeginAuthenticateAsClient\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslStream\\.AuthenticateAsServer\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslStream\\.AuthenticateAsServerAsync\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bBeginAuthenticateAsServer\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440000",
+    "name": "Generic: Hard-coded SSL/TLS Protocol",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "Generic: Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\b(SSL|D?TLS) ?v?[0123][0123_\\.]+",
+        "type": "regex",
+        "modifiers": [
+          "i"
+        ],
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440010",
+    "name": "OpenSSL: Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "OpenSSL: Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "SSLv2?3_method|D?TLSv1_([123]_)?(client_|server_)?method",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "DTLSv1_listen|SSL_stateless",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSL_(CTX_)?set_(min|max)_proto_version",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSL_EXT_TLS_ONLY|SSL_EXT_DTLS_ONLY|SSL_EXT_TLS_IMPLEMENTATION_ONLY|SSL_EXT_SSL3_ALLOWED|SSL_EXT_TLS1_2_AND_BELOW_ONLY|SSL_EXT|TLS1_3_ONLY|SSL_EXT_TLS1_2_SERVER_HELLO|SSL_EXT_TLS1_3_SERVER_HELLO",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSL_OP_(NO_(SSLv2|SSLv3|TLSv1|TLSv1_1|TLSv1_2|TLSv1_3|DTLSv1|DTLSv1_2))",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "(TLS_)?(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-_]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440011",
+    "name": "BoringSSL: Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "BoringSSL: Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\b(SSL|D?TLS) ?v?[0123_\\.]*_VERSION(_MAJOR)?",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440012",
+    "name": "GnuTLS: Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "GnuTLS: Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "GNUTLS_(SSL|D?TLS)[01239_\\.]+",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440013",
+    "name": "LibreSSL: Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "LibreSSL: Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "(SSL|D?TLS)[01239_\\.]+_VERSION(_MAJOR|_MINOR)?",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440014",
+    "name": "mbedTLS: Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "mbedTLS: Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "MBEDTLS_SSL_PROTO_(SSL|D?TLS)[123_]+",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "MBEDTLS_SSL_(MAJOR|MINOR)_VERSION_[0123]",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440015",
+    "name": "Generic: Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "Generic: Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\b--secure-protocol=\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "--(sslv2|sslv3|tlsv1|tlsv11|tlsv1\\.1|tlsv1\\.2)",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "CURL_SSLVERSION_(MAX_)?(SSL|TLS)v[0123_]+",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "ssl_protocols\\s+[^;]+;",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bssl_version\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "DISABLE_SSL_([^\\b]+)",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSLProtocol\\s.+",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "sslEnabledProtocols\\s*=",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440100",
+    "name": "Generic: Hard-coded Elliptic Curve",
+    "overrides": null,
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Elliptic-Curve.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "Generic: Hard-coded Elliptic Curve",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440100.md",
+    "patterns": [
+      {
+        "pattern": "arbitrary_explicit_char2_curves|arbitrary_explicit_prime_curves|brainpoolP160r1|brainpoolP160t1|brainpoolP192r1|brainpoolP192t1|brainpoolP224r1|brainpoolP224t1|brainpoolP256r1|brainpoolp256r1|brainpoolP256t1|brainpoolP320r1|brainpoolP320t1|brainpoolP384r1|brainpoolp384r1|brainpoolP384t1|brainpoolP512r1|brainpoolp512r1|brainpoolP512t1|curve25519|ec192wapi|nistP192|nistP224|nistP256|nistP384|nistP521|numsP256t1|numsP384t1|numsP512t1|secP160k1|secp160k1|secP160r1|secp160r1|secP160r2|secp160r2|secP192k1|secp192k1|secP192r1|secp192r1|secP224k1|secp224k1|secP224r1|secp224r1|secP256k1|secp256k1|secP256r1|secp256r1|secP384r1|secp384r1|secP521r1|secp521r1|sect163k1|sect163r1|sect163r2|sect193r1|sect193r2|sect233k1|sect233r1|sect239k1|sect283k1|sect283r1|sect409k1|sect409r1|sect571k1|sect571r1|wtls12|wtls7|wtls9|X25519|X448|x962P192v1|x962P192v2|x962P192v3|x962P239v1|x962P239v2|x962P239v3|x962P256v1",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112852",
+    "name": "Go - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "go"
+    ],
+    "severity": "manual-review",
+    "description": "Go - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "tls13|VersionSSL30|VersionTLS1[0123]",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "tls\\.Curve(P256|P384|P521)",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bX25519\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112853",
+    "name": "Java - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "java"
+    ],
+    "severity": "manual-review",
+    "description": "Java - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "setSslSecurityProtocol|SSLSecurityProtocol|Alg\\.Alias\\.SSLContext\\.TLS|jdk\\.tls\\.client\\.protocols|https\\.protocols",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSLContext\\.getInstance\\(\\\"([^\\\"]+)\\\"",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\.ssl\\.context\\.protocol=\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112854",
+    "name": "OkHttp - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "java"
+    ],
+    "severity": "manual-review",
+    "description": "OkHttp - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "TlsVersion\\.(SSL_3_0|TLS_1_[0123])",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112844",
+    "name": "Node - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "javascript",
+      "typescript"
+    ],
+    "severity": "manual-review",
+    "description": "Node - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\bsecureProtocol\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "tls-min-v[\\d\\.]+",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440080",
+    "name": "MacOS - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [],
+    "severity": "manual-review",
+    "description": "MacOS - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\bkSSLProtocol([\\d]+|MaxSupported)(Only)?",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSLSetProtocolVersion(Min|Max|Enabled)",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": []
+  },
+  {
+    "id": "DS440070",
+    "name": "Python - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "python"
+    ],
+    "severity": "manual-review",
+    "description": "Python - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "PROTOCOL_(SSL|TLS)v?[0123_\\.]*(_CLIENT|SERVER)?",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": []
+  },
+  {
+    "id": "DS440070",
+    "name": "Rust - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "rust"
+    ],
+    "severity": "manual-review",
+    "description": "Rust - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "ProtocolVersion::(SSLv2|SSLv3|TLSv1_[0123])",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": []
+  },
+  {
+    "id": "DS112835",
+    "name": ".NET - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "csharp",
+      "powershell",
+      "vb"
+    ],
+    "severity": "manual-review",
+    "description": ".NET - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS112835.md",
+    "patterns": [
+      {
+        "pattern": "\\bSecurityProtocolType\\.Ssl3\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SecurityProtocolType\\)48\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSecurityProtocolType\\.SystemDefault\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SecurityProtocolType\\)0\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SecurityProtocolType\\)192\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SecurityProtocolType\\)768\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SecurityProtocolType\\.Tls[123]?",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SecurityProtocolType\\)3072\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSecurityProtocolType\\.Tls13\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SecurityProtocolType\\)12288\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSecurityProtocolTypeExtensions\\.Tls11\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSecurityProtocolTypeExtensions\\.Tls12\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSecurityProtocolTypeExtensions\\.SystemDefault\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS112836",
+    "name": ".NET - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "csharp",
+      "powershell",
+      "vb"
+    ],
+    "severity": "manual-review",
+    "description": ".NET - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "\\bSslProtocolsExtensions\\.Tls11\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocolsExtensions\\.Tls12\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.Default\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)240\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.None\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)0\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.Ssl2\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)12\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.Ssl3\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)48\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.Tls\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)192\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.Tls11\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)768\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.Tls12\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)3072\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\bSslProtocols\\.Tls13\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "\\b\\(SslProtocols\\)12288\\b",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": null
+  },
+  {
+    "id": "DS440071",
+    "name": "Win32 - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "c",
+      "cpp",
+      "csharp"
+    ],
+    "severity": "manual-review",
+    "description": "Win32 - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "SP_PROT_[A-Z0-9_]+_(SERVER|CLIENT)",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": []
+  },
+  {
+    "id": "DS440072",
+    "name": "Win32 - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "c",
+      "cpp"
+    ],
+    "severity": "manual-review",
+    "description": "Win32 - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "ssl::context context|ssl::context set_options|ssl::context set_options|ssl::context native_handle",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": []
+  },
+  {
+    "id": "DS440073",
+    "name": "Win32 - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "c",
+      "cpp"
+    ],
+    "severity": "manual-review",
+    "description": "Win32 - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "NULL-MD5|NULL-SHA|EXP-RC4-MD5|RC4-MD5|RC4-SHA|EXP-RC2-CBC-MD5|IDEA-CBC-SHA|EXP-DES-CBC-SHA|DES-CBC-SHA|DES-CBC3-SHA|DH-DSS-DES-CBC-SHA|DH-DSS-DES-CBC3-SHA|DH-RSA-DES-CBC-SHA|DH-RSA-DES-CBC3-SHA|EXP-EDH-DSS-DES-CBC-SHA|EDH-DSS-CBC-SHA|EDH-DSS-DES-CBC3-SHA|EXP-EDH-RSA-DES-CBC-SHA|EDH-RSA-DES-CBC-SHA|EDH-RSA-DES-CBC3-SHA|EXP-ADH-RC4-MD5|ADH-RC4-MD5|EXP-ADH-DES-CBC-SHA|ADH-DES-CBC-SHA|ADH-DES-CBC3-SHA",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "AES128-SHA|AES256-SHA|DH-DSS-AES128-SHA|DH-DSS-AES256-SHA|DH-RSA-AES128-SHA|DH-RSA-AES256-SHA|DHE-DSS-AES128-SHA|DHE-DSS-AES256-SHA|DHE-RSA-AES128-SHA|DHE-RSA-AES256-SHA|ADH-AES128-SHA|ADH-AES256-SHA",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "CAMELLIA128-SHA|CAMELLIA256-SHA|DH-DSS-CAMELLIA128-SHA|DH-DSS-CAMELLIA256-SHA|DH-RSA-CAMELLIA128-SHA|DH-RSA-CAMELLIA256-SHA|DHE-DSS-CAMELLIA128-SHA|DHE-DSS-CAMELLIA256-SHA|DHE-RSA-CAMELLIA128-SHA|DHE-RSA-CAMELLIA256-SHA|ADH-CAMELLIA128-SHA|ADH-CAMELLIA256-SHA",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "CAMELLIA128-SHA|CAMELLIA256-SHA|DH-DSS-CAMELLIA128-SHA|DH-DSS-CAMELLIA256-SHA|DH-RSA-CAMELLIA128-SHA|DH-RSA-CAMELLIA256-SHA|DHE-DSS-CAMELLIA128-SHA|DHE-DSS-CAMELLIA256-SHA|DHE-RSA-CAMELLIA128-SHA|DHE-RSA-CAMELLIA256-SHA|ADH-CAMELLIA128-SHA|ADH-CAMELLIA256-SHA",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SEED-SHA|DH-DSS-SEED-SHA|DH-RSA-SEED-SHA|DHE-DSS-SEED-SHA|DHE-RSA-SEED-SHA|ADH-SEED-SHA",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "GOST94-GOST89-GOST89|GOST2001-GOST89-GOST89|GOST94-NULL-GOST94|GOST2001-NULL-GOST94",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "EXP1024-DES-CBC-SHA|EXP1024-RC4-SHA|EXP1024-DHE-DSS-DES-CBC-SHA|EXP1024-DHE-DSS-RC4-SHA|DHE-DSS-RC4-SHA",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "EXP1024-DES-CBC-SHA|EXP1024-RC4-SHA|EXP1024-DHE-DSS-DES-CBC-SHA|EXP1024-DHE-DSS-RC4-SHA|DHE-DSS-RC4-SHA",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "NULL-SHA256NULL-SHA256|AES128-SHA256|AES256-SHA256|AES128-GCM-SHA256|AES256-GCM-SHA384|DH-RSA-AES128-SHA256|DH-RSA-AES256-SHA256|DH-RSA-AES128-GCM-SHA256|DH-RSA-AES256-GCM-SHA384|DH-DSS-AES128-SHA256|DH-DSS-AES256-SHA256|DH-DSS-AES128-GCM-SHA256|DH-DSS-AES256-GCM-SHA384|DHE-RSA-AES128-SHA256|DHE-RSA-AES256-SHA256|DHE-RSA-AES128-GCM-SHA256|DHE-RSA-AES256-GCM-SHA384|DHE-DSS-AES128-SHA256|DHE-DSS-AES256-SHA256|DHE-DSS-AES128-GCM-SHA256|DHE-DSS-AES256-GCM-SHA384|ECDH-RSA-AES128-SHA256|ECDH-RSA-AES256-SHA384|ECDH-RSA-AES128-GCM-SHA256|ECDH-RSA-AES256-GCM-SHA384|ECDH-ECDSA-AES128-SHA256|ECDH-ECDSA-AES256-SHA384|ECDH-ECDSA-AES128-GCM-SHA256|ECDH-ECDSA-AES256-GCM-SHA384|ECDHE-RSA-AES128-SHA256|ECDHE-RSA-AES256-SHA384|ECDHE-RSA-AES128-GCM-SHA256|ECDHE-RSA-AES256-GCM-SHA384|ECDHE-ECDSA-AES128-SHA256|ECDHE-ECDSA-AES256-SHA384|ECDHE-ECDSA-AES128-GCM-SHA256|ECDHE-ECDSA-AES256-GCM-SHA384|ADH-AES128-SHA256|ADH-AES256-SHA256|ADH-AES128-GCM-SHA256|ADH-AES256-GCM-SHA384",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": []
+  },
+  {
+    "id": "DS440074",
+    "name": "Win32 - Hard-coded SSL/TLS Protocol",
+    "overrides": [
+      "DS440000"
+    ],
+    "schema_version": 0,
+    "tags": [
+      "Cryptography.Protocol.TLS.Hard-Coded"
+    ],
+    "applies_to": [
+      "c",
+      "cpp"
+    ],
+    "severity": "manual-review",
+    "description": "Win32 - Hard-coded SSL/TLS Protocol",
+    "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+    "rule_info": "DS440000.md",
+    "patterns": [
+      {
+        "pattern": "CONF_modules_load_file|SSL_CTX_config|SSL_config|SSL_CONF_cmd|SSL_CONF_cmd_value_type",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSL_set_security_callback|SSL_set_security_level|SSL_CTX_set_security_level",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSL_(CTX_)?set_(min|max)_proto_version",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "DTLS_client_method|DTLS_server_method|TLS_client_method|TLS_server_method|TLS_method",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSLv3_method|SSLv3_server_method|SSLv3_client_method|SSLv23_method|SSLv23_server_method|SSLv23_client_method|TLSv1_method|TLSv1_server_method|TLSv1_client_method|TLSv1_1_method|TLSv1_1_server_method|TLSv1_1_client_method|TLSv1_2_method|TLSv1_2_server_method|TLSv1_2_client_method|DTLSv1_method|DTLSv1_server_method|DTLSv1_client_method|DTLSv1_2_method|DTLSv1_2_server_method|DTLSv1_2_client_method",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "SSL_set_ssl_method|SSL_CTX_set_ssl_version|SSL_CTX_new|SSL_CTX_add_client_custom_ext|SSL_CTX_add_server_custom_ext",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      },
+      {
+        "pattern": "DTLSv1_listen|SSL_stateless|SSL_CTX_add_custom_ext",
+        "type": "regex",
+        "modifiers": null,
+        "scopes": [
+          "code",
+          "code"
+        ]
+      }
+    ],
+    "conditions": [],
+    "fix_its": []
   },
   {
     "id": "DS300001",
