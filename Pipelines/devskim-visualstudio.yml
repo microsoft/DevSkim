@@ -1,0 +1,20 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  batch: true
+  paths:
+    include:
+    - DevSkim-VisualStudio-Extension/*
+  branches:
+    include:
+    - master
+
+jobs:
+- job: publish
+  displayName: Publish Visual Studio Extension
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: *TODO*
