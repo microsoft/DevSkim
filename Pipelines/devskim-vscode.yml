@@ -1,0 +1,20 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VSCode_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  batch: true
+  paths:
+    include:
+    - DevSkim-VSCode-Plugin/*
+  branches:
+    include:
+    - master
+
+jobs:
+- job: publish
+  displayName: Publish VSCode Plugin
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: *TODO*
