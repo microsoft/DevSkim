@@ -1,7 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_Core_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: DevSkim_CLI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   batch: true
   paths:
