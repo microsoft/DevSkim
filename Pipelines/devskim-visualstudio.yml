@@ -11,10 +11,25 @@ trigger:
     include:
     - master
 
-jobs:
-- job: publish
-  displayName: Publish Visual Studio Extension
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - task: *TODO*
+stages:
+- stage: Run Build Tests
+  jobs:
+  - job: Windows
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: MSBuild@1
+      inputs:
+        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension.Tests/Microsoft.DevSkim.VSExtension.Tests.csproj'
+        platform: 'AnyCPU'
+        configuration: 'Release'
+        restoreNugetPackages: true
+
+- stage: Publish
+  jobs:
+  - job: publish
+    displayName: Publish Visual Studio Extension
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: *TODO*
