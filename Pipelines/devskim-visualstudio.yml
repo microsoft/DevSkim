@@ -18,12 +18,19 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: NuGetCommand@2
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(SolutionDirectory)'
+        feedsToUse: 'select'
+        vstsFeed: '73b0a75c-d420-4e77-95db-e81276361e42'
     - task: MSBuild@1
       inputs:
         solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension.Tests/Microsoft.DevSkim.VSExtension.Tests.csproj'
         platform: 'AnyCPU'
         configuration: 'Release'
-        restoreNugetPackages: true
+        msbuildArguments: '/p:OutputPath=$(Build.BinariesDirectory)/Tests'
+        restoreNugetPackages: false
 
 - stage: Publish
   jobs:
