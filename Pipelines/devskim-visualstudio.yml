@@ -31,6 +31,12 @@ stages:
         configuration: 'Release'
         msbuildArguments: '/p:OutputPath=$(Build.BinariesDirectory)/Tests'
         restoreNugetPackages: false
+    - task: VSTest@2
+      inputs:
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: 'Microsoft.DevSkim.VSExtension.Tests.dll'
+        searchFolder: '$(Build.BinariesDirectory)/Tests'
+        resultsFolder: '$(Build.BinariesDirectory)/Tests/TestResults'
 
 - stage: Publish
   jobs:
