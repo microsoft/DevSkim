@@ -1,0 +1,185 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Gstoc\\Documents\\GitHub\\DevSkim\\DevSkim\\src\\Microsoft.DevSkim\\Microsoft.DevSkim.VSExtension\\Microsoft.DevSkim.VSExtension.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Gstoc\\Documents\\GitHub\\DevSkim\\DevSkim\\src\\Microsoft.DevSkim\\Microsoft.DevSkim.VSExtension\\Microsoft.DevSkim.VSExtension.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Gstoc\\Documents\\GitHub\\DevSkim\\DevSkim\\src\\Microsoft.DevSkim\\Microsoft.DevSkim.VSExtension\\Microsoft.DevSkim.VSExtension.csproj",
+        "projectName": "Microsoft.DevSkim.VSExtension",
+        "projectPath": "C:\\Users\\Gstoc\\Documents\\GitHub\\DevSkim\\DevSkim\\src\\Microsoft.DevSkim\\Microsoft.DevSkim.VSExtension\\Microsoft.DevSkim.VSExtension.csproj",
+        "packagesPath": "C:\\Users\\Gstoc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Gstoc\\Documents\\GitHub\\DevSkim\\DevSkim\\src\\Microsoft.DevSkim\\Microsoft.DevSkim.VSExtension\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Gstoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.9.8, )"
+            },
+            "Microsoft.VSSDK.BuildTools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[16.5.1023, )"
+            },
+            "Microsoft.VisualStudio.ComponentModelHost": {
+              "target": "Package",
+              "version": "[16.2.45, )"
+            },
+            "Microsoft.VisualStudio.Imaging": {
+              "target": "Package",
+              "version": "[16.4.29519.181, )"
+            },
+            "Microsoft.VisualStudio.Language.Intellisense": {
+              "target": "Package",
+              "version": "[16.2.45, )"
+            },
+            "Microsoft.VisualStudio.Language.StandardClassification": {
+              "target": "Package",
+              "version": "[16.2.45, )"
+            },
+            "Microsoft.VisualStudio.SDK.EmbedInteropTypes": {
+              "target": "Package",
+              "version": "[15.0.27, )"
+            },
+            "Microsoft.VisualStudio.Shell.14.0": {
+              "target": "Package",
+              "version": "[14.3.25407, )"
+            },
+            "Microsoft.VisualStudio.Shell.Framework": {
+              "target": "Package",
+              "version": "[16.4.29519.181, )"
+            },
+            "Microsoft.VisualStudio.Shell.Immutable.10.0": {
+              "target": "Package",
+              "version": "[15.0.25415, )"
+            },
+            "Microsoft.VisualStudio.Shell.Immutable.11.0": {
+              "target": "Package",
+              "version": "[15.0.25415, )"
+            },
+            "Microsoft.VisualStudio.Shell.Immutable.12.0": {
+              "target": "Package",
+              "version": "[15.0.25415, )"
+            },
+            "Microsoft.VisualStudio.Shell.Immutable.14.0": {
+              "target": "Package",
+              "version": "[15.0.25405, )"
+            },
+            "Microsoft.VisualStudio.Shell.Interop.12.0": {
+              "target": "Package",
+              "version": "[12.0.30111, )"
+            },
+            "Microsoft.VisualStudio.Shell.Interop.9.0": {
+              "target": "Package",
+              "version": "[9.0.30730, )"
+            },
+            "Microsoft.VisualStudio.Text.UI.Wpf": {
+              "target": "Package",
+              "version": "[16.2.45, )"
+            },
+            "Microsoft.VisualStudio.Threading.Analyzers": {
+              "target": "Package",
+              "version": "[16.4.33, )"
+            },
+            "Microsoft.Win32.Registry": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Nerdbank.Streams": {
+              "target": "Package",
+              "version": "[2.4.50, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
+            "StreamJsonRpc": {
+              "target": "Package",
+              "version": "[2.2.53, )"
+            },
+            "System.Collections.Immutable": {
+              "target": "Package",
+              "version": "[1.7.0, )"
+            },
+            "System.IO.Pipelines": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "System.Net.Http": {
+              "target": "Package",
+              "version": "[4.3.4, )"
+            },
+            "System.Numerics.Vectors": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Reflection.Emit": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "System.Runtime": {
+              "target": "Package",
+              "version": "[4.3.1, )"
+            },
+            "System.Runtime.CompilerServices.Unsafe": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "System.Security.Cryptography.Algorithms": {
+              "target": "Package",
+              "version": "[4.3.1, )"
+            },
+            "System.Security.Cryptography.X509Certificates": {
+              "target": "Package",
+              "version": "[4.3.2, )"
+            },
+            "System.Threading.Tasks.Dataflow": {
+              "target": "Package",
+              "version": "[4.11.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
