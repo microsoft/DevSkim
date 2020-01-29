@@ -194,16 +194,16 @@
       <Version>0.3.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost">
-      <Version>16.2.45</Version>
+      <Version>16.4.280</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Imaging">
       <Version>16.4.29519.181</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense">
-      <Version>16.2.45</Version>
+      <Version>16.4.280</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification">
-      <Version>16.2.45</Version>
+      <Version>16.4.280</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes">
       <Version>15.0.27</Version>
@@ -233,13 +233,13 @@
       <Version>9.0.30730</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf">
-      <Version>16.2.45</Version>
+      <Version>16.4.280</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers">
-      <Version>16.4.33</Version>
+      <Version>16.4.45</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>16.5.1023</Version>
+      <Version>16.5.2036</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
