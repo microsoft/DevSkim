@@ -14,12 +14,12 @@
   </PropertyGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.codeanalysis.bannedapianalyzers\2.9.8\build\Microsoft.CodeAnalysis.BannedApiAnalyzers.props" Condition="Exists('$(NuGetPackageRoot)microsoft.codeanalysis.bannedapianalyzers\2.9.8\build\Microsoft.CodeAnalysis.BannedApiAnalyzers.props')" />
-    <Import Project="$(NuGetPackageRoot)microsoft.vssdk.buildtools\16.5.1023\build\Microsoft.VSSDK.BuildTools.props" Condition="Exists('$(NuGetPackageRoot)microsoft.vssdk.buildtools\16.5.1023\build\Microsoft.VSSDK.BuildTools.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.vssdk.buildtools\16.5.2036\build\Microsoft.VSSDK.BuildTools.props" Condition="Exists('$(NuGetPackageRoot)microsoft.vssdk.buildtools\16.5.2036\build\Microsoft.VSSDK.BuildTools.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgMicrosoft_VisualStudio_Threading_Analyzers Condition=" '$(PkgMicrosoft_VisualStudio_Threading_Analyzers)' == '' ">C:\Users\Gstoc\.nuget\packages\microsoft.visualstudio.threading.analyzers\16.4.33</PkgMicrosoft_VisualStudio_Threading_Analyzers>
+    <PkgMicrosoft_VisualStudio_Threading_Analyzers Condition=" '$(PkgMicrosoft_VisualStudio_Threading_Analyzers)' == '' ">C:\Users\Gstoc\.nuget\packages\microsoft.visualstudio.threading.analyzers\16.4.45</PkgMicrosoft_VisualStudio_Threading_Analyzers>
     <PkgMicrosoft_CodeAnalysis_BannedApiAnalyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_BannedApiAnalyzers)' == '' ">C:\Users\Gstoc\.nuget\packages\microsoft.codeanalysis.bannedapianalyzers\2.9.8</PkgMicrosoft_CodeAnalysis_BannedApiAnalyzers>
     <PkgMicrosoft_VisualStudio_SDK_Analyzers Condition=" '$(PkgMicrosoft_VisualStudio_SDK_Analyzers)' == '' ">C:\Users\Gstoc\.nuget\packages\microsoft.visualstudio.sdk.analyzers\16.3.14</PkgMicrosoft_VisualStudio_SDK_Analyzers>
-    <PkgMicrosoft_VSSDK_BuildTools Condition=" '$(PkgMicrosoft_VSSDK_BuildTools)' == '' ">C:\Users\Gstoc\.nuget\packages\microsoft.vssdk.buildtools\16.5.1023</PkgMicrosoft_VSSDK_BuildTools>
+    <PkgMicrosoft_VSSDK_BuildTools Condition=" '$(PkgMicrosoft_VSSDK_BuildTools)' == '' ">C:\Users\Gstoc\.nuget\packages\microsoft.vssdk.buildtools\16.5.2036</PkgMicrosoft_VSSDK_BuildTools>
   </PropertyGroup>
 </Project>

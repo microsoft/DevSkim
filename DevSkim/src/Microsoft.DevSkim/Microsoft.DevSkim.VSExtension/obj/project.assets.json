@@ -8,31 +8,58 @@
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
         }
       },
-      "Microsoft.VisualStudio.ComponentModelHost/16.2.45": {
+      "Microsoft.DevSkim/0.3.7": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30319"
+          "Newtonsoft.Json": "10.0.3"
+        },
+        "compile": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.NETCore.Targets/1.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.VisualStudio.ComponentModelHost/16.4.280": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30320"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.Composition"
         ],
         "compile": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         },
         "runtime": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         }
       },
-      "Microsoft.VisualStudio.CoreUtility/16.2.45": {
+      "Microsoft.VisualStudio.CoreUtility/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.Threading": "16.4.16",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.CoreUtility.dll": {}
         },
@@ -74,16 +101,17 @@
           "lib/net20/Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language/16.2.45": {
+      "Microsoft.VisualStudio.Language/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45",
-          "Newtonsoft.Json": "9.0.1",
-          "StreamJsonRpc": "2.0.167",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280",
+          "Newtonsoft.Json": "12.0.2",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0",
+          "System.Private.Uri": "4.3.1"
         },
         "frameworkAssemblies": [
           "System.IO",
@@ -102,26 +130,22 @@
           "lib/net472/Microsoft.VisualStudio.Language.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.Intellisense/16.2.45": {
+      "Microsoft.VisualStudio.Language.Intellisense/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Language": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Language": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
-          "System.IO",
-          "System.Net.Http",
-          "System.Net.WebSockets",
-          "System.Runtime",
-          "System.Security.Cryptography.Algorithms",
-          "System.Security.Cryptography.Encoding",
-          "System.Security.Cryptography.Primitives",
-          "System.Security.Cryptography.X509Certificates"
+          "System",
+          "System.ComponentModel.Composition",
+          "System.Core",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
@@ -130,14 +154,11 @@
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.StandardClassification/16.2.45": {
+      "Microsoft.VisualStudio.Language.StandardClassification/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280"
         },
-        "frameworkAssemblies": [
-          "System"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.StandardClassification.dll": {}
         },
@@ -328,16 +349,12 @@
           "lib/net11/Microsoft.VisualStudio.Shell.Interop.9.0.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Data/16.2.45": {
+      "Microsoft.VisualStudio.Text.Data/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Threading": "16.4.16"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         },
@@ -345,18 +362,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Logic/16.2.45": {
+      "Microsoft.VisualStudio.Text.Logic/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         },
@@ -364,17 +377,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         },
@@ -382,21 +392,22 @@
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI.Wpf/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI.Wpf/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
           "PresentationFramework",
           "System",
           "System.ComponentModel.Composition",
-          "UIAutomationProvider"
+          "UIAutomationProvider",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.Wpf.dll": {}
@@ -487,7 +498,7 @@
           }
         }
       },
-      "Microsoft.VisualStudio.Threading.Analyzers/16.4.33": {
+      "Microsoft.VisualStudio.Threading.Analyzers/16.4.45": {
         "type": "package",
         "build": {
           "build/Microsoft.VisualStudio.Threading.Analyzers.targets": {}
@@ -558,7 +569,7 @@
           }
         }
       },
-      "Microsoft.VSSDK.BuildTools/16.5.1023": {
+      "Microsoft.VSSDK.BuildTools/16.5.2036": {
         "type": "package",
         "dependencies": {
           "Microsoft.VisualStudio.SDK.Analyzers": "15.8.33"
@@ -706,6 +717,18 @@
           "lib/netstandard2.0/System.Collections.Immutable.dll": {}
         }
       },
+      "System.ComponentModel.Composition/4.5.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.ComponentModel.Composition"
+        ],
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.IO/4.3.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -798,6 +821,16 @@
         },
         "runtime": {
           "lib/net46/System.Numerics.Vectors.dll": {}
+        }
+      },
+      "System.Private.Uri/4.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.1",
+          "Microsoft.NETCore.Targets": "1.1.3"
+        },
+        "compile": {
+          "ref/netstandard/_._": {}
         }
       },
       "System.Reflection.Emit/4.7.0": {
@@ -1010,31 +1043,58 @@
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
         }
       },
-      "Microsoft.VisualStudio.ComponentModelHost/16.2.45": {
+      "Microsoft.DevSkim/0.3.7": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30319"
+          "Newtonsoft.Json": "10.0.3"
+        },
+        "compile": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.NETCore.Targets/1.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.VisualStudio.ComponentModelHost/16.4.280": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30320"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.Composition"
         ],
         "compile": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         },
         "runtime": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         }
       },
-      "Microsoft.VisualStudio.CoreUtility/16.2.45": {
+      "Microsoft.VisualStudio.CoreUtility/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.Threading": "16.4.16",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.CoreUtility.dll": {}
         },
@@ -1076,16 +1136,17 @@
           "lib/net20/Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language/16.2.45": {
+      "Microsoft.VisualStudio.Language/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45",
-          "Newtonsoft.Json": "9.0.1",
-          "StreamJsonRpc": "2.0.167",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280",
+          "Newtonsoft.Json": "12.0.2",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0",
+          "System.Private.Uri": "4.3.1"
         },
         "frameworkAssemblies": [
           "System.IO",
@@ -1104,26 +1165,22 @@
           "lib/net472/Microsoft.VisualStudio.Language.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.Intellisense/16.2.45": {
+      "Microsoft.VisualStudio.Language.Intellisense/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Language": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Language": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
-          "System.IO",
-          "System.Net.Http",
-          "System.Net.WebSockets",
-          "System.Runtime",
-          "System.Security.Cryptography.Algorithms",
-          "System.Security.Cryptography.Encoding",
-          "System.Security.Cryptography.Primitives",
-          "System.Security.Cryptography.X509Certificates"
+          "System",
+          "System.ComponentModel.Composition",
+          "System.Core",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
@@ -1132,14 +1189,11 @@
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.StandardClassification/16.2.45": {
+      "Microsoft.VisualStudio.Language.StandardClassification/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280"
         },
-        "frameworkAssemblies": [
-          "System"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.StandardClassification.dll": {}
         },
@@ -1330,16 +1384,12 @@
           "lib/net11/Microsoft.VisualStudio.Shell.Interop.9.0.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Data/16.2.45": {
+      "Microsoft.VisualStudio.Text.Data/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Threading": "16.4.16"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         },
@@ -1347,18 +1397,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Logic/16.2.45": {
+      "Microsoft.VisualStudio.Text.Logic/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         },
@@ -1366,17 +1412,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         },
@@ -1384,21 +1427,22 @@
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI.Wpf/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI.Wpf/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
           "PresentationFramework",
           "System",
           "System.ComponentModel.Composition",
-          "UIAutomationProvider"
+          "UIAutomationProvider",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.Wpf.dll": {}
@@ -1489,7 +1533,7 @@
           }
         }
       },
-      "Microsoft.VisualStudio.Threading.Analyzers/16.4.33": {
+      "Microsoft.VisualStudio.Threading.Analyzers/16.4.45": {
         "type": "package",
         "build": {
           "build/Microsoft.VisualStudio.Threading.Analyzers.targets": {}
@@ -1560,7 +1604,7 @@
           }
         }
       },
-      "Microsoft.VSSDK.BuildTools/16.5.1023": {
+      "Microsoft.VSSDK.BuildTools/16.5.2036": {
         "type": "package",
         "dependencies": {
           "Microsoft.VisualStudio.SDK.Analyzers": "15.8.33"
@@ -1610,6 +1654,24 @@
         },
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "runtime.any.System.IO/4.3.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "runtime.any.System.Runtime/4.3.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
         }
       },
       "StreamJsonRpc/2.2.53": {
@@ -1698,8 +1760,23 @@
           "lib/netstandard2.0/System.Collections.Immutable.dll": {}
         }
       },
+      "System.ComponentModel.Composition/4.5.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.ComponentModel.Composition"
+        ],
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.IO/4.3.0": {
         "type": "package",
+        "dependencies": {
+          "runtime.any.System.IO": "4.3.0"
+        },
         "frameworkAssemblies": [
           "System",
           "mscorlib"
@@ -1782,6 +1859,16 @@
           "lib/net46/System.Numerics.Vectors.dll": {}
         }
       },
+      "System.Private.Uri/4.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.1",
+          "Microsoft.NETCore.Targets": "1.1.3"
+        },
+        "compile": {
+          "ref/netstandard/_._": {}
+        }
+      },
       "System.Reflection.Emit/4.7.0": {
         "type": "package",
         "compile": {
@@ -1793,6 +1880,9 @@
       },
       "System.Runtime/4.3.1": {
         "type": "package",
+        "dependencies": {
+          "runtime.any.System.Runtime": "4.3.0"
+        },
         "frameworkAssemblies": [
           "System",
           "System.ComponentModel.Composition",
@@ -1946,31 +2036,58 @@
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
         }
       },
-      "Microsoft.VisualStudio.ComponentModelHost/16.2.45": {
+      "Microsoft.DevSkim/0.3.7": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30319"
+          "Newtonsoft.Json": "10.0.3"
+        },
+        "compile": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.NETCore.Targets/1.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.VisualStudio.ComponentModelHost/16.4.280": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30320"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.Composition"
         ],
         "compile": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         },
         "runtime": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         }
       },
-      "Microsoft.VisualStudio.CoreUtility/16.2.45": {
+      "Microsoft.VisualStudio.CoreUtility/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.Threading": "16.4.16",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.CoreUtility.dll": {}
         },
@@ -2012,16 +2129,17 @@
           "lib/net20/Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language/16.2.45": {
+      "Microsoft.VisualStudio.Language/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45",
-          "Newtonsoft.Json": "9.0.1",
-          "StreamJsonRpc": "2.0.167",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280",
+          "Newtonsoft.Json": "12.0.2",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0",
+          "System.Private.Uri": "4.3.1"
         },
         "frameworkAssemblies": [
           "System.IO",
@@ -2040,26 +2158,22 @@
           "lib/net472/Microsoft.VisualStudio.Language.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.Intellisense/16.2.45": {
+      "Microsoft.VisualStudio.Language.Intellisense/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Language": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Language": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
-          "System.IO",
-          "System.Net.Http",
-          "System.Net.WebSockets",
-          "System.Runtime",
-          "System.Security.Cryptography.Algorithms",
-          "System.Security.Cryptography.Encoding",
-          "System.Security.Cryptography.Primitives",
-          "System.Security.Cryptography.X509Certificates"
+          "System",
+          "System.ComponentModel.Composition",
+          "System.Core",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
@@ -2068,14 +2182,11 @@
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.StandardClassification/16.2.45": {
+      "Microsoft.VisualStudio.Language.StandardClassification/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280"
         },
-        "frameworkAssemblies": [
-          "System"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.StandardClassification.dll": {}
         },
@@ -2266,16 +2377,12 @@
           "lib/net11/Microsoft.VisualStudio.Shell.Interop.9.0.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Data/16.2.45": {
+      "Microsoft.VisualStudio.Text.Data/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Threading": "16.4.16"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         },
@@ -2283,18 +2390,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Logic/16.2.45": {
+      "Microsoft.VisualStudio.Text.Logic/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         },
@@ -2302,17 +2405,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         },
@@ -2320,21 +2420,22 @@
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI.Wpf/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI.Wpf/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
           "PresentationFramework",
           "System",
           "System.ComponentModel.Composition",
-          "UIAutomationProvider"
+          "UIAutomationProvider",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.Wpf.dll": {}
@@ -2425,7 +2526,7 @@
           }
         }
       },
-      "Microsoft.VisualStudio.Threading.Analyzers/16.4.33": {
+      "Microsoft.VisualStudio.Threading.Analyzers/16.4.45": {
         "type": "package",
         "build": {
           "build/Microsoft.VisualStudio.Threading.Analyzers.targets": {}
@@ -2496,7 +2597,7 @@
           }
         }
       },
-      "Microsoft.VSSDK.BuildTools/16.5.1023": {
+      "Microsoft.VSSDK.BuildTools/16.5.2036": {
         "type": "package",
         "dependencies": {
           "Microsoft.VisualStudio.SDK.Analyzers": "15.8.33"
@@ -2519,7 +2620,7 @@
           "ref/net472/Microsoft.Win32.Registry.dll": {}
         },
         "runtime": {
-          "lib/net461/Microsoft.Win32.Registry.dll": {}
+          "runtimes/win/lib/net461/Microsoft.Win32.Registry.dll": {}
         }
       },
       "Nerdbank.Streams/2.4.50": {
@@ -2546,6 +2647,24 @@
         },
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "runtime.any.System.IO/4.3.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "runtime.any.System.Runtime/4.3.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
         }
       },
       "StreamJsonRpc/2.2.53": {
@@ -2634,8 +2753,23 @@
           "lib/netstandard2.0/System.Collections.Immutable.dll": {}
         }
       },
+      "System.ComponentModel.Composition/4.5.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.ComponentModel.Composition"
+        ],
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.IO/4.3.0": {
         "type": "package",
+        "dependencies": {
+          "runtime.any.System.IO": "4.3.0"
+        },
         "frameworkAssemblies": [
           "System",
           "mscorlib"
@@ -2689,7 +2823,7 @@
           "ref/net46/System.Net.Http.dll": {}
         },
         "runtime": {
-          "lib/net46/System.Net.Http.dll": {}
+          "runtimes/win/lib/net46/System.Net.Http.dll": {}
         }
       },
       "System.Net.WebSockets/4.3.0": {
@@ -2718,6 +2852,16 @@
           "lib/net46/System.Numerics.Vectors.dll": {}
         }
       },
+      "System.Private.Uri/4.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.1",
+          "Microsoft.NETCore.Targets": "1.1.3"
+        },
+        "compile": {
+          "ref/netstandard/_._": {}
+        }
+      },
       "System.Reflection.Emit/4.7.0": {
         "type": "package",
         "compile": {
@@ -2729,6 +2873,9 @@
       },
       "System.Runtime/4.3.1": {
         "type": "package",
+        "dependencies": {
+          "runtime.any.System.Runtime": "4.3.0"
+        },
         "frameworkAssemblies": [
           "System",
           "System.ComponentModel.Composition",
@@ -2763,7 +2910,7 @@
           "ref/net461/System.Security.AccessControl.dll": {}
         },
         "runtime": {
-          "lib/net461/System.Security.AccessControl.dll": {}
+          "runtimes/win/lib/net461/System.Security.AccessControl.dll": {}
         }
       },
       "System.Security.Cryptography.Algorithms/4.3.1": {
@@ -2782,7 +2929,7 @@
           "ref/net463/System.Security.Cryptography.Algorithms.dll": {}
         },
         "runtime": {
-          "lib/net463/System.Security.Cryptography.Algorithms.dll": {}
+          "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll": {}
         }
       },
       "System.Security.Cryptography.Encoding/4.3.0": {
@@ -2795,7 +2942,7 @@
           "ref/net46/System.Security.Cryptography.Encoding.dll": {}
         },
         "runtime": {
-          "lib/net46/System.Security.Cryptography.Encoding.dll": {}
+          "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll": {}
         }
       },
       "System.Security.Cryptography.Primitives/4.3.0": {
@@ -2825,7 +2972,7 @@
           "ref/net461/System.Security.Cryptography.X509Certificates.dll": {}
         },
         "runtime": {
-          "lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
+          "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
         }
       },
       "System.Security.Principal.Windows/4.7.0": {
@@ -2838,7 +2985,7 @@
           "ref/net461/System.Security.Principal.Windows.dll": {}
         },
         "runtime": {
-          "lib/net461/System.Security.Principal.Windows.dll": {}
+          "runtimes/win/lib/net461/System.Security.Principal.Windows.dll": {}
         }
       },
       "System.Threading.Tasks.Dataflow/4.11.0": {
@@ -2882,31 +3029,58 @@
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
         }
       },
-      "Microsoft.VisualStudio.ComponentModelHost/16.2.45": {
+      "Microsoft.DevSkim/0.3.7": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30319"
+          "Newtonsoft.Json": "10.0.3"
+        },
+        "compile": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DevSkim.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.NETCore.Targets/1.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.VisualStudio.ComponentModelHost/16.4.280": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.VisualStudio.Shell.Interop.10.0": "10.0.30320"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.Composition"
         ],
         "compile": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         },
         "runtime": {
-          "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll": {}
+          "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll": {}
         }
       },
-      "Microsoft.VisualStudio.CoreUtility/16.2.45": {
+      "Microsoft.VisualStudio.CoreUtility/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.Threading": "16.4.16",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.CoreUtility.dll": {}
         },
@@ -2948,16 +3122,17 @@
           "lib/net20/Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language/16.2.45": {
+      "Microsoft.VisualStudio.Language/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45",
-          "Newtonsoft.Json": "9.0.1",
-          "StreamJsonRpc": "2.0.167",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280",
+          "Newtonsoft.Json": "12.0.2",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0",
+          "System.Private.Uri": "4.3.1"
         },
         "frameworkAssemblies": [
           "System.IO",
@@ -2976,26 +3151,22 @@
           "lib/net472/Microsoft.VisualStudio.Language.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.Intellisense/16.2.45": {
+      "Microsoft.VisualStudio.Language.Intellisense/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Language": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Language": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
-          "System.IO",
-          "System.Net.Http",
-          "System.Net.WebSockets",
-          "System.Runtime",
-          "System.Security.Cryptography.Algorithms",
-          "System.Security.Cryptography.Encoding",
-          "System.Security.Cryptography.Primitives",
-          "System.Security.Cryptography.X509Certificates"
+          "System",
+          "System.ComponentModel.Composition",
+          "System.Core",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
@@ -3004,14 +3175,11 @@
           "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Language.StandardClassification/16.2.45": {
+      "Microsoft.VisualStudio.Language.StandardClassification/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280"
         },
-        "frameworkAssemblies": [
-          "System"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Language.StandardClassification.dll": {}
         },
@@ -3202,16 +3370,12 @@
           "lib/net11/Microsoft.VisualStudio.Shell.Interop.9.0.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Data/16.2.45": {
+      "Microsoft.VisualStudio.Text.Data/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Threading": "16.0.102"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Threading": "16.4.16"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         },
@@ -3219,18 +3383,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Data.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.Logic/16.2.45": {
+      "Microsoft.VisualStudio.Text.Logic/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "System.Collections.Immutable": "1.5.0"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "System.Collections.Immutable": "1.5.0",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         },
@@ -3238,17 +3398,14 @@
           "lib/net472/Microsoft.VisualStudio.Text.Logic.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45"
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "System.ComponentModel.Composition": "4.5.0"
         },
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition"
-        ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         },
@@ -3256,21 +3413,22 @@
           "lib/net472/Microsoft.VisualStudio.Text.UI.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Text.UI.Wpf/16.2.45": {
+      "Microsoft.VisualStudio.Text.UI.Wpf/16.4.280": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.CoreUtility": "16.2.45",
+          "Microsoft.VisualStudio.CoreUtility": "16.4.280",
           "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime": "14.3.26930",
-          "Microsoft.VisualStudio.Text.Data": "16.2.45",
-          "Microsoft.VisualStudio.Text.Logic": "16.2.45",
-          "Microsoft.VisualStudio.Text.UI": "16.2.45"
+          "Microsoft.VisualStudio.Text.Data": "16.4.280",
+          "Microsoft.VisualStudio.Text.Logic": "16.4.280",
+          "Microsoft.VisualStudio.Text.UI": "16.4.280"
         },
         "frameworkAssemblies": [
           "PresentationCore",
           "PresentationFramework",
           "System",
           "System.ComponentModel.Composition",
-          "UIAutomationProvider"
+          "UIAutomationProvider",
+          "WindowsBase"
         ],
         "compile": {
           "lib/net472/Microsoft.VisualStudio.Text.UI.Wpf.dll": {}
@@ -3361,7 +3519,7 @@
           }
         }
       },
-      "Microsoft.VisualStudio.Threading.Analyzers/16.4.33": {
+      "Microsoft.VisualStudio.Threading.Analyzers/16.4.45": {
         "type": "package",
         "build": {
           "build/Microsoft.VisualStudio.Threading.Analyzers.targets": {}
@@ -3432,7 +3590,7 @@
           }
         }
       },
-      "Microsoft.VSSDK.BuildTools/16.5.1023": {
+      "Microsoft.VSSDK.BuildTools/16.5.2036": {
         "type": "package",
         "dependencies": {
           "Microsoft.VisualStudio.SDK.Analyzers": "15.8.33"
@@ -3455,7 +3613,7 @@
           "ref/net472/Microsoft.Win32.Registry.dll": {}
         },
         "runtime": {
-          "lib/net461/Microsoft.Win32.Registry.dll": {}
+          "runtimes/win/lib/net461/Microsoft.Win32.Registry.dll": {}
         }
       },
       "Nerdbank.Streams/2.4.50": {
@@ -3482,6 +3640,24 @@
         },
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "runtime.any.System.IO/4.3.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "runtime.any.System.Runtime/4.3.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
         }
       },
       "StreamJsonRpc/2.2.53": {
@@ -3570,8 +3746,23 @@
           "lib/netstandard2.0/System.Collections.Immutable.dll": {}
         }
       },
+      "System.ComponentModel.Composition/4.5.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.ComponentModel.Composition"
+        ],
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.IO/4.3.0": {
         "type": "package",
+        "dependencies": {
+          "runtime.any.System.IO": "4.3.0"
+        },
         "frameworkAssemblies": [
           "System",
           "mscorlib"
@@ -3625,7 +3816,7 @@
           "ref/net46/System.Net.Http.dll": {}
         },
         "runtime": {
-          "lib/net46/System.Net.Http.dll": {}
+          "runtimes/win/lib/net46/System.Net.Http.dll": {}
         }
       },
       "System.Net.WebSockets/4.3.0": {
@@ -3654,6 +3845,16 @@
           "lib/net46/System.Numerics.Vectors.dll": {}
         }
       },
+      "System.Private.Uri/4.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.1",
+          "Microsoft.NETCore.Targets": "1.1.3"
+        },
+        "compile": {
+          "ref/netstandard/_._": {}
+        }
+      },
       "System.Reflection.Emit/4.7.0": {
         "type": "package",
         "compile": {
@@ -3665,6 +3866,9 @@
       },
       "System.Runtime/4.3.1": {
         "type": "package",
+        "dependencies": {
+          "runtime.any.System.Runtime": "4.3.0"
+        },
         "frameworkAssemblies": [
           "System",
           "System.ComponentModel.Composition",
@@ -3699,7 +3903,7 @@
           "ref/net461/System.Security.AccessControl.dll": {}
         },
         "runtime": {
-          "lib/net461/System.Security.AccessControl.dll": {}
+          "runtimes/win/lib/net461/System.Security.AccessControl.dll": {}
         }
       },
       "System.Security.Cryptography.Algorithms/4.3.1": {
@@ -3718,7 +3922,7 @@
           "ref/net463/System.Security.Cryptography.Algorithms.dll": {}
         },
         "runtime": {
-          "lib/net463/System.Security.Cryptography.Algorithms.dll": {}
+          "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll": {}
         }
       },
       "System.Security.Cryptography.Encoding/4.3.0": {
@@ -3731,7 +3935,7 @@
           "ref/net46/System.Security.Cryptography.Encoding.dll": {}
         },
         "runtime": {
-          "lib/net46/System.Security.Cryptography.Encoding.dll": {}
+          "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll": {}
         }
       },
       "System.Security.Cryptography.Primitives/4.3.0": {
@@ -3761,7 +3965,7 @@
           "ref/net461/System.Security.Cryptography.X509Certificates.dll": {}
         },
         "runtime": {
-          "lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
+          "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
         }
       },
       "System.Security.Principal.Windows/4.7.0": {
@@ -3774,7 +3978,7 @@
           "ref/net461/System.Security.Principal.Windows.dll": {}
         },
         "runtime": {
-          "lib/net461/System.Security.Principal.Windows.dll": {}
+          "runtimes/win/lib/net461/System.Security.Principal.Windows.dll": {}
         }
       },
       "System.Threading.Tasks.Dataflow/4.11.0": {
@@ -3881,28 +4085,76 @@
         "tools/uninstall.ps1"
       ]
     },
-    "Microsoft.VisualStudio.ComponentModelHost/16.2.45": {
-      "sha512": "tXXBRLMzivdeyVFEobX9jugc0mYS9/BZMCiMtR6IQt9l2LDmZRlO+5JhXwg1PjvemFGooVMbUnw0dwrJYpJBJw==",
+    "Microsoft.DevSkim/0.3.7": {
+      "sha512": "vzFG5PxkDvwk7ggaz/Jx+G+il1am9YSUNEYS8tl/g9ba/eu15CdR7q28QYqB2x+VZivHOQWQqdiwCYVPTQ3G7g==",
       "type": "package",
-      "path": "microsoft.visualstudio.componentmodelhost/16.2.45",
+      "path": "microsoft.devskim/0.3.7",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net46/Microsoft.VisualStudio.ComponentModelHost.dll",
-        "lib/net46/Microsoft.VisualStudio.ComponentModelHost.xml",
-        "microsoft.visualstudio.componentmodelhost.16.2.45.nupkg.sha512",
+        "lib/net45/Microsoft.DevSkim.dll",
+        "lib/netstandard2.0/Microsoft.DevSkim.dll",
+        "microsoft.devskim.0.3.7.nupkg.sha512",
+        "microsoft.devskim.nuspec"
+      ]
+    },
+    "Microsoft.NETCore.Platforms/1.1.1": {
+      "sha512": "TMBuzAHpTenGbGgk0SMTwyEkyijY/Eae4ZGsFNYJvAr/LDn1ku3Etp3FPxChmDp5HHF3kzJuoaa08N0xjqAJfQ==",
+      "type": "package",
+      "path": "microsoft.netcore.platforms/1.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/netstandard1.0/_._",
+        "microsoft.netcore.platforms.1.1.1.nupkg.sha512",
+        "microsoft.netcore.platforms.nuspec",
+        "runtime.json"
+      ]
+    },
+    "Microsoft.NETCore.Targets/1.1.3": {
+      "sha512": "3Wrmi0kJDzClwAC+iBdUBpEKmEle8FQNsCs77fkiOIw/9oYA07bL1EZNX0kQ2OMN3xpwvl0vAtOCYY3ndDNlhQ==",
+      "type": "package",
+      "path": "microsoft.netcore.targets/1.1.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/netstandard1.0/_._",
+        "microsoft.netcore.targets.1.1.3.nupkg.sha512",
+        "microsoft.netcore.targets.nuspec",
+        "runtime.json"
+      ]
+    },
+    "Microsoft.VisualStudio.ComponentModelHost/16.4.280": {
+      "sha512": "wwKQMmPxYZzuWwu+6QH6nrI9sV7A8EejYqO4iTbTubk8F2f4pCcn408LvGN/SZTSJrKMMquftCUCuNG6MJBAeg==",
+      "type": "package",
+      "path": "microsoft.visualstudio.componentmodelhost/16.4.280",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
+        "lib/net472/Microsoft.VisualStudio.ComponentModelHost.dll",
+        "lib/net472/Microsoft.VisualStudio.ComponentModelHost.xml",
+        "microsoft.visualstudio.componentmodelhost.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.componentmodelhost.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.CoreUtility/16.2.45": {
-      "sha512": "FaQPf1aN3psWVJrdPkv9XCa6gnErxp5FHj3sB0cb8vNMpZKQ63Xto9YTRiLTdmYiTssaGvnzRNmYOMbiIznXsQ==",
+    "Microsoft.VisualStudio.CoreUtility/16.4.280": {
+      "sha512": "H+ry2x2j64GfWL8GJoTvgbE8WqskEXtl03hM2eRnH5bJCl1dUQh/auOH22IIK20fedPWTqjsuNK+DoQ33WmZGw==",
       "type": "package",
-      "path": "microsoft.visualstudio.coreutility/16.2.45",
+      "path": "microsoft.visualstudio.coreutility/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.CoreUtility.dll",
-        "microsoft.visualstudio.coreutility.16.2.45.nupkg.sha512",
+        "lib/netstandard2.0/Microsoft.VisualStudio.CoreUtility.dll",
+        "microsoft.visualstudio.coreutility.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.coreutility.nuspec"
       ]
     },
@@ -3945,39 +4197,47 @@
         "microsoft.visualstudio.imaging.interop.14.0.designtime.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Language/16.2.45": {
-      "sha512": "bO9V3WQoSyf3VKbaKe41dZT6I1+gy+Tpj2f3vx9tO4Bc7uPKYEGwF4PPQ4dospJJ9eHzlevmPKzfhSN1zZtXrw==",
+    "Microsoft.VisualStudio.Language/16.4.280": {
+      "sha512": "TXD7axrk1/5xLwR6SjxLqhAMXPkmp1ggLJ13ev3EspdFUmpVcziBA549KoofIQSnXid/OR4voQNl2d2WbyBuRg==",
       "type": "package",
-      "path": "microsoft.visualstudio.language/16.2.45",
+      "path": "microsoft.visualstudio.language/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.Language.dll",
-        "microsoft.visualstudio.language.16.2.45.nupkg.sha512",
+        "lib/netstandard2.0/Microsoft.VisualStudio.Language.dll",
+        "microsoft.visualstudio.language.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.language.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Language.Intellisense/16.2.45": {
-      "sha512": "LXO0pY8CRrYMWhqMzwqMwInzjDW0T/bfY1qKTOD6xV1zOj1pOUj0Io3PYGZJOuzPlgfZWXZL5ey4VgwNOXHtXg==",
+    "Microsoft.VisualStudio.Language.Intellisense/16.4.280": {
+      "sha512": "Xd974HEZgwxvoX4SFLRjEr+zr9Bkksx7NNhWV3dBAGj7KiYSwg7agVhZ4zko5ALlESbKpSpmpNFXqxVk/8acNw==",
       "type": "package",
-      "path": "microsoft.visualstudio.language.intellisense/16.2.45",
+      "path": "microsoft.visualstudio.language.intellisense/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.Language.Intellisense.dll",
-        "microsoft.visualstudio.language.intellisense.16.2.45.nupkg.sha512",
+        "microsoft.visualstudio.language.intellisense.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.language.intellisense.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Language.StandardClassification/16.2.45": {
-      "sha512": "VJ1GSfLiaiPjKxrYaJKO+Upyl2BDh2bYetNbRgvJH/YoL789VrxdLn+Sn1vpVOBPdTynIk34xJh1/2N6jtcwjQ==",
+    "Microsoft.VisualStudio.Language.StandardClassification/16.4.280": {
+      "sha512": "+Zk97lCDNZ6qktjN8RoP9EsRystThbkgT7vEEkcghkSSUoXwF1zcHuSIg96bbKLhy5zoESHn7suQr1FCf8eoFQ==",
       "type": "package",
-      "path": "microsoft.visualstudio.language.standardclassification/16.2.45",
+      "path": "microsoft.visualstudio.language.standardclassification/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.Language.StandardClassification.dll",
-        "microsoft.visualstudio.language.standardclassification.16.2.45.nupkg.sha512",
+        "lib/netstandard2.0/Microsoft.VisualStudio.Language.StandardClassification.dll",
+        "microsoft.visualstudio.language.standardclassification.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.language.standardclassification.nuspec"
       ]
     },
@@ -4184,51 +4444,62 @@
         "microsoft.visualstudio.shell.interop.9.0.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Text.Data/16.2.45": {
-      "sha512": "QtOyv7h0j9lCI5CLCtnxNKPLswc5L7XqWzcXNFpzNPsp+veIwO2+xDaYpn2wIpTSV3gW57m8JTzCz8Hpiwm9hQ==",
+    "Microsoft.VisualStudio.Text.Data/16.4.280": {
+      "sha512": "e3sGnIjszWRjnB7NSxLhtOAr54uotG/x+MP3wiIBAs0lw2VZhXkxaTYkjlgocrnqLE0hI97QsN2Kmbbnzr/HqQ==",
       "type": "package",
-      "path": "microsoft.visualstudio.text.data/16.2.45",
+      "path": "microsoft.visualstudio.text.data/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.Text.Data.dll",
-        "microsoft.visualstudio.text.data.16.2.45.nupkg.sha512",
+        "lib/netstandard2.0/Microsoft.VisualStudio.Text.Data.dll",
+        "microsoft.visualstudio.text.data.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.text.data.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Text.Logic/16.2.45": {
-      "sha512": "Hf9nzxSewmSyeyeG5IiDmOqOvxGP70uwUtsh+4dOstt5q5cTJvnDotZoSFIr+V05860Eszk5iqfxcpwGYMPQYw==",
+    "Microsoft.VisualStudio.Text.Logic/16.4.280": {
+      "sha512": "cqKEgsT4WeVc5D3z8tR6WHTKpEL8xPBKSudxQrP+GFW65oanIYH1+isKvGKjGtWTTDQpRE18iUibiUVrGIMRig==",
       "type": "package",
-      "path": "microsoft.visualstudio.text.logic/16.2.45",
+      "path": "microsoft.visualstudio.text.logic/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.Text.Logic.dll",
-        "microsoft.visualstudio.text.logic.16.2.45.nupkg.sha512",
+        "lib/netstandard2.0/Microsoft.VisualStudio.Text.Logic.dll",
+        "microsoft.visualstudio.text.logic.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.text.logic.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Text.UI/16.2.45": {
-      "sha512": "GnUMyFV5S1W78lWyNPEJKfQNy9Xu6VinZAD7lb5FcoMSJAaz0OoBvjHCRK6Pu2bgnbiTU1Dhnnx+OU+vKuNkPw==",
+    "Microsoft.VisualStudio.Text.UI/16.4.280": {
+      "sha512": "Fi4UtcituxFR/1PxYl+meY16r1V1+xUm+8fQSXQQRcPj3/RSwvlLkAggDz7FV4MwjW5UZWGQbPhLRgMymL9LdA==",
       "type": "package",
-      "path": "microsoft.visualstudio.text.ui/16.2.45",
+      "path": "microsoft.visualstudio.text.ui/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.Text.UI.dll",
-        "microsoft.visualstudio.text.ui.16.2.45.nupkg.sha512",
+        "lib/netstandard2.0/Microsoft.VisualStudio.Text.UI.dll",
+        "microsoft.visualstudio.text.ui.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.text.ui.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Text.UI.Wpf/16.2.45": {
-      "sha512": "YvhUOXocDbtWkwfh2d6h1gEboaAHRnuXtP7Ra0F6Gg73TR5Q6rQ4ZUVfqJVnZHyjw/DxY5rYrFI3dFjCtG0peg==",
+    "Microsoft.VisualStudio.Text.UI.Wpf/16.4.280": {
+      "sha512": "tBnLBS/3n5zdpaAB7TmJ90ZVJzuBawnSbHY/5KPGbjQd9mBlSa63mH1dKOe13ZZfDvI9jnviFz8jnrrv2Ho8BQ==",
       "type": "package",
-      "path": "microsoft.visualstudio.text.ui.wpf/16.2.45",
+      "path": "microsoft.visualstudio.text.ui.wpf/16.4.280",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.txt",
+        "PackageIcon.png",
         "lib/net472/Microsoft.VisualStudio.Text.UI.Wpf.dll",
-        "microsoft.visualstudio.text.ui.wpf.16.2.45.nupkg.sha512",
+        "microsoft.visualstudio.text.ui.wpf.16.4.280.nupkg.sha512",
         "microsoft.visualstudio.text.ui.wpf.nuspec"
       ]
     },
@@ -4302,10 +4573,10 @@
         "microsoft.visualstudio.threading.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Threading.Analyzers/16.4.33": {
-      "sha512": "s3LhPuQzyGj2zbk0k5B2VI5tLILMMTa1tEs9FE78KiLOxn6FomAmahQtSfaBadysF6mlgMeOOdvDVHF9KfPn5g==",
+    "Microsoft.VisualStudio.Threading.Analyzers/16.4.45": {
+      "sha512": "LewQ3fiBejl+Rhzb7VNTALDm4o8IzYsGcccp5RoRAkcZKsGQnGFuvcLZYVQXUOBOH0YCnCeOBexCBnYkBAFo/g==",
       "type": "package",
-      "path": "microsoft.visualstudio.threading.analyzers/16.4.33",
+      "path": "microsoft.visualstudio.threading.analyzers/16.4.45",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -4331,7 +4602,7 @@
         "build/AdditionalFiles/vs-threading.MainThreadSwitchingMethods.txt",
         "build/AdditionalFiles/vs-threading.MembersRequiringMainThread.txt",
         "build/Microsoft.VisualStudio.Threading.Analyzers.targets",
-        "microsoft.visualstudio.threading.analyzers.16.4.33.nupkg.sha512",
+        "microsoft.visualstudio.threading.analyzers.16.4.45.nupkg.sha512",
         "microsoft.visualstudio.threading.analyzers.nuspec",
         "tools/install.ps1",
         "tools/uninstall.ps1"
@@ -4393,17 +4664,17 @@
         "microsoft.visualstudio.validation.nuspec"
       ]
     },
-    "Microsoft.VSSDK.BuildTools/16.5.1023": {
-      "sha512": "7mKfzet6YVh+ohGTavKkl9wW4Frf2sx3ObiV8YuTS0irvShbJxcWb0CV/hvQafzcqp05aw0Iaun3hXL0Q1wS1Q==",
+    "Microsoft.VSSDK.BuildTools/16.5.2036": {
+      "sha512": "O8EtGYywpYUs8jbK7tZXMCFor75aTDfX6gl/cFv6CdFpC8RongftLiEqvG2zy9lSEjoVYR31KtCkI2Pbu/mk/w==",
       "type": "package",
-      "path": "microsoft.vssdk.buildtools/16.5.1023",
+      "path": "microsoft.vssdk.buildtools/16.5.2036",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "build/Microsoft.VSSDK.BuildTools.props",
         "build/Microsoft.VSSDK.BuildTools.targets",
-        "microsoft.vssdk.buildtools.16.5.1023.nupkg.sha512",
+        "microsoft.vssdk.buildtools.16.5.2036.nupkg.sha512",
         "microsoft.vssdk.buildtools.nuspec",
         "tools/vssdk/Empty.resx",
         "tools/vssdk/Microsoft.VisualStudio.ExtensionEngine.dll",
@@ -4423,8 +4694,6 @@
         "tools/vssdk/bin/CreatePkgDef.exe",
         "tools/vssdk/bin/CreatePkgDef.exe.config",
         "tools/vssdk/bin/DebugSamples.dll",
-        "tools/vssdk/bin/RegPkg.exe",
-        "tools/vssdk/bin/RegPkg.exe.config",
         "tools/vssdk/bin/RegRiched20.exe",
         "tools/vssdk/bin/VSCT.exe",
         "tools/vssdk/bin/VSCTCompress.dll",
@@ -4581,6 +4850,60 @@
         "packageIcon.png"
       ]
     },
+    "runtime.any.System.IO/4.3.0": {
+      "sha512": "SDZ5AD1DtyRoxYtEcqQ3HDlcrorMYXZeCt7ZhG9US9I5Vva+gpIWDGMkcwa5XiKL0ceQKRZIX2x0XEjLX7PDzQ==",
+      "type": "package",
+      "path": "runtime.any.system.io/4.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net45/_._",
+        "lib/netcore50/System.IO.dll",
+        "lib/netstandard1.5/System.IO.dll",
+        "lib/win8/_._",
+        "lib/wp80/_._",
+        "lib/wpa81/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/netstandard/_._",
+        "runtime.any.system.io.4.3.0.nupkg.sha512",
+        "runtime.any.system.io.nuspec",
+        "runtimes/aot/lib/netcore50/_._"
+      ]
+    },
+    "runtime.any.System.Runtime/4.3.0": {
+      "sha512": "fRS7zJgaG9NkifaAxGGclDDoRn9HC7hXACl52Or06a/fxdzDajWb5wov3c6a+gVSlekRoexfjwQSK9sh5um5LQ==",
+      "type": "package",
+      "path": "runtime.any.system.runtime/4.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net45/_._",
+        "lib/netcore50/System.Runtime.dll",
+        "lib/netstandard1.5/System.Runtime.dll",
+        "lib/win8/_._",
+        "lib/wp80/_._",
+        "lib/wpa81/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/netstandard/_._",
+        "runtime.any.system.runtime.4.3.0.nupkg.sha512",
+        "runtime.any.system.runtime.nuspec",
+        "runtimes/aot/lib/netcore50/_._"
+      ]
+    },
     "StreamJsonRpc/2.2.53": {
       "sha512": "Eo7ZvRsdXGo5ULGn98MJanOXRE9CHYjwzgsLiohkTrba9zYHW1FVS5mZgjdat6jVzpHozgcglozaPi0kGoOOCA==",
       "type": "package",
@@ -4672,6 +4995,40 @@
         "lib/portable-net45+win8+wp8+wpa81/System.Collections.Immutable.xml",
         "system.collections.immutable.1.7.0.nupkg.sha512",
         "system.collections.immutable.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "System.ComponentModel.Composition/4.5.0": {
+      "sha512": "+iB9FoZnfdqMEGq6np28X6YNSUrse16CakmIhV3h6PxEWt7jYxUN3Txs1D8MZhhf4QmyvK0F/EcIN0f4gGN0dA==",
+      "type": "package",
+      "path": "system.componentmodel.composition/4.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net45/_._",
+        "lib/netcoreapp2.0/System.ComponentModel.Composition.dll",
+        "lib/netstandard2.0/System.ComponentModel.Composition.dll",
+        "lib/uap10.0.16299/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net45/_._",
+        "ref/netstandard2.0/System.ComponentModel.Composition.dll",
+        "ref/uap10.0.16299/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "system.componentmodel.composition.4.5.0.nupkg.sha512",
+        "system.componentmodel.composition.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
@@ -4927,6 +5284,20 @@
         "system.numerics.vectors.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "System.Private.Uri/4.3.1": {
+      "sha512": "ZXuxp2Eu2FL38NJf9ktR/SpAa3Q1QGPJw80C7iwpio/UNCDwDEHISCiQ1oV9yXDbunZV83mwrOqZaNhYGAjxPg==",
+      "type": "package",
+      "path": "system.private.uri/4.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "ref/netstandard/_._",
+        "system.private.uri.4.3.1.nupkg.sha512",
+        "system.private.uri.nuspec"
       ]
     },
     "System.Reflection.Emit/4.7.0": {
@@ -5453,11 +5824,12 @@
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.7.2": [
       "Microsoft.CodeAnalysis.BannedApiAnalyzers >= 2.9.8",
-      "Microsoft.VSSDK.BuildTools >= 16.5.1023",
-      "Microsoft.VisualStudio.ComponentModelHost >= 16.2.45",
+      "Microsoft.DevSkim >= 0.3.7",
+      "Microsoft.VSSDK.BuildTools >= 16.5.2036",
+      "Microsoft.VisualStudio.ComponentModelHost >= 16.4.280",
       "Microsoft.VisualStudio.Imaging >= 16.4.29519.181",
-      "Microsoft.VisualStudio.Language.Intellisense >= 16.2.45",
-      "Microsoft.VisualStudio.Language.StandardClassification >= 16.2.45",
+      "Microsoft.VisualStudio.Language.Intellisense >= 16.4.280",
+      "Microsoft.VisualStudio.Language.StandardClassification >= 16.4.280",
       "Microsoft.VisualStudio.SDK.EmbedInteropTypes >= 15.0.27",
       "Microsoft.VisualStudio.Shell.14.0 >= 14.3.25407",
       "Microsoft.VisualStudio.Shell.Framework >= 16.4.29519.181",
@@ -5467,8 +5839,8 @@
       "Microsoft.VisualStudio.Shell.Immutable.14.0 >= 15.0.25405",
       "Microsoft.VisualStudio.Shell.Interop.12.0 >= 12.0.30111",
       "Microsoft.VisualStudio.Shell.Interop.9.0 >= 9.0.30730",
-      "Microsoft.VisualStudio.Text.UI.Wpf >= 16.2.45",
-      "Microsoft.VisualStudio.Threading.Analyzers >= 16.4.33",
+      "Microsoft.VisualStudio.Text.UI.Wpf >= 16.4.280",
+      "Microsoft.VisualStudio.Threading.Analyzers >= 16.4.45",
       "Microsoft.Win32.Registry >= 4.7.0",
       "Nerdbank.Streams >= 2.4.50",
       "Newtonsoft.Json >= 12.0.3",
@@ -5529,15 +5901,19 @@
             "target": "Package",
             "version": "[2.9.8, )"
           },
+          "Microsoft.DevSkim": {
+            "target": "Package",
+            "version": "[0.3.7, )"
+          },
           "Microsoft.VSSDK.BuildTools": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
-            "version": "[16.5.1023, )"
+            "version": "[16.5.2036, )"
           },
           "Microsoft.VisualStudio.ComponentModelHost": {
             "target": "Package",
-            "version": "[16.2.45, )"
+            "version": "[16.4.280, )"
           },
           "Microsoft.VisualStudio.Imaging": {
             "target": "Package",
@@ -5545,11 +5921,11 @@
           },
           "Microsoft.VisualStudio.Language.Intellisense": {
             "target": "Package",
-            "version": "[16.2.45, )"
+            "version": "[16.4.280, )"
           },
           "Microsoft.VisualStudio.Language.StandardClassification": {
             "target": "Package",
-            "version": "[16.2.45, )"
+            "version": "[16.4.280, )"
           },
           "Microsoft.VisualStudio.SDK.EmbedInteropTypes": {
             "target": "Package",
@@ -5589,11 +5965,11 @@
           },
           "Microsoft.VisualStudio.Text.UI.Wpf": {
             "target": "Package",
-            "version": "[16.2.45, )"
+            "version": "[16.4.280, )"
           },
           "Microsoft.VisualStudio.Threading.Analyzers": {
             "target": "Package",
-            "version": "[16.4.33, )"
+            "version": "[16.4.45, )"
           },
           "Microsoft.Win32.Registry": {
             "target": "Package",

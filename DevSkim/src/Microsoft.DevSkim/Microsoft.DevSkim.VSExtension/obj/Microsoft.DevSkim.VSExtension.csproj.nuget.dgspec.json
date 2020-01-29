@@ -44,15 +44,19 @@
               "target": "Package",
               "version": "[2.9.8, )"
             },
+            "Microsoft.DevSkim": {
+              "target": "Package",
+              "version": "[0.3.7, )"
+            },
             "Microsoft.VSSDK.BuildTools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[16.5.1023, )"
+              "version": "[16.5.2036, )"
             },
             "Microsoft.VisualStudio.ComponentModelHost": {
               "target": "Package",
-              "version": "[16.2.45, )"
+              "version": "[16.4.280, )"
             },
             "Microsoft.VisualStudio.Imaging": {
               "target": "Package",
@@ -60,11 +64,11 @@
             },
             "Microsoft.VisualStudio.Language.Intellisense": {
               "target": "Package",
-              "version": "[16.2.45, )"
+              "version": "[16.4.280, )"
             },
             "Microsoft.VisualStudio.Language.StandardClassification": {
               "target": "Package",
-              "version": "[16.2.45, )"
+              "version": "[16.4.280, )"
             },
             "Microsoft.VisualStudio.SDK.EmbedInteropTypes": {
               "target": "Package",
@@ -104,11 +108,11 @@
             },
             "Microsoft.VisualStudio.Text.UI.Wpf": {
               "target": "Package",
-              "version": "[16.2.45, )"
+              "version": "[16.4.280, )"
             },
             "Microsoft.VisualStudio.Threading.Analyzers": {
               "target": "Package",
-              "version": "[16.4.33, )"
+              "version": "[16.4.45, )"
             },
             "Microsoft.Win32.Registry": {
               "target": "Package",
