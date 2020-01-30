@@ -21,7 +21,7 @@ jobs:
     displayName: Dotnet Publish Linux x64
     inputs:
       command: 'publish'
-      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r linux-x64 /p:DebugType=None'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r linux-x64 /p:DebugType=None'
       workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
@@ -29,7 +29,7 @@ jobs:
     displayName: Dotnet Publish MacOS x64
     inputs:
       command: 'publish'
-      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r osx-x64 /p:DebugType=None'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r osx-x64 /p:DebugType=None'
       workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
@@ -65,7 +65,7 @@ jobs:
     displayName: Dotnet Publish Windows x86
     inputs:
       command: 'publish'
-      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion) -f netcoreapp2.0 -r win-x86 /p:DebugType=None'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r win-x86 /p:DebugType=None'
       workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
@@ -73,7 +73,7 @@ jobs:
     displayName: Dotnet Build .NET Core App
     inputs:
       command: 'build'
-      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp2.0\DevSkim_$(ReleaseVersion) -f netcoreapp2.0 /p:DebugType=None'
+      arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp3.1\DevSkim_$(ReleaseVersion) -f netcoreapp3.1 /p:DebugType=None'
       workingDirectory: '$(SolutionDirectory)'
       publishWebProjects: false
       zipAfterPublish: false
@@ -121,10 +121,10 @@ jobs:
   - task: ArchiveFiles@2
     displayName: Archive Artifact - .NET Core App
     inputs:
-      rootFolderOrFile: '$(Build.BinariesDirectory)\netcoreapp2.0\DevSkim_$(ReleaseVersion)'
+      rootFolderOrFile: '$(Build.BinariesDirectory)\netcoreapp3.1\DevSkim_$(ReleaseVersion)'
       includeRootFolder: true
       archiveType: 'zip'
-      archiveFile: '$(Build.StagingDirectory)\DevSkim_netcoreapp2.0_$(ReleaseVersion).zip'
+      archiveFile: '$(Build.StagingDirectory)\DevSkim_netcoreapp3.1_$(ReleaseVersion).zip'
       replaceExistingArchive: true
   - task: ArchiveFiles@2
     displayName: Archive Artifact - Nupkg
