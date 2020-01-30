@@ -11,7 +11,7 @@ namespace Microsoft.DevSkim
     /// <summary>
     /// Class to handle text as a searchable container
     /// </summary>
-    class TextContainer
+    public class TextContainer
     {
         /// <summary>
         /// Creates new instance
@@ -19,7 +19,7 @@ namespace Microsoft.DevSkim
         /// <param name="content">Text to work with</param>
         public TextContainer(string content, string language)
         {
-            _language = language;
+            Language = language;
             _content = content;
             _lineEnds = new List<int>(){ 0 };            
 
@@ -176,9 +176,9 @@ namespace Microsoft.DevSkim
         /// <returns>True if boundary is matching the pattern scope</returns>
         private bool ScopeMatch(SearchPattern pattern, Boundary boundary, string text)
         {
-            string prefix = Language.GetCommentPrefix(_language);
-            string suffix = Language.GetCommentSuffix(_language);
-            string inline = Language.GetCommentInline(_language);
+            string prefix = DevSkim.Language.GetCommentPrefix(Language);
+            string suffix = DevSkim.Language.GetCommentSuffix(Language);
+            string inline = DevSkim.Language.GetCommentInline(Language);
 
             if (pattern.Scopes.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
@@ -301,6 +301,7 @@ namespace Microsoft.DevSkim
 
         private string _content;
         private List<int> _lineEnds;
-        private string _language;
+
+        public string Language { get; set; }
     }
 }

@@ -31,7 +31,8 @@ namespace Microsoft.DevSkim.VSExtension
 
             optionsDialogControl.UseDefaultRules.IsChecked  = _settings.UseDefaultRules;
             optionsDialogControl.UseCustomRules.IsChecked   = _settings.UseCustomRules;
-            optionsDialogControl.CustomRulesPath.Text       = _settings.CustomRulesPath;
+
+            optionsDialogControl.CustomRulesPath.Text = _settings.CustomRulesPath;
 
             optionsDialogControl.EnableImportantRules.IsChecked = _settings.EnableImportantRules;
             optionsDialogControl.EnableModerateRules.IsChecked = _settings.EnableModerateRules;
@@ -39,7 +40,10 @@ namespace Microsoft.DevSkim.VSExtension
             optionsDialogControl.EnableBestPracticeRules.IsChecked = _settings.EnableBestPracticeRules;
             optionsDialogControl.EnableManualReviewRules.IsChecked = _settings.EnableManualReviewRules;
 
-            optionsDialogControl.SuppressDays.Text          = _settings.SuppressDays.ToString();
+            optionsDialogControl.SuppressDays.Text = _settings.SuppressDays.ToString();
+
+            optionsDialogControl.UsePreviousLineSuppression.IsChecked = _settings.UsePreviousLineSuppression;
+            optionsDialogControl.UseBlockSuppression.IsChecked = _settings.UseBlockSuppression;
         }
 
         protected override void OnDeactivate(CancelEventArgs e)
@@ -77,6 +81,9 @@ namespace Microsoft.DevSkim.VSExtension
             _settings.EnableManualReviewRules = (bool)optionsDialogControl.EnableManualReviewRules.IsChecked;
 
             _settings.CustomRulesPath   = optionsDialogControl.CustomRulesPath.Text;
+
+            _settings.UsePreviousLineSuppression = (bool)optionsDialogControl.UsePreviousLineSuppression.IsChecked;
+            _settings.UseBlockSuppression = (bool)optionsDialogControl.UseBlockSuppression.IsChecked;
 
             int val;
             if (int.TryParse(optionsDialogControl.SuppressDays.Text, out val) && val > 0)

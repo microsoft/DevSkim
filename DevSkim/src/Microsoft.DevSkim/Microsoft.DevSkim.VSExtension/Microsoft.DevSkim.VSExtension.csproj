@@ -14,7 +14,7 @@
     <OldToolsVersion>14.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>
@@ -190,9 +190,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.DevSkim">
-      <Version>0.3.7</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost">
       <Version>16.4.280</Version>
     </PackageReference>
@@ -285,6 +282,12 @@
     <PackageReference Include="System.Threading.Tasks.Dataflow">
       <Version>4.11.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj">
+      <Project>{6413d0ee-b522-47c4-a11a-a917426dd43f}</Project>
+      <Name>Microsoft.DevSkim</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

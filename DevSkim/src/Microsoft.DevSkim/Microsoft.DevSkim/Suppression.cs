@@ -17,6 +17,13 @@ namespace Microsoft.DevSkim
         const string KeywordIgnore = "ignore";        
         const string KeywordAll = "all";
         const string KeywordUntil = "until";
+        public const string pattern = @"\s*" + KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
+        Regex reg = new Regex(pattern);
+
+        TextContainer _text;
+        int _lineNumber;
+        string _lineText;
+        Language _language;
 
         /// <summary>
         /// Creates new instance of Supressor
@@ -30,7 +37,15 @@ namespace Microsoft.DevSkim
                 throw new ArgumentNullException("text");
 #pragma warning restore IDE0016 // Use 'throw' expression
             }
+            _lineText = text;
+
+            ParseLine();
+        }
+
+        public Suppression(TextContainer text, int lineNumber)
+        {
             _text = text;
+            _lineNumber = lineNumber;
 
             ParseLine();
         }
@@ -58,19 +73,43 @@ namespace Microsoft.DevSkim
         /// </summary>
         private void ParseLine()
         {
-            // String.Contains is faster then RegEx. Quickly test if the further parsing is necessary or not
-            if (!_text.Contains(KeywordPrefix))
-                return;
 
-            string pattern = @"\s*" + KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
-            Regex reg = new Regex(pattern);            
-            Match match = reg.Match(_text);
+            if (_text != null)
+            {
+                _lineText = _text.GetLineContent(_lineNumber);
+                // If the line with the issue doesn't contain a suppression check the lines above it
+                if (!_lineText.Contains(KeywordPrefix))
+                {
+                    if (_lineNumber > 0)
+                    {
+                        var content = _text.GetLineContent(--_lineNumber);
+                        if (content.Contains(Language.GetCommentSuffix(_text.Language)))
+                        {
+                            while (_lineNumber >= 0 && !_text.GetLineContent(_lineNumber).Contains(Language.GetCommentPrefix(_text.Language)))
+                            {
+                                if (reg.IsMatch(_text.GetLineContent(_lineNumber)))
+                                {
+                                    _lineText = _text.GetLineContent(_lineNumber);
+                                    break;
+                                }
+                                _lineNumber--;
+                            }
+                        }
+                        else if (content.Contains(Language.GetCommentInline(_text.Language)))
+                        {
+                            _lineText = content;
+                        }
+                    }
+                }
+            }
+
+            Match match = reg.Match(_lineText);
 
             if (match.Success)
-            {                
+            {
                 _suppressStart = match.Index;
                 _suppressLength = match.Length;
-                
+
                 string idString = match.Groups[1].Value.Trim();
                 IssuesListIndex = match.Groups[1].Index;
 
@@ -90,14 +129,14 @@ namespace Microsoft.DevSkim
                 if (idString == KeywordAll)
                 {
                     _issues.Add(new SuppressedIssue()
-                                {
-                                    ID = KeywordAll,
-                                    Boundary = new Boundary()
-                                    {
-                                        Index = IssuesListIndex,
-                                        Length = KeywordAll.Length
-                                    }
-                                }); 
+                    {
+                        ID = KeywordAll,
+                        Boundary = new Boundary()
+                        {
+                            Index = IssuesListIndex,
+                            Length = KeywordAll.Length
+                        }
+                    });
                 }
                 else
                 {
@@ -107,14 +146,14 @@ namespace Microsoft.DevSkim
                     {
 
                         _issues.Add(new SuppressedIssue()
-                                    {
-                                        ID = id,
-                                        Boundary = new Boundary()
-                                        {
-                                            Index = index,
-                                            Length = id.Length
-                                        }
-                                    });
+                        {
+                            ID = id,
+                            Boundary = new Boundary()
+                            {
+                                Index = index,
+                                Length = id.Length
+                            }
+                        });
                         index += id.Length + 1;
                     }
                 }
@@ -164,7 +203,6 @@ namespace Microsoft.DevSkim
 
         private List<SuppressedIssue> _issues = new List<SuppressedIssue>();
         private DateTime _expirationDate = DateTime.MaxValue;
-        private string _text = string.Empty;
 
         private int _suppressStart = -1;
         private int _suppressLength = -1;        

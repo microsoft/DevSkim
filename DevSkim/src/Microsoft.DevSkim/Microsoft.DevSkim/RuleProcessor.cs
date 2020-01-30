@@ -93,7 +93,7 @@ namespace Microsoft.DevSkim
                 // Go through each matching pattern of the rule
                 foreach (SearchPattern pattern in rule.Patterns)
                 {
-                    // Get all matches for the patttern
+                    // Get all matches for the pattern
                     List<Boundary> matches = textContainer.MatchPattern(pattern);
 
                     if (matches.Count > 0)
@@ -144,7 +144,7 @@ namespace Microsoft.DevSkim
                     Suppression supp;
                     foreach (Issue result in matchList)
                     {
-                        supp = new Suppression(textContainer.GetLineContent(result.StartLocation.Line));
+                        supp = new Suppression(textContainer,result.StartLocation.Line);
                         // If rule is NOT being suppressed then report it
                         SuppressedIssue supissue = supp.GetSuppressedIssue(result.Rule.Id);
                         if (supissue == null)
@@ -154,8 +154,8 @@ namespace Microsoft.DevSkim
                         // Otherwise add the suppression info instead
                         else
                         {                            
-                            Boundary bound = textContainer.GetLineBoundary(result.Boundary.Index);
-                            bound.Index += supissue.Boundary.Index;
+                            Boundary bound = textContainer.GetLineBoundary(supissue.Boundary.Index);
+                            bound.Index = supissue.Boundary.Index;
                             bound.Length = supissue.Boundary.Length;
 
                             //resultsList.Add();

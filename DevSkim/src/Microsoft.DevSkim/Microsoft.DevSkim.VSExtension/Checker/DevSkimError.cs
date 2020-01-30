@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.VisualStudio.Text;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim.VSExtension
 {
@@ -20,7 +21,106 @@ namespace Microsoft.DevSkim.VSExtension
             this.Rule = rule;
             this.Actionable = actionable;
         }
-        
+
+        public ITrackingSpan ErrorTrackingSpan
+        {
+            get
+            {
+                return Span.Snapshot.CreateTrackingSpan(Span, SpanTrackingMode.EdgeInclusive);
+            }
+        }
+
+        public ITrackingSpan LineTrackingSpan
+        {
+            get
+            {
+                return Span.Snapshot.CreateTrackingSpan(Span.Snapshot.GetLineFromPosition(Span.Start).Extent, SpanTrackingMode.EdgeInclusive);
+            }
+        }
+
+        public ITextSnapshot Snapshot
+        {
+            get
+            {
+                return this.Span.Snapshot;   
+            }
+        }
+
+        public string LineText 
+        { 
+            get
+            {
+                return LineTrackingSpan.GetText(Snapshot);
+            }
+        }
+
+        public string ErrorText
+        {
+            get
+            {
+                return ErrorTrackingSpan.GetText(Snapshot);
+            }
+        }
+
+        public int LineNumber
+        {
+            get
+            {
+                return Snapshot.GetLineNumberFromPosition(Span.Start);
+            }
+        }
+
+        public ITrackingSpan LineAndSuppressionCommentTrackingSpan { 
+            get
+            {
+                var reg = new Regex(Suppression.pattern);
+                if (reg.IsMatch(LineText))
+                {
+                    return LineTrackingSpan;
+                }
+
+                var end = LineTrackingSpan.GetEndPoint(Snapshot).Position;
+                if (LineNumber > 1)
+                {
+                    var content = Snapshot.GetLineFromLineNumber(LineNumber - 1);
+                    if (content.GetText().Contains(Language.GetCommentInline(Span.Snapshot.ContentType.TypeName)))
+                    {
+                        if (reg.IsMatch(content.GetText()))
+                        {
+                            return Snapshot.CreateTrackingSpan(content.Start.Position, end - content.Start.Position, SpanTrackingMode.EdgeInclusive);
+                        }
+                    }
+                    if (content.GetText().Contains(Language.GetCommentSuffix(Snapshot.ContentType.TypeName)))
+                    {
+                        bool foundSuppression = false;
+
+                        for (var i = LineNumber - 1; i > 0; i++)
+                        {
+                            content = Snapshot.GetLineFromLineNumber(i);
+
+                            if (reg.IsMatch(content.GetText()))
+                            {
+                                foundSuppression = true;
+                            }
+                            if (content.GetText().Contains(Language.GetCommentPrefix(Span.Snapshot.ContentType.TypeName)))
+                            {
+                                if (foundSuppression)
+                                {
+                                    return Snapshot.CreateTrackingSpan(content.Start.Position, end - content.Start.Position, SpanTrackingMode.EdgeInclusive);
+                                }
+                                else
+                                {
+                                    return LineTrackingSpan;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return LineTrackingSpan;
+            }
+        }
+
         public static DevSkimError Clone(DevSkimError error)
         {
             return new DevSkimError(error.Span, error.Rule, error.Actionable);

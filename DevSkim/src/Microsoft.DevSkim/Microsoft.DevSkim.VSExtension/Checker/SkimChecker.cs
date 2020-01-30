@@ -143,6 +143,7 @@ namespace Microsoft.DevSkim.VSExtension
                 {
                     Debug.Assert(newError.Span.Length == error.Span.Length);
 
+                    //TODO: Remove this psuedo linked list stuff
                     error.NextIndex = newSecurityErrors.Errors.Count;
                     newSecurityErrors.Errors.Add(newError);
                 }
@@ -165,6 +166,7 @@ namespace Microsoft.DevSkim.VSExtension
             if (!_isUpdating)
             {
                 _isUpdating = true;
+                // TODO: Improve this
                 _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
             }
         }

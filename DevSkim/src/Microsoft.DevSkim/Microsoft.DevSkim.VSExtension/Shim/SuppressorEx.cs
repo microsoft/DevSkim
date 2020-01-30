@@ -14,17 +14,24 @@ namespace Microsoft.DevSkim.VSExtension
         const string KeywordAll = "all";
         const string KeywordUntil = "until";
 
-        public SuppressionEx(string text, string language) 
-            : base(text)
+        public SuppressionEx(DevSkimError error, string language) 
+            : base(text: new TextContainer(error.Snapshot.GetText(),error.Snapshot.ContentType.TypeName), lineNumber: error.LineNumber)
         {            
-            _text = text;
+            _error = error;
             _language = language;
             foreach (SuppressedIssue issue in base.GetIssues())
             {
                 _issues.Add(issue.ID);
             }
-            //ParseLine();
         }
+
+        public SuppressionEx(string code, string language)
+            : base(code)
+        {
+            //Deprecated
+        }
+
+        //public SuppressionEx(TextContainer)
 
         /// <summary>
         /// Supress all rules
@@ -53,6 +60,15 @@ namespace Microsoft.DevSkim.VSExtension
         public string SuppressIssue(string issueId)
         {
             return SuppressIssue(issueId, DateTime.MaxValue);
+        }
+
+        public string UpdateSuppression(string command)
+        {
+            var full = _error.LineAndSuppressionCommentTrackingSpan.GetText(_error.Snapshot);
+
+            var reg = new Regex(Suppression.pattern);
+
+            return reg.Replace(full, command);
         }
 
         /// <summary>
@@ -98,19 +114,62 @@ namespace Microsoft.DevSkim.VSExtension
 
             // If we are dealing with existing suppress we are going to refresh it
             // othewrise add completely new comment with suppressor
-            string result = _text;
+            string result = _error.LineText;
             if (this.Index > 0)
             {
-                result = result.Remove(Index, Length);
-                result = result.Insert(Index, command);
+                result = UpdateSuppression(command);
             }
             else
             {
-                result = string.Format("{0} {1}{2}{3}", 
-                                        result, 
-                                        Language.GetCommentPrefix(_language),
-                                        command, 
-                                        Language.GetCommentSuffix(_language)); 
+                Settings set = Settings.GetSettings();
+                if (set.UseBlockSuppression)
+                {
+                    if (Language.GetCommentPrefix(_language) != null)
+                    {
+                        command = string.Format("{0}{1}{2}",
+                            Language.GetCommentPrefix(_language),
+                            command,
+                            Language.GetCommentSuffix(_language));
+                    }
+                    else
+                    {
+                        command = string.Format("{0}{1}",
+                            Language.GetCommentInline(_language),
+                            command);
+                    }
+                }
+                else
+                {
+                    if (Language.GetCommentInline(_language) != null) {
+                        command = string.Format("{0}{1}",
+                            Language.GetCommentInline(_language),
+                            command);
+                    }
+                    else
+                    {
+                        command = string.Format("{0}{1}{2}",
+                            Language.GetCommentPrefix(_language),
+                            command,
+                            Language.GetCommentSuffix(_language));
+                    }
+                }
+
+                if (set.UsePreviousLineSuppression)
+                {
+                    var reg = new Regex("^([\\s]*)");
+                    if (reg.IsMatch(result))
+                    {
+                        result = string.Format("{0}{1}{2}{3}", reg.Match(result), command, Environment.NewLine, result);
+                    }
+                    else
+                    {
+                        result = string.Format("{0}{1}{2}", command, Environment.NewLine, result);
+                    }
+                }
+                else
+                {
+                    result = string.Format("{0} {1}", result, command);
+                }
             }
 
             return result;
@@ -118,6 +177,6 @@ namespace Microsoft.DevSkim.VSExtension
    
         private List<string> _issues = new List<string>();
         private string _language;
-        private string _text;
+        private DevSkimError _error;
     }
 }

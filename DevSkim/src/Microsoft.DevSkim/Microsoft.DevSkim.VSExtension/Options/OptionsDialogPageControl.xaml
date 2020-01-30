@@ -11,6 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -64,6 +65,21 @@
                 <TextBox x:Name="SuppressDays"  Grid.Column="1" HorizontalAlignment="Left" Height="20"  TextWrapping="Wrap" Width="38"  />
             </Grid>
         </GroupBox>
+        <GroupBox x:Name="groupBox3" Header="Suppression Styling" HorizontalAlignment="Stretch"  VerticalAlignment="Top" Grid.Row="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <CheckBox x:Name="UseBlockSuppression" Content="Use block style suppressions."  Grid.Row="0" Margin="10" HorizontalAlignment="Left" />
+                <CheckBox x:Name="UsePreviousLineSuppression" Content="Use previous line suppressions."  Grid.Row="1" Margin="10" HorizontalAlignment="Left" />
+            </Grid>
+        </GroupBox>
+
+
         <TextBlock Grid.Row="3" Text="Changes require solution to be closed!" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
     </Grid>
 </UserControl>

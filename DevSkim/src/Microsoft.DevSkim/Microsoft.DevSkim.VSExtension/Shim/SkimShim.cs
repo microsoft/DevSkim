@@ -40,13 +40,11 @@ namespace Microsoft.DevSkim.VSExtension
         /// <param name="contenttype">VS Content Type</param>
         /// <returns>True if more than one issue exists</returns>
         public static bool HasMultipleProblems(string text, string contenttype)
-        {                        
-            var list = Analyze(text, contenttype, string.Empty)
+        {
+            return Analyze(text, contenttype, string.Empty)
                       .GroupBy(x => x.Rule.Id)
                       .Select(x => x.First())
-                      .ToList();
-
-            return list.Count() > 1;            
+                      .Count() > 1;
         }
 
         /// <summary>

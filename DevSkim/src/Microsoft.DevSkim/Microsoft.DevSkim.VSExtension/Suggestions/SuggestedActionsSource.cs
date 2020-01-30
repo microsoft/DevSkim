@@ -40,33 +40,30 @@ namespace Microsoft.DevSkim.VSExtension
             if (error != null && error.Actionable)
             {
                 List<ISuggestedAction> fixActions = new List<ISuggestedAction>();
+                var line = error.Span.Snapshot.GetLineFromPosition(error.Span.Start);
 
-                ITrackingSpan trackingSpan = range.Snapshot.CreateTrackingSpan(error.Span, SpanTrackingMode.EdgeInclusive);
+                ITrackingSpan errorSpan = error.ErrorTrackingSpan;
 
                 // Create list of fixes if the rule has them..
                 if (error.Rule.Fixes != null)
-                {                    
-                    foreach (CodeFix fix in error.Rule.Fixes)
-                    {
-                        fixActions.Add(new FixSuggestedAction(trackingSpan, error.Rule, fix));
-                    }
+                {
+                    fixActions.AddRange(error.Rule.Fixes.Select(fix => new FixSuggestedAction(errorSpan, error.Rule, fix)));
                 }
 
                 int suppressDays = Settings.GetSettings().SuppressDays;
 
                 List<ISuggestedAction> suppActions = new List<ISuggestedAction>();
-                var line = range.Snapshot.GetLineFromPosition(range.Start);                
-                trackingSpan = line.Snapshot.CreateTrackingSpan(line.Extent, SpanTrackingMode.EdgeInclusive);
+                var lineSpan = error.LineTrackingSpan;
 
-                suppActions.Add(new SuppressSuggestedAction(trackingSpan, error.Rule, suppressDays));
-                suppActions.Add(new SuppressSuggestedAction(trackingSpan, error.Rule));                
+                suppActions.Add(new SuppressSuggestedAction(error, suppressDays));
+                suppActions.Add(new SuppressSuggestedAction(error));              
                                 
                 // If there is multiple issues on the line, offer "Suppress all"
-                if (SkimShim.HasMultipleProblems(trackingSpan.GetText(range.Snapshot),
-                    trackingSpan.TextBuffer.ContentType.TypeName))
+                if (SkimShim.HasMultipleProblems(lineSpan.GetText(range.Snapshot),
+                    lineSpan.TextBuffer.ContentType.TypeName))
                 {
-                    suppActions.Add(new SuppressSuggestedAction(trackingSpan, null, suppressDays));
-                    suppActions.Add(new SuppressSuggestedAction(trackingSpan, null));                    
+                    suppActions.Add(new SuppressSuggestedAction(error, suppressDays, true));
+                    suppActions.Add(new SuppressSuggestedAction(error, suppressAll: true));                    
                 }
 
                 VSPackage.LogEvent(string.Format("Lightbulb invoked on {0} {1}", error.Rule.Id, error.Rule.Name));

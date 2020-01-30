@@ -19,6 +19,39 @@ namespace Microsoft.DevSkim.VSExtension
         private readonly DateTime _suppDate = DateTime.MaxValue;
         private readonly string _code;
         private readonly string _display = string.Empty;
+        private readonly DevSkimError _error;
+
+        public SuppressSuggestedAction(DevSkimError error, int days = -1, bool suppressAll = false)
+        {
+            _error = error;
+            _rule = error.Rule;
+
+            _span = _error.ErrorTrackingSpan;
+            _snapshot = _error.Snapshot;
+            _code = _error.LineTrackingSpan.GetText(_snapshot);
+
+            if (_rule != null)
+            {
+                if (days > 0)
+                {
+                    _display = string.Format(Resources.Messages.SuppressIssue, _rule.Id, days);
+                    _suppDate = DateTime.Now.AddDays(days);
+                }
+                else
+                    _display = string.Format(Resources.Messages.SuppressIssuePermanently, _rule.Id);
+
+            }
+            else
+            {
+                if (days > 0)
+                {
+                    _display = string.Format(Resources.Messages.SupressAllIssues, days);
+                    _suppDate = DateTime.Now.AddDays(days);
+                }
+                else
+                    _display = string.Format(Resources.Messages.SuppressAllIssuesPermanently);
+            }
+        }
 
         public SuppressSuggestedAction(ITrackingSpan span, Rule rule) : this(span, rule, -1) { }
 
@@ -122,7 +155,7 @@ namespace Microsoft.DevSkim.VSExtension
             }
 
             string fixedCode = string.Empty;            
-            SuppressionEx supp = new SuppressionEx(_code, ContentType.GetLanguages(_snapshot.ContentType.TypeName)[0]);
+            SuppressionEx supp = new SuppressionEx(_error, ContentType.GetLanguages(_snapshot.ContentType.TypeName)[0]);
             if (_rule == null)
             {
                 fixedCode = supp.SuppressAll(_suppDate);
@@ -132,7 +165,7 @@ namespace Microsoft.DevSkim.VSExtension
                 fixedCode = supp.SuppressIssue(_rule.Id, _suppDate);
             }
 
-            _span.TextBuffer.Replace(_span.GetSpan(_snapshot), fixedCode);
+            _error.Snapshot.TextBuffer.Replace(_error.LineAndSuppressionCommentTrackingSpan.GetSpan(_error.Snapshot), fixedCode);
         }
 
         public bool TryGetTelemetryId(out Guid telemetryId)
