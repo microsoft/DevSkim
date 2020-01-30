@@ -94,7 +94,7 @@ namespace Microsoft.DevSkim.VSExtension
                     {
                         bool foundSuppression = false;
 
-                        for (var i = LineNumber - 1; i > 0; i++)
+                        for (var i = LineNumber - 1; i > 0; i--)
                         {
                             content = Snapshot.GetLineFromLineNumber(i);
 

@@ -17,7 +17,7 @@ namespace Microsoft.DevSkim
         const string KeywordIgnore = "ignore";        
         const string KeywordAll = "all";
         const string KeywordUntil = "until";
-        public const string pattern = @"\s*" + KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
+        public const string pattern = KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
         Regex reg = new Regex(pattern);
 
         TextContainer _text;
@@ -73,23 +73,26 @@ namespace Microsoft.DevSkim
         /// </summary>
         private void ParseLine()
         {
-
             if (_text != null)
             {
                 _lineText = _text.GetLineContent(_lineNumber);
                 // If the line with the issue doesn't contain a suppression check the lines above it
                 if (!_lineText.Contains(KeywordPrefix))
                 {
-                    if (_lineNumber > 0)
+                    if (_lineNumber > 1)
                     {
                         var content = _text.GetLineContent(--_lineNumber);
                         if (content.Contains(Language.GetCommentSuffix(_text.Language)))
                         {
-                            while (_lineNumber >= 0 && !_text.GetLineContent(_lineNumber).Contains(Language.GetCommentPrefix(_text.Language)))
+                            while (_lineNumber >= 1)
                             {
                                 if (reg.IsMatch(_text.GetLineContent(_lineNumber)))
                                 {
                                     _lineText = _text.GetLineContent(_lineNumber);
+                                    break;
+                                }
+                                else if (_text.GetLineContent(_lineNumber).Contains(Language.GetCommentPrefix(_text.Language)))
+                                {
                                     break;
                                 }
                                 _lineNumber--;
@@ -121,7 +124,14 @@ namespace Microsoft.DevSkim
                     Match m = reg.Match(date);
                     if (m.Success)
                     {
-                        _expirationDate = DateTime.ParseExact(m.Value, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                        try
+                        {
+                            _expirationDate = DateTime.ParseExact(m.Value, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        catch (FormatException)
+                        {
+                            _expirationDate = DateTime.MinValue;
+                        }
                     }
                 }
 

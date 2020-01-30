@@ -1,8 +1,4 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-Microsoft.DevSkim/bin
+﻿Microsoft.DevSkim/bin
 Microsoft.DevSkim/obj
 Microsoft.DevSkim.Tests/bin
 Microsoft.DevSkim.Tests/obj

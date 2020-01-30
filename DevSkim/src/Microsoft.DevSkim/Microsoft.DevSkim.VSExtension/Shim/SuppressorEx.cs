@@ -15,7 +15,7 @@ namespace Microsoft.DevSkim.VSExtension
         const string KeywordUntil = "until";
 
         public SuppressionEx(DevSkimError error, string language) 
-            : base(text: new TextContainer(error.Snapshot.GetText(),error.Snapshot.ContentType.TypeName), lineNumber: error.LineNumber)
+            : base(text: new TextContainer(error.Snapshot.GetText(),error.Snapshot.ContentType.TypeName), lineNumber: error.LineNumber + 1)
         {            
             _error = error;
             _language = language;
@@ -99,13 +99,7 @@ namespace Microsoft.DevSkim.VSExtension
             string expiration = string.Empty;
 
             // Prepare expiration date if it is set
-            if (ExpirationDate != DateTime.MaxValue)
-            {
-                expiration = string.Format(" {0} {1}", KeywordUntil, ExpirationDate.ToString("yyyy-MM-dd"));
-            }
-
-            // Set expiration to the closer date
-            if (date < DateTime.MaxValue && date < ExpirationDate)
+            if (date != DateTime.MaxValue)
             {
                 expiration = string.Format(" {0} {1}", KeywordUntil, date.ToString("yyyy-MM-dd"));
             }

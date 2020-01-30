@@ -80,7 +80,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language))
+                    if (comment.Languages.Contains(language.ToLower()))
                         return comment.Inline;
                 }
             }
@@ -101,7 +101,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language))
+                    if (comment.Languages.Contains(language.ToLower()))
                         return comment.Preffix;
                 }
             }

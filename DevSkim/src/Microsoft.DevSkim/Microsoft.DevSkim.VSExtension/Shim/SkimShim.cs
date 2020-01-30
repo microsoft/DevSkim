@@ -53,9 +53,9 @@ namespace Microsoft.DevSkim.VSExtension
         /// <param name="text">line of code</param>
         /// <param name="contenttype">VS Content Type</param>
         /// <returns>List of actionable and non-actionable issues</returns>
-        public static Issue[] Analyze(string text, string contentType, string fileName)
+        public static Issue[] Analyze(string text, string contentType, string fileName = "", int lineNumber = 1)
         {                        
-            return _instance.processor.Analyze(text, _instance.GetLanguageList(contentType, fileName));
+            return _instance.processor.Analyze(text, lineNumber, _instance.GetLanguageList(contentType, fileName));
         }    
 
         #endregion

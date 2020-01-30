@@ -187,7 +187,7 @@ namespace Microsoft.DevSkim.VSExtension
 
                 if (line.Length > 0)
                 {
-                    var oldSecurityErrors = this.Factory.CurrentSnapshot;
+                    var oldSecurityErrors = Factory.CurrentSnapshot;
                     var newSecurityErrors = new DevSkimErrorsSnapshot(this.FilePath, oldSecurityErrors.VersionNumber + 1);
 
                     // Go through the existing errors. If they are on the line we are currently parsing then
@@ -215,29 +215,27 @@ namespace Microsoft.DevSkim.VSExtension
                     // provide whole line to processor so it has complete overview of the scanned code                    
                     string text = _textView.TextSnapshot.GetText(); //line.GetText();
                     
-                    Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, this.FilePath);
-                    foreach(Issue issue in issues)
+                    Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath, line.LineNumber + 1);
+                    foreach (Issue issue in issues)
                     {
-                        if (issue.StartLocation.Line == line.LineNumber + 1)
-                        {
-                            int errorStart = issue.StartLocation.Column-1;
-                            int errorLength = issue.Boundary.Length;
-                            if (errorLength > 0)    // Ignore any single character error.
-                            {
-                                var newSpan = new SnapshotSpan(line.Start + errorStart, errorLength);
-                                var oldError = oldLineErrors.Find((e) => e.Span == newSpan);
 
-                                if (oldError != null)
-                                {
-                                    // There was a security error at the same span as the old one so we should be able to just reuse it.
-                                    oldError.NextIndex = newSecurityErrors.Errors.Count;
-                                    newSecurityErrors.Errors.Add(DevSkimError.Clone(oldError));    // Don't clone the old error yet
-                                }
-                                else
-                                {
-                                    newSecurityErrors.Errors.Add(new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo));
-                                    anyNewErrors = true;
-                                }
+                        int errorStart = issue.StartLocation.Column;
+                        int errorLength = issue.Boundary.Length;
+                        if (errorLength > 0)    // Ignore any single character error.
+                        {
+                            var newSpan = new SnapshotSpan(line.Start + errorStart, errorLength);
+                            var oldError = oldLineErrors.Find((e) => e.Span == newSpan);
+
+                            if (oldError != null)
+                            {
+                                // There was a security error at the same span as the old one so we should be able to just reuse it.
+                                oldError.NextIndex = newSecurityErrors.Errors.Count;
+                                newSecurityErrors.Errors.Add(DevSkimError.Clone(oldError));    // Don't clone the old error yet
+                            }
+                            else
+                            {
+                                newSecurityErrors.Errors.Add(new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo));
+                                anyNewErrors = true;
                             }
                         }
                     }
