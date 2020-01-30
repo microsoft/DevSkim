@@ -6,7 +6,8 @@ trigger:
   batch: true
   paths:
     include:
-    - DevSkim/*
+    - DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim/*
+	- DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.CLI/*
   branches:
     include:
     - master
