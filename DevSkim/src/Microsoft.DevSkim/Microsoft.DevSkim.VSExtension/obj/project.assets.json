@@ -8,18 +8,6 @@
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
         }
       },
-      "Microsoft.DevSkim/0.3.7": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "10.0.3"
-        },
-        "compile": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
-        }
-      },
       "Microsoft.NETCore.Platforms/1.1.1": {
         "type": "package",
         "compile": {
@@ -1034,6 +1022,19 @@
         "runtime": {
           "lib/net47/System.ValueTuple.dll": {}
         }
+      },
+      "Microsoft.DevSkim/0.3.8": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "compile": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
+        }
       }
     },
     ".NETFramework,Version=v4.7.2/win": {
@@ -1041,18 +1042,6 @@
         "type": "package",
         "build": {
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
-        }
-      },
-      "Microsoft.DevSkim/0.3.7": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "10.0.3"
-        },
-        "compile": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
         }
       },
       "Microsoft.NETCore.Platforms/1.1.1": {
@@ -2026,6 +2015,19 @@
         },
         "runtime": {
           "lib/net47/System.ValueTuple.dll": {}
+        }
+      },
+      "Microsoft.DevSkim/0.3.8": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "compile": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
         }
       }
     },
@@ -2036,18 +2038,6 @@
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
         }
       },
-      "Microsoft.DevSkim/0.3.7": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "10.0.3"
-        },
-        "compile": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
-        }
-      },
       "Microsoft.NETCore.Platforms/1.1.1": {
         "type": "package",
         "compile": {
@@ -3019,6 +3009,19 @@
         },
         "runtime": {
           "lib/net47/System.ValueTuple.dll": {}
+        }
+      },
+      "Microsoft.DevSkim/0.3.8": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "compile": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
         }
       }
     },
@@ -3029,18 +3032,6 @@
           "build/Microsoft.CodeAnalysis.BannedApiAnalyzers.props": {}
         }
       },
-      "Microsoft.DevSkim/0.3.7": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "10.0.3"
-        },
-        "compile": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Microsoft.DevSkim.dll": {}
-        }
-      },
       "Microsoft.NETCore.Platforms/1.1.1": {
         "type": "package",
         "compile": {
@@ -4012,6 +4003,19 @@
         },
         "runtime": {
           "lib/net47/System.ValueTuple.dll": {}
+        }
+      },
+      "Microsoft.DevSkim/0.3.8": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "compile": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Microsoft.DevSkim.dll": {}
         }
       }
     }
@@ -4083,19 +4087,6 @@
         "rulesets/PortedFromFxCopRulesEnabled.ruleset",
         "tools/install.ps1",
         "tools/uninstall.ps1"
-      ]
-    },
-    "Microsoft.DevSkim/0.3.7": {
-      "sha512": "vzFG5PxkDvwk7ggaz/Jx+G+il1am9YSUNEYS8tl/g9ba/eu15CdR7q28QYqB2x+VZivHOQWQqdiwCYVPTQ3G7g==",
-      "type": "package",
-      "path": "microsoft.devskim/0.3.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net45/Microsoft.DevSkim.dll",
-        "lib/netstandard2.0/Microsoft.DevSkim.dll",
-        "microsoft.devskim.0.3.7.nupkg.sha512",
-        "microsoft.devskim.nuspec"
       ]
     },
     "Microsoft.NETCore.Platforms/1.1.1": {
@@ -5819,12 +5810,17 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "Microsoft.DevSkim/0.3.8": {
+      "type": "project",
+      "path": "../Microsoft.DevSkim/Microsoft.DevSkim.csproj",
+      "msbuildProject": "../Microsoft.DevSkim/Microsoft.DevSkim.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.7.2": [
       "Microsoft.CodeAnalysis.BannedApiAnalyzers >= 2.9.8",
-      "Microsoft.DevSkim >= 0.3.7",
+      "Microsoft.DevSkim >= 0.3.8",
       "Microsoft.VSSDK.BuildTools >= 16.5.2036",
       "Microsoft.VisualStudio.ComponentModelHost >= 16.4.280",
       "Microsoft.VisualStudio.Imaging >= 16.4.29519.181",
@@ -5888,7 +5884,11 @@
       },
       "frameworks": {
         "net472": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Gstoc\\Documents\\GitHub\\DevSkim\\DevSkim\\src\\Microsoft.DevSkim\\Microsoft.DevSkim\\Microsoft.DevSkim.csproj": {
+              "projectPath": "C:\\Users\\Gstoc\\Documents\\GitHub\\DevSkim\\DevSkim\\src\\Microsoft.DevSkim\\Microsoft.DevSkim\\Microsoft.DevSkim.csproj"
+            }
+          }
         }
       }
     },
@@ -5900,10 +5900,6 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[2.9.8, )"
-          },
-          "Microsoft.DevSkim": {
-            "target": "Package",
-            "version": "[0.3.7, )"
           },
           "Microsoft.VSSDK.BuildTools": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
