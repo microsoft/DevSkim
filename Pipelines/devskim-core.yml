@@ -7,7 +7,7 @@ trigger:
   paths:
     include:
     - DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim/*
-	- DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.CLI/*
+    - DevSkim/src/Microsoft.DevSkim/Microsoft.DevSkim.CLI/*
   branches:
     include:
     - master
