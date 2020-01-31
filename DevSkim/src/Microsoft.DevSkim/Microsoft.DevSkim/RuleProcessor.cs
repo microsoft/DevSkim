@@ -159,24 +159,11 @@ namespace Microsoft.DevSkim
                         }
                         // Otherwise add the suppression info instead
                         else
-                        {                            
-                            Boundary bound = textContainer.GetLineBoundary(supissue.Boundary.Index);
-                            bound.Index = supissue.Boundary.Index;
-                            bound.Length = supissue.Boundary.Length;
+                        {
+                            result.IsSuppressionInfo = true;
 
-                            //resultsList.Add();
-                            Issue info = new Issue()
-                            {
-                                IsSuppressionInfo = true,
-                                Boundary = bound,
-                                StartLocation = textContainer.GetLocation(bound.Index),
-                                EndLocation = textContainer.GetLocation(bound.Index + bound.Length),
-                                Rule = result.Rule
-                            };
-
-                            // Add info only if it's not exists on the same location
-                            if (resultsList.FirstOrDefault(x => x.Rule.Id == info.Rule.Id && x.Boundary.Index == info.Boundary.Index) == null)
-                                resultsList.Add(info);
+                            if (!resultsList.Any(x => x.Rule.Id == result.Rule.Id && x.Boundary.Index == result.Boundary.Index))
+                                resultsList.Add(result);
                         }
                     }
                 }

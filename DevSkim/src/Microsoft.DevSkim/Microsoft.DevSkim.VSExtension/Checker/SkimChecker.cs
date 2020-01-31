@@ -162,7 +162,7 @@ namespace Microsoft.DevSkim.VSExtension
 
         private void KickUpdate()
         {
-            // We're assuming we will only be called from the UI thread so there should be no issues with race conditions.
+            // TODO: Now called async - We're assuming we will only be called from the UI thread so there should be no issues with race conditions.
             if (!_isUpdating)
             {
                 _isUpdating = true;
