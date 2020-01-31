@@ -65,12 +65,12 @@ namespace Microsoft.DevSkim
         /// <returns>Array of matches</returns>
         public Issue[] Analyze(string text, string language)
         {
-            return Analyze(text, 1, new string[] { language });
+            return Analyze(text, new string[] { language });
         }
 
         public Issue[] Analyze(string text, int lineNumber, string language)
         {
-            return Analyze(text, lineNumber, new string[] { language });
+            return Analyze(text, new string[] { language }, lineNumber);
         }
 
         /// <summary>
@@ -79,13 +79,13 @@ namespace Microsoft.DevSkim
         /// <param name="text">Source code</param>
         /// <param name="languages">List of languages</param>
         /// <returns>Array of matches</returns>
-        public Issue[] Analyze(string text, int lineNumber, string[] languages)
+        public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
         {
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty);
-            TextContainer line = new TextContainer(textContainer.GetLineContent(lineNumber), (languages.Length > 0) ? languages[0] : string.Empty);
+            TextContainer line = (lineNumber > 0)?new TextContainer(textContainer.GetLineContent(lineNumber), (languages.Length > 0) ? languages[0] : string.Empty):textContainer;
 
             // Go through each rule
             foreach (Rule rule in rules)
@@ -150,7 +150,7 @@ namespace Microsoft.DevSkim
                     Suppression supp;
                     foreach (Issue result in matchList)
                     {
-                        supp = new Suppression(textContainer,lineNumber);
+                        supp = new Suppression(textContainer,(lineNumber > 0)?lineNumber:result.StartLocation.Line);
                         // If rule is NOT being suppressed then report it
                         SuppressedIssue supissue = supp.GetSuppressedIssue(result.Rule.Id);
                         if (supissue == null)

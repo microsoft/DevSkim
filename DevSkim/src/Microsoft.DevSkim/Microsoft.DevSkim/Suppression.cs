@@ -33,9 +33,7 @@ namespace Microsoft.DevSkim
         {
             if (text == null)
             {
-#pragma warning disable IDE0016 // Use 'throw' expression - not supported in < C# 7
                 throw new ArgumentNullException("text");
-#pragma warning restore IDE0016 // Use 'throw' expression
             }
             _lineText = text;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.Text;
 
 namespace Microsoft.DevSkim.VSExtension.Tests
 {
@@ -9,8 +10,26 @@ namespace Microsoft.DevSkim.VSExtension.Tests
         [TestMethod]
         public void IsSuppress_Test()
         {
+            RuleProcessor processor = new RuleProcessor(LoadRules(false))
+            {
+                EnableSuppressions = true
+            };
             // Is supressed test
             string testString = "md5.new()";
+            Issue[] issues = processor.Analyze(testString, "python");
+            foreach (Issue issue in issues)
+            {
+                int errorStart = issue.StartLocation.Column;
+                int errorLength = issue.Boundary.Length;
+                if (errorLength > 0)    // Ignore any single character error.
+                {
+                    var newSpan = new SnapshotSpan(errorStart, errorLength);
+                    new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo);
+                }
+            }
+
+            SuppressionEx supp = new SuppressionEx(, ContentType.GetLanguages(_snapshot.ContentType.TypeName)[0]);
+
             SuppressionEx sup = new SuppressionEx(testString, "python");
             Assert.IsTrue(sup.Index < 0, "Suppression should not be flagged");
         }
@@ -119,7 +138,7 @@ namespace Microsoft.DevSkim.VSExtension.Tests
             DateTime expirationDate = DateTime.Now.AddDays(5);
             // Suppress All Until test            
             string suppressedString = sup.SuppressAll(expirationDate);
-            string expected = string.Format("var hash=MD5.Create(); /*DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}*/", expirationDate);
+            string expected = string.Format("var hash=MD5.Create(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}", expirationDate);
             Assert.AreEqual(expected, suppressedString, "Supress All Until failed ");
         }
 
@@ -243,6 +262,16 @@ namespace Microsoft.DevSkim.VSExtension.Tests
             string suppressedString = sup.SuppressAll(expirationDate);
             string expected = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore all until 1980-07-15";
             Assert.AreEqual(string.Format(expected, expirationDate), suppressedString, "Suppress multiple to all new date failed");
-        }       
+        }
+
+        public RuleSet LoadRules(bool loadCustomRules)
+        {
+            RuleSet rules = RuleSet.FromDirectory(Path.Combine("rules", "valid"), null);
+
+            if (loadCustomRules)
+                rules.AddDirectory(Path.Combine("rules", "custom"), "my rules");
+
+            return rules;
+        }
     }
 }

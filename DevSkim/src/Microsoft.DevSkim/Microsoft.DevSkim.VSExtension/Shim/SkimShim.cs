@@ -55,7 +55,7 @@ namespace Microsoft.DevSkim.VSExtension
         /// <returns>List of actionable and non-actionable issues</returns>
         public static Issue[] Analyze(string text, string contentType, string fileName = "", int lineNumber = 1)
         {                        
-            return _instance.processor.Analyze(text, lineNumber, _instance.GetLanguageList(contentType, fileName));
+            return _instance.processor.Analyze(text, _instance.GetLanguageList(contentType, fileName), lineNumber);
         }    
 
         #endregion
