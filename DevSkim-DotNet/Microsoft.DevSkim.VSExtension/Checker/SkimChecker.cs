@@ -143,7 +143,6 @@ namespace Microsoft.DevSkim.VSExtension
                 {
                     Debug.Assert(newError.Span.Length == error.Span.Length);
 
-                    //TODO: Remove this psuedo linked list stuff
                     error.NextIndex = newSecurityErrors.Errors.Count;
                     newSecurityErrors.Errors.Add(newError);
                 }
@@ -162,7 +161,8 @@ namespace Microsoft.DevSkim.VSExtension
 
         private void KickUpdate()
         {
-            // TODO: Now called async - We're assuming we will only be called from the UI thread so there should be no issues with race conditions.
+            // TODO: Now called async -
+            // We're assuming we will only be called from the UI thread so there should be no issues with race conditions.
             if (!_isUpdating)
             {
                 _isUpdating = true;
@@ -212,8 +212,7 @@ namespace Microsoft.DevSkim.VSExtension
                     int expectedErrorCount = newSecurityErrors.Errors.Count + oldLineErrors.Count;
                     bool anyNewErrors = false;
 
-                    // provide whole line to processor so it has complete overview of the scanned code                    
-                    string text = _textView.TextSnapshot.GetText(); //line.GetText();
+                    string text = _textView.TextSnapshot.GetText();
                     
                     Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath, line.LineNumber + 1);
                     foreach (Issue issue in issues)
@@ -244,7 +243,7 @@ namespace Microsoft.DevSkim.VSExtension
                     // If there were any new errors or if we didn't see all the expected errors then there is a change and we need to update the security errors.
                     if (anyNewErrors || (newSecurityErrors.Errors.Count != expectedErrorCount))
                     {
-                        this.UpdateSecurityErrors(newSecurityErrors);
+                        UpdateSecurityErrors(newSecurityErrors);
                     }
                     else
                     {
