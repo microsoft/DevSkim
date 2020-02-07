@@ -25,12 +25,6 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
-        public SuppressionEx(string code, string language)
-            : base(code)
-        {
-            //Deprecated
-        }
-
         //public SuppressionEx(TextContainer)
 
         /// <summary>
