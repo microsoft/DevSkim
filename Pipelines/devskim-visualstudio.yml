@@ -6,38 +6,13 @@ trigger:
   batch: true
   paths:
     include:
-    - DevSkim-VisualStudio-Extension/*
+    - DevSkim-DotNet/Microsoft.DevSkim/*
+    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
   branches:
     include:
     - master
 
 stages:
-- stage: Run Build Tests
-  jobs:
-  - job: Windows
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: NuGetCommand@2
-      inputs:
-        command: 'restore'
-        restoreSolution: '$(SolutionDirectory)'
-        feedsToUse: 'select'
-        vstsFeed: '73b0a75c-d420-4e77-95db-e81276361e42'
-    - task: MSBuild@1
-      inputs:
-        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension.Tests/Microsoft.DevSkim.VSExtension.Tests.csproj'
-        platform: 'AnyCPU'
-        configuration: 'Release'
-        msbuildArguments: '/p:OutputPath=$(Build.BinariesDirectory)/Tests'
-        restoreNugetPackages: false
-    - task: VSTest@2
-      inputs:
-        testSelector: 'testAssemblies'
-        testAssemblyVer2: 'Microsoft.DevSkim.VSExtension.Tests.dll'
-        searchFolder: '$(Build.BinariesDirectory)/Tests'
-        resultsFolder: '$(Build.BinariesDirectory)/Tests/TestResults'
-
 - stage: Publish
   jobs:
   - job: publish
@@ -45,4 +20,123 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    - task: *TODO*
+    - task: *TODO BUILD*
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(Build.BinariesDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign
+      enabled: false
+      inputs:
+        ConnectedServiceName: ''
+        FolderPath: '$(Build.BinariesDirectory)\visualstudio\DevSkim_$(ReleaseVersion)'
+        Pattern: ''
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [ ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      displayName: 'Delete Code Sign Summaries'
+    - task: PowerShell@2
+      displayName: Generate Hashes
+      inputs:
+        targetType: 'inline'
+        script: |
+          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+            $name = $_.Name
+            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+          }
+    - task: PublishPipelineArtifact@1
+      displayName: Publish All Artifacts
+      inputs:
+        targetPath: '$(Build.StagingDirectory)'
+        artifact: 'Binaries'
+
+
+  - job: sdl
+    displayName: SDL Tools
+    dependsOn: publish
+    condition: and(succeeded(), eq(variables['RunSDL'], 'TRUE'))
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: CLI Build
+      inputs:
+        command: 'build'
+        arguments: 'Microsoft.DevSkim.CLI -c Release'
+        workingDirectory: '$(SolutionDirectory)'
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(Build.StagingDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+    - task: ComponentGovernanceComponentDetection@0
+      displayName: Component Governance
+      inputs:
+        scanType: 'Register'
+        verbosity: 'Verbose'
+        alertWarningLevel: 'Low'
+    - task: notice@0
+      displayName: Notice File Generator
+      inputs:
+        outputformat: 'text'
+      continueOnError: true
+    - task: PoliCheck@1
+      displayName: PoliCheck
+      inputs:
+        inputType: 'Basic'
+        targetType: 'F'
+        targetArgument: '$(Build.SourcesDirectory)\DevSkim-DotNet'
+        result: 'PoliCheck.xml'
+    - task: BinSkim@3
+      displayName: BinSkim
+      inputs:
+        InputType: 'CommandLine'
+      continueOnError: true
+    - task: Semmle@0
+      displayName: Semmle Scan
+      inputs:
+        sourceCodeDirectory: '$(Build.SourcesDirectory)\DevSkim-DotNet'
+        language: 'csharp'
+        cleanupBuildCommands: 'dotnet clean Microsoft.DevSkim.CLI -c Release'
+        buildCommands: 'dotnet build Microsoft.DevSkim.CLI -c Release'
+        querySuite: 'Recommended'
+        timeout: '1800'
+        ram: '16384'
+        addProjectDirToScanningExclusionList: true
+      continueOnError: true
+    - task: PublishPipelineArtifact@1
+      displayName: Publish PoliCheck Result
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\PoliCheck\PoliCheck.xml'
+        artifact: 'PoliCheck.xml'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish BinSkim Result
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\BinSkim\BinSkim.sarif'
+        artifact: 'BinSkim.sarif'
+      continueOnError: true
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Semmle Result
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\csharp\Microsoft.DevSkim.CLI-csharp-1.sarif'
+        artifact: 'Semmle.sarif'
+      continueOnError: true
