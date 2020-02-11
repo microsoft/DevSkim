@@ -20,6 +20,10 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '3.1.100'
     - task: DotNetCoreCLI@2
       displayName: Dotnet Publish Linux x64
       inputs:
@@ -65,6 +69,10 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '3.1.100'
     - task: DotNetCoreCLI@2
       displayName: Dotnet Publish Windows x86
       inputs:
