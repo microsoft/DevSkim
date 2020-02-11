@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>    
+    <TargetFrameworks>netcoreapp3.1;net48;</TargetFrameworks>    
     <PackageId>Microsoft.DevSkim</PackageId>
     <PackageVersion>0.3.8</PackageVersion>
     <Authors>Microsoft</Authors>
