@@ -29,7 +29,6 @@ stages:
         command: 'restore'
         restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
         feedsToUse: 'select'
-        vstsFeed: '73b0a75c-d420-4e77-95db-e81276361e42'
     - task: MSBuild@1
       inputs:
         solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
