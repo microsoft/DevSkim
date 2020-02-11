@@ -24,16 +24,14 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '3.1.100'
-    - task: UseDotNet@2
+    - task: NuGetToolInstaller@1
       inputs:
-        packageType: 'sdk'
-        version: '2.x'
+        versionSpec: '5.4'
     - task: NuGetCommand@2
       inputs:
         command: 'restore'
         restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
         feedsToUse: 'select'
-        vstsFeed: '73b0a75c-d420-4e77-95db-e81276361e42'
     - task: MSBuild@1
       inputs:
         solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
