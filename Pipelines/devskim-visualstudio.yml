@@ -20,7 +20,17 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    - task: *TODO BUILD*
+    - task: NuGetCommand@2
+	  displayName: NuGet Restore
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(SolutionDirectory)'
+        feedsToUse: 'select'
+        vstsFeed: '73b0a75c-d420-4e77-95db-e81276361e42'
+    - task: MSBuild@1
+      inputs:
+        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
+        msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
@@ -38,7 +48,7 @@ stages:
       inputs:
         ConnectedServiceName: ''
         FolderPath: '$(Build.BinariesDirectory)\visualstudio\DevSkim_$(ReleaseVersion)'
-        Pattern: ''
+        Pattern: '*.vsix'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [ ]
@@ -47,6 +57,11 @@ stages:
         MaxRetryAttempts: '5'
     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
       displayName: 'Delete Code Sign Summaries'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
     - task: PowerShell@2
       displayName: Generate Hashes
       inputs:
@@ -71,12 +86,11 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    - task: DotNetCoreCLI@2
-      displayName: CLI Build
+    - task: MSBuild@1
+	  displayName: Build Extension
       inputs:
-        command: 'build'
-        arguments: 'Microsoft.DevSkim.CLI -c Release'
-        workingDirectory: '$(SolutionDirectory)'
+        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
+        msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.StagingDirectory) /p:DebugType=Full'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
@@ -104,7 +118,7 @@ stages:
       inputs:
         inputType: 'Basic'
         targetType: 'F'
-        targetArgument: '$(Build.SourcesDirectory)\DevSkim-DotNet'
+        targetArgument: '$(SolutionDirectory)'
         result: 'PoliCheck.xml'
     - task: BinSkim@3
       displayName: BinSkim
@@ -114,10 +128,10 @@ stages:
     - task: Semmle@0
       displayName: Semmle Scan
       inputs:
-        sourceCodeDirectory: '$(Build.SourcesDirectory)\DevSkim-DotNet'
+        sourceCodeDirectory: '$(SolutionDirectory)'
         language: 'csharp'
-        cleanupBuildCommands: 'dotnet clean Microsoft.DevSkim.CLI -c Release'
-        buildCommands: 'dotnet build Microsoft.DevSkim.CLI -c Release'
+        cleanupBuildCommands: 'msbuild Microsoft.DevSkim.VSExtension /p:Configuration=$(BuildConfiguration) /t:Clean'
+        buildCommands: 'msbuild Microsoft.DevSkim.VSExtension /p:Configuration=$(BuildConfiguration) /p:DebugType=Full'
         querySuite: 'Recommended'
         timeout: '1800'
         ram: '16384'
@@ -137,6 +151,6 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish Semmle Result
       inputs:
-        targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\csharp\Microsoft.DevSkim.CLI-csharp-1.sarif'
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\csharp\Microsoft.DevSkim.VSExtension-csharp-1.sarif'
         artifact: 'Semmle.sarif'
       continueOnError: true

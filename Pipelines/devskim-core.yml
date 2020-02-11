@@ -206,7 +206,7 @@ stages:
       displayName: CLI Build
       inputs:
         command: 'build'
-        arguments: 'Microsoft.DevSkim.CLI -c Release'
+        arguments: 'Microsoft.DevSkim.CLI -c Release -o $(Build.StagingDirectory) /p:DebugType=Full'
         workingDirectory: '$(SolutionDirectory)'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
@@ -235,7 +235,7 @@ stages:
       inputs:
         inputType: 'Basic'
         targetType: 'F'
-        targetArgument: '$(Build.SourcesDirectory)\DevSkim-DotNet'
+        targetArgument: '$(SolutionDirectory)'
         result: 'PoliCheck.xml'
     - task: BinSkim@3
       displayName: BinSkim
@@ -245,7 +245,7 @@ stages:
     - task: Semmle@0
       displayName: Semmle Scan
       inputs:
-        sourceCodeDirectory: '$(Build.SourcesDirectory)\DevSkim-DotNet'
+        sourceCodeDirectory: '$(SolutionDirectory)'
         language: 'csharp'
         cleanupBuildCommands: 'dotnet clean Microsoft.DevSkim.CLI -c Release'
         buildCommands: 'dotnet build Microsoft.DevSkim.CLI -c Release'
