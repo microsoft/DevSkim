@@ -24,10 +24,10 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '3.1.100'
-    - task: NuGetCommand@2
+    - task: DotNetCoreCLI@2
       inputs:
         command: 'restore'
-        restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
+        projects: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
         feedsToUse: 'config'
     - task: MSBuild@1
       inputs:
