@@ -27,7 +27,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '2.x'
+        version: '2.1.x'
     - task: NuGetCommand@2
       inputs:
         command: 'restore'
