@@ -21,7 +21,7 @@ stages:
       vmImage: 'windows-latest'
     steps:
     - task: NuGetCommand@2
-	  displayName: NuGet Restore
+      displayName: NuGet Restore
       inputs:
         command: 'restore'
         restoreSolution: '$(SolutionDirectory)'
@@ -87,7 +87,7 @@ stages:
       vmImage: 'windows-latest'
     steps:
     - task: MSBuild@1
-	  displayName: Build Extension
+      displayName: Build Extension
       inputs:
         solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
         msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.StagingDirectory) /p:DebugType=Full'
