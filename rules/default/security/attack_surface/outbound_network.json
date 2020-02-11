@@ -66,9 +66,9 @@
                 "name": "Change to HTTPS ",
                 "type": "regex-replace",
                 "_comment": "",
-                "replacement": "https:",
+                "replacement": "https://",
                 "pattern": {
-                    "pattern": "http:",
+                    "pattern": "http://",
                     "type": "regex",
                     "scopes": [
                         "code"
