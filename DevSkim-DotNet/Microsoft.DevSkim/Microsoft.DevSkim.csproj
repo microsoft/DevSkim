@@ -13,7 +13,6 @@
     <PackageIconUrl>https://raw.githubusercontent.com/Microsoft/DevSkim/master/media/64x64.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
-    <PackageReleaseNotes>First public release</PackageReleaseNotes>    
   </PropertyGroup>
 
   <ItemGroup>
