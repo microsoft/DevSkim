@@ -4,13 +4,13 @@
 name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   batch: true
+  branches:
+    include:
+    - master
   paths:
     include:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-  branches:
-    include:
-    - master
 
 stages:
 - stage: Publish
