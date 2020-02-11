@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>    
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net48;</TargetFrameworks>    
     <PackageId>Microsoft.DevSkim</PackageId>
     <PackageVersion>0.3.8</PackageVersion>
     <Authors>Microsoft</Authors>
@@ -13,7 +13,8 @@
     <PackageIconUrl>https://raw.githubusercontent.com/Microsoft/DevSkim/master/media/64x64.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
-    <PackageReleaseNotes>First public release</PackageReleaseNotes>    
+    <PackageReleaseNotes>First public release</PackageReleaseNotes>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>    
   </PropertyGroup>
 
   <ItemGroup>
