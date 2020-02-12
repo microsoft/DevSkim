@@ -1,8 +1,8 @@
 FROM ubuntu:18.04
 
-COPY publish /publish
+COPY DevSkim-Linux /DevSkim-Linux
 
-RUN ln -s /publish/devskim /bin/devskim
+RUN ln -s /DevSkim-Linux/devskim /bin/devskim
 
 ENTRYPOINT ["devskim"]
 CMD ["--help"]
