@@ -51,6 +51,9 @@ namespace Microsoft.DevSkim
         [JsonConverter(typeof(SeverityConverter))]
         public Severity Severity { get; set; }
 
+        [JsonProperty(PropertyName = "confidence")]
+        public Confidence Confidence { get; set; }
+
         [JsonProperty(PropertyName = "description")]
         public string Description { get; set; }
 
