@@ -183,7 +183,7 @@ namespace Microsoft.DevSkim
             if (pattern.Scopes.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
 
-            bool isInComment = (  IsBetween(text, boundary.Index, prefix, suffix)
+            bool isInComment = (  IsBetween(text, boundary.Index, prefix, suffix, inline)
                                || IsBetween(text, boundary.Index, inline, "\n"));
 
             return !(isInComment && !pattern.Scopes.Contains(PatternScope.Comment));
@@ -197,11 +197,22 @@ namespace Microsoft.DevSkim
         /// <param name="prefix">Prefix</param>
         /// <param name="suffix">Suffix</param>
         /// <returns>True if the index is between prefix and suffix</returns>
-        private bool IsBetween(string text, int index, string prefix, string suffix)
+        private bool IsBetween(string text, int index, string prefix, string suffix, string inline = "")
         {
             bool result = false;
             string preText = string.Concat(text.Substring(0, index));
             int lastPreffix = preText.LastIndexOf(prefix, StringComparison.Ordinal);
+            if (!string.IsNullOrEmpty(inline))
+            {
+                int lastInline = preText.Substring(0, lastPreffix).LastIndexOf(inline, StringComparison.Ordinal);
+                for (int i = lastInline;i < lastPreffix; i++)
+                {
+                    if (Environment.NewLine.Contains(preText[i]))
+                    {
+                        lastPreffix = 0;
+                    }
+                }
+            }
             if (lastPreffix >= 0)
             {
                 preText = preText.Substring(lastPreffix);
