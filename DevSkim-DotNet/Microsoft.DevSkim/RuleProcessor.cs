@@ -107,23 +107,40 @@ namespace Microsoft.DevSkim
                         foreach (Boundary match in matches)
                         {
                             bool passedConditions = true;
-                            foreach (SearchCondition condition in rule.Conditions)
+                            var translatedBoundary = match;
+                            if (lineNumber >= 0)
                             {
-                                bool res = line.MatchPattern(condition.Pattern, match, condition);                                
-                                if (res && condition.NegateFinding)
+                                translatedBoundary = new Boundary()
                                 {
-                                    passedConditions = false;
-                                    break;
-                                }
-                                if (!res && condition.NegateFinding)
+                                    Length = match.Length,
+                                    Index = textContainer.GetBoundaryFromLine(lineNumber).Index + match.Index
+                                };
+                            }
+                            
+                            if (!textContainer.ScopeMatch(pattern, translatedBoundary))
+                            {
+                                passedConditions = false;
+                            }
+                            else
+                            {
+                                foreach (SearchCondition condition in rule.Conditions)
                                 {
-                                    passedConditions = true;
-                                    break;
-                                }
-                                if (!res)
-                                {
-                                    passedConditions = false;
-                                    break;
+                                    bool res = line.MatchPattern(condition.Pattern, match, condition);
+                                    if (res && condition.NegateFinding)
+                                    {
+                                        passedConditions = false;
+                                        break;
+                                    }
+                                    if (!res && condition.NegateFinding)
+                                    {
+                                        passedConditions = true;
+                                        break;
+                                    }
+                                    if (!res)
+                                    {
+                                        passedConditions = false;
+                                        break;
+                                    }
                                 }
                             }
 

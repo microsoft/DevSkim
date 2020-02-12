@@ -63,8 +63,8 @@ namespace Microsoft.DevSkim
             Boundary scope = ParseSearchBoundary(boundary, condition.SearchIn);
 
             string text = _content.Substring(scope.Index, scope.Length);
-            List<Boundary> macthes = MatchPattern(pattern, text);
-            if (macthes.Count > 0)
+            List<Boundary> matches = MatchPattern(pattern, text);
+            if (matches.Count > 0)
                 result = true;
 
             return result;
@@ -121,7 +121,33 @@ namespace Microsoft.DevSkim
             }
 
             return result;
-        }        
+        }
+
+        /// <summary>
+        /// Returns the Boundary of a specified line number
+        /// </summary>
+        /// <param name="lineNumber">The line number to return the boundary for</param>
+        /// <returns></returns>
+        public Boundary GetBoundaryFromLine(int lineNumber)
+        {
+            Boundary result = new Boundary();
+
+            if (lineNumber >= _lineEnds.Count)
+            {
+                return result;
+            }
+
+            // Fine when the line number is 0
+            var start = 0;
+            if (lineNumber > 0)
+            {
+                start = _lineEnds[lineNumber - 1] + 1;
+            }
+            result.Index = start;
+            result.Length = _lineEnds[lineNumber] - result.Index + 1;
+
+            return result;
+        }
 
         /// <summary>
         /// Return content of the line
@@ -159,7 +185,6 @@ namespace Microsoft.DevSkim
                 foreach (Match m in matches)
                 {
                     Boundary bound = new Boundary() { Index = m.Index, Length = m.Length };
-                    if (ScopeMatch(pattern, bound, text))
                         matchList.Add(bound);
                 }
             }
@@ -174,7 +199,7 @@ namespace Microsoft.DevSkim
         /// <param name="boundary">Boundary in a text</param>
         /// <param name="text">Text</param>
         /// <returns>True if boundary is matching the pattern scope</returns>
-        private bool ScopeMatch(SearchPattern pattern, Boundary boundary, string text)
+        public bool ScopeMatch(SearchPattern pattern, Boundary boundary)
         {
             string prefix = DevSkim.Language.GetCommentPrefix(Language);
             string suffix = DevSkim.Language.GetCommentSuffix(Language);
@@ -183,8 +208,8 @@ namespace Microsoft.DevSkim
             if (pattern.Scopes.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
 
-            bool isInComment = (  IsBetween(text, boundary.Index, prefix, suffix, inline)
-                               || IsBetween(text, boundary.Index, inline, "\n"));
+            bool isInComment = (  IsBetween(Content, boundary.Index, prefix, suffix, inline)
+                               || IsBetween(Content, boundary.Index, inline, "\n"));
 
             return !(isInComment && !pattern.Scopes.Contains(PatternScope.Comment));
         }
@@ -201,23 +226,22 @@ namespace Microsoft.DevSkim
         {
             bool result = false;
             string preText = string.Concat(text.Substring(0, index));
-            int lastPreffix = preText.LastIndexOf(prefix, StringComparison.Ordinal);
-            if (!string.IsNullOrEmpty(inline))
+            int lastPrefix = preText.LastIndexOf(prefix, StringComparison.InvariantCulture);
+            if (!string.IsNullOrEmpty(inline) && lastPrefix >= 0)
             {
-                int lastInline = preText.Substring(0, lastPreffix).LastIndexOf(inline, StringComparison.Ordinal);
-                for (int i = lastInline;i < lastPreffix; i++)
+                int lastInline = preText.Substring(0, lastPrefix).LastIndexOf(inline, StringComparison.InvariantCulture);
+
+                // For example in C#, If this /* is actually commented out by a //
+                if (lastInline < lastPrefix && !preText.Substring(lastInline,lastPrefix - lastInline).Contains('\n'))
                 {
-                    if (Environment.NewLine.Contains(preText[i]))
-                    {
-                        lastPreffix = 0;
-                    }
+                    lastPrefix = 0;
                 }
             }
-            if (lastPreffix >= 0)
+            if (lastPrefix >= 0)
             {
-                preText = preText.Substring(lastPreffix);
+                preText = text.Substring(lastPrefix);
                 int lastSuffix = preText.IndexOf(suffix, StringComparison.Ordinal);
-                if (lastSuffix < 0)
+                if (lastSuffix + lastPrefix > index)
                     result = true;
             }
 
@@ -254,7 +278,7 @@ namespace Microsoft.DevSkim
         /// <returns>Boundary</returns>
         private Boundary ParseSearchBoundary(Boundary boundary, string searchIn)
         {
-            // Default baundary is the fidning line
+            // Default boundary is the finding line
             Boundary result = GetLineBoundary(boundary.Index);
             string srch = (string.IsNullOrEmpty(searchIn)) ? string.Empty : searchIn.ToLower();
 
@@ -310,9 +334,17 @@ namespace Microsoft.DevSkim
             return result;
         }
 
-        private string _content;
         private List<int> _lineEnds;
-
+        private string _content;
+        public string Content {
+            get
+            {
+                return _content;
+            }
+            private set{
+                _content = value;
+            }
+        }
         public string Language { get; set; }
     }
 }
