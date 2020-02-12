@@ -153,6 +153,31 @@ stages:
         ArtifactName: 'WinCoreArchives'
         publishLocation: 'Container'
 
+  - job: docker
+    displayName: Generate Docker Image
+    dependsOn:
+    - publish_nix
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        itemPattern: 'DevSkim_linux_'
+        downloadPath: '$(System.ArtifactsDirectory)'
+    - task: ExtractFiles@1
+      inputs:
+        archiveFilePatterns: '$(System.ArtifactsDirectory)/*.zip'
+        destinationFolder: '$(agent.builddirectory)/DevSkim-Linux'
+        cleanDestinationFolder: true
+    - task: Docker@2
+      inputs:
+        command: 'build'
+        Dockerfile: '$(build.sourcedirectory)/Docker/Dockerfile'
+        buildContext: '$(agent.builddirectory)/DevSkim-Linux'
+    
+    # TODO: Push docker image somewhere
 
   - job: hashes
     displayName: Generate Hashes
