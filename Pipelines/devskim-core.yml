@@ -165,17 +165,17 @@ stages:
         buildType: 'current'
         downloadType: 'specific'
         itemPattern: 'DevSkim_linux_'
-        downloadPath: '$(System.ArtifactsDirectory)'
+        downloadPath: '$(Agent.TempDirectory)'
     - task: ExtractFiles@1
       inputs:
-        archiveFilePatterns: '$(System.ArtifactsDirectory)/*.zip'
-        destinationFolder: '$(agent.builddirectory)/DevSkim-Linux'
+        archiveFilePatterns: '$(Agent.TempDirectory)/DevSkim_linux_*.zip'
+        destinationFolder: '$(Build.BinariesDirectory)/DevSkim-Linux'
         cleanDestinationFolder: true
     - task: Docker@2
       inputs:
         command: 'build'
-        Dockerfile: '$(build.sourcedirectory)/Docker/Dockerfile'
-        buildContext: '$(agent.builddirectory)/DevSkim-Linux'
+        Dockerfile: '$(Build.SourcesDirectory)/Docker/Dockerfile'
+        buildContext: '$(Build.BinariesDirectory)'
     
     # TODO: Push docker image somewhere
 
