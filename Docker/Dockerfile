@@ -1,6 +1,8 @@
-FROM alpine:3.7
+FROM ubuntu:18.04
 
-COPY devskim /usr/bin/devskim
+COPY publish /publish
+
+RUN ln -s /publish/devskim /bin/devskim
 
 ENTRYPOINT ["devskim"]
 CMD ["--help"]
