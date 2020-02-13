@@ -55,6 +55,7 @@ stages:
     #TODO Update CLI Rules GitHub
     #TODO Update VSExt Rules GitHub
     #TODO Update VSCode Rules GitHub
+	#TODO Trigger CLI, Extension build pipelines
 
   - job: sdl
     displayName: SDL Tools
