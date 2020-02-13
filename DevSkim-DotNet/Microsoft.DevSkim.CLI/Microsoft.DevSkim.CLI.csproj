@@ -33,4 +33,8 @@
     <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet ../../RulePacker/devskim.dll pack ../../rules Resources/devskim-rules.json" />
+  </Target>
+
 </Project>
