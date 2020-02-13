@@ -70,7 +70,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -84,7 +83,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -132,7 +130,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -146,7 +143,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -194,7 +190,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -208,7 +203,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -256,7 +250,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -270,7 +263,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -318,7 +310,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -332,7 +323,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -492,7 +482,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -598,7 +587,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -644,7 +632,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -692,7 +679,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -706,7 +692,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -805,7 +790,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -824,7 +808,6 @@
             "i"
           ],
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -898,7 +881,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -1508,7 +1490,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -1659,7 +1640,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -1701,7 +1681,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -1745,7 +1724,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -1789,7 +1767,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -1833,7 +1810,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -1877,7 +1853,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2002,7 +1977,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2016,7 +1990,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2062,7 +2035,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2076,7 +2048,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2122,7 +2093,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2136,7 +2106,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2180,7 +2149,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2194,7 +2162,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2240,7 +2207,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2254,7 +2220,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2300,7 +2265,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2314,7 +2278,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2385,7 +2348,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -2458,7 +2420,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3220,7 +3181,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3273,7 +3233,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3317,7 +3276,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3331,7 +3289,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3345,7 +3302,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3386,7 +3342,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3403,7 +3358,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3417,7 +3371,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -3707,7 +3660,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -4175,7 +4127,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -4219,7 +4170,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },
@@ -4263,7 +4213,6 @@
           "type": "regex",
           "modifiers": null,
           "scopes": [
-            "code",
             "code"
           ]
         },

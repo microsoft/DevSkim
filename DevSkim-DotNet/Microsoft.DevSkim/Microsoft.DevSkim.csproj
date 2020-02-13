@@ -23,9 +23,11 @@
     <Content Remove="Resources\comments.json" />
     <Content Remove="Resources\languages.json" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Include="Resources\comments.json" />
+    <EmbeddedResource Include="Resources\devskim-rules.json" />
     <EmbeddedResource Include="Resources\languages.json" />
   </ItemGroup>
+
 </Project>

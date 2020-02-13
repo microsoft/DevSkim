@@ -127,7 +127,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             if (!_ignoreDefaultRules)
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
-                string filePath = "Microsoft.DevSkim.CLI.Resources.devskim-rules.json";
+                string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
                 Stream resource = assembly.GetManifestResourceStream(filePath);
                 using (StreamReader file = new StreamReader(resource))
                 {
