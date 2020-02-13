@@ -4,12 +4,19 @@
 name: DevSkim_VSCode_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   batch: true
-  paths:
-    include:
-    - DevSkim-VSCode-Plugin/*
   branches:
     include:
     - master
+  paths:
+    include:
+    - DevSkim-VSCode-Plugin/*
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - DevSkim-VSCode-Plugin/*
 
 jobs:
 - job: publish
