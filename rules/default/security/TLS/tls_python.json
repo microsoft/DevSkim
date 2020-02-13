@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Python - Hard-coded SSL/TLS Protocol",
+        "id": "DS440070",
+        "description": "Python - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "PROTOCOL_(SSL|TLS)v?[0123_\\.]*(_CLIENT|SERVER)?",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ],
+        "fix_its": [
+        ]
+    }
+]

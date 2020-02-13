@@ -1,148 +1,129 @@
 [
     {
-        "name": "Do not set a custom execution policy.",
-        "id": "DS113853",
-        "description": "The Set-ExecutionPolicy cmdlet has been used to dynamically change the permissions available to PowerShell.",
-        "recommendation": "Avoid elevating privileges if possible.",
+        "name": ".NET - Hard-coded SSL/TLS Protocol",
+        "id": "DS112835",
+        "description": ".NET - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
-            "powershell"
+            "csharp",
+            "powershell",
+            "vb"
         ],
         "tags": [
-            "ControlFlow.Permission.Evalation"
+            "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "moderate",
+        "severity": "manual-review",
         "_comment": "",
-        "rule_info": "DS113853.md",
+        "rule_info": "DS112835.md",
         "patterns": [
             {
-                "pattern": "Set-ExecutionPolicy",
+                "pattern": "SecurityProtocolType.Ssl3",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)48",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolType.SystemDefault",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)0",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)192",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)768",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolType\\.Tls[123]?",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "(SecurityProtocolType)3072",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },            
+            {
+                "pattern": "SecurityProtocolType.Tls13",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },            
+            {
+                "pattern": "(SecurityProtocolType)12288",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolTypeExtensions.Tls11",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolTypeExtensions.Tls12",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "SecurityProtocolTypeExtensions.SystemDefault",
                 "type": "string",
                 "scopes": [
                     "code"
                 ],
                 "_comment": ""
             }
-        ]
-    },
-    {
-        "name": "Use of restricted functions.",
-        "id": "DS104456",
-        "description": "Use of restricted functions.",
-        "recommendation": "",
-        "applies_to": [
-            "powershell"
-        ],
-        "tags": [
-            "Implementation.Scripting.PowerShell.DangeousFunction"
-        ],
-        "severity": "important",
-        "_comment": "",
-        "rule_info": "DS104456.md",
-        "patterns": [
-            {
-                "pattern": "GetDelegateForFunctionPointer",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "System.Runtime.InteropServices.Marshal",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "WriteByte",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "Microsoft.Win32.UnsafeNativeMethods",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "PtrToStructure",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "StructureToPtr",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "(NtCreateThreadEx|CreateRemoteThread)",
-                "type": "regex-word",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "Invoke-Command",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "Use Start-Process instead whenever possible."
-            },
-            {
-                "pattern": "Invoke-Expression",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "Use Start-Process instead whenever possible."
-            },
-            {
-                "pattern": "VirtualProtect",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "iex",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "&\"",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            },
-            {
-                "pattern": "& $",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": ""
-            }
+
         ]
     }
 ]

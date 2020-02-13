@@ -1,0 +1,51 @@
+[
+    {
+        "name": ".NET - Hard-coded SSL/TLS Protocol",
+        "id": "DS112838",
+        "description": ".NET - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "applies_to": [
+            ".config"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS112838.md",
+        "patterns": [
+            {
+                "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "Switch.System.ServiceModel.DisableUsingServicePointManagerSecurityProtocol",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "Switch.System.Net.DontEnableSystemDefaultTlsVersions",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "Switch.System.ServiceModel.DontEnableSystemDefaultTlsVersions",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    }
+]

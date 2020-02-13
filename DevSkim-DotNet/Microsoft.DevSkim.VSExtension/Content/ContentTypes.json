@@ -1,0 +1,132 @@
+﻿[
+  {
+    "vs_type": "C/C++",
+    "languages": [ "c", "cpp" ]
+  },
+  {
+    "vs_type": "CSharp",
+    "languages": [ "csharp" ]
+  },
+  {
+    "vs_type": "Basic",
+    "languages": [ "vb" ]
+  },
+  {
+    "vs_type": "Python",
+    "languages": [ "python" ]
+  },
+
+
+  {
+    "vs_type": "JavaScript",
+    "languages": [ "javascript", "javascriptreact" ]
+  },
+  {
+    "vs_type": "TypeScript",
+    "languages": [ "typescript", "typescriptreact" ]
+  },
+  {
+    "vs_type": "CoffeeScript",
+    "languages": [ "coffeescript" ]
+  },
+  
+
+  {
+    "vs_type": "Java",
+    "languages": ["java" ]
+  },
+  {
+    "vs_type": "code++.Objective-C",
+    "languages": [ "objective-c" ]
+  },
+  {
+    "vs_type": "code++.Swift",
+    "languages": [ "swift" ]
+  },
+
+
+  {
+    "vs_type": "code++.Perl",
+    "languages": [ "perl" ]
+  },
+  {
+    "vs_type": "code++.Perl 6",
+    "languages": [ "perl6" ]
+  },
+  {
+    "vs_type": "code++.Ruby",
+    "languages": ["ruby" ]
+  },
+  {
+    "vs_type": "code++.Lua",
+    "languages": [ "lua" ]
+  },
+  {
+    "vs_type": "code++.Groovy",
+    "languages": [ "groovy" ]
+  },
+  {
+    "vs_type": "code++.Go",
+    "languages": [ "go" ]
+  },
+  {
+    "vs_type": "code++.Rust",
+    "languages": [ "rust" ]
+  },
+  {
+    "vs_type": "code++.Jade",
+    "languages": [ "jade" ]
+  },
+  {
+    "vs_type": "code++.Clojure",
+    "languages": [ "clojure" ]
+  },
+  {
+    "vs_type": "code++.R",
+    "languages": [ "r" ]
+  },
+  {
+    "vs_type": "code++.YAML",
+    "languages": [ "yaml" ]
+  },
+  {
+    "vs_type": "code++.XAML",
+    "languages": [ "xaml" ]
+  },
+  {
+    "vs_type": "code++.F#",
+    "languages": [ "fsharp" ]
+  },
+  {
+    "vs_type": "PHP",
+    "languages": [ "php" ]
+  },
+
+
+  {
+    "vs_type": "PowerShell",
+    "languages": [ "powershell" ]
+  },
+  {
+    "vs_type": "InBoxPowerShell",
+    "languages": [ "powershell" ]
+  },
+  {
+    "vs_type": "code++.Batch File",
+    "languages": [ "bat" ]
+  },
+  {
+    "vs_type": "code++.Shell Script (Bash)",
+    "languages": [ "shellscript" ]
+  },
+
+
+  {
+    "vs_type": "SQL Server Tools",
+    "languages": [ "sql" ]
+  },
+  {
+    "vs_type": "plaintext",
+    "languages": [ "plaintext" ]
+  }
+]

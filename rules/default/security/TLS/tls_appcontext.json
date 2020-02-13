@@ -1,0 +1,37 @@
+[
+    {
+        "name": ".NET - Hard-coded SSL/TLS Protocol",
+        "id": "DS112837",
+        "description": ".NET - Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "applies_to": [
+            "csharp",
+            "powershell",
+            "vb"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "manual-review",
+        "_comment": "",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "TestSwitch.LocalAppContext.DisableCaching",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            },
+            {
+                "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": ""
+            }
+        ]
+    }
+]
