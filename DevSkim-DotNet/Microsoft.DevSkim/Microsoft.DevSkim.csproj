@@ -30,4 +30,8 @@
     <EmbeddedResource Include="Resources\languages.json" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet ../../RulePacker/devskim.dll pack ../../rules Resources/devskim-rules.json" />
+  </Target>
+
 </Project>

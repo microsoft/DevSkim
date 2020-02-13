@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "devskim/0.4.36-beta-gf9422ca6fd": {
+      "devskim/0.4.40-beta-g3aebb0cc40": {
         "dependencies": {
           "Microsoft.DevSkim": "0.3.8",
           "Microsoft.Extensions.CommandLineUtils": "1.1.1",
@@ -729,7 +729,7 @@
     }
   },
   "libraries": {
-    "devskim/0.4.36-beta-gf9422ca6fd": {
+    "devskim/0.4.40-beta-g3aebb0cc40": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
