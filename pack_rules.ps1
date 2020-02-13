@@ -8,4 +8,4 @@ ForEach-Object -InputObject $jsonFiles
 
 $out |
     ConvertTo-Json -Depth 5 |
-    Out-File -FilePath Microsoft.DevSkim.Cli/Resources/devskim-rules.json
+    Out-File -FilePath $outPath
