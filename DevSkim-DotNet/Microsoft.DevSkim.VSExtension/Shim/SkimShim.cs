@@ -91,7 +91,7 @@ namespace Microsoft.DevSkim.VSExtension
 
             ruleset = new RuleSet();
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
             string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
             Stream resource = assembly.GetManifestResourceStream(filePath);
 
@@ -99,7 +99,7 @@ namespace Microsoft.DevSkim.VSExtension
             {
                 using (StreamReader file = new StreamReader(resource))
                 {
-                    ruleset.AddFile(file.ReadToEnd(), null);
+                    ruleset.AddString(file.ReadToEnd(), filePath);
                 }
             }
 
