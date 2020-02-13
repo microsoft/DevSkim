@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace Microsoft.DevSkim.VSExtension
 {
@@ -89,10 +90,18 @@ namespace Microsoft.DevSkim.VSExtension
             Settings set = Settings.GetSettings();
 
             ruleset = new RuleSet();
-            string rulesFile = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            rulesFile = Path.Combine(Path.Combine(rulesFile, "Content"), "devskim-rules.json");
+
+            Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
+            string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
+            Stream resource = assembly.GetManifestResourceStream(filePath);
+
             if (set.UseDefaultRules)
-                ruleset.AddFile(rulesFile, null);
+            {
+                using (StreamReader file = new StreamReader(resource))
+                {
+                    ruleset.AddString(file.ReadToEnd(), filePath);
+                }
+            }
 
             if (set.UseCustomRules)
                 ruleset.AddDirectory(set.CustomRulesPath, "custom");

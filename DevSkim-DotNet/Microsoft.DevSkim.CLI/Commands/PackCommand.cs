@@ -56,13 +56,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                 e.ErrorContext.Handled = true;
             };
 
-            using (FileStream fs = File.Open(_outputfile, FileMode.Create, FileAccess.Write))
-            {
-                StreamWriter sw = new StreamWriter(fs);
-                sw.Write(JsonConvert.SerializeObject(list, settings));
-                sw.Close();
-                fs.Close();
-            }
+            using FileStream fs = File.Open(_outputfile, FileMode.Create, FileAccess.Write);
+            using StreamWriter sw = new StreamWriter(fs);
+            sw.Write(JsonConvert.SerializeObject(list, settings));
+            sw.Close();
+            fs.Close();
 
             return (int)ExitCode.NoIssues;
         }
