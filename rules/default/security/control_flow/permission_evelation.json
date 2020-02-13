@@ -96,12 +96,20 @@
                 "_comment": ""
             },
             {
-                "pattern": "Invoke",
+                "pattern": "Invoke-Command",
                 "type": "string",
                 "scopes": [
                     "code"
                 ],
-                "_comment": ""
+                "_comment": "Use Start-Process instead whenever possible."
+            },
+            {
+                "pattern": "Invoke-Expression",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Use Start-Process instead whenever possible."
             },
             {
                 "pattern": "VirtualProtect",
