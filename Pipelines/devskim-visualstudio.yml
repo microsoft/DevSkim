@@ -20,7 +20,6 @@ pr:
     include:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-    - rules/*
 
 stages:
 - stage: Publish
