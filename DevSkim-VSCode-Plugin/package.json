@@ -56,7 +56,7 @@
     "onLanguage:plaintext",
     "onLanguage:python"
   ],
-  "main": "./dist/extension",
+  "main": "./client/dist/extension.js",
   "contributes": {
     "commands": [
       {
