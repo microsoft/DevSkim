@@ -10,6 +10,7 @@ trigger:
   paths:
     include:
     - DevSkim-VSCode-Plugin/*
+    - rules/*
 pr:
   branches:
     include:
@@ -18,10 +19,153 @@ pr:
     include:
     - DevSkim-VSCode-Plugin/*
 
-jobs:
-- job: publish
-  displayName: Publish VSCode Plugin
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - task: *TODO*
+stages:
+- stage: Publish
+  jobs:
+  - job: publish
+    displayName: Publish VSCode Plugin
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: Npm@1
+      displayName: npm install
+      inputs:
+        command: 'install'
+        workingDir: '$(SolutionDirectory)'
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        workingDir: '$(SolutionDirectory)'
+        customCommand: 'run pack-ext'
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(SolutionDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $(SolutionDirectory)/*.vsix $env:BUILD_BINARIESDIRECTORY'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign
+      enabled: false
+      inputs:
+        ConnectedServiceName: ''
+        FolderPath: '$(Build.BinariesDirectory)'
+        Pattern: '*.vsix'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [ ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      displayName: 'Delete Code Sign Summaries'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/*.vsix $env:BUILD_STAGINGDIRECTORY'
+    - task: PowerShell@2
+      displayName: Generate Hashes
+      inputs:
+        targetType: 'inline'
+        script: |
+          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+            $name = $_.Name
+            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+          }
+    - task: PublishPipelineArtifact@1
+      displayName: Publish All Artifacts
+      inputs:
+        targetPath: '$(Build.StagingDirectory)'
+        artifact: 'Binaries'
+
+  - job: sdl
+    displayName: SDL Tools
+    dependsOn: publish
+    condition: and(succeeded(), eq(variables['RunSDL'], 'TRUE'))
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: Npm@1
+      displayName: npm install
+      inputs:
+        command: 'install'
+        workingDir: '$(SolutionDirectory)'
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: 'vsce package'
+        workingDirectory: '$(SolutionDirectory)'
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(SolutionDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+    - task: ComponentGovernanceComponentDetection@0
+      displayName: Component Governance
+      inputs:
+        scanType: 'Register'
+        verbosity: 'Verbose'
+        alertWarningLevel: 'Low'
+    - task: notice@0
+      displayName: Notice File Generator
+      inputs:
+        outputformat: 'text'
+      continueOnError: true
+    - task: PoliCheck@1
+      displayName: PoliCheck
+      inputs:
+        inputType: 'Basic'
+        targetType: 'F'
+        targetArgument: '$(SolutionDirectory)'
+        result: 'PoliCheck.xml'
+    - task: BinSkim@3
+      displayName: BinSkim
+      inputs:
+        InputType: 'CommandLine'
+      continueOnError: true
+    - task: Semmle@0
+      displayName: Semmle Scan
+      inputs:
+        sourceCodeDirectory: '$(SolutionDirectory)'
+        language: 'javascript'
+        cleanupBuildCommands: 'npm run clean'
+        buildCommands: 'npm install && vsce package'
+        querySuite: 'Recommended'
+        timeout: '1800'
+        ram: '16384'
+        addProjectDirToScanningExclusionList: true
+      continueOnError: true
+    - task: PublishPipelineArtifact@1
+      displayName: Publish PoliCheck Result
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\PoliCheck\PoliCheck.xml'
+        artifact: 'PoliCheck.xml'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish BinSkim Result
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\BinSkim\BinSkim.sarif'
+        artifact: 'BinSkim.sarif'
+      continueOnError: true
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Semmle Result
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\javascript\DevSkim-VSCode-csharp-1.sarif'
+        artifact: 'Semmle.sarif'
+      continueOnError: true
