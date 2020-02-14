@@ -220,10 +220,11 @@
     "check:bail": "yarn run lint:bail && yarn run build && yarn run test",
     "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server",
     "backup-vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run build",
-    "vscode:prepublish": "cd ./client && webpack --mode production && cd ../server && webpack --mode production",
+    "vscode:prepublish": "npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production",
     "webpack": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
-    "test-compile": "tsc -p ./"
+    "test-compile": "tsc -p ./",
+    "copy-rules": "ncp ../rules server/data/rules"
   },
   "dependencies": {
     "recursive-readdir": "^2.2.2"
@@ -240,6 +241,7 @@
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5",
     "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "ncp": "^2.0.0"
   }
 }
