@@ -1,7 +1,7 @@
 [
     {
         "name": "Python - Hard-coded SSL/TLS Protocol",
-        "id": "DS440070",
+        "id": "DS440071",
         "description": "Python - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
