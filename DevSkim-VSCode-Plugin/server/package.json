@@ -33,6 +33,9 @@
     "@types/node": "^6.14.4",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.4.3"
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.4.3",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
   }
 }
