@@ -10,6 +10,7 @@ trigger:
   paths:
     include:
     - DevSkim-VSCode-Plugin/*
+    - rules/*
 pr:
   branches:
     include:
