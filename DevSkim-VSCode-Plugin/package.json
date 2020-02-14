@@ -2,9 +2,9 @@
   "name": "devskim-vscode-plugin",
   "description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click",
   "author": "Microsoft Corporation",
-  "license": "ISC",
-  "version": "1.0.0",
-  "publisher": "MS-DevSkim",
+  "license": "MIT",
+  "version": "0.0.0-placeholder",
+  "publisher": "CST-E",
   "repository": {
     "type": "git",
     "url": "https://github.com/Microsoft/devskim.git"
@@ -220,7 +220,7 @@
     "check:bail": "yarn run lint:bail && yarn run build && yarn run test",
     "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server",
     "backup-vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run build",
-    "vscode:prepublish": "npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production",
+    "vscode:prepublish": "gulp setPackageVersion && npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production && cd .. && gulp",
     "webpack": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
@@ -228,6 +228,7 @@
     "pack-ext": "vsce package"
   },
   "dependencies": {
+    "nerdbank-gitversioning": "^3.1.51-beta",
     "recursive-readdir": "^2.2.2"
   },
   "devDependencies": {
@@ -236,6 +237,7 @@
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "eslint": "^5.16.0",
+    "gulp": "^4.0.2",
     "jest": "^24.9.0",
     "ncp": "^2.0.0",
     "rimraf": "^2.6.2",
