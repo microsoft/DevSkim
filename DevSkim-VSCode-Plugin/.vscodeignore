@@ -6,7 +6,7 @@
 .gitignore
 README.md
 tsconfig.json
-
+node_modules
 
 client/node_modules
 client/out
