@@ -225,7 +225,7 @@
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
     "copy-rules": "ncp ../rules server/data/rules",
-	"pack-ext": "vsce package"
+    "pack-ext": "vsce package"
   },
   "dependencies": {
     "recursive-readdir": "^2.2.2"

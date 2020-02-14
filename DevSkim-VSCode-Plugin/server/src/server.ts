@@ -10,8 +10,6 @@ import ReadableStream = NodeJS.ReadableStream;
 import WritableStream = NodeJS.WritableStream;
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
-// const pkg = require('../package');
-
 export let connectionCtr = 0;
 
 export class DevSkimMain
