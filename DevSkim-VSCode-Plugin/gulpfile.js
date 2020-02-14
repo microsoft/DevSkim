@@ -5,8 +5,8 @@ const util = require('util');
 const renameAsync = util.promisify(fs.rename);
 const { exec } = require('child_process');
 
-gulp.task('setPackageVersion', function(done) {
-    const gitVersion = nbgv.getVersion();
+gulp.task('setPackageVersion', async function(done) {
+    const gitVersion = await nbgv.getVersion();    
     exec(`npm version ${gitVersion.npmPackageVersion} --no-git-tag-version --allow-same-version`);
     done();
 });
