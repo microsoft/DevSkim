@@ -31,11 +31,11 @@ stages:
       inputs:
         command: 'install'
         workingDir: '$(SolutionDirectory)'
-    - task: PowerShell@2
+    - task: Npm@1
       inputs:
-        targetType: 'inline'
-        script: 'vsce package'
-        workingDirectory: '$(SolutionDirectory)'
+        command: 'custom'
+        workingDir: '$(SolutionDirectory)'
+        customCommand: 'run pack-ext'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
