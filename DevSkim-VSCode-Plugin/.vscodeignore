@@ -18,4 +18,4 @@ server/*.md
 server/tsconfig.json
 server/.gitignore
 server/jest.config.js
-server/nod
+server/node_modules
