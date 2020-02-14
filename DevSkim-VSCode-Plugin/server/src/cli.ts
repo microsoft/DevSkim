@@ -16,6 +16,7 @@ var program = require("commander");
 //set up the command line options for the "analyze" command
 program.command(CLIcommands.Analyze)
     .description('analyze the files in the specified directory for security mistakes')
+    .option("-s, --settings [settings]", "JSON based settings file to configure the analysis.  A sample can be produced via the command \"devskim settings\"")    
     .option("-f, --format [format]", "Format of the output. Pass the letter of the desired output (shown in parenthesis): (T) - Text [default], (S) - SARIF v2.1 for Sarif v2.1, (H) - HTML, (C) - CSV")
     .option("-d, --directory [directory]", "The parent directory to containing the files to analyze.  If not provided, the current working directory is used")
     .option("-o, --output_file [outputFile]", "The file to write output into. If this option is set but no file specified, output is written to devskim_results.<format>")
