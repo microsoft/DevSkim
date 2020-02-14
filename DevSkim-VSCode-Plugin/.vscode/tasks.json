@@ -1,0 +1,44 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "compile",
+			"type": "npm",
+			"script": "compile",
+			"group": "build",
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "never"
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "watch",
+			"type": "npm",
+			"isBackground": true,
+			"script": "watch",
+			"group": {
+				"kind": "build",
+				"isDefault": true,
+			},
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "never"
+			},
+			"problemMatcher": [
+				"$tsc-watch"
+			]
+		},
+		{
+			"label": "predefined vars",
+			"type": "shell",
+			"command": "echo \" workspaceFolder: \t\t${workspaceFolder}\r\n workspaceRoot: \t\t${workspaceRoot}\r\n workspaceFolderBasename: \t${workspaceFolderBasename}\r\n execPath: \t\t\t${execPath}\r\n cwd: \t\t\t\t${cwd}\r\n file: \t\t\t\t${file}\r\n relativeFile: \t\t\t${relativeFile}\r\n fileBasename: \t\t\t${fileBasename}\r\n fileBasenameNoExtension: \t${fileBasenameNoExtension}\r\n fileDirname: \t\t\t${fileDirname}\r\n fileExtname: \t\t\t${fileExtname}\r\n lineNumber: \t\t\t${lineNumber}\"",
+			"presentation": {
+				"echo": false,
+				"clear": true
+			}
+		}
+	]
+}
