@@ -2,9 +2,9 @@
   "name": "devskim-vscode-plugin",
   "description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click",
   "author": "Microsoft Corporation",
-  "license": "ISC",
-  "version": "1.0.0",
-  "publisher": "MS-DevSkim",
+  "license": "MIT",
+  "version": "0.0.0-placeholder",
+  "publisher": "CST-E",
   "repository": {
     "type": "git",
     "url": "https://github.com/Microsoft/devskim.git"
@@ -56,7 +56,7 @@
     "onLanguage:plaintext",
     "onLanguage:python"
   ],
-  "main": "./client/out/extension.js",
+  "main": "./client/dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -132,13 +132,13 @@
             "(^|/)(out|bin)/",
             "(^|/)(tests?|unittests?|__tests__|__mocks__)/",
             "(^|/)(\\.git|git)/",
-            "\\.(git|git[^.\/])$",
+            "\\.(git|git[^./])$",
             "-lock\\.[^/]|\\.lock$",
             "(^|/)(\\.vscode|\\.cache|logs)/",
             "(^|/)(nuget|node_modules)/",
             "\\.(log|sarif|test)$",
             "\\.(py[cod])$",
-            "(^|/)__pycache__/"        
+            "(^|/)__pycache__/"
           ],
           "description": "Regular expressions to exclude files and folders from analysis.  All regular expressions are executed with the i (case insensitive) flag "
         },
@@ -156,7 +156,7 @@
           "type": "boolean",
           "default": true,
           "description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
-        }      
+        }
       }
     }
   },
@@ -203,15 +203,14 @@
     "preset": "ts-jest"
   },
   "scripts": {
-    "clean": "yarn run clean:local && yarn run clean:server && yarn run clean:client",
-    "clean:local": "rm -rf *.log out node_modules package-lock.json yarn.lock",
-    "clean:server": "cd server && npm run clean && cd ..",
+    "clean": "npm run clean:base && npm run clean:client && npm run clean:server",
+    "clean:base": "rimraf *.log out node_modules",
     "clean:client": "cd client && npm run clean && cd ..",
+    "clean:server": "cd server && npm run clean && cd ..",
     "compile": "tsc -b",
     "build": "tsc -b",
     "watch": "tsc -b -w",
-    "vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run build",
-    "postinstall": "cd client && npm install && cd ../server && npm  install && cd ..",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
     "lint": "tslint --project client --fix && tslint --project server --fix",
     "lint:bail": "tslint --project client && tslint --project server",
     "test": "jest --runInBand --forceExit",
@@ -219,20 +218,35 @@
     "test:watch": "yarn run test -- --watch",
     "check": "yarn run lint && yarn run build && yarn run test",
     "check:bail": "yarn run lint:bail && yarn run build && yarn run test",
-    "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server"
+    "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server",
+    "backup-vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run build",
+    "vscode:prepublish": "gulp setPackageVersion && npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production && cd .. && gulp",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
+    "test-compile": "tsc -p ./",
+    "copy-rules": "ncp ../rules server/data/rules",
+    "pack-ext": "vsce package"
   },
   "dependencies": {
+    "nerdbank-gitversioning": "^3.1.51-beta",
     "recursive-readdir": "^2.2.2"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.16",
-    "@types/node": "^11.13.10",
-    "@typescript-eslint/eslint-plugin": "^1.9.0",
-    "@typescript-eslint/parser": "^1.9.0",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^11.15.6",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
     "eslint": "^5.16.0",
-    "jest": "^24.8.0",
-    "ts-jest": "^24.0.2",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.3"
+    "gulp": "^4.0.2",
+    "jest": "^24.9.0",
+    "ncp": "^2.0.0",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^24.3.0",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5",
+    "vsce": "^1.73.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
   }
 }

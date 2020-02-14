@@ -1,0 +1,18 @@
+{
+	"typescript.tsc.autoDetect": "off",
+	"typescript.preferences.quoteStyle": "single",
+	"cSpell.words": [
+		"Icommands",
+		"cplusplus",
+		"dylib",
+		"nuget",
+		"nupkg",
+		"pathing",
+		"pycache",
+		"schemastore",
+		"subdir",
+		"subdirs",
+		"unittests",
+		"visualbasic"
+	]
+}

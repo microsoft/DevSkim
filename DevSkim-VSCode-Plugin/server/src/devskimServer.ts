@@ -11,8 +11,9 @@
 import
 {
     CodeActionParams, Connection, Diagnostic, DidChangeConfigurationParams, InitializedParams, Hover,
-    InitializeParams, RequestType, ServerCapabilities, TextDocument, TextDocuments, TextDocumentPositionParams    
+    InitializeParams, RequestType, ServerCapabilities, TextDocuments, TextDocumentPositionParams    
 } from "vscode-languageserver";
+import{ TextDocument } from "vscode-languageserver-textdocument";
 
 import { Command, TextEdit } from 'vscode-languageserver-protocol';
 import { TextDocumentIdentifier } from 'vscode-languageserver-types';
@@ -37,7 +38,7 @@ export default class DevSkimServer
      * @param connection the connection to the client
      * @param worker an instantiated instance of the DevSkimWorker class that does the analysis
      */
-    private constructor(private documents: TextDocuments, private connection: Connection, private worker: DevSkimWorker)
+    private constructor(private documents, private connection: Connection, private worker: DevSkimWorker)
     {
         this.globalSettings = worker.dswSettings.getSettings();
     }
@@ -48,7 +49,7 @@ export default class DevSkimServer
      * @param connection connection to the client
      * @param params parameters the client passed during initialization
      */
-    public static async initialize(documents: TextDocuments, connection: Connection, params: InitializedParams): Promise<DevSkimServer>
+    public static async initialize(documents, connection: Connection, params: InitializedParams): Promise<DevSkimServer>
     {
         const dsWorkerSettings = new DevSkimWorkerSettings();
         const dsSettings = dsWorkerSettings.getSettings();

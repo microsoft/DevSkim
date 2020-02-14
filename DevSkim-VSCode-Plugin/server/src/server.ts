@@ -8,8 +8,7 @@ import
 import { StreamMessageReader, StreamMessageWriter } from "vscode-jsonrpc";
 import ReadableStream = NodeJS.ReadableStream;
 import WritableStream = NodeJS.WritableStream;
-
-const pkg = require('../package');
+import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export let connectionCtr = 0;
 
@@ -48,12 +47,13 @@ export class DevSkimMain
             this.connection = bToPipe
                 ? this.createConnectionToPipes(pipeName)
                 : createConnection(ProposedFeatures.all);
+                
 
-            const documents: TextDocuments = new TextDocuments();
+            const documents = new TextDocuments(TextDocument);
 
             this.connection.onInitialize((params: InitializeParams): Promise<InitializeResult> =>
             {
-                this.connection.console.log(`Initialized server v. ${pkg.version}`);
+                this.connection.console.log(`Initialized server v. `);
                 return DevSkimServer.initialize(documents, this.connection, params)
                     .then(async server =>
                     {

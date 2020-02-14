@@ -37,12 +37,9 @@ export class ReloadRulesRequest {
 export function activate(context: vscode.ExtensionContext) {
 
 	try {
-		const serverModule = context.asAbsolutePath(path.join("server", "out", 'index.js'));
+		const serverModule = context.asAbsolutePath(path.join("server", "dist", 'index.js'));
 		console.log(`Server module: ${serverModule}`);
-
-		// The debug options for the server
 		const devSkimProperties = getDevSkimConfiguration();
-
 		const env: any = {
 			...process.env,
             devSkimProperties,
