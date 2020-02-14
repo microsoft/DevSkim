@@ -125,7 +125,7 @@ export class DevSkimWorkerSettings
                 "(^|/)(out|bin)/",
                 "(^|/)(tests?|unittests?|__tests__|__mocks__)/",
                 "(^|/)(\\.git|git)/",
-                "\\.(git|git[^\.\/]*)$",
+                "\\.(git|git[^.\\/]*)$",
                 "-lock\\.[^/]|\\.lock$",
                 "(^|/)(\\.vscode|\\.cache|logs)/",
                 "(^|/)(nuget|node_modules)/",
