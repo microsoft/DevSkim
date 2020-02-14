@@ -25,13 +25,27 @@ interface ValidateDocsParams {
 	textDocuments: TextDocumentIdentifier[];
 }
 
+/**
+ * Mock of server function to trigger a document validation.  Analogous to implementation in devskimServer.ts
+ */
 export class ValidateDocsRequest {
 	public static type: RequestType<ValidateDocsParams,void,void,void>
 		= new RequestType<ValidateDocsParams, void, void, void>('textDocument/devskim/validatedocuments');
 }
 
+/**
+ * Mock of server function to trigger a a rules reloading from the file system.  Analogous to implementation in devskimServer.ts
+ */
 export class ReloadRulesRequest {
 	public static type: RequestType<{},void,void,void> = new RequestType<{}, void, void, void>('devskim/validaterules')
+}
+
+/**
+ * Mock of server function to notify that analysis on change should run even if setting says
+ * analysis on save - this is to enable analysis after invoking a code action.  Analogous to implementation in devskimServer.ts
+ */
+export class SetAnalysisFlag {
+	public static type: RequestType<{},void,void,void> = new RequestType<{}, void, void, void>('devskim/analysisflag')
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -156,8 +170,18 @@ function applyTextEdits(uri: string, documentVersion: number, edits: TextEdit[])
 		//as any changes to the document should refresh the code action, but since things are asynchronous this might be possible
 		if (textEditor && textEditor.document.uri.toString() === uri) {
 			if (textEditor.document.version !== documentVersion) {
-				vscode.window.showInformationMessage(`DevSkim fixes are outdated and can't be applied to the document.`);
+				vscode.window.showInformationMessage(`This document has changed since the Auto Fix was generated.  DevSkim is doing a new analysis now.  Please trigger the fix again.`);
+				const textDocuments: TextDocumentIdentifier[] = [];
+				const td: TextDocumentIdentifier = Object.create(null);
+				td.uri = uri;
+				textDocuments.push(td);				
+				client.sendRequest(ValidateDocsRequest.type, {textDocuments});
 			}
+
+			//When doing analysis only on saves we still want to re-analyze if the user took a code action.  This
+			//tells the server to do so
+			client.sendRequest(SetAnalysisFlag.type, null);
+			
 			//apply the edits
 			textEditor.edit(mutator => {
 				for (let edit of edits) {

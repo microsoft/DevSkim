@@ -3,16 +3,21 @@
 	"typescript.preferences.quoteStyle": "single",
 	"cSpell.words": [
 		"Icommands",
+		"analysisflag",
 		"cplusplus",
+		"deserialization",
 		"dylib",
+		"eval",
 		"nuget",
 		"nupkg",
 		"pathing",
 		"pycache",
+		"ruleset",
 		"schemastore",
 		"subdir",
 		"subdirs",
 		"unittests",
+		"usersettings",
 		"visualbasic"
 	]
 }

@@ -196,6 +196,14 @@ export interface IDevSkimSettings
 	 */
 	suppressionCommentPlacement: string;
 	
+	/**
+	 * DevSkim can analyze files for problems at two points in time, while actively editing the document, 
+	 * and when the document is saved.  Editing is similar to Spell Check as it will catch issues as they are 
+	 * introduced, but on very large files, or less performant machines, may lag behind the typing. On Save will 
+	 * only analyze when the document has been saved."
+	 */	
+	analyzeMode: string;
+
 	//--------------------------------------
 	//Internal use
 

@@ -4,11 +4,11 @@ DevSkim is a framework of IDE plugins and Language analyzers that provide inline
 
 ## PUBLIC PREVIEW
 
-DevSkim is currently in public preview. We're looking forward to working with the community to improve both the scanning engines and rules over the next few months, and welcome your feedback and contributions! You can find us at https://github.com/Microsoft/DevSkim
+DevSkim is currently in public preview. We're looking forward to working with the community to improve both the scanning engines and rules over the next few months, and welcome your feedback and contributions! You can find us at [Github](https://github.com/Microsoft/DevSkim)
 
 ## Usage
 
-As a developer codes DevSkim will flag certain security issues and call attention to them with errors or warnings (depending on a very generalized estimation of the severity).  Mousing over the issue will show a description of the problem and how to address it, and a link to more information.  For some issues, one or more safe alternitives are available in the lightbulb menu so that the issue can be fixed with a couple mouse clicks.  For issues where the alternitive has different parameters than the unsafe API that is called out, guidance for the parameters will be inserted in the form of \<some guidance info\>  (example, when DevSkim turns gets() into fgets() it adds \<size of firstparamname\> to cue a user that they need to provide the size of the buffer).
+As a developer codes DevSkim will flag certain security issues and call attention to them with errors or warnings (depending on a very generalized estimation of the severity).  Mousing over the issue will show a description of the problem and how to address it, and a link to more information.  For some issues, one or more safe alternatives are available in the light bulb menu so that the issue can be fixed with a couple mouse clicks.  For issues where the alternative has different parameters than the unsafe API that is called out, guidance for the parameters will be inserted in the form of \<some guidance info\>  (example, when DevSkim turns gets() into fgets() it adds \<size of firstparamname\> to cue a user that they need to provide the size of the buffer).
 
 ![screenshot of devskim](https://github.com/Microsoft/DevSkim-VSCode-Plugin/raw/master/vsc-example.gif)
 
@@ -18,14 +18,14 @@ DevSkim has built in the ability to suppress any of its warnings, either permane
 
 For timed suppressions, the default period is 30 days, but this can be adjusted in the settings file.
 
-Suppressions can be accessed from the lightbulb menu.  Once a suppression is added, DevSkim will highlight the issue number that identifies the check being suppressed (the gets() example above is issue number DS181021 for example), and mousing over will provide details.  This will let other contributors to a project know what was suppressed, so that they aren't confused by the comment
+Suppressions can be accessed from the light bulb menu.  Once a suppression is added, DevSkim will highlight the issue number that identifies the check being suppressed (the gets() example above is issue number DS181021 for example), and mousing over will provide details.  This will let other contributors to a project know what was suppressed, so that they aren't confused by the comment
 
 ![screenshot of devskim suppression](https://github.com/Microsoft/DevSkim-VSCode-Plugin/raw/master/vsc-suppression-example.png)
 
 ### Code Reviews
 
-Most of DevSkim's rules are meant to be used by all developers, flagging programming practices that are generally bad for security.  For example, the hashing function SHA-1 is broken, so generally should never be used.  There are some scenarios where the security relevence is not as clear cut.  For example, many dynamic languages support some form of eval() to create code on the fly.  If an
-attacker can get their data into the eval function, they can get their own code created, but if there isn't a clear path for an attacker to manipulate the contents of eval() it is probably ok.  For scenarios such as this, DevSkim is conservative and by default won't alert to the usage.  However, if the user turns on the Manual Review rules in settings they will start seeing issues that take a bit of analysis to determine whether the usage is safe or dangerous.  The intent is to make manual security code reviews a bit easier, by calling attention to *potentially* dangerous code.  When the reviewer deems the code safe they can click on the lightbulb menu and mark it as reviewed. Similar to suppressions, DevSkim will no longer flag that usage, but will highlight the issue number in its comment so that other people seeing the comment can understand what was reviewed.
+Most of DevSkim's rules are meant to be used by all developers, flagging programming practices that are generally bad for security.  For example,the hashing function SHA-1 is broken, so generally should never be used.  There are some scenarios where the security relevance is not as clear cut.  For example, many dynamic languages support some form of eval() to create code on the fly.  If an
+attacker can get their data into the eval function, they can get their own code created, but if there isn't a clear path for an attacker to manipulate the contents of eval() it is probably ok.  For scenarios such as this, DevSkim is conservative and by default won't alert to the usage.  However, if the user turns on the Manual Review rules in settings they will start seeing issues that take a bit of analysis to determine whether the usage is safe or dangerous.  The intent is to make manual security code reviews a bit easier, by calling attention to *potentially* dangerous code.  When the reviewer deems the code safe they can click on the light bulb menu and mark it as reviewed. Similar to suppressions, DevSkim will no longer flag that usage, but will highlight the issue number in its comment so that other people seeing the comment can understand what was reviewed.
 
 There is also a DevSkim setting to set the reviewer name (person's name, or github handle, etc.).  If set, DevSkim will mark that the code was reviewed by that specific person.
 

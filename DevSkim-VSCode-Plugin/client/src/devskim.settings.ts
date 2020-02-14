@@ -11,6 +11,8 @@ export interface DevSkimSettings {
     validateRulesFiles: boolean;
     guidanceBaseURL: string;
     removeFindingsOnClose: boolean;
+    analyzeMode: string;
+    maxFileSizeKB : number;
 }
 
 export class DevSkimSettingsObject implements DevSkimSettings {
@@ -26,4 +28,6 @@ export class DevSkimSettingsObject implements DevSkimSettings {
     removeFindingsOnClose: boolean;
     suppressionDurationInDays: number;
     validateRulesFiles: boolean;
+    analyzeMode: string;
+    maxFileSizeKB : number;
 };

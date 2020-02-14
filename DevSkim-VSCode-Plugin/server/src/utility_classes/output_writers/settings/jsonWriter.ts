@@ -17,6 +17,14 @@ export class JSONSettingsWriter extends DevskimSettingsWriter
      */      
     protected createOutput(): string
     {
+        //remove settings irrelevant for the CLI
+        delete this.devskimSettings.suppressionDurationInDays;
+        delete this.devskimSettings.manualReviewerName;
+        delete this.devskimSettings.suppressionCommentStyle;
+        delete this.devskimSettings.suppressionCommentPlacement;
+        delete this.devskimSettings.removeFindingsOnClose;
+        delete this.devskimSettings.analyzeMode;
+
         return JSON.stringify(this.devskimSettings , null, 4);
     }
 

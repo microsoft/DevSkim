@@ -70,21 +70,37 @@ export class DevSkimCLI
     /**
      * Create a DevSkimSettings object from the specified command line options (or defaults if no relevant option is present)
      */
-    private buildSettings() 
+    private async buildSettings() 
     {
         //right now most of the options come from the defaults, with only a couple of variations passed
         //from the command line
         this.settings = DevSkimWorkerSettings.defaultSettings();
     
-        if(this.options.best_practice != undefined && this.options.best_practice == true)
+        //user passed in a settings file - try to lead it, and override the defaults
+        if(this.options.settings !== undefined)
         {
             this.settings.enableBestPracticeRules = true;
+            const fs = require('fs');
+            if(this.options.settings.length > 0 && fs.existsSync(this.options.settings))
+            {
+                const util = require('util');
+                const readFile = util.promisify(fs.readFile);
+
+                await readFile(this.options.settings).then(content =>
+                    {
+                        const tempSettings: IDevSkimSettings = JSON.parse(content);
+                        let workerSettingObject : DevSkimWorkerSettings = new DevSkimWorkerSettings();
+                        workerSettingObject.setSettings(tempSettings);
+                        this.settings = workerSettingObject.getSettings();
+
+                    });
+
+            }
+            else
+            {
+                console.log("Could not load the settings file, please check the path provided.  Continuing execution with the default settings.")
+            }
         }
-    
-        if(this.options.manual_review != undefined && this.options.manual_review == true)
-        {
-            this.settings.enableManualReviewRules = true;
-        }    
     }
 
     /**
@@ -223,28 +239,6 @@ export class DevSkimCLI
             case CLIcommands.showSettings: this.outputObject.writeOutput();
                 break;
         }
-    }
-
-    /**
-     * Produce a template of the DevSkim settings to make it easier to customize runs
-     * @todo do more than just output it to the command line, and finish fleshing out
-     * the settings object
-     */
-    private writeSettings()
-    {
-        let settings : IDevSkimSettings = DevSkimWorkerSettings.defaultSettings();
-
-
-        //remove settings irrelevant for the CLI
-        delete settings.suppressionDurationInDays;
-        delete settings.manualReviewerName;
-        delete settings.suppressionCommentStyle;
-        delete settings.suppressionCommentPlacement;
-        delete settings.removeFindingsOnClose;
-
-        let output : string = JSON.stringify(settings , null, 4);
-
-        console.log(output);
     }
     
     /**

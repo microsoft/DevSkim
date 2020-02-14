@@ -32,12 +32,15 @@ export class DevSkimWorkerSettings
         let defaults : IDevSkimSettings = DevSkimWorkerSettings.defaultSettings();
 
         //validating the incoming settings, and replace with defaults for fields that don't validate
-        settings.enableBestPracticeRules = (settings.enableBestPracticeRules !== undefined && settings.enableBestPracticeRules != null) ?
-                                            settings.enableBestPracticeRules : defaults.enableBestPracticeRules;
+        settings.enableBestPracticeRules = (settings.enableBestPracticeRules !== undefined && settings.enableBestPracticeRules != null
+            && (settings.enableBestPracticeRules === true || settings.enableBestPracticeRules === false)) ?
+                settings.enableBestPracticeRules : defaults.enableBestPracticeRules;
 
-        settings.enableManualReviewRules = (settings.enableManualReviewRules !== undefined && settings.enableManualReviewRules != null) ?
-                                            settings.enableManualReviewRules : defaults.enableManualReviewRules;      
-        
+        settings.enableManualReviewRules = (settings.enableManualReviewRules !== undefined && settings.enableManualReviewRules != null
+            && (settings.enableManualReviewRules === true || settings.enableManualReviewRules === false)) ?
+                settings.enableManualReviewRules : defaults.enableManualReviewRules;      
+
+
         settings.guidanceBaseURL = (settings.guidanceBaseURL !== undefined && settings.guidanceBaseURL != null && settings.guidanceBaseURL.length > 0) ?
                                             settings.guidanceBaseURL : defaults.guidanceBaseURL;       
 
@@ -56,12 +59,14 @@ export class DevSkimWorkerSettings
         settings.manualReviewerName = (settings.manualReviewerName !== undefined && settings.manualReviewerName != null && settings.manualReviewerName.length > 0) ?
                                             settings.manualReviewerName : defaults.manualReviewerName;   
                                             
-        settings.removeFindingsOnClose = (settings.removeFindingsOnClose !== undefined && settings.removeFindingsOnClose != null) ?
+        settings.removeFindingsOnClose = (settings.removeFindingsOnClose !== undefined && settings.removeFindingsOnClose != null
+                                    && (settings.removeFindingsOnClose === true || settings.removeFindingsOnClose === false)) ?
                                             settings.removeFindingsOnClose : defaults.removeFindingsOnClose ;     
-                                            
-        settings.validateRulesFiles = (settings.validateRulesFiles !== undefined && settings.validateRulesFiles != null) ?
-                                            settings.validateRulesFiles : defaults.validateRulesFiles ;   
-                                            
+                                                                                
+        settings.validateRulesFiles = (settings.validateRulesFiles !== undefined && settings.validateRulesFiles != null
+            && (settings.validateRulesFiles === true || settings.validateRulesFiles === false)) ?
+                    settings.validateRulesFiles : defaults.validateRulesFiles ;   
+                                                       
         settings.debugLogging = (settings.debugLogging !== undefined && settings.debugLogging != null) ?
                                             settings.debugLogging : defaults.debugLogging ; 
                                             
@@ -120,7 +125,7 @@ export class DevSkimWorkerSettings
                 "(^|/)(out|bin)/",
                 "(^|/)(tests?|unittests?|__tests__|__mocks__)/",
                 "(^|/)(\\.git|git)/",
-                "\\.(git|git[^.\/])$",
+                "\\.(git|git[^\.\/]*)$",
                 "-lock\\.[^/]|\\.lock$",
                 "(^|/)(\\.vscode|\\.cache|logs)/",
                 "(^|/)(nuget|node_modules)/",
@@ -137,7 +142,8 @@ export class DevSkimWorkerSettings
             validateRulesFiles: false,
             debugLogging: false,
             maxFileSizeKB: 100,
-            toolInfo:  new ToolVersion()
+            toolInfo:  new ToolVersion(),
+            analyzeMode: "Analyze While Typing"
         };
     }
 

@@ -132,7 +132,7 @@
             "(^|/)(out|bin)/",
             "(^|/)(tests?|unittests?|__tests__|__mocks__)/",
             "(^|/)(\\.git|git)/",
-            "\\.(git|git[^.\/])$",
+            "\\.(git|git[^.\\/]*)$",
             "-lock\\.[^/]|\\.lock$",
             "(^|/)(\\.vscode|\\.cache|logs)/",
             "(^|/)(nuget|node_modules)/",
@@ -156,7 +156,7 @@
           "type": "boolean",
           "default": true,
           "description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
-        }      
+        }
       }
     }
   },
