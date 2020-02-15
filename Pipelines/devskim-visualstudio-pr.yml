@@ -1,0 +1,70 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VisualStudio_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - DevSkim-DotNet/Microsoft.DevSkim/*
+    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+    - rules/*
+
+stages:
+- stage: Publish
+  jobs:
+  - job: publish
+    displayName: Publish Visual Studio Extension
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '3.1.100'
+    - task: NuGetToolInstaller@1
+      inputs:
+        versionSpec: '5.4'
+    - task: NuGetCommand@2
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
+        feedsToUse: 'select'
+    - task: MSBuild@1
+      inputs:
+        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
+        msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
+        restoreNugetPackages: false
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(Build.BinariesDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
+    - task: PowerShell@2
+      displayName: Generate Hashes
+      inputs:
+        targetType: 'inline'
+        script: |
+          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+            $name = $_.Name
+            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+          }
+    - task: PublishPipelineArtifact@1
+      displayName: Publish All Artifacts
+      inputs:
+        targetPath: '$(Build.StagingDirectory)'
+        artifact: 'Binaries'

@@ -1,0 +1,83 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VSCode_CI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - DevSkim-VSCode-Plugin/*
+    - rules/*
+
+stages:
+- stage: Publish
+  jobs:
+  - job: publish
+    displayName: Publish VSCode Plugin
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: Npm@1
+      displayName: npm install
+      inputs:
+        command: 'install'
+        workingDir: '$(SolutionDirectory)'
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        workingDir: '$(SolutionDirectory)'
+        customCommand: 'run pack-ext'
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(SolutionDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $(SolutionDirectory)/*.vsix $env:BUILD_BINARIESDIRECTORY'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign
+      enabled: false
+      inputs:
+        ConnectedServiceName: ''
+        FolderPath: '$(Build.BinariesDirectory)'
+        Pattern: '*.vsix'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [ ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      displayName: 'Delete Code Sign Summaries'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/*.vsix $env:BUILD_STAGINGDIRECTORY'
+    - task: PowerShell@2
+      displayName: Generate Hashes
+      inputs:
+        targetType: 'inline'
+        script: |
+          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+            $name = $_.Name
+            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+          }
+    - task: PublishPipelineArtifact@1
+      displayName: Publish All Artifacts
+      inputs:
+        targetPath: '$(Build.StagingDirectory)'
+        artifact: 'Binaries'

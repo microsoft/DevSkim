@@ -1,82 +1,54 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-trigger:
-  batch: true
-  branches:
-    include:
-    - master
-  paths:
-    include:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-    - rules/*
+name: DevSkim_VSCode_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 pr:
   branches:
     include:
     - master
   paths:
     include:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+    - DevSkim-VSCode-Plugin/*
 
 stages:
 - stage: Publish
   jobs:
   - job: publish
-    displayName: Publish Visual Studio Extension
+    displayName: Publish VSCode Plugin
     pool:
       vmImage: 'windows-latest'
     steps:
-    - task: UseDotNet@2
+    - task: Npm@1
+      displayName: npm install
       inputs:
-        packageType: 'sdk'
-        version: '3.1.100'
-    - task: NuGetToolInstaller@1
+        command: 'install'
+        workingDir: '$(SolutionDirectory)'
+    - task: Npm@1
       inputs:
-        versionSpec: '5.4'
-    - task: NuGetCommand@2
-      inputs:
-        command: 'restore'
-        restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
-        feedsToUse: 'select'
-    - task: MSBuild@1
-      inputs:
-        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
-        msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
-        restoreNugetPackages: false
+        command: 'custom'
+        workingDir: '$(SolutionDirectory)'
+        customCommand: 'run pack-ext'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
         InputType: 'Basic'
         ScanType: 'CustomScan'
-        FileDirPath: '$(Build.BinariesDirectory)'
+        FileDirPath: '$(SolutionDirectory)'
         EnableServices: true
         SupportLogOnError: false
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
-    - task: EsrpCodeSigning@1
-      displayName: Code Sign
-      enabled: false
-      inputs:
-        ConnectedServiceName: ''
-        FolderPath: '$(Build.BinariesDirectory)\visualstudio\DevSkim_$(ReleaseVersion)'
-        Pattern: '*.vsix'
-        signConfigType: 'inlineSignParams'
-        inlineOperation: |
-          [ ]
-        SessionTimeout: '60'
-        MaxConcurrency: '50'
-        MaxRetryAttempts: '5'
-    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
-      displayName: 'Delete Code Sign Summaries'
     - task: PowerShell@2
       displayName: Move Extension File
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
+        script: 'mv $(SolutionDirectory)/*.vsix $env:BUILD_BINARIESDIRECTORY'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/*.vsix $env:BUILD_STAGINGDIRECTORY'
     - task: PowerShell@2
       displayName: Generate Hashes
       inputs:
@@ -93,7 +65,6 @@ stages:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Binaries'
 
-
   - job: sdl
     displayName: SDL Tools
     dependsOn: publish
@@ -101,17 +72,22 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    - task: MSBuild@1
-      displayName: Build Extension
+    - task: Npm@1
+      displayName: npm install
       inputs:
-        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
-        msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.StagingDirectory) /p:DebugType=Full'
+        command: 'install'
+        workingDir: '$(SolutionDirectory)'
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: 'vsce package'
+        workingDirectory: '$(SolutionDirectory)'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
         InputType: 'Basic'
         ScanType: 'CustomScan'
-        FileDirPath: '$(Build.StagingDirectory)'
+        FileDirPath: '$(SolutionDirectory)'
         EnableServices: true
         SupportLogOnError: false
         TreatSignatureUpdateFailureAs: 'Warning'
@@ -144,9 +120,9 @@ stages:
       displayName: Semmle Scan
       inputs:
         sourceCodeDirectory: '$(SolutionDirectory)'
-        language: 'csharp'
-        cleanupBuildCommands: 'msbuild Microsoft.DevSkim.VSExtension /p:Configuration=$(BuildConfiguration) /t:Clean'
-        buildCommands: 'msbuild Microsoft.DevSkim.VSExtension /p:Configuration=$(BuildConfiguration) /p:DebugType=Full'
+        language: 'javascript'
+        cleanupBuildCommands: 'npm run clean'
+        buildCommands: 'npm install && vsce package'
         querySuite: 'Recommended'
         timeout: '1800'
         ram: '16384'
@@ -166,6 +142,6 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish Semmle Result
       inputs:
-        targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\csharp\Microsoft.DevSkim.VSExtension-csharp-1.sarif'
+        targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\javascript\DevSkim-VSCode-csharp-1.sarif'
         artifact: 'Semmle.sarif'
       continueOnError: true
