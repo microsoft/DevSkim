@@ -1,16 +1,14 @@
 # include these to be ignored
 .idea
-out
-client/out
-server/out
-client/dist
-server/dist
-npm-debug.log
-node_modules
-**/node_modules
+**/out/**
+**/dist/**
+**/npm-debug.log/**
+**/node_modules/**
 **/rulesValidatiionLog.json
 **/.vscode*
 **/.vscode/**
+server/data/rules
+server/rulesValidationLog.json
 
 #exclude these from being ignored
 !**/.gitignore
