@@ -204,7 +204,7 @@
   },
   "scripts": {
     "clean": "npm run clean:base && npm run clean:client && npm run clean:server",
-    "clean:base": "rimraf *.log out node_modules",
+    "clean:base": "npx --ignore-existing --quiet rimraf *.log out node_modules",
     "clean:client": "cd client && npm run clean && cd ..",
     "clean:server": "cd server && npm run clean && cd ..",
     "compile": "tsc -b",
