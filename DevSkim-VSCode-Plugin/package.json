@@ -231,7 +231,7 @@
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
     "copy-rules": "ncp ../rules server/data/rules",
-    "pack-ext": "vsce package"
+    "pack-ext": "vsce package && gulp resetPackageVersion"
   },
   "dependencies": {
     "nerdbank-gitversioning": "^3.1.51-beta",
