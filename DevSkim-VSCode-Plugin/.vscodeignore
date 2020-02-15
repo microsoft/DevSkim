@@ -4,7 +4,6 @@
 **/*.png
 .vscode
 .gitignore
-README.md
 tsconfig.json
 node_modules
 

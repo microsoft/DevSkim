@@ -1,9 +1,9 @@
 {
-  "name": "devskim-analyzer",
+  "name": "devskim-vscode-analyzer",
   "description": "Devskim Security Analyzer",
-  "version": "0.3.0",
+  "version": "0.0.0-placeholder",
   "author": "Microsoft Corporation",
-  "publisher": "MS-DevSkim",
+  "publisher": "MS-CST-E",
   "private": true,
   "license": "MIT",
   "main": "./out/cli.js",
