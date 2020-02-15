@@ -25,7 +25,7 @@
 	"scripts": {
 		"update-vscode": "vscode-install",
 		"postinstall": "vscode-install",
-		"clean": "rimraf client/node_modules client/dist client/out"
+		"clean": "npx --ignore-existing --quiet rimraf node_modules dist out"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.9.1",
