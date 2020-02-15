@@ -12,6 +12,15 @@ trigger:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
     - rules/*
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - DevSkim-DotNet/Microsoft.DevSkim/*
+    - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
+    - rules/*
 
 stages:
 - stage: Publish
