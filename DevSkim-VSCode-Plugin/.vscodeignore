@@ -4,8 +4,9 @@
 **/*.png
 .vscode
 .gitignore
-tsconfig.json
 node_modules
+readme-gallery.md
+tsconfig.json
 
 client/node_modules
 client/out
