@@ -11,6 +11,13 @@ trigger:
     include:
     - DevSkim-VSCode-Plugin/*
     - rules/*
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - DevSkim-VSCode-Plugin/*
 
 stages:
 - stage: Publish
@@ -47,6 +54,7 @@ stages:
         targetType: 'inline'
         script: 'mv $(SolutionDirectory)/*.vsix $env:BUILD_BINARIESDIRECTORY'
     - task: EsrpCodeSigning@1
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Code Sign
       enabled: false
       inputs:
@@ -60,6 +68,7 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: 'Delete Code Sign Summaries'
     - task: PowerShell@2
       displayName: Move Extension File
@@ -67,6 +76,7 @@ stages:
         targetType: 'inline'
         script: 'mv $env:BUILD_BINARIESDIRECTORY/*.vsix $env:BUILD_STAGINGDIRECTORY'
     - task: PowerShell@2
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Generate Hashes
       inputs:
         targetType: 'inline'

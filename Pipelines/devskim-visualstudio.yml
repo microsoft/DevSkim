@@ -1,7 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_VisualStudio_CI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   batch: true
   branches:
@@ -12,6 +12,15 @@ trigger:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
     - rules/*
+  pr:
+    branches:
+      include:
+      - master
+    paths:
+      include:
+      - DevSkim-DotNet/Microsoft.DevSkim/*
+      - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+      - rules/*
 
 stages:
 - stage: Publish
@@ -50,6 +59,7 @@ stages:
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
     - task: EsrpCodeSigning@1
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Code Sign
       enabled: false
       inputs:
@@ -63,6 +73,7 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: 'Delete Code Sign Summaries'
     - task: PowerShell@2
       displayName: Move Extension File
@@ -70,6 +81,7 @@ stages:
         targetType: 'inline'
         script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
     - task: PowerShell@2
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Generate Hashes
       inputs:
         targetType: 'inline'

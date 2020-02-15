@@ -1,7 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_CLI_CI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: DevSkim_CLI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   batch: true
   branches:
@@ -109,6 +109,7 @@ stages:
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
     - task: EsrpCodeSigning@1
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Code Sign
       enabled: false
       inputs:
@@ -122,6 +123,7 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: 'Delete Code Sign Summaries'
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Windows
@@ -160,6 +162,7 @@ stages:
     dependsOn:
     - publish_nix
     - publish_win
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
     pool:
       vmImage: 'windows-latest'
     steps:
