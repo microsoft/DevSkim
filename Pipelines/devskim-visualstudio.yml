@@ -20,6 +20,7 @@ pr:
     include:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+    - rules/*
 
 stages:
 - stage: Publish
@@ -58,6 +59,7 @@ stages:
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
     - task: EsrpCodeSigning@1
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Code Sign
       enabled: false
       inputs:
@@ -71,6 +73,7 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: 'Delete Code Sign Summaries'
     - task: PowerShell@2
       displayName: Move Extension File
@@ -78,6 +81,7 @@ stages:
         targetType: 'inline'
         script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
     - task: PowerShell@2
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Generate Hashes
       inputs:
         targetType: 'inline'
@@ -92,80 +96,3 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Binaries'
-
-
-  - job: sdl
-    displayName: SDL Tools
-    dependsOn: publish
-    condition: and(succeeded(), eq(variables['RunSDL'], 'TRUE'))
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: MSBuild@1
-      displayName: Build Extension
-      inputs:
-        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
-        msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.StagingDirectory) /p:DebugType=Full'
-    - task: AntiMalware@3
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: '$(Build.StagingDirectory)'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Error'
-    - task: ComponentGovernanceComponentDetection@0
-      displayName: Component Governance
-      inputs:
-        scanType: 'Register'
-        verbosity: 'Verbose'
-        alertWarningLevel: 'Low'
-    - task: notice@0
-      displayName: Notice File Generator
-      inputs:
-        outputformat: 'text'
-      continueOnError: true
-    - task: PoliCheck@1
-      displayName: PoliCheck
-      inputs:
-        inputType: 'Basic'
-        targetType: 'F'
-        targetArgument: '$(SolutionDirectory)'
-        result: 'PoliCheck.xml'
-    - task: BinSkim@3
-      displayName: BinSkim
-      inputs:
-        InputType: 'CommandLine'
-      continueOnError: true
-    - task: Semmle@0
-      displayName: Semmle Scan
-      inputs:
-        sourceCodeDirectory: '$(SolutionDirectory)'
-        language: 'csharp'
-        cleanupBuildCommands: 'msbuild Microsoft.DevSkim.VSExtension /p:Configuration=$(BuildConfiguration) /t:Clean'
-        buildCommands: 'msbuild Microsoft.DevSkim.VSExtension /p:Configuration=$(BuildConfiguration) /p:DebugType=Full'
-        querySuite: 'Recommended'
-        timeout: '1800'
-        ram: '16384'
-        addProjectDirToScanningExclusionList: true
-      continueOnError: true
-    - task: PublishPipelineArtifact@1
-      displayName: Publish PoliCheck Result
-      inputs:
-        targetPath: '$(Pipeline.Workspace)\_sdt\logs\PoliCheck\PoliCheck.xml'
-        artifact: 'PoliCheck.xml'
-    - task: PublishPipelineArtifact@1
-      displayName: Publish BinSkim Result
-      inputs:
-        targetPath: '$(Pipeline.Workspace)\_sdt\logs\BinSkim\BinSkim.sarif'
-        artifact: 'BinSkim.sarif'
-      continueOnError: true
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Semmle Result
-      inputs:
-        targetPath: '$(Pipeline.Workspace)\_sdt\logs\Semmle\csharp\Microsoft.DevSkim.VSExtension-csharp-1.sarif'
-        artifact: 'Semmle.sarif'
-      continueOnError: true
