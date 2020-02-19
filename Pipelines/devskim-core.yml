@@ -23,10 +23,10 @@ pr:
     - rules/*
 
 stages:
-- stage: Publish
+- stage: Build
   jobs:
-  - job: publish_nix
-    displayName: Publish Linux & Mac
+  - job: build_nix
+    displayName: Build Linux & Mac
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -53,7 +53,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Linux
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/linux/'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)/DevSkim_linux_$(ReleaseVersion).zip'
@@ -61,7 +61,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - MacOS
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/macos/'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)/DevSkim_macos_$(ReleaseVersion).zip'
@@ -74,8 +74,8 @@ stages:
         publishLocation: 'Container'
 
 
-  - job: publish_win
-    displayName: Publish Windows, NetCore, Nupkg
+  - job: build_win
+    displayName: Build Windows, NetCoreApp, Nupkg
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -95,7 +95,7 @@ stages:
       displayName: Dotnet Build .NET Core App
       inputs:
         command: 'build'
-        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp3.1\DevSkim_$(ReleaseVersion) -f netcoreapp3.1 /p:DebugType=None'
+        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp\DevSkim_$(ReleaseVersion) -f netcoreapp3.1 /p:DebugType=None'
         workingDirectory: '$(SolutionDirectory)'
         publishWebProjects: false
         zipAfterPublish: false
@@ -117,27 +117,10 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
-    - task: EsrpCodeSigning@1
-      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
-      displayName: Code Sign
-      enabled: false
-      inputs:
-        ConnectedServiceName: ''
-        FolderPath: '$(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion)'
-        Pattern: ''
-        signConfigType: 'inlineSignParams'
-        inlineOperation: |
-          [ ]
-        SessionTimeout: '60'
-        MaxConcurrency: '50'
-        MaxRetryAttempts: '5'
-    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
-      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
-      displayName: 'Delete Code Sign Summaries'
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Windows
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)\windows\'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)\DevSkim_windows_$(ReleaseVersion).zip'
@@ -145,33 +128,34 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - .NET Core App
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)\netcoreapp3.1\DevSkim_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)\netcoreapp\'
         includeRootFolder: true
         archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)\DevSkim_netcoreapp3.1_$(ReleaseVersion).zip'
+        archiveFile: '$(Build.StagingDirectory)\DevSkim_netcoreapp_$(ReleaseVersion).zip'
         replaceExistingArchive: true
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Nupkg
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)\nuget\DevSkim_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)\nuget\'
         includeRootFolder: true
         archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)\DevSkim_nupkg_$(ReleaseVersion).zip'
+        archiveFile: '$(Build.StagingDirectory)\DevSkim_nuget_$(ReleaseVersion).zip'
         replaceExistingArchive: true
     - task: PublishBuildArtifacts@1
       displayName: Store Windows, NetCoreApp, Nupkg Archives
       inputs:
         PathtoPublish: '$(Build.StagingDirectory)'
-        ArtifactName: 'WinCoreArchives'
+        ArtifactName: 'WinCoreNugetArchives'
         publishLocation: 'Container'
 
 
-  - job: hashes
-    displayName: Generate Hashes
+  - job: sign_hash_release
+    displayName: Code Sign, Generate Hashes, Publish Public Releases
     dependsOn:
-    - publish_nix
-    - publish_win
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+    - build_nix
+    - build_win
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
+    #TODO: Remove 'Manual' after testing
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -180,27 +164,222 @@ stages:
       inputs:
         buildType: 'current'
         downloadType: 'specific'
-        itemPattern: 'NixArchives/*.zip'
+        itemPattern: 'NixArchives\*.zip'
         downloadPath: '$(Build.BinariesDirectory)'
     - task: DownloadBuildArtifacts@0
       displayName: Retrieve Windows, NetCoreApp, Nupkg Archives
       inputs:
         buildType: 'current'
         downloadType: 'specific'
-        itemPattern: 'WinCoreArchives/*.zip'
+        itemPattern: 'WinCoreNugetArchives\*.zip'
         downloadPath: '$(Build.BinariesDirectory)'
+    - task: ExtractFiles@1
+      displayName: Extract Artifacts for Signing
+      inputs:
+        archiveFilePatterns: '$(Build.BinariesDirectory)\*.zip'
+        destinationFolder: '$(Build.BinariesDirectory)'
+        cleanDestinationFolder: false
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(Build.BinariesDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign Linux
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion)'
+        Pattern: 'devskim, devskim.dll, Microsoft.DevSkim.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+        [{
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolSign",
+            "Parameters" : {
+                "OpusName" : "Microsoft",
+                "OpusInfo" : "http://www.microsoft.com",
+                "FileDigest" : "/fd \"SHA256\"",
+                "PageHash" : "/NPH",
+                "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+            },
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        },
+        {
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolVerify",
+            "Parameters" : {},
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        }]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign MacOS
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion)'
+        Pattern: 'devskim, devskim.dll, Microsoft.DevSkim.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+        [{
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolSign",
+            "Parameters" : {
+                "OpusName" : "Microsoft",
+                "OpusInfo" : "http://www.microsoft.com",
+                "FileDigest" : "/fd \"SHA256\"",
+                "PageHash" : "/NPH",
+                "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+            },
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        },
+        {
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolVerify",
+            "Parameters" : {},
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        }]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign Windows
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/windows/DevSkim_$(ReleaseVersion)'
+        Pattern: 'devskim.exe, devskim.dll, Microsoft.DevSkim.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+        [{
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolSign",
+            "Parameters" : {
+                "OpusName" : "Microsoft",
+                "OpusInfo" : "http://www.microsoft.com",
+                "FileDigest" : "/fd \"SHA256\"",
+                "PageHash" : "/NPH",
+                "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+            },
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        },
+        {
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolVerify",
+            "Parameters" : {},
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        }]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign NetCoreApp
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_$(ReleaseVersion)'
+        Pattern: 'devskim.exe, devskim.dll, Microsoft.DevSkim.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+        [{
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolSign",
+            "Parameters" : {
+                "OpusName" : "Microsoft",
+                "OpusInfo" : "http://www.microsoft.com",
+                "FileDigest" : "/fd \"SHA256\"",
+                "PageHash" : "/NPH",
+                "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+            },
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        },
+        {
+            "KeyCode" : "CP-230012",
+            "OperationCode" : "SigntoolVerify",
+            "Parameters" : {},
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        }]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@1
+      displayName: Code Sign Nuget Package
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/nuget/DevSkim_$(ReleaseVersion)'
+        Pattern: '*.nupkg'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+        [{
+            "KeyCode" : "CP-401405",
+            "OperationCode" : "NuGetSign",
+            "Parameters" : {},
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        },
+        {
+            "KeyCode" : "CP-401405",
+            "OperationCode" : "NuGetVerify",
+            "Parameters" : {},
+            "ToolName" : "sign",
+            "ToolVersion" : "1.0"
+        }]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      displayName: 'Delete Code Sign Summaries'
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - Linux
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_linux_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - MacOS
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_macos_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - Windows
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/windows/DevSkim_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_windows_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - .NET Core App
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_netcoreapp_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
     - task: PowerShell@2
-      displayName: Move Linux & Mac Archives
+      displayName: Move Nuget Package
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/NixArchives/*.zip $env:BUILD_STAGINGDIRECTORY'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/nuget/*.nupkg $env:BUILD_STAGINGDIRECTORY/'
     - task: PowerShell@2
-      displayName: Move Windows & NetCoreApp Archives
-      inputs:
-        targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/WinCoreArchives/*.zip $env:BUILD_STAGINGDIRECTORY'
-    - task: PowerShell@2
-      displayName: Generate Archive Hashes
+      displayName: Generate Hashes
       inputs:
         targetType: 'inline'
         script: |
@@ -210,7 +389,12 @@ stages:
             Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
           }
     - task: PublishPipelineArtifact@1
-      displayName: Publish All Artifacts
+      displayName: Publish Signed Artifacts to Pipeline
       inputs:
         targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Binaries'
+        artifact: 'Signed_Binaries'
+    #- task: ** TODO: Publish linux release to GitHub
+    #- task: ** TODO: Publish macos release to GitHub
+    #- task: ** TODO: Publish windows release to GitHub
+    #- task: ** TODO: Publish netcoreapp release to GitHub
+    #- task: ** TODO: Publish nuget package release to NuGet.org
