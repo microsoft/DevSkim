@@ -226,13 +226,12 @@
     "check": "yarn run lint && yarn run build && yarn run test",
     "check:bail": "yarn run lint:bail && yarn run build && yarn run test",
     "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server",
-    "backup-vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run build",
-    "vscode:prepublish": "gulp setPackageVersion && npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production && cd .. && gulp",
+    "vscode:prepublish": "npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production",
     "webpack": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
     "copy-rules": "ncp ../rules server/data/rules",
-    "pack-ext": "vsce package && gulp resetPackageVersion"
+    "pack-ext": "gulp setPackageVersion && vsce package && gulp resetPackageVersion"
   },
   "dependencies": {
     "nerdbank-gitversioning": "^3.1.51-beta",
