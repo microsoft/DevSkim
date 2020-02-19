@@ -5,6 +5,13 @@
   "author": "Microsoft Corporation",
   "publisher": "MS-CST-E",
   "private": true,
+  "repository": {
+	"type": "git",
+	"url": "https://github.com/Microsoft/devskim.git"
+  },
+  "bugs": {
+	"url": "https://github.com/Microsoft/devskim/issues"
+  },
   "license": "MIT",
   "main": "./out/cli.js",
   "bin": {
