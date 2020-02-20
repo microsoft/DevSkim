@@ -99,7 +99,7 @@ stages:
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
     - task: EsrpCodeSigning@1
-	  displayName: Code Sign VS Extension
+      displayName: Code Sign VS Extension
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)\Unsigned_Extension'
