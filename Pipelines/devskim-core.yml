@@ -120,7 +120,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Windows
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)\windows\'
+        rootFolderOrFile: '$(Build.BinariesDirectory)\windows'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)\DevSkim_windows_$(ReleaseVersion).zip'
@@ -128,7 +128,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - .NET Core App
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)\netcoreapp\'
+        rootFolderOrFile: '$(Build.BinariesDirectory)\netcoreapp'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)\DevSkim_netcoreapp_$(ReleaseVersion).zip'
@@ -136,7 +136,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Nupkg
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)\nuget\'
+        rootFolderOrFile: '$(Build.BinariesDirectory)\nuget'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)\DevSkim_nuget_$(ReleaseVersion).zip'
