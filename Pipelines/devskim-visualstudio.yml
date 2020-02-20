@@ -92,7 +92,7 @@ stages:
       inputs:
         InputType: 'Basic'
         ScanType: 'CustomScan'
-        FileDirPath: '$(Build.BinariesDirectory)'
+        FileDirPath: '$(Build.BinariesDirectory)\Unsigned_Extension'
         EnableServices: true
         SupportLogOnError: false
         TreatSignatureUpdateFailureAs: 'Warning'
@@ -101,7 +101,7 @@ stages:
     - task: EsrpCodeSigning@1
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)'
+        FolderPath: '$(Build.BinariesDirectory)\Unsigned_Extension'
         Pattern: '*.vsix'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -132,7 +132,7 @@ stages:
       displayName: Move Extension File
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/*.vsix $env:BUILD_STAGINGDIRECTORY/'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Extension/*.vsix $env:BUILD_STAGINGDIRECTORY/'
     - task: PowerShell@2
       displayName: Generate Hashes
       inputs:
