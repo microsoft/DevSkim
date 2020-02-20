@@ -81,7 +81,7 @@ stages:
       vmImage: 'windows-latest'
     steps:
     - task: DownloadBuildArtifacts@0
-      displayName: Retrieve VSExtension
+      displayName: Retrieve Unsigned Artifact 
       inputs:
         buildType: 'current'
         downloadType: 'specific'
@@ -99,15 +99,30 @@ stages:
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
     - task: EsrpCodeSigning@1
-      displayName: Code Sign
-      enabled: false
       inputs:
-        ConnectedServiceName: ''
+        ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)'
         Pattern: '*.vsix'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
-          [ ]
+          [
+                  {
+                      "KeyCode" : "CP-233016",
+                      "OperationCode" : "OpcSign",
+                      "Parameters" : {
+                          "FileDigest" : "/fd SHA256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-233016",
+                      "OperationCode" : "OpcVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
