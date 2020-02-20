@@ -89,7 +89,7 @@ stages:
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
     - task: EsrpCodeSigning@1
-	  displayName: Code Sign VSCode Plugin
+      displayName: Code Sign VSCode Plugin
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
