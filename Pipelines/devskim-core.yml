@@ -194,7 +194,7 @@ stages:
       displayName: Test Changing Linux Extension 
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/linux/devskim $env:BUILD_BINARIESDIRECTORY/linux/devskim.exe'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/linux/DevSkim_$(ReleaseVersion)/devskim $env:BUILD_BINARIESDIRECTORY/linux/DevSkim_$(ReleaseVersion)/devskim.exe'
     - task: EsrpCodeSigning@1
       displayName: Code Sign Linux
       inputs:
