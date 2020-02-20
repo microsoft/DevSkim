@@ -64,11 +64,12 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
-    - task: PublishPipelineArtifact@1
+    - task: PublishBuildArtifacts@1
       displayName: Publish Unsigned Artifact
       inputs:
-        targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Unsigned_Extension'
+        PathtoPublish: '$(Build.StagingDirectory)'
+        ArtifactName: 'Unsigned_Extension'
+        publishLocation: 'Container'
 
 
   - job: sign_hash_release
