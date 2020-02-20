@@ -76,8 +76,7 @@ stages:
     displayName: Code Sign, Generate Hashes, Publish Public Release
     dependsOn:
     - build_extension
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
-    #TODO: Remove 'Manual' after testing
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -88,11 +87,6 @@ stages:
         downloadType: 'specific'
         itemPattern: 'Unsigned_Extension\*.vsix'
         downloadPath: '$(Build.BinariesDirectory)'
-    - task: CmdLine@2
-      displayName: REMOVEME - Dir on Bin
-      inputs:
-        script: 'dir'
-        workingDirectory: '$(Build.BinariesDirectory)'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
