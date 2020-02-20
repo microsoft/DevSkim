@@ -23,10 +23,10 @@ pr:
     - rules/*
 
 stages:
-- stage: Publish
+- stage: Build
   jobs:
-  - job: publish
-    displayName: Publish Visual Studio Extension
+  - job: build_extension
+    displayName: Build Visual Studio Extension
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -43,6 +43,7 @@ stages:
         restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
         feedsToUse: 'select'
     - task: MSBuild@1
+      displayName: MSBuild VSExtension
       inputs:
         solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
         msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
@@ -58,13 +59,51 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
+    - task: PowerShell@2
+      displayName: Move Extension File
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Unsigned Artifact
+      inputs:
+        targetPath: '$(Build.StagingDirectory)'
+        artifact: 'Unsigned_Extension'
+
+
+  - job: sign_hash_release
+    displayName: Code Sign, Generate Hashes, Publish Public Release
+    dependsOn:
+    - build_extension
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
+    #TODO: Remove 'Manual' after testing
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: Retrieve VSExtension
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        itemPattern: 'Unsigned_Extension\*.vsix'
+        downloadPath: '$(Build.BinariesDirectory)'
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(Build.BinariesDirectory)'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
     - task: EsrpCodeSigning@1
-      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Code Sign
       enabled: false
       inputs:
         ConnectedServiceName: ''
-        FolderPath: '$(Build.BinariesDirectory)\visualstudio\DevSkim_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)'
         Pattern: '*.vsix'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -73,15 +112,13 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
-      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: 'Delete Code Sign Summaries'
     - task: PowerShell@2
       displayName: Move Extension File
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/*.vsix $env:BUILD_STAGINGDIRECTORY/'
     - task: PowerShell@2
-      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
       displayName: Generate Hashes
       inputs:
         targetType: 'inline'
@@ -92,7 +129,8 @@ stages:
             Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
           }
     - task: PublishPipelineArtifact@1
-      displayName: Publish All Artifacts
+      displayName: Publish Signed Artifact to Pipeline
       inputs:
         targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Binaries'
+        artifact: 'Signed_Extension'
+    #-task: TODO: Publish to VS Marketplace
