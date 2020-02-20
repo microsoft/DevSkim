@@ -154,8 +154,7 @@ stages:
     dependsOn:
     - build_nix
     - build_win
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
-    #TODO: Remove 'Manual' after testing
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
     pool:
       vmImage: 'windows-latest'
     steps:
