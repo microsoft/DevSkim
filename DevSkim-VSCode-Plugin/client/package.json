@@ -1,11 +1,11 @@
 {
-	"name": "vscode-devskim",
-	"displayName": "DevSkim",
+	"name": "devskim-vscode-client",
+	"displayName": "Microsoft DevSkim",
 	"description": "Detect security mistakes as you type, and get real time details and fix suggestions",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
-	"version": "0.3.0",
-	"publisher": "MS-DevSkim",
+	"version": "0.0.0-placeholder",
+	"publisher": "MS-CST-E",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Microsoft/devskim.git"
@@ -13,15 +13,9 @@
 	"bugs": {
 		"url": "https://github.com/Microsoft/devskim/issues"
 	},
-	"icon": "devskim.ico",
-	"galleryBanner": {
-		"color": "#999999",
-		"theme": "dark"
-	},
 	"engines": {
 		"vscode": "^1.33.x"
 	},
-	"preview": true,
 	"scripts": {
 		"update-vscode": "vscode-install",
 		"postinstall": "vscode-install",
