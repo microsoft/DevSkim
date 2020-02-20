@@ -65,8 +65,7 @@ stages:
     displayName: Code Sign, Generate Hashes, Publish Public Release
     dependsOn:
     - build_vscode_plugin
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
-    #TODO: Remove 'Manual' after testing
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
     pool:
       vmImage: 'windows-latest'
     steps:
