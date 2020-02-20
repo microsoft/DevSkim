@@ -190,12 +190,17 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
+    - task: PowerShell@2
+      displayName: Test Changing Linux Extension 
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/linux/devskim $env:BUILD_BINARIESDIRECTORY/linux/devskim.exe'
     - task: EsrpCodeSigning@1
       displayName: Code Sign Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion)'
-        Pattern: 'devskim, devskim.dll, Microsoft.DevSkim.dll'
+        Pattern: 'devskim.exe, devskim.dll, Microsoft.DevSkim.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [
