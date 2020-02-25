@@ -174,7 +174,7 @@ stages:
     dependsOn:
     - build_nix
     - build_win
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -223,6 +223,10 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '2.1.804'
     - task: EsrpCodeSigning@1
       displayName: Code Sign Linux
       inputs:

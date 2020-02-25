@@ -76,7 +76,7 @@ stages:
     displayName: Code Sign, Generate Hashes, Publish Public Release
     dependsOn:
     - build_extension
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -164,7 +164,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Install-Module VSSetup
+          Install-Module VSSetup -Force
           $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
           $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
           & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/vs-manifest.json -personalAccessToken $env:VS_TOKEN -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"

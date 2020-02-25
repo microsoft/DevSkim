@@ -65,7 +65,7 @@ stages:
     displayName: Code Sign, Generate Hashes, Publish Public Release
     dependsOn:
     - build_vscode_plugin
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -143,5 +143,11 @@ stages:
       inputs:
         command: 'custom'
         customCommand: 'install -g vsce'
-    - powershell: '$packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative; vsce publish --packagePath $packPath -p $env:VS_TOKEN'
+    - task: PowerShell@2
       displayName: Deploy to VS Marketplace
+      inputs:
+        targetType: 'inline'
+        script: |
+          $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+          vsce publish --packagePath $packPath --pat $env:VS_TOKEN
+        workingDirectory: '$(Build.StagingDirectory)'
