@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="DevSkim" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="Microsoft Corporation" />
+        <Identity Id="DevSkim" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="MS CST-E" />
         <DisplayName>Microsoft DevSkim</DisplayName>
         <Description xml:space="preserve">DevSkim is a framework of IDE plugins and language analyzers that provide inline security analysis as the developer writes code. It works with multiple IDEs and has a flexible rule model that supports multiple programming languages.</Description>
         <MoreInfo>https://github.com/Microsoft/DevSkim</MoreInfo>
