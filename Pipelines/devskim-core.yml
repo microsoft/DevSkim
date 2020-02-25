@@ -421,11 +421,6 @@ stages:
         archiveFile: '$(Build.StagingDirectory)/DevSkim_netcoreapp_$(ReleaseVersion).zip'
         replaceExistingArchive: true
     - task: PowerShell@2
-      displayName: Move Nuget Package
-      inputs:
-        targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/nuget/*.nupkg $env:BUILD_STAGINGDIRECTORY/'
-    - task: PowerShell@2
       displayName: Generate Hashes
       inputs:
         targetType: 'inline'
@@ -435,6 +430,11 @@ stages:
             $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
             Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
           }
+    - task: PowerShell@2
+      displayName: Move Nuget Package
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/nuget/DevSkim_$(ReleaseVersion)/*.nupkg $env:BUILD_STAGINGDIRECTORY/'
     - task: PublishPipelineArtifact@1
       displayName: Publish Signed Artifacts to Pipeline
       inputs:
@@ -446,6 +446,7 @@ stages:
         repositoryName: 'microsoft/DevSkim'
         action: 'create'
         target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecifiedTag'
         tag: 'v$(ReleaseVersion)'
         title: 'DevSkim CLI v$(ReleaseVersion)'
         assets: |
