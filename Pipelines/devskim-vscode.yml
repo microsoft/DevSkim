@@ -149,5 +149,5 @@ stages:
         targetType: 'inline'
         script: |
           $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-          vsce publish --packagePath $packPath --pat $env:VS_TOKEN
+          vsce publish --packagePath $packPath --pat $(VS_Token)
         workingDirectory: '$(Build.StagingDirectory)'
