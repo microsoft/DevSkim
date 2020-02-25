@@ -162,5 +162,5 @@ stages:
           Install-Module VSSetup
           $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
           $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-          & $vsixPublisher publish -payload $vsixPath -publishManifest ./vs-manifest.json -personalAccessToken $env:VS_TOKEN -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
+          & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/vs-manifest.json -personalAccessToken $env:VS_TOKEN -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
         workingDirectory: '$(Build.StagingDirectory)'
