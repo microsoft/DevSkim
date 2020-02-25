@@ -1,6 +1,6 @@
 {
     "$schema": "http://json.schemastore.org/vsix-publish",
-    "categories": [ "Tools", "Coding", "Security", "Programming Languages" ],
+    "categories": [ "Linters", "Programming Languages" ],
     "identity": {
         "internalName": "DevSkim"
     },
