@@ -9,7 +9,7 @@
         <GettingStartedGuide>Content\readme-gallery.txt</GettingStartedGuide>
         <Icon>Media\devskim.ico</Icon>
         <PreviewImage>Media\preview.png</PreviewImage>
-        <Tags>Security, Linters, c, cpp, csharp, javascript, powershell, python, vb</Tags>
+        <Tags>Security, Linters, c, cpp, csharp, js, python, vb</Tags>
     </Metadata>
     <Installation>
         <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Community" />
