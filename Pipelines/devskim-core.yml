@@ -436,8 +436,18 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Binaries'
-    #- task: ** TODO: Publish linux release to GitHub
-    #- task: ** TODO: Publish macos release to GitHub
-    #- task: ** TODO: Publish windows release to GitHub
-    #- task: ** TODO: Publish netcoreapp release to GitHub
+    - task: GitHubRelease@1
+      inputs:
+        gitHubConnection: 'DevSkim'
+        repositoryName: 'microsoft/DevSkim'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tag: 'v$(ReleaseVersion)'
+        title: 'DevSkim CLI v$(ReleaseVersion)'
+        assets: |
+          $(Build.StagingDirectory)/*.zip
+          $(Build.StagingDirectory)/HASHES.txt
+        changeLogCompareToRelease: 'lastNonDraftRelease'
+        changeLogType: 'commitBased'
     #- task: ** TODO: Publish nuget package release to NuGet.org
+    
