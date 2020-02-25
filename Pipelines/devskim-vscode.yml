@@ -143,5 +143,11 @@ stages:
       inputs:
         command: 'custom'
         customCommand: 'install -g vsce'
-    - powershell: '$packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative; vsce publish --packagePath $packPath -p $env:VS_TOKEN'
+    - task: PowerShell@2
       displayName: Deploy to VS Marketplace
+      inputs:
+        targetType: 'inline'
+        script: |
+          $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+          vsce publish --packagePath $packPath --pat $env:VS_TOKEN
+        workingDirectory: '$(Build.StagingDirectory)'
