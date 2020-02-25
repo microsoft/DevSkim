@@ -34,6 +34,16 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '3.1.100'
+    - script: 'dotnet tool install -g nbgv'
+      displayName: 'Install GitVersioning'
+    - task: Bash@3
+      displayName: Set Release Version
+      inputs:
+        targetType: 'inline'
+        script: |
+          version=(nbgv get-version -v AssemblyInformationalVersion).split('+')[0]
+          echo "##vso[task.setvariable variable=ReleaseVersion]$version"
+        workingDirectory: '$(SolutionDirectory)'
     - task: DotNetCoreCLI@2
       displayName: Dotnet Publish Linux x64
       inputs:
@@ -70,7 +80,7 @@ stages:
       displayName: Store Linux & Mac Archives
       inputs:
         PathtoPublish: '$(Build.StagingDirectory)'
-        ArtifactName: 'NixArchives'
+        ArtifactName: 'Unsigned_Nix'
         publishLocation: 'Container'
 
 
@@ -83,6 +93,16 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '3.1.100'
+    - script: 'dotnet tool install -g nbgv'
+      displayName: 'Install GitVersioning'
+    - task: PowerShell@2
+      displayName: Set Release Version
+      inputs:
+        targetType: 'inline'
+        script: |
+          $version = (nbgv get-version -v AssemblyInformationalVersion).split('+')[0]
+          Write-Host "##vso[task.setvariable variable=ReleaseVersion;]$version"
+        workingDirectory: '$(SolutionDirectory)'
     - task: DotNetCoreCLI@2
       displayName: Dotnet Publish Windows x86
       inputs:
@@ -145,7 +165,7 @@ stages:
       displayName: Store Windows, NetCoreApp, Nupkg Archives
       inputs:
         PathtoPublish: '$(Build.StagingDirectory)'
-        ArtifactName: 'WinCoreNugetArchives'
+        ArtifactName: 'Unsigned_WinNuget'
         publishLocation: 'Container'
 
 
@@ -158,19 +178,33 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '3.1.100'
+    - script: 'dotnet tool install -g nbgv'
+      displayName: 'Install GitVersioning'
+    - task: PowerShell@2
+      displayName: Set Release Version
+      inputs:
+        targetType: 'inline'
+        script: |
+          $version = (nbgv get-version -v AssemblyInformationalVersion).split('+')[0]
+          Write-Host "##vso[task.setvariable variable=ReleaseVersion;]$version"
+        workingDirectory: '$(SolutionDirectory)'
     - task: DownloadBuildArtifacts@0
       displayName: Retrieve Linux & Mac Archives
       inputs:
         buildType: 'current'
         downloadType: 'specific'
-        itemPattern: 'NixArchives\*.zip'
+        itemPattern: 'Unsigned_Nix\*.zip'
         downloadPath: '$(Build.BinariesDirectory)'
     - task: DownloadBuildArtifacts@0
       displayName: Retrieve Windows, NetCoreApp, Nupkg Archives
       inputs:
         buildType: 'current'
         downloadType: 'specific'
-        itemPattern: 'WinCoreNugetArchives\*.zip'
+        itemPattern: 'Unsigned_WinNuget\*.zip'
         downloadPath: '$(Build.BinariesDirectory)'
     - task: ExtractFiles@1
       displayName: Extract Artifacts for Signing
