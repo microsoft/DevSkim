@@ -36,13 +36,13 @@ stages:
         version: '3.1.100'
     - script: 'dotnet tool install -g nbgv'
       displayName: 'Install GitVersioning'
-    - task: Bash@3
+    - task: PowerShell@2
       displayName: Set Release Version
       inputs:
         targetType: 'inline'
         script: |
-          version=(nbgv get-version -v AssemblyInformationalVersion).split('+')[0]
-          echo "##vso[task.setvariable variable=ReleaseVersion]$version"
+          $version = (nbgv get-version -v AssemblyInformationalVersion).split('+')[0]
+          Write-Host "##vso[task.setvariable variable=ReleaseVersion;]$version"
         workingDirectory: '$(SolutionDirectory)'
     - task: DotNetCoreCLI@2
       displayName: Dotnet Publish Linux x64
