@@ -1,6 +1,6 @@
 {
-  "name": "devskim-vscode-plugin",
-  "displayName": "Microsoft DevSkim",
+  "name": "vscode-devskim",
+  "displayName": "DevSkim",
   "description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click",
   "author": "Microsoft Corporation",
   "license": "MIT",
