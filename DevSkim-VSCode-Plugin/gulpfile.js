@@ -7,7 +7,7 @@ const { exec } = require('child_process');
 
 gulp.task('setPackageVersion', async function(done) {
     const gitVersion = await nbgv.getVersion();    
-    exec(`npm version ${gitVersion.npmPackageVersion} --no-git-tag-version --allow-same-version`);
+    exec(`npm version ${gitVersion.simpleVersion} --no-git-tag-version --allow-same-version`);
     done();
 });
 
