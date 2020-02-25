@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import {DevSkimSuppression} from "../src/utility_classes/suppressions";
 import {DevskimRuleSeverity, DevSkimSettings, IDevSkimSettings} from "../src/devskimObjects";
 

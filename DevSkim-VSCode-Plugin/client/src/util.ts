@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import { execFile } from 'child_process'
 import * as Path from 'path'
 import { workspace } from 'vscode'
