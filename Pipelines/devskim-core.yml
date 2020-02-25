@@ -449,5 +449,10 @@ stages:
           $(Build.StagingDirectory)/HASHES.txt
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
-    #- task: ** TODO: Publish nuget package release to NuGet.org
-    
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'DevSkim Nuget CI'
+        verbosityPush: 'Normal'
