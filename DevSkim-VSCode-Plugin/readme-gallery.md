@@ -10,7 +10,7 @@ DevSkim is currently in public preview. We're looking forward to working with th
 
 As a developer codes DevSkim will flag certain security issues and call attention to them with errors or warnings (depending on a very generalized estimation of the severity).  Mousing over the issue will show a description of the problem and how to address it, and a link to more information.  For some issues, one or more safe alternitives are available in the lightbulb menu so that the issue can be fixed with a couple mouse clicks.  For issues where the alternitive has different parameters than the unsafe API that is called out, guidance for the parameters will be inserted in the form of \<some guidance info\>  (example, when DevSkim turns gets() into fgets() it adds \<size of firstparamname\> to cue a user that they need to provide the size of the buffer).
 
-![screenshot of devskim](https://github.com/Microsoft/DevSkim-VSCode-Plugin/raw/master/vsc-example.gif)
+![screenshot of devskim](https://github.com/Microsoft/DevSkim/raw/master/DevSkim-VSCode-Plugin/vsc-example.gif)
 
 ### Suppressions
 
@@ -20,7 +20,7 @@ For timed suppressions, the default period is 30 days, but this can be adjusted 
 
 Suppressions can be accessed from the lightbulb menu.  Once a suppression is added, DevSkim will highlight the issue number that identifies the check being suppressed (the gets() example above is issue number DS181021 for example), and mousing over will provide details.  This will let other contributors to a project know what was suppressed, so that they aren't confused by the comment
 
-![screenshot of devskim suppression](https://github.com/Microsoft/DevSkim-VSCode-Plugin/raw/master/vsc-suppression-example.png)
+![screenshot of devskim suppression](https://github.com/Microsoft/DevSkim/raw/master/DevSkim-VSCode-Plugin/vsc-suppression-example.png)
 
 ### Code Reviews
 
@@ -29,7 +29,7 @@ attacker can get their data into the eval function, they can get their own code 
 
 There is also a DevSkim setting to set the reviewer name (person's name, or github handle, etc.).  If set, DevSkim will mark that the code was reviewed by that specific person.
 
-![screenshot of devskim code reviews](https://github.com/Microsoft/DevSkim-VSCode-Plugin/raw/master/vsc-review-example.png)
+![screenshot of devskim code reviews](https://github.com/Microsoft/DevSkim/raw/master/DevSkim-VSCode-Plugin/vsc-review-example.png)
 
 ## Programming Language Support
 
@@ -37,4 +37,4 @@ DevSkim takes an approach that is programming language agnostic.  At this stage,
 
 ## Thank You
 
-Thanks for trying DevSkim.  Its a work in progress.  If you find issues please [report them on Github](https://github.com/Microsoft/DevSkim-VSCode-Plugin/) and feel free to contribute!
+Thanks for trying DevSkim.  Its a work in progress.  If you find issues please [report them on Github](https://github.com/Microsoft/DevSkim) and feel free to contribute!
