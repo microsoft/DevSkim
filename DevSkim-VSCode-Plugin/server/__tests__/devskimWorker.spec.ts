@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 const path = require('path');
 import {DevSkimWorker} from "../src/devskimWorker";
 import {Connection} from "vscode-languageserver";

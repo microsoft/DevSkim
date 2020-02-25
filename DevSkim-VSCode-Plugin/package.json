@@ -20,9 +20,9 @@
     "theme": "dark"
   },
   "bugs": {
-    "url": "https://github.com/Microsoft/DevSkim-VSCode-Plugin/issues"
+    "url": "https://github.com/Microsoft/DevSkim/issues"
   },
-  "homepage": "https://github.com/Microsoft/DevSkim-VSCode-Plugin#readme",
+  "homepage": "https://github.com/Microsoft/DevSkim#readme",
   "categories": [
     "Linters"
   ],

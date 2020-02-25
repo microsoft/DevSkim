@@ -1,7 +1,7 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+/* ------------------------------------------------------------------------------------------ 
  *
  * Helper functions when working with the text of a document.  Methods are primarily static
  * as they don't require maintaining a state, and get invoked quite a lot.  While this increases

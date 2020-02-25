@@ -138,4 +138,10 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Plugin'
-    #-task: TODO: Publish to VS Marketplace
+    - task: Npm@1
+      displayName: Install vsce
+      inputs:
+        command: 'custom'
+        customCommand: 'install -g vsce'
+    - powershell: '$packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative; vsce publish --packagePath $packPath -p $env:VS_TOKEN'
+      displayName: Deploy to VS Marketplace

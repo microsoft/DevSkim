@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 import {DevSkimRules} from "./devskimRules";
 import {DevSkimWorkerSettings} from "../src/devskimWorkerSettings";
 import {RuleValidator} from "../src/utility_classes/ruleValidator";

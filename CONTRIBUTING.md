@@ -2,7 +2,7 @@
 
 ### Before Submitting an Issue
 
-First, please do a search of [open issues](https://github.com/Microsoft/DevSkim-Rules/issues) to see if the issue or feature request has already been filed.
+First, please do a search of [open issues](https://github.com/Microsoft/DevSkim/issues) to see if the issue or feature request has already been filed.
 
 If you find your issue already exists, make relevant comments and add your
 [reaction](https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments). Use a reaction in place of a "+1" comment.
@@ -10,13 +10,6 @@ If you find your issue already exists, make relevant comments and add your
 👍 - upvote
 
 👎 - downvote
-
-The DevSkim project is distributed across multiple repositories, so try to file the issue against the correct repository:
-
-* [DevSkim-SublimePlugin](https://github.com/Microsoft/DevSkim-Sublime-Plugin/) - Sublime Text Plugin
-* [DevSkim-VSCode](https://github.com/Microsoft/DevSkim-VSCode-Plugin/) - VSCode Plugin
-* [DevSkim-VisualStudio](https://github.com/Microsoft/DevSkim-VisualStudio-Plugin/) - Visual Studio Plugin
-* [DevSkim-Rules](https://github.com/Microsoft/DevSkim-Rules/) - Common Rules
 
 If your issue is a question then please ask the question on [Stack Overflow](https://stackoverflow.com/questions/tagged/devskim)
 using the tag `devskim`.

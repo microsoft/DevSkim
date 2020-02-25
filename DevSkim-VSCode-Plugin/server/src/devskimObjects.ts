@@ -1,7 +1,7 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+/* ------------------------------------------------------------------------------------------ 
  * 
  * This file contains the object and enumeration definitions for DevSkim Rules (the logic to 
  * find an issue), Problems (a specific part of the code in which a rule triggered on), and 

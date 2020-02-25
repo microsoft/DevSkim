@@ -149,4 +149,23 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Extension'
-    #-task: TODO: Publish to VS Marketplace
+    - task: PowerShell@2
+      displayName: Move VS Marketplace Manifest
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
+    - task: PowerShell@2
+      displayName: Move Readme-gallery.txt
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Content/readme-gallery.txt $env:BUILD_STAGINGDIRECTORY/'
+    - task: PowerShell@2
+      displayName: Deploy to VS Marketplace
+      inputs:
+        targetType: 'inline'
+        script: |
+          Install-Module VSSetup
+          $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
+          $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+          & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/vs-manifest.json -personalAccessToken $env:VS_TOKEN -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
+        workingDirectory: '$(Build.StagingDirectory)'

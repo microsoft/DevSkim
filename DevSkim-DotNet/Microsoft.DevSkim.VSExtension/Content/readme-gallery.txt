@@ -1,6 +1,6 @@
 ﻿# README
 
-DevSkim is a framework of IDE plugins and Language analyzers that provide inline security analysis in the dev environment as the developer writes code. It is designed to work with multiple IDEs (VS, VS Code, Sublime Text, etc.), and has a flexible rule model that supports multiple programming languages. The idea is to give the developer notification as they are introducing a security vulnerability in order to fix the issue at the point of introduction, and to help build awareness for the developer.
+DevSkim is a framework of IDE plugins and Language analyzers that provide inline security analysis in the dev environment as the developer writes code. It is designed to work with multiple IDEs (VS, VS Code, etc.), and has a flexible rule model that supports multiple programming languages. The idea is to give the developer notification as they are introducing a security vulnerability in order to fix the issue at the point of introduction, and to help build awareness for the developer.
 
 ## PUBLIC PREVIEW
 
@@ -10,7 +10,7 @@ DevSkim is currently in public preview. We're looking forward to working with th
 
 As a developer codes DevSkim will flag certain security issues and call attention to them with errors or warnings (depending on a very generalized estimation of the severity).  Mousing over the issue will show a description of the problem and how to address it, and a link to more information.  For some issues, one or more safe alternitives are available in the lightbulb menu so that the issue can be fixed with a couple mouse clicks.  For issues where the alternitive has different parameters than the unsafe API that is called out, guidance for the parameters will be inserted in the form of \<some guidance info\>  (example, when DevSkim turns gets() into fgets() it adds \<size of firstparamname\> to cue a user that they need to provide the size of the buffer).
 
-![screenshot of devskim](https://github.com/Microsoft/DevSkim-VisualStudio-Extension/blob/master/media/DevSkim-VisualStudio-Demo-1.gif)
+![screenshot of devskim](https://github.com/Microsoft/DevSkim/blob/master/media/DevSkim-VisualStudio-Demo-1.gif)
 
 ### Suppressions
 
@@ -20,7 +20,7 @@ For timed suppressions, the default period is 30 days, but this can be adjusted 
 
 Suppressions can be accessed from the lightbulb menu.  Once a suppression is added, DevSkim will highlight the issue number that identifies the check being suppressed (the gets() example above is issue number DS181021 for example), and mousing over will provide details.  This will let other contributors to a project know what was suppressed, so that they aren't confused by the comment
 
-![screenshot of devskim suppression](https://github.com/Microsoft/DevSkim-VisualStudio-Extension/blob/master/media/DevSkim-VisualStudio-Suppression-Example)
+![screenshot of devskim suppression](https://github.com/Microsoft/DevSkim/blob/master/media/DevSkim-VisualStudio-Suppression-Example.png)
 
 
 ## Programming Language Support
@@ -30,4 +30,4 @@ DevSkim takes an approach that is programming language agnostic.  At this stage,
 ## Thank You
 
 Thanks for trying DevSkim.  Its a work in progress.  If you find issues please 
-[report them on Github](https://github.com/Microsoft/DevSkim-VisualStudio-Extension/) and feel free to contribute!
+[report them on Github](https://github.com/Microsoft/DevSkim) and feel free to contribute!

@@ -1,5 +1,5 @@
 ﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+// Licensed under the MIT License.
 
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
@@ -199,7 +199,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     fileText = File.ReadAllText(filename);
                     filesAnalyzed++;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // Skip files we can't parse
                     filesSkipped++;
