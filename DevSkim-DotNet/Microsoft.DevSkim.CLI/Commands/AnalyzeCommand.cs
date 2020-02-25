@@ -199,7 +199,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     fileText = File.ReadAllText(filename);
                     filesAnalyzed++;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // Skip files we can't parse
                     filesSkipped++;
