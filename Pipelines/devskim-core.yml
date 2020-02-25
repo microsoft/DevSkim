@@ -223,6 +223,10 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '2.1.804'
     - task: EsrpCodeSigning@1
       displayName: Code Sign Linux
       inputs:
