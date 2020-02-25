@@ -12,7 +12,7 @@
     <Version>0.1.11</Version>
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>
-    <Copyright>(c) Microsoft Corporation. All rights reserved</Copyright>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright> 
     <Description>DevSkim is a framework and Language analyzer that provide inline security analysis</Description>    
   </PropertyGroup>
 

@@ -8,7 +8,7 @@
     <PackageTags>Security Linter</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/Microsoft/DevSkim/blob/master/LICENSE.txt</PackageLicenseUrl>
-    <Copyright>(c) Microsoft Corporation. All rights reserved</Copyright>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright> 
     <Description>DevSkim is a framework and Language analyzer that provide inline security analysis</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/Microsoft/DevSkim/master/media/64x64.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
