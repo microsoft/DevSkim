@@ -153,7 +153,7 @@ stages:
       displayName: Move VS Marketplace Manifest
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_SOURCESDIRECTORY/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
+        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
     - task: PowerShell@2
       displayName: Deploy to VS Marketplace
       inputs:
