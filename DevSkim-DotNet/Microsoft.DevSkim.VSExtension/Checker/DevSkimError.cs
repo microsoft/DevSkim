@@ -1,5 +1,5 @@
 ﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+// Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Text;
 using System.Text.RegularExpressions;
