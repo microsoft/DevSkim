@@ -120,11 +120,18 @@ stages:
         publishWebProjects: false
         zipAfterPublish: false
     - task: DotNetCoreCLI@2
-      displayName: Pack Nupkg
+      displayName: Pack Nupkg (Lib)
       inputs:
         command: 'custom'
         custom: 'pack'
         arguments: 'Microsoft.DevSkim -c Release -o $(Build.BinariesDirectory)\nuget\DevSkim_$(ReleaseVersion)'
+        workingDirectory: '$(SolutionDirectory)'
+    - task: DotNetCoreCLI@2
+      displayName: Pack Nupkg (Dotnet Tool)
+      inputs:
+        command: 'custom'
+        custom: 'pack'
+        arguments: 'Microsoft.DevSkim.CLI -c Release -o $(Build.BinariesDirectory)\nuget\DevSkim_$(ReleaseVersion)'
         workingDirectory: '$(SolutionDirectory)'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
@@ -360,7 +367,7 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - task: EsrpCodeSigning@1
-      displayName: Code Sign Nuget Package
+      displayName: Code Sign Nuget Packages
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)/nuget/DevSkim_$(ReleaseVersion)'
@@ -431,7 +438,7 @@ stages:
             Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
           }
     - task: PowerShell@2
-      displayName: Move Nuget Package
+      displayName: Move Nuget Packages
       inputs:
         targetType: 'inline'
         script: 'mv $env:BUILD_BINARIESDIRECTORY/nuget/DevSkim_$(ReleaseVersion)/*.nupkg $env:BUILD_STAGINGDIRECTORY/'
@@ -459,5 +466,5 @@ stages:
         command: 'push'
         packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
         nuGetFeedType: 'external'
-        publishFeedCredentials: 'DevSkim Nuget CI'
+        publishFeedCredentials: 'CST-E Nuget CI'
         verbosityPush: 'Normal'

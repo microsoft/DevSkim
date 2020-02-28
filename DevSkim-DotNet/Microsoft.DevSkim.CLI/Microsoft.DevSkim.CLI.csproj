@@ -6,14 +6,20 @@
     <AssemblyName>devskim</AssemblyName>
     <StartupObject>Microsoft.DevSkim.CLI.Program</StartupObject>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
-    <ApplicationIcon />
-    <PackageId>Microsoft.DevSkim.CLI</PackageId>
+    <PackageId>DevSkim</PackageId>
     <Product>Microsoft DevSkim Command Line Interface</Product>
-    <Version>0.1.11</Version>
+    <Version>0.0.0</Version>
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright> 
-    <Description>DevSkim is a framework and Language analyzer that provide inline security analysis</Description>    
+    <Description>DevSkim is a framework and language analyzer that provides inline security analysis. This is a Dotnet Tool package. For the library package, see Microsoft.DevSkim.</Description>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>devskim</ToolCommandName>
+    <PackageTags>Security Linter</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageIcon>devskim-icon-128.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
+    <PackageVersion>0.0.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,4 +35,8 @@
     <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath=""/>
+    <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
 </Project>
