@@ -232,7 +232,7 @@ namespace Microsoft.DevSkim
                 int lastInline = preText.Substring(0, lastPrefix).LastIndexOf(inline, StringComparison.InvariantCulture);
 
                 // For example in C#, If this /* is actually commented out by a //
-                if (lastInline < lastPrefix && !preText.Substring(lastInline,lastPrefix - lastInline).Contains('\n'))
+                if (lastInline >= 0 && lastInline < lastPrefix && !preText.Substring(lastInline,lastPrefix - lastInline).Contains('\n'))
                 {
                     lastPrefix = 0;
                 }
