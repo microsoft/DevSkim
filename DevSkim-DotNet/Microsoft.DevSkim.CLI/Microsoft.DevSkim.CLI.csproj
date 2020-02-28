@@ -12,7 +12,7 @@
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright> 
-    <Description>DevSkim is a framework and Language analyzer that provide inline security analysis</Description>
+    <Description>DevSkim is a framework and language analyzer that provides inline security analysis. This is a Dotnet Tool package. For the library package, see Microsoft.DevSkim.</Description>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>devskim</ToolCommandName>
     <PackageTags>Security Linter</PackageTags>
