@@ -234,14 +234,14 @@ namespace Microsoft.DevSkim
                 // For example in C#, If this /* is actually commented out by a //
                 if (lastInline >= 0 && lastInline < lastPrefix && !preText.Substring(lastInline,lastPrefix - lastInline).Contains('\n'))
                 {
-                    lastPrefix = 0;
+                    lastPrefix = -1;
                 }
             }
             if (lastPrefix >= 0)
             {
                 preText = text.Substring(lastPrefix);
-                int lastSuffix = preText.IndexOf(suffix, StringComparison.Ordinal);
-                if (lastSuffix + lastPrefix > index)
+                int nextSuffix = preText.IndexOf(suffix, StringComparison.Ordinal);
+                if (nextSuffix + lastPrefix > index)
                     result = true;
             }
 
