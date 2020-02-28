@@ -97,7 +97,6 @@ namespace Microsoft.DevSkim
                     }
                 }
             }
-
             return result;
         }
 
@@ -232,16 +231,19 @@ namespace Microsoft.DevSkim
                 int lastInline = preText.Substring(0, lastPrefix).LastIndexOf(inline, StringComparison.InvariantCulture);
 
                 // For example in C#, If this /* is actually commented out by a //
-                if (lastInline < lastPrefix && !preText.Substring(lastInline,lastPrefix - lastInline).Contains('\n'))
+                if (lastInline >= 0 && lastInline < lastPrefix && !preText.Substring(lastInline,lastPrefix - lastInline).Contains('\n'))
                 {
-                    lastPrefix = 0;
+                    lastPrefix = -1;
                 }
             }
             if (lastPrefix >= 0)
             {
-                preText = text.Substring(lastPrefix);
-                int lastSuffix = preText.IndexOf(suffix, StringComparison.Ordinal);
-                if (lastSuffix + lastPrefix > index)
+                var commentedText = text.Substring(lastPrefix);
+                int nextSuffix = commentedText.IndexOf(suffix, StringComparison.Ordinal);
+
+                // If the index is in between the last prefix before the index and the next suffix after that prefix
+                // Then it is commented out
+                if (lastPrefix + nextSuffix  > index)
                     result = true;
             }
 
