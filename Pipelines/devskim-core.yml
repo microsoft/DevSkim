@@ -168,7 +168,6 @@ stages:
         ArtifactName: 'Unsigned_WinNuget'
         publishLocation: 'Container'
 
-
   - job: sign_hash_release
     displayName: Code Sign, Generate Hashes, Publish Public Releases
     dependsOn:
@@ -461,3 +460,10 @@ stages:
         nuGetFeedType: 'external'
         publishFeedCredentials: 'DevSkim Nuget CI'
         verbosityPush: 'Normal'
+    - task: Docker@2
+      inputs:
+        command: 'build'
+        Dockerfile: '$(Build.SourcesDirectory)/Docker/Dockerfile'
+        buildContext: '$(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion)'
+    
+    # TODO: Push docker image somewhere
