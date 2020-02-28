@@ -97,7 +97,6 @@ namespace Microsoft.DevSkim
                     }
                 }
             }
-
             return result;
         }
 
@@ -239,9 +238,12 @@ namespace Microsoft.DevSkim
             }
             if (lastPrefix >= 0)
             {
-                preText = text.Substring(lastPrefix);
-                int nextSuffix = preText.IndexOf(suffix, StringComparison.Ordinal);
-                if (nextSuffix + lastPrefix > index)
+                var commentedText = text.Substring(lastPrefix);
+                int nextSuffix = commentedText.IndexOf(suffix, StringComparison.Ordinal);
+
+                // If the index is in between the last prefix before the index and the next suffix after that prefix
+                // Then it is commented out
+                if (lastPrefix + nextSuffix  > index)
                     result = true;
             }
 
