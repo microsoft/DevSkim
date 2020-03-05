@@ -14,7 +14,7 @@
     <Description>DevSkim is a framework and language analyzer that provides inline security analysis. This is a Dotnet Tool package. For the library package, see Microsoft.DevSkim.</Description>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>devskim</ToolCommandName>
-    <PackageId>Microsoft.DevSkim.CLI</PackageId>
+    <PackageId>Microsoft.CST.DevSkim.CLI</PackageId>
     <PackageTags>Security Linter</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>devskim-icon-128.png</PackageIcon>
