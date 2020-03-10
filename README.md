@@ -7,12 +7,6 @@ languages. The idea is to give the developer notification as they are introducin
 vulnerability in order to fix the issue at the point of introduction, and to help build awareness
 for the developer.
 
-### PUBLIC PREVIEW
-
-DevSkim is currently in *public preview*. We're looking forward to working with the community
-to improve both the scanning engines and rules over the next few months, and welcome your feedback
-and contributions!
-
 ### Repository Structure
 
 DevSkim and its plugins/extensions are currently being merged here into a single repository.
