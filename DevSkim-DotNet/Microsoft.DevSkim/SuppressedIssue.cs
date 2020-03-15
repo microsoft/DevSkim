@@ -8,7 +8,7 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class SuppressedIssue
     {
-        public Boundary Boundary { get; set; }
-        public string ID { get; set; }
+        public Boundary? Boundary { get; set; }
+        public string? ID { get; set; }
     }
 }

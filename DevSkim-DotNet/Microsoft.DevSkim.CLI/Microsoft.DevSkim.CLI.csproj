@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath=""/>
-    <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath=""/>
+    <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

@@ -20,20 +20,26 @@ namespace Microsoft.DevSkim
     /// </summary>
     class PatternScopeConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            PatternScope svr = (PatternScope)value;
-            string svrstr = svr.ToString().ToLower();
+            if (value is PatternScope svr)
+            {
+                string svrstr = svr.ToString().ToLower();
 
-            writer.WriteValue(svrstr);
-            writer.WriteValue(svr.ToString().ToLower());
+                writer.WriteValue(svrstr);
+                writer.WriteValue(svr.ToString().ToLower());
+            }
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            var enumString = (string)reader.Value;
-            enumString = enumString.Replace("-", "");
-            return Enum.Parse(typeof(PatternScope), enumString, true);
+            if (reader.Value is string enumString)
+            {
+                enumString = enumString.Replace("-", "");
+                return Enum.Parse(typeof(PatternScope), enumString, true);
+            }
+            // TODO: Should there be a separate enum value for finding a null here?
+            return null;
         }
 
         public override bool CanConvert(Type objectType)

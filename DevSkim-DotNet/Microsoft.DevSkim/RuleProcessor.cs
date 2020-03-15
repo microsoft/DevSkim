@@ -18,21 +18,14 @@ namespace Microsoft.DevSkim
         /// <summary>
         /// Creates instance of RuleProcessor
         /// </summary>
-        public RuleProcessor()
-        {            
+        public RuleProcessor(RuleSet rules)
+        {
+            _ruleset = rules;
             _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
             EnableSuppressions = false;
             EnableCache = true;
 
             SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
-        }
-
-        /// <summary>
-        /// Creates instance of RuleProcessor
-        /// </summary>
-        public RuleProcessor(RuleSet rules) : this()
-        {
-            this.Rules = rules;
         }       
 
         #region Public Methods
@@ -49,9 +42,12 @@ namespace Microsoft.DevSkim
 
             if (fixRecord.FixType == FixType.RegexReplace)
             {
-                //TODO: Better pattern search and modifiers
-                Regex regex = new Regex(fixRecord.Pattern.Pattern);
-                result = regex.Replace(text, fixRecord.Replacement);
+                if (fixRecord.Pattern is { })
+                {
+                    //TODO: Better pattern search and modifiers
+                    Regex regex = new Regex(fixRecord.Pattern.Pattern);
+                    result = regex.Replace(text, fixRecord.Replacement);
+                }
             }
 
             return result;
@@ -97,7 +93,7 @@ namespace Microsoft.DevSkim
                     continue;
 
                 // Go through each matching pattern of the rule
-                foreach (SearchPattern pattern in rule.Patterns)
+                foreach (SearchPattern pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
                 {
                     // Get all matches for the pattern
                     List<Boundary> matches = line.MatchPattern(pattern);
@@ -123,23 +119,26 @@ namespace Microsoft.DevSkim
                             }
                             else
                             {
-                                foreach (SearchCondition condition in rule.Conditions)
+                                foreach (SearchCondition condition in rule.Conditions.Where(x => x is SearchCondition))
                                 {
-                                    bool res = line.MatchPattern(condition.Pattern, match, condition);
-                                    if (res && condition.NegateFinding)
+                                    if (condition.Pattern is { })
                                     {
-                                        passedConditions = false;
-                                        break;
-                                    }
-                                    if (!res && condition.NegateFinding)
-                                    {
-                                        passedConditions = true;
-                                        break;
-                                    }
-                                    if (!res)
-                                    {
-                                        passedConditions = false;
-                                        break;
+                                        bool res = line.MatchPattern(condition.Pattern, match, condition);
+                                        if (res && condition.NegateFinding)
+                                        {
+                                            passedConditions = false;
+                                            break;
+                                        }
+                                        if (!res && condition.NegateFinding)
+                                        {
+                                            passedConditions = true;
+                                            break;
+                                        }
+                                        if (!res)
+                                        {
+                                            passedConditions = false;
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -169,8 +168,8 @@ namespace Microsoft.DevSkim
                     {
                         supp = new Suppression(textContainer,(lineNumber > 0)?lineNumber:result.StartLocation.Line);
                         // If rule is NOT being suppressed then report it
-                        SuppressedIssue supissue = supp.GetSuppressedIssue(result.Rule.Id);
-                        if (supissue == null)
+                        var supissue = supp.GetSuppressedIssue(result.Rule.Id);
+                        if (supissue is null)
                         {
                             resultsList.Add(result);
                         }

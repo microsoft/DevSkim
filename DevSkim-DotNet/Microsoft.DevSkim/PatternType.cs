@@ -22,26 +22,32 @@ namespace Microsoft.DevSkim
     /// </summary>
     class PatternTypeConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            PatternType svr = (PatternType)value;
-            string svrstr = svr.ToString().ToLower();
-
-            switch (svr)
+            if (value is PatternType svr)
             {
-                case PatternType.RegexWord:
-                    svrstr = "regex-word";
-                    break;
+                string svrstr = svr.ToString().ToLower();
+
+                switch (svr)
+                {
+                    case PatternType.RegexWord:
+                        svrstr = "regex-word";
+                        break;
+                }
+                writer.WriteValue(svrstr);
+                writer.WriteValue(svr.ToString().ToLower());
             }
-            writer.WriteValue(svrstr);
-            writer.WriteValue(svr.ToString().ToLower());
+            
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            var enumString = (string)reader.Value;
-            enumString = enumString.Replace("-", "");
-            return Enum.Parse(typeof(PatternType), enumString, true);
+            if (reader.Value is string enumString)
+            {
+                enumString = enumString.Replace("-", "");
+                return Enum.Parse(typeof(PatternType), enumString, true);
+            }
+            return null;
         }
 
         public override bool CanConvert(Type objectType)

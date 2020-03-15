@@ -15,13 +15,13 @@ namespace Microsoft.DevSkim
         /// Typically file, database or other storage.
         /// </summary>
         [JsonIgnore]
-        public string Source { get; set; }
+        public string? Source { get; set; }
 
         /// <summary>
         /// Optional tag assigned to the rule during runtime
         /// </summary>
         [JsonIgnore]
-        public string RuntimeTag { get; set; }
+        public string? RuntimeTag { get; set; }
 
         /// <summary>
         /// Runtime flag to disable the rule
@@ -33,19 +33,19 @@ namespace Microsoft.DevSkim
         public string Id { get; set; }
 
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonProperty(PropertyName = "overrides")]
-        public string[] Overrides { get; set; }
+        public string[]? Overrides { get; set; }
 
         [JsonProperty(PropertyName = "schema_version")]
         public int SchemaVersion { get; set; }
 
         [JsonProperty(PropertyName = "tags")]
-        public string[] Tags { get; set; }
+        public string[]? Tags { get; set; }
 
         [JsonProperty(PropertyName = "applies_to")]
-        public string[] AppliesTo { get; set; }
+        public string[]? AppliesTo { get; set; }
 
         [JsonProperty(PropertyName = "severity")]
         [JsonConverter(typeof(SeverityConverter))]
@@ -55,21 +55,26 @@ namespace Microsoft.DevSkim
         public Confidence Confidence { get; set; }
 
         [JsonProperty(PropertyName = "description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [JsonProperty(PropertyName = "recommendation")]
-        public string Recommendation { get; set; }
+        public string? Recommendation { get; set; }
 
         [JsonProperty(PropertyName = "rule_info")]
-        public string RuleInfo { get; set; }
+        public string? RuleInfo { get; set; }
 
         [JsonProperty(PropertyName = "patterns")]
-        public SearchPattern[] Patterns { get; set; }
+        public SearchPattern[]? Patterns { get; set; }
 
         [JsonProperty(PropertyName = "conditions")]
-        public SearchCondition[] Conditions { get; set; }
+        public SearchCondition[]? Conditions { get; set; }
 
         [JsonProperty(PropertyName = "fix_its")]
-        public CodeFix[] Fixes { get; set; }
+        public CodeFix[]? Fixes { get; set; }
+
+        public Rule(string Id)
+        {
+            this.Id = Id;
+        }
     }
 }

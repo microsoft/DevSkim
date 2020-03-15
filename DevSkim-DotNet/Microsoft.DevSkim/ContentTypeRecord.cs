@@ -11,9 +11,9 @@ namespace DevSkim
     class ContentTypeRecord
     {
         [JsonProperty(PropertyName ="vs_type")]
-        public string VSType { get; set; }
+        public string? VSType { get; set; }
         [JsonProperty(PropertyName ="ds_types")]
-        public string[] DSTypes { get; set; }
+        public string[]? DSTypes { get; set; }
 
     }
 }
