@@ -5,9 +5,17 @@ namespace Microsoft.DevSkim.CLI
 {
     public class IssueRecord
     {
-        public string Filename { get; set; }
-        public int Filesize { get; set; }
-        public string TextSample { get; set; }
-        public Issue Issue { get; set; }
+        public string Filename { get; }
+        public int Filesize { get; }
+        public string TextSample { get; }
+        public Issue Issue { get; }
+
+        public IssueRecord(string Filename, int Filesize, string TextSample, Issue Issue)
+        {
+            this.Filename = Filename;
+            this.Filesize = Filesize;
+            this.TextSample = TextSample;
+            this.Issue = Issue;
+        }
     }
 }

@@ -2,16 +2,14 @@
 // Licensed under the MIT License.
 
 using System;
+using System.IO;
 
 namespace Microsoft.DevSkim.CLI.Writers
 {
     public class WriterFactory
     {
-        public static Writer GetWriter(string writerName, string defaultWritter, string format = null)
+        public static Writer GetWriter(string writerName, string format, TextWriter output)
         {
-            if (string.IsNullOrEmpty(writerName))
-                writerName = defaultWritter;
-            
             if (string.IsNullOrEmpty(writerName))
                 writerName = "_dummy";
 
@@ -20,11 +18,11 @@ namespace Microsoft.DevSkim.CLI.Writers
                 case "_dummy":
                     return new DummyWriter();
                 case "json":
-                    return new JsonWriter(format);                    
+                    return new JsonWriter(format, output);                    
                 case "text":
-                    return new SimpleTextWriter(format);
+                    return new SimpleTextWriter(format, output);
                 case "sarif":
-                    return new SarifWriter();
+                    return new SarifWriter(output);
                 default:
                     throw new Exception("wrong output");
             }

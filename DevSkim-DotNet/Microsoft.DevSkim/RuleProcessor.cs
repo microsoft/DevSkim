@@ -145,13 +145,7 @@ namespace Microsoft.DevSkim
 
                             if (passedConditions)
                             {
-                                Issue issue = new Issue()
-                                {
-                                    Boundary = match,
-                                    StartLocation = line.GetLocation(match.Index),
-                                    EndLocation = line.GetLocation(match.Index + match.Length),
-                                    Rule = rule
-                                };
+                                Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
 
                                 matchList.Add(issue);
                             }
