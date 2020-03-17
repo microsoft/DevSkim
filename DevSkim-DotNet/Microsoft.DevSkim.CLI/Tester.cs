@@ -31,10 +31,11 @@ namespace Microsoft.DevSkim.CLI
             {
                 List<string> missingTest = new List<string>();
 
-                foreach (Rule r in _rules)
+                foreach (Rule? r in _rules)
                 {
-                    if (!_coverageList.Contains(r.Id))
-                        missingTest.Add(r.Id);
+                    if (r is Rule)
+                        if (!_coverageList.Contains(r.Id))
+                            missingTest.Add(r.Id);
                 }
 
                 if (missingTest.Count > 0)
@@ -66,7 +67,7 @@ namespace Microsoft.DevSkim.CLI
 
             // See if file name is a valid rule ID and preload default values
             string defaultId = Path.GetFileNameWithoutExtension(fileName);
-            string[] languages = null;
+            string[]? languages = null;
             Rule fileRule = _rules.FirstOrDefault(x => x.Id == defaultId);
             if (fileRule != null)
                 languages = fileRule.AppliesTo;            
@@ -140,7 +141,7 @@ namespace Microsoft.DevSkim.CLI
             return result;
         }
 
-        private string[] GetLanguges(string header, string[] defaultLanguages)
+        private string[] GetLanguges(string header, string[]? defaultLanguages)
         {
             List<string> result = new List<string>();
 
@@ -166,29 +167,32 @@ namespace Microsoft.DevSkim.CLI
 
             Regex reg = new Regex("^line: *(\\d*)( *expect *)?(.*)", RegexOptions.Multiline);
             MatchCollection matches = reg.Matches(header);
-            foreach(Match match in matches)
+            foreach(Match? match in matches)
             {
-                int line;
-                List<string> ids = new List<string>();
-                if (int.TryParse(match.Groups[1].Value, out line))
+                if (match is { })
                 {
-                    // get list of ids or used default one
-                    if (match.Groups[2].Value.Trim() == "expect" && !string.IsNullOrEmpty(match.Groups[3].Value))
+                    int line;
+                    List<string> ids = new List<string>();
+                    if (int.TryParse(match.Groups[1].Value, out line))
                     {
-                        ids.AddRange(match.Groups[3].Value.Split(',')
-                                     .Select(x => x.Trim()));
+                        // get list of ids or used default one
+                        if (match.Groups[2].Value.Trim() == "expect" && !string.IsNullOrEmpty(match.Groups[3].Value))
+                        {
+                            ids.AddRange(match.Groups[3].Value.Split(',')
+                                         .Select(x => x.Trim()));
+                        }
+                        else
+                        {
+                            ids.Add(defaultId);
+                        }
+
+                        // Add line and ids to the result set
+                        if (result.ContainsKey(line))
+                            result[line].AddRange(ids);
+                        else
+                            result.Add(line, ids);
                     }
-                    else
-                    {
-                        ids.Add(defaultId);
-                    }
-                    
-                    // Add line and ids to the result set
-                    if (result.ContainsKey(line))                    
-                        result[line].AddRange(ids);                    
-                    else
-                        result.Add(line, ids);
-                }
+                }  
             }
 
             return result;

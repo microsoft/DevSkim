@@ -16,11 +16,8 @@ namespace Microsoft.DevSkim.VSExtension
     {
         public SkimShim()
         {
-            processor = new RuleProcessor()
-            {
-                EnableSuppressions = true
-            };            
-
+            ruleset = new RuleSet();
+            processor = new RuleProcessor(ruleset);
             LoadRules();
         }
 
@@ -89,8 +86,6 @@ namespace Microsoft.DevSkim.VSExtension
         {
             Settings set = Settings.GetSettings();
 
-            ruleset = new RuleSet();
-
             Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
             string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
             Stream resource = assembly.GetManifestResourceStream(filePath);
@@ -116,7 +111,7 @@ namespace Microsoft.DevSkim.VSExtension
             if (set.EnableManualReviewRules) processor.SeverityLevel |= Severity.ManualReview;
         }
 
-        private RuleProcessor processor = new RuleProcessor();
+        private RuleProcessor processor;
         private RuleSet ruleset;
 
         private static SkimShim _instance = new SkimShim();

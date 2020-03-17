@@ -39,29 +39,35 @@ namespace Microsoft.DevSkim
     /// </summary>
     class SeverityConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            Severity svr = (Severity)value;
-            string svrstr = svr.ToString().ToLower();
-
-            switch (svr)
+            if (value is Severity svr)
             {
-                case Severity.BestPractice:
-                    svrstr = "best-practice";
-                    break;
-                case Severity.ManualReview:
-                    svrstr = "manual-review";
-                    break;
-            }
+                string svrstr = svr.ToString().ToLower();
 
-            writer.WriteValue(svrstr);
+                switch (svr)
+                {
+                    case Severity.BestPractice:
+                        svrstr = "best-practice";
+                        break;
+                    case Severity.ManualReview:
+                        svrstr = "manual-review";
+                        break;
+                }
+
+                writer.WriteValue(svrstr);
+            }
+            
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            var enumString = (string)reader.Value;
-            enumString = enumString.Replace("-", "");
-            return Enum.Parse(typeof(Severity), enumString, true);
+            if (reader.Value is string enumString)
+            {
+                enumString = enumString.Replace("-", "");
+                return Enum.Parse(typeof(Severity), enumString, true);
+            }
+            return null;
         }
 
         public override bool CanConvert(Type objectType)

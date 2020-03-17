@@ -27,10 +27,10 @@ namespace Microsoft.DevSkim.CLI
             Environment.Exit((int)ExitCode.CriticalError);
         }
 
-        public string WriteRaw(string rawData)
+        public string? WriteRaw(string? rawData)
         {
-            string fileName = "devskim_exception.log";
-            FileStream fs = null;
+            string? fileName = "devskim_exception.log";
+            FileStream? fs = null;
             try
             {
                 fs = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
@@ -68,7 +68,7 @@ namespace Microsoft.DevSkim.CLI
             string message = "Message: " + ex.Message + "\r\n";
             message += "StackTrace: " + ex.StackTrace;
 
-            return WriteRaw(message);
+            return WriteRaw(message) ?? string.Empty;
         }
     }
 }

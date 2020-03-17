@@ -10,17 +10,6 @@ namespace Microsoft.DevSkim
     public class Issue
     {
         /// <summary>
-        /// Creates new instance of Issue
-        /// </summary>
-        public Issue()
-        {
-            Rule = null;
-            Boundary = new Boundary();
-            StartLocation = new Location();
-            IsSuppressionInfo = false;
-        }
-
-        /// <summary>
         /// Boundary of issue (index, length)
         /// </summary>
         public Boundary Boundary { get; set; }
@@ -39,6 +28,14 @@ namespace Microsoft.DevSkim
         /// Matching rule
         /// </summary>
         public Rule Rule { get; set; }
+
+        public Issue(Boundary Boundary, Location StartLocation, Location EndLocation, Rule Rule)
+        {
+            this.Boundary = Boundary;
+            this.StartLocation = StartLocation;
+            this.EndLocation = EndLocation;
+            this.Rule = Rule;
+        }
 
         /// <summary>
         /// True if Issue refers to suppression information 

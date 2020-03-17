@@ -10,17 +10,17 @@ namespace Microsoft.DevSkim.CLI.Commands
     {
         public static void Configure(CommandLineApplication app)
         {
-            app.FullName = Assembly.GetEntryAssembly()
-                               .GetCustomAttribute<AssemblyProductAttribute>()
+            app.FullName = Assembly.GetEntryAssembly()?
+                               .GetCustomAttribute<AssemblyProductAttribute>()?
                                .Product;
 
-            app.Name = Assembly.GetEntryAssembly()
-                               .GetCustomAttribute<AssemblyTitleAttribute>()
+            app.Name = Assembly.GetEntryAssembly()?
+                               .GetCustomAttribute<AssemblyTitleAttribute>()?
                                .Title;
 
             app.HelpOption("-?|-h|--help");            
-            app.VersionOption("-v|--version", Assembly.GetEntryAssembly()
-                                                      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            app.VersionOption("-v|--version", Assembly.GetEntryAssembly()?
+                                                      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                                                       .InformationalVersion);
 
             app.Command("analyze", AnalyzeCommand.Configure, false);

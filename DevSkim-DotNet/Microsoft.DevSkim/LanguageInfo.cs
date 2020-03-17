@@ -11,9 +11,9 @@ namespace Microsoft.DevSkim
     class LanguageInfo
     {
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonProperty(PropertyName = "extensions")]
-        public string[] Extensions { get; set; }
+        public string[]? Extensions { get; set; }
     }
 }

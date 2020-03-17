@@ -1,6 +1,9 @@
 ﻿// Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
+using System.IO;
+
 namespace Microsoft.DevSkim.CLI.Writers
 {
     /// <summary>
@@ -19,12 +22,14 @@ namespace Microsoft.DevSkim.CLI.Writers
     /// </summary>
     public class SimpleTextWriter : Writer
     {
-        public SimpleTextWriter(string formatString)
+        public SimpleTextWriter(string formatString, TextWriter writer)
         {
             if (string.IsNullOrEmpty(formatString))
                 _formatString = "%F:%L:%C:%l:%c [%S] %R %N";            
             else
                 _formatString = formatString;
+
+            this.TextWriter = writer;
         }
 
         public override void WriteIssue(IssueRecord issue)
@@ -41,7 +46,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             output = output.Replace("%S", issue.Issue.Rule.Severity.ToString());
             output = output.Replace("%D", issue.Issue.Rule.Description);
             output = output.Replace("%m", issue.TextSample);
-            output = output.Replace("%T", string.Join(',',issue.Issue.Rule.Tags));
+            output = output.Replace("%T", string.Join(',',issue.Issue.Rule.Tags ?? Array.Empty<string>()));
 
             TextWriter.WriteLine(output);
         }

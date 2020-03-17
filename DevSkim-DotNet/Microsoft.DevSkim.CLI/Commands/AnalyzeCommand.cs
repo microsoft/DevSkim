@@ -105,7 +105,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return (int)ExitCode.CriticalError;
             }
 
-            Verifier verifier = null;
+            Verifier? verifier = null;
             if (_rulespath.Count() > 0)
             {
                 // Setup the rules
@@ -126,13 +126,17 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             if (!_ignoreDefaultRules)
             {
-                Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
+                Assembly? assembly = Assembly.GetAssembly(typeof(Boundary));
                 string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
-                Stream resource = assembly.GetManifestResourceStream(filePath);
-                using (StreamReader file = new StreamReader(resource))
+                Stream? resource = assembly?.GetManifestResourceStream(filePath);
+                if (resource is Stream)
                 {
-                    rules.AddString(file.ReadToEnd(), filePath, null);
-                }                
+                    using (StreamReader file = new StreamReader(resource))
+                    {
+                        rules.AddString(file.ReadToEnd(), filePath, null);
+                    }
+                }
+                           
             }
 
             // Initialize the processor
@@ -158,8 +162,8 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
                         
             Writer outputWriter = WriterFactory.GetWriter(_fileFormat, 
-                                                          (string.IsNullOrEmpty(_outputFile)) ? null : "text", 
-                                                           _outputFormat);        
+                                                           _outputFormat,
+                                                           string.IsNullOrEmpty(_outputFile)?Console.Out: File.CreateText(_outputFile));        
             if (string.IsNullOrEmpty(_outputFile))
                 outputWriter.TextWriter = Console.Out;
             else 
@@ -230,13 +234,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                     issue.Rule.Severity,
                                                     issue.Rule.Name);
 
-                            IssueRecord record = new IssueRecord()
-                            {
-                                Filename = filename,
-                                Filesize = fileText.Length,
-                                TextSample = fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
-                                Issue = issue
-                            };
+                            IssueRecord record = new IssueRecord(
+                                Filename: filename,
+                                Filesize: fileText.Length,
+                                TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
+                                Issue: issue);
 
                             outputWriter.WriteIssue(record);
                         }

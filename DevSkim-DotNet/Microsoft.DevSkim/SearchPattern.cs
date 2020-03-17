@@ -11,16 +11,16 @@ namespace Microsoft.DevSkim
     public class SearchPattern
     {
         [JsonProperty(PropertyName = "pattern")]
-        public string Pattern { get; set; }
+        public string? Pattern { get; set; }
 
         [JsonProperty(PropertyName = "type")]
         [JsonConverter(typeof(PatternTypeConverter))]
-        public PatternType PatternType { get; set; }
+        public PatternType? PatternType { get; set; }
 
         [JsonProperty(PropertyName = "modifiers")]
-        public string[] Modifiers { get; set; }
+        public string[]? Modifiers { get; set; }
 
         [JsonProperty(PropertyName = "scopes")]        
-        public PatternScope[] Scopes { get; set; }
+        public PatternScope[]? Scopes { get; set; }
     }
 }

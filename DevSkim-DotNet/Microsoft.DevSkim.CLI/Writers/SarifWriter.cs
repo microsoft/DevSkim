@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.Sarif.Readers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 
@@ -10,10 +11,12 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public class SarifWriter : Writer
     {
-        public SarifWriter()
+        public SarifWriter(TextWriter textWriter)
         {
             _results = new List<Result>();
             _rules = new Dictionary<string, CodeAnalysis.Sarif.Rule>();
+
+            this.TextWriter = textWriter;
         }
 
         public override void WriteIssue(IssueRecord issue)
@@ -49,32 +52,34 @@ namespace Microsoft.DevSkim.CLI.Writers
             sarifLog.Version = SarifVersion.OneZeroZero;
             Run runItem = new Run();
             runItem.Tool = new Tool();
-            Assembly entryAssembly = Assembly.GetEntryAssembly();
 
-            runItem.Tool.Name = entryAssembly.GetName()
+            if (Assembly.GetEntryAssembly() is Assembly entryAssembly)
+            {
+                runItem.Tool.Name = entryAssembly.GetName()
                                  .Name;
 
-            runItem.Tool.FullName = entryAssembly.GetCustomAttribute<AssemblyProductAttribute>()
-                                                 .Product;
+                runItem.Tool.FullName = entryAssembly.GetCustomAttribute<AssemblyProductAttribute>()?
+                                                     .Product;
 
-            runItem.Tool.Version = entryAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                                                .InformationalVersion;
-            
-            runItem.Results = _results;
-            runItem.Rules = _rules;
-            sarifLog.Runs = new List<Run>();            
-            sarifLog.Runs.Add(runItem);
+                runItem.Tool.Version = entryAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+                                                    .InformationalVersion;
+
+                runItem.Results = _results;
+                runItem.Rules = _rules;
+                sarifLog.Runs = new List<Run>();
+                sarifLog.Runs.Add(runItem);
 
 
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                ContractResolver = SarifContractResolver.Instance,
-                Formatting = Formatting.Indented
-            };
-                        
-            TextWriter.Write(JsonConvert.SerializeObject(sarifLog, settings));
-            TextWriter.Flush();
-            TextWriter.Close();
+                JsonSerializerSettings settings = new JsonSerializerSettings()
+                {
+                    ContractResolver = SarifContractResolver.Instance,
+                    Formatting = Formatting.Indented
+                };
+
+                TextWriter.Write(JsonConvert.SerializeObject(sarifLog, settings));
+                TextWriter.Flush();
+                TextWriter.Close();
+            }
         }
 
         private void MapRuleToResult(Rule rule, ref Result resultItem)
@@ -96,7 +101,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             resultItem.RuleId = rule.Id;
             resultItem.Message = rule.Name;
-            foreach (string tag in rule.Tags)
+            foreach (string tag in rule.Tags ?? Array.Empty<string>())
             {
                 resultItem.Tags.Add(tag);
             }

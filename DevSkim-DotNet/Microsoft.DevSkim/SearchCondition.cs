@@ -8,10 +8,10 @@ namespace Microsoft.DevSkim
     public class SearchCondition
     {
         [JsonProperty(PropertyName = "pattern")]
-        public SearchPattern Pattern { get; set; }
+        public SearchPattern? Pattern { get; set; }
 
         [JsonProperty(PropertyName = "search_in")]
-        public string SearchIn { get; set; }
+        public string? SearchIn { get; set; }
 
         [JsonProperty(PropertyName = "negate_finding")]
         public bool NegateFinding { get; set; }

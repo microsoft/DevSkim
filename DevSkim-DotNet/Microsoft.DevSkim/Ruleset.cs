@@ -21,12 +21,12 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">Error arguments</param>
-        public delegate void DeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
+        public delegate void DeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
         
         /// <summary>
         /// Event raised if deserialization error is encoutered while loading JSON rules
         /// </summary>
-        public event DeserializationError OnDeserializationError;
+        public event DeserializationError? OnDeserializationError;
 
         /// <summary>
         /// Creates instance of Ruleset
@@ -42,7 +42,7 @@ namespace Microsoft.DevSkim
         /// <param name="path">Path to rules folder</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static RuleSet FromDirectory(string path, string tag = null)
+        public static RuleSet FromDirectory(string path, string? tag = null)
         {
             RuleSet result = new RuleSet();
             result.AddDirectory(path, tag);
@@ -56,7 +56,7 @@ namespace Microsoft.DevSkim
         /// <param name="filename">Filename with rules</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static RuleSet FromFile(string filename, string tag = null)
+        public static RuleSet FromFile(string filename, string? tag = null)
         {
             RuleSet result = new RuleSet();
             result.AddFile(filename, tag);
@@ -71,7 +71,7 @@ namespace Microsoft.DevSkim
         /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
         /// <param name="tag">Tag for the rules</param>
         /// <returns>Ruleset</returns>
-        public static RuleSet FromString(string jsonstring, string sourcename = "string", string tag = null)
+        public static RuleSet FromString(string jsonstring, string sourcename = "string", string? tag = null)
         {
             RuleSet result = new RuleSet();
             result.AddString(jsonstring, sourcename, tag);
@@ -84,7 +84,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="path">Path to rules folder</param>
         /// <param name="tag">Tag for the rules</param>        
-        public void AddDirectory(string path, string tag = null)
+        public void AddDirectory(string path, string? tag = null)
         {
             if (path == null)
                 throw new ArgumentNullException("path");
@@ -103,7 +103,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="filename">Filename with rules</param>
         /// <param name="tag">Tag for the rules</param>
-        public void AddFile(string filename, string tag = null)
+        public void AddFile(string filename, string? tag = null)
         {
             if (string.IsNullOrEmpty(filename))
                 throw new ArgumentException("filename");
@@ -123,16 +123,15 @@ namespace Microsoft.DevSkim
         /// <param name="jsonstring">JSON string</param>
         /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
         /// <param name="tag">Tag for the rules</param>
-        public void AddString(string jsonstring, string sourcename, string tag = null)
+        public void AddString(string jsonstring, string sourcename, string? tag = null)
         {
-            List<Rule> ruleList = new List<Rule>();
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 Error = HandleDeserializationError
             };
 
-            ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring, settings);
-            if (ruleList != null)
+            List<Rule>? ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring, settings);
+            if (ruleList is List<Rule>)
             {
                 foreach (Rule r in ruleList)
                 {
@@ -151,8 +150,11 @@ namespace Microsoft.DevSkim
                         r.Conditions = new SearchCondition[] { };
 
                     foreach (SearchCondition condition in r.Conditions)
-                    {                                             
-                        SanitizePatternRegex(condition.Pattern);                        
+                    {
+                        if (condition.Pattern is { })
+                        {
+                            SanitizePatternRegex(condition.Pattern);
+                        }
                     }
                 }
 
@@ -233,7 +235,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="errorArgs">Error arguments</param>
-        private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
+        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
         {
             OnDeserializationError?.Invoke(sender, errorArgs);
         }
