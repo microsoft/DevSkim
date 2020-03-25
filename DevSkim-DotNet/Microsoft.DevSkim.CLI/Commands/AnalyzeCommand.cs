@@ -60,7 +60,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             command.OnExecute(() => {                
                 return (new AnalyzeCommand(locationArgument.Value,
                                  outputArgument.Value,
-                                 outputFileFormat.Value(),
+                                 outputFileFormat.Value() ?? "text",
                                  outputTextFormat.Value(),
                                  severityOption.Values,
                                  rulesOption.Values,
@@ -163,7 +163,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         
             Writer outputWriter = WriterFactory.GetWriter(_fileFormat, 
                                                            _outputFormat,
-                                                           string.IsNullOrEmpty(_outputFile) ? Console.Out: File.CreateText(_outputFile));          
+                                                           string.IsNullOrEmpty(_outputFile)?Console.Out: File.CreateText(_outputFile));                
             
             int filesAnalyzed = 0;
             int filesSkipped = 0;
