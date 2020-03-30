@@ -1,1 +1,4 @@
 ﻿*.vsix
+/.vs
+/DevSkim-DotNet/UpgradeLog.htm
+/guidance/guidance.zip
