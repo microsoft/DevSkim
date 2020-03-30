@@ -17,8 +17,7 @@ namespace Microsoft.DevSkim.Tests
         public void AssignRuleSetTest()
         {
             RuleSet rules = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);
-            RuleProcessor proc = new RuleProcessor();
-            proc.Rules = rules;
+            RuleProcessor proc = new RuleProcessor(rules);
 
             Assert.AreSame(rules, proc.Rules, "Rulesets needs to match");
         }

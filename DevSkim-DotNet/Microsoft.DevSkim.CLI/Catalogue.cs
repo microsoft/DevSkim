@@ -56,8 +56,7 @@ namespace Microsoft.DevSkim.CLI
             {
                 foreach(Attribute attr in property.GetCustomAttributes(true))
                 {
-                    JsonPropertyAttribute jsonAttr = (attr as JsonPropertyAttribute);
-                    if (jsonAttr != null && jsonAttr.PropertyName == propName)
+                    if (attr is JsonPropertyAttribute jsonAttr && jsonAttr.PropertyName == propName)
                     {
                         return GetPropertyValue(property, rule);
                     }
@@ -75,23 +74,23 @@ namespace Microsoft.DevSkim.CLI
         private string GetPropertyValue(PropertyInfo property, Rule rule)
         {
             string result = string.Empty;
-            switch (property.PropertyType.Name)
+            switch (property.GetValue(rule))
             {
-                case "String":
-                    result = property.GetValue(rule) as string;
+                case string s:
+                    result = s;
                     break;
-                case "String[]":
-                    string[] list = (property.GetValue(rule) as string[]);
-                    result = (list == null) ? string.Empty : string.Join(",", list);
+                case string[] list:
+                    result = string.Join(",", list);
                     break;
-                case "SearchPattern[]":
-                case "SearchCondition[]":
-                case "CodeFix[]":
+                case SearchPattern[] _:
+                case SearchCondition[] _:
+                case CodeFix[] _:
                     result = "#UNSUPPORTED PROPERTY";
                     break;
                 default:
-                    result = property.GetValue(rule).ToString();
+                    result = property.GetValue(rule)?.ToString() ?? string.Empty;
                     break;
+
             }
 
             return result;

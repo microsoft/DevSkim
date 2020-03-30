@@ -60,7 +60,7 @@ namespace Microsoft.DevSkim
         {
             bool result = false;
 
-            Boundary scope = ParseSearchBoundary(boundary, condition.SearchIn);
+            Boundary scope = ParseSearchBoundary(boundary, condition.SearchIn ?? "finding-only");
 
             string text = _content.Substring(scope.Index, scope.Length);
             List<Boundary> matches = MatchPattern(pattern, text);
@@ -181,10 +181,12 @@ namespace Microsoft.DevSkim
             MatchCollection matches = patRegx.Matches(text);
             if (matches.Count > 0)
             {
-                foreach (Match m in matches)
+                foreach (Match? m in matches)
                 {
-                    Boundary bound = new Boundary() { Index = m.Index, Length = m.Length };
-                        matchList.Add(bound);
+                    if (m is { })
+                    {
+                        matchList.Add(new Boundary() { Index = m.Index, Length = m.Length });
+                    }
                 }
             }
 

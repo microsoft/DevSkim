@@ -32,7 +32,7 @@ namespace Microsoft.DevSkim.Tests
         [ExpectedException(typeof(NullReferenceException))]
         public void IsMatch_InvalidInputTest()
         {
-            RuleProcessor processor = new RuleProcessor();
+            RuleProcessor processor = new RuleProcessor(new RuleSet());
 
             // Langugage is null
             Issue[] issues = processor.Analyze(null, "");
@@ -43,7 +43,7 @@ namespace Microsoft.DevSkim.Tests
         [ExpectedException(typeof(NullReferenceException))]
         public void IsMatch_InvalidLanguageTest()
         {
-            RuleProcessor processor = new RuleProcessor();
+            RuleProcessor processor = new RuleProcessor(new RuleSet());
             string testString = "this is a test string";
 
             // Langugage is empty

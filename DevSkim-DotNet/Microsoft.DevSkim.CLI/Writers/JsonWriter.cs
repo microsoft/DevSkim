@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,12 +10,13 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public class JsonWriter : Writer
     {
-        public JsonWriter(string formatString)
+        public JsonWriter(string formatString, TextWriter output)
         {
             if (string.IsNullOrEmpty(formatString))
                 _formatString = "%F%L%C%l%c%m%S%R%N%D";
             else
                 _formatString = formatString;
+            this.TextWriter = output;
         }
 
         public override void WriteIssue(IssueRecord issue)
@@ -38,15 +40,15 @@ namespace Microsoft.DevSkim.CLI.Writers
             if (_formatString.Contains("%R"))
                 item.Add("rule_id", issue.Issue.Rule.Id);
             if (_formatString.Contains("%N"))
-                item.Add("rule_name", issue.Issue.Rule.Name);
+                item.Add("rule_name", issue.Issue.Rule.Name ?? string.Empty);
             if (_formatString.Contains("%S"))
                 item.Add("severity", issue.Issue.Rule.Severity);
             if (_formatString.Contains("%D"))
-                item.Add("description", issue.Issue.Rule.Description);
+                item.Add("description", issue.Issue.Rule.Description ?? string.Empty);
             if (_formatString.Contains("%m"))
                 item.Add("match", issue.TextSample);
             if (_formatString.Contains("%T"))
-                item.Add("tags", issue.Issue.Rule.Tags);
+                item.Add("tags", issue.Issue.Rule.Tags ?? Array.Empty<string>());
 
             // Store the result in the result list
             jsonResult.Add(item);

@@ -20,10 +20,9 @@ namespace Microsoft.DevSkim
         public const string pattern = KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
         Regex reg = new Regex(pattern);
 
-        TextContainer _text;
+        TextContainer? _text;
         int _lineNumber;
         string _lineText;
-        Language _language;
 
         /// <summary>
         /// Creates new instance of Supressor
@@ -31,7 +30,7 @@ namespace Microsoft.DevSkim
         /// <param name="text">Text to work with</param>        
         public Suppression(string text)
         {
-            if (text == null)
+            if (text is null)
             {
                 throw new ArgumentNullException("text");
             }
@@ -42,8 +41,13 @@ namespace Microsoft.DevSkim
 
         public Suppression(TextContainer text, int lineNumber)
         {
+            if (text is null)
+			{
+                throw new ArgumentNullException("text");
+            }
             _text = text;
             _lineNumber = lineNumber;
+            _lineText = _text.GetLineContent(_lineNumber);
 
             ParseLine();
         }
@@ -53,14 +57,10 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="issueId">Rule ID</param>
         /// <returns>True if rule is suppressed</returns>
-        public SuppressedIssue GetSuppressedIssue(string issueId)
+        public SuppressedIssue? GetSuppressedIssue(string issueId)
         {
-            bool result = false;
             SuppressedIssue issue = _issues.FirstOrDefault(x => x.ID == issueId || x.ID == KeywordAll);
-            if (issue != null)
-                result = true;
-
-            if (DateTime.Now < _expirationDate && result)
+            if (DateTime.Now < _expirationDate && issue != null)
                 return issue;
             else
                 return null;
@@ -71,9 +71,9 @@ namespace Microsoft.DevSkim
         /// </summary>
         private void ParseLine()
         {
+            // If we have multiple lines to look at
             if (_text != null)
             {
-                _lineText = _text.GetLineContent(_lineNumber);
                 // If the line with the issue doesn't contain a suppression check the lines above it
                 if (!_lineText.Contains(KeywordPrefix))
                 {

@@ -7,7 +7,10 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public abstract class Writer
     {
+#nullable disable
+        
         public TextWriter TextWriter { get; set; }
+#nullable restore
         public abstract void WriteIssue(IssueRecord issue);
         public abstract void FlushAndClose();
     }

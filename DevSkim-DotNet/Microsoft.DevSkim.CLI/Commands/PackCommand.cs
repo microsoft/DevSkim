@@ -51,7 +51,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.Formatting = (_indent) ? Formatting.Indented : Formatting.None;
-            settings.Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+            settings.Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
                 e.ErrorContext.Handled = true;
             };

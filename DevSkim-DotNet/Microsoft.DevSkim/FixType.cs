@@ -20,25 +20,30 @@ namespace Microsoft.DevSkim
     /// </summary>
     class FixTypeConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            FixType svr = (FixType)value;
-            string svrstr = svr.ToString().ToLower();
-
-            switch (svr)
+            if (value is FixType svr)
             {
-                case FixType.RegexReplace:
-                    svrstr = "regex-replace";
-                    break;
+                string svrstr = svr.ToString().ToLower();
+
+                switch (svr)
+                {
+                    case FixType.RegexReplace:
+                        svrstr = "regex-replace";
+                        break;
+                }
+                writer.WriteValue(svrstr);
             }
-            writer.WriteValue(svrstr);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            var enumString = (string)reader.Value;
-            enumString = enumString.Replace("-", "");
-            return Enum.Parse(typeof(FixType), enumString, true);
+            if (reader.Value is string enumString)
+            {
+                enumString = enumString.Replace("-", "");
+                return Enum.Parse(typeof(FixType), enumString, true);
+            }
+            return null;
         }
 
         public override bool CanConvert(Type objectType)

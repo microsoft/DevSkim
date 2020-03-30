@@ -11,16 +11,16 @@ namespace Microsoft.DevSkim
     public class CodeFix
     {
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
    
         [JsonProperty(PropertyName = "type")]
         [JsonConverter(typeof(FixTypeConverter))]
-        public FixType FixType { get; set; }
+        public FixType? FixType { get; set; }
 
         [JsonProperty(PropertyName = "pattern")]
-        public SearchPattern Pattern { get; set; }
+        public SearchPattern? Pattern { get; set; }
 
         [JsonProperty(PropertyName = "replacement")]
-        public string Replacement { get; set; }
+        public string? Replacement { get; set; }
     }
 }

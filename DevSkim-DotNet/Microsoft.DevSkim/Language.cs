@@ -20,15 +20,15 @@ namespace Microsoft.DevSkim
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             // Load comments
-            Stream resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.comments.json");
-            using (StreamReader file = new StreamReader(resource))
+            Stream? resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.comments.json");
+            using (StreamReader file = new StreamReader(resource ?? new MemoryStream()))
             {
                 Comments = JsonConvert.DeserializeObject<List<Comment>>(file.ReadToEnd());
             }
 
             // Load languages
             resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.languages.json");
-            using (StreamReader file = new StreamReader(resource))
+            using (StreamReader file = new StreamReader(resource ?? new MemoryStream()))
             {
                 Languages = JsonConvert.DeserializeObject<List<LanguageInfo>>(file.ReadToEnd());
             }
@@ -50,8 +50,8 @@ namespace Microsoft.DevSkim
             // Look for whole filename first
             foreach (LanguageInfo item in Instance.Languages)
             {
-                if (Array.Exists(item.Extensions, x => x.EndsWith(file)))
-                    return item.Name;
+                if (Array.Exists(item.Extensions ?? Array.Empty<string>(), x => x.EndsWith(file)))
+                    return item?.Name ?? string.Empty;
             }
 
             // Look for extension only ext is defined
@@ -59,8 +59,8 @@ namespace Microsoft.DevSkim
             {
                 foreach (LanguageInfo item in Instance.Languages)
                 {
-                    if (Array.Exists(item.Extensions, x => x.EndsWith(ext)))
-                        return item.Name;
+                    if (Array.Exists(item.Extensions ?? Array.Empty<string>(), x => x.EndsWith(ext)))
+                        return item.Name ?? string.Empty;
                 }
             }
 
@@ -80,7 +80,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower()))
+                    if (comment.Languages.Contains(language.ToLower()) && comment.Inline is { })
                         return comment.Inline;
                 }
             }
@@ -101,8 +101,8 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower()))
-                        return comment.Preffix;
+                    if (comment.Languages.Contains(language.ToLower()) && comment.Prefix is { })
+                        return comment.Prefix;
                 }
             }
 
@@ -122,7 +122,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower()))
+                    if (comment.Languages.Contains(language.ToLower()) && comment.Suffix is { })
                         return comment.Suffix;
                 }
             }
@@ -142,7 +142,7 @@ namespace Microsoft.DevSkim
             return names.ToArray();
         }
 
-        private static Language _instance;
+        private static Language? _instance;
         private static Language Instance
         {
             get

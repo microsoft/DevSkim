@@ -73,13 +73,7 @@ namespace Microsoft.DevSkim.CLI
                 // Check for null Id
                 if (rule.Id == null)
                 {
-                    _messages.Add(new ErrorMessage()
-                    {
-                        Message = "Rule has empty ID",
-                        Path = rule.Name ?? string.Empty,
-                        File = rule.Source,
-                        Warning = true
-                    });
+                    _messages.Add(new ErrorMessage(Message: "Rule has empty ID", Path: rule.Name, File: rule.Source, Warning: true));
                 }
                 else
                 {
@@ -87,21 +81,9 @@ namespace Microsoft.DevSkim.CLI
                     Rule sameRule = _rules.FirstOrDefault(x => x.Id == rule.Id);
                     if (sameRule != null && sameRule != rule)
                     {
-                        _messages.Add(new ErrorMessage()
-                        {
-                            Message = "Two or more rules have a same ID",
-                            RuleID = sameRule.Id,
-                            File = sameRule.Source,
-                            Warning = true
-                        });
+                        _messages.Add(new ErrorMessage(Message: "Two or more rules have a same ID", RuleID: sameRule.Id, File: sameRule.Source, Warning: true));
 
-                        _messages.Add(new ErrorMessage()
-                        {
-                            Message = "Two or more rules have a same ID",
-                            RuleID = rule.Id,
-                            File = rule.Source,
-                            Warning = true
-                        });
+                        _messages.Add(new ErrorMessage(Message: "Two or more rules have a same ID", RuleID: rule.Id, File: rule.Source, Warning: true));
                     }
                 }
 
@@ -112,14 +94,11 @@ namespace Microsoft.DevSkim.CLI
                     {
                         if (!languages.Contains(lang))
                         {
-                            _messages.Add(new ErrorMessage()
-                            {
-                                Message = string.Format("Unknown language '{0}'", lang),
-                                RuleID = rule.Id ?? string.Empty,
-                                Path = "applies_to",
-                                File = rule.Source,
-                                Warning = true
-                            });
+                            _messages.Add(new ErrorMessage(Message: string.Format("Unknown language '{0}'", lang),
+                                RuleID: rule.Id ?? string.Empty,
+                                Path: "applies_to",
+                                File: rule.Source,
+                                Warning: true));
                         }
                     }
                 }
@@ -142,14 +121,11 @@ namespace Microsoft.DevSkim.CLI
         {
             RuleSet rules = new RuleSet();
             bool noProblem = true;
-            rules.OnDeserializationError += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+            rules.OnDeserializationError += delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
-                ErrorMessage message = new ErrorMessage()
-                {
-                    File = file,
-                    Message = e.ErrorContext.Error.Message,
-                    Path = e.ErrorContext.Path
-                };
+                ErrorMessage message = new ErrorMessage(File: file,
+                    Message: e.ErrorContext.Error.Message,
+                    Path: e.ErrorContext.Path);
 
                 if (e.ErrorContext.OriginalObject is Rule r && !string.IsNullOrEmpty(r.Id))
                 {
