@@ -66,7 +66,10 @@ export class DevSkimWorkerSettings
                                             settings.debugLogging : defaults.debugLogging ; 
                                             
         settings.maxFileSizeKB = (settings.maxFileSizeKB !== undefined && settings.maxFileSizeKB != null) ?
-                                            settings.maxFileSizeKB : defaults.maxFileSizeKB ;     
+                                            settings.maxFileSizeKB : defaults.maxFileSizeKB ;
+                                            
+        settings.useGitIgnore = (settings.useGitIgnore !== undefined && settings.useGitIgnore != null) ?
+                                            settings.useGitIgnore : defaults.useGitIgnore ;
                                             
         this.settings = settings;
     }

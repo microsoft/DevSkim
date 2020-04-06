@@ -195,6 +195,11 @@ export interface IDevSkimSettings
 	 * values are "same line as finding" or "line above finding"
 	 */
 	suppressionCommentPlacement: string;
+
+	/**
+	 * By Default DevSkim extensions will ignore files identified in a .gitignore file.
+	 */
+	useGitIgnore: boolean;
 	
 	//--------------------------------------
 	//Internal use

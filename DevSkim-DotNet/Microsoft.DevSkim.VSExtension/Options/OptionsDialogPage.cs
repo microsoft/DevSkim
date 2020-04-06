@@ -44,6 +44,8 @@ namespace Microsoft.DevSkim.VSExtension
 
             optionsDialogControl.UsePreviousLineSuppression.IsChecked = _settings.UsePreviousLineSuppression;
             optionsDialogControl.UseBlockSuppression.IsChecked = _settings.UseBlockSuppression;
+
+            optionsDialogControl.UseGitIgnore.IsChecked = _settings.UseGitIgnore;
         }
 
         protected override void OnDeactivate(CancelEventArgs e)

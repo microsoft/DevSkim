@@ -16,6 +16,7 @@ export function getDocumentSelectors() {
         { scheme: 'file', language: 'java' },
         { scheme: 'file', language: 'javascript' },
         { scheme: 'file', language: 'javascriptreact' },
+        { scheme: 'file', language: 'json' },
         { scheme: 'file', language: 'lua' },
         { scheme: 'file', language: 'objective-c' },
         { scheme: 'file', language: 'perl' },

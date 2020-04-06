@@ -56,6 +56,9 @@ namespace Microsoft.DevSkim.VSExtension
         [SettingsEntity(Name = "Use Block comment style suppression messages.")]
         public bool UseBlockSuppression { get; set; } = false;
 
+        [SettingsEntity(Name = "Ignore files listed in .gitignore files.")]
+        public bool UseGitIgnore { get; set; } = true;
+
         [ImportingConstructor]
         public Settings(SVsServiceProvider vsServiceProvider)
         {
