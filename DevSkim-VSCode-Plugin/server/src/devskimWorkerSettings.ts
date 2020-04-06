@@ -140,7 +140,8 @@ export class DevSkimWorkerSettings
             validateRulesFiles: false,
             debugLogging: false,
             maxFileSizeKB: 100,
-            toolInfo:  new ToolVersion()
+            toolInfo:  new ToolVersion(),
+            useGitIgnore: true
         };
     }
 
