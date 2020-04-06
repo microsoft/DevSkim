@@ -17,21 +17,19 @@
 		"vscode": "^1.33.x"
 	},
 	"scripts": {
-		"update-vscode": "vscode-install",
-		"postinstall": "vscode-install",
 		"clean": "npx --ignore-existing --quiet rimraf node_modules dist out"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.9.1",
 		"@types/node": "^11.15.7",
 		"@types/semver": "^6.2.1",
+		"@types/vscode": "^1.43.0",
 		"jest": "^25.2.0",
 		"jest-cli": "^25.2.0",
 		"rimraf": "^2.6.2",
 		"shx": "^0.3.2",
 		"ts-loader": "^6.2.1",
-		"typescript": "^3.8.3",
-		"vscode": "^1.1.36"
+		"typescript": "^3.8.3"
 	},
 	"dependencies": {
 		"node-dir": "^0.1.17",
