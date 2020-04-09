@@ -23,7 +23,8 @@ import {DevSkimWorker} from "./devskimWorker";
 import { DevSkimWorkerSettings } from "./devskimWorkerSettings";
 import { DevSkimSuppression } from "./utility_classes/suppressions";
 import { DebugLogger } from "./utility_classes/logger"
-
+const { exec } = require('child_process');
+const { path } = require('path');
 /**
  * The specific implementation of the DevSkim LSP
  */
@@ -306,18 +307,28 @@ export default class DevSkimServer
                 delete this.worker.codeActions[textDocument.uri];
                 this.worker.UpdateSettings(settings);
 
-                const problems: DevSkimProblem[] =
+                var doAnalyze = true;
+                if (settings.useGitIgnore){
+                    let proc = exec(`git check-ignore "${textDocument.uri}`, {cwd: path.dirname(textDocument.uri)});
+                    if (proc.subprocess.exitCode == 0){
+                        doAnalyze = false;
+                    }
+                }
+
+                if (doAnalyze){
+                    const problems: DevSkimProblem[] =
                     await this.worker.analyzeText(textDocument.getText(), textDocument.languageId, textDocument.uri);
 
-                for (let problem of problems)
-                {
-                    let diagnostic: Diagnostic = problem.makeDiagnostic(this.worker.dswSettings);
-                    diagnostics.push(diagnostic);
-
-                    for (let fix of problem.fixes)
+                    for (let problem of problems)
                     {
-                        this.worker.recordCodeAction(textDocument.uri, textDocument.version,
-                            diagnostic.range, diagnostic.code, fix, problem.ruleId);
+                        let diagnostic: Diagnostic = problem.makeDiagnostic(this.worker.dswSettings);
+                        diagnostics.push(diagnostic);
+
+                        for (let fix of problem.fixes)
+                        {
+                            this.worker.recordCodeAction(textDocument.uri, textDocument.version,
+                                diagnostic.range, diagnostic.code, fix, problem.ruleId);
+                        }
                     }
                 }
             }
