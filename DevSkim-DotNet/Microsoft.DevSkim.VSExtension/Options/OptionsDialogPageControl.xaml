@@ -12,6 +12,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -79,7 +81,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox x:Name="groupBox4" Header="Ignore Files" HorizontalAlignment="Stretch"  VerticalAlignment="Top" Grid.Row="3">
+        <GroupBox x:Name="groupBox4" Header="Ignore Files" HorizontalAlignment="Stretch"  VerticalAlignment="Top" Grid.Row="4">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -92,6 +94,6 @@
             </Grid>
         </GroupBox>
 
-        <TextBlock Grid.Row="3" Text="Changes require solution to be closed!" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+        <TextBlock Grid.Row="5" Text="Changes require solution to be closed!" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
     </Grid>
 </UserControl>
