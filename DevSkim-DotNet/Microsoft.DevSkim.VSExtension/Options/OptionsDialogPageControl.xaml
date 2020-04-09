@@ -13,7 +13,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -53,7 +52,7 @@
                 <CheckBox x:Name="EnableImportantRules" Content="Important"  Grid.Row="0" Grid.Column="0" Margin="10" HorizontalAlignment="Left" />
                 <CheckBox x:Name="EnableModerateRules" Content="Moderate"  Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Left" />
 
-                <CheckBox x:Name="EnableBestPracticeRules" Content="Best Practice"  Grid.Row="2" Grid.Column="0" Margin="10" HorizontalAlignment="Left" />
+                <CheckBox x:Name="EnableBestPracticeRules" Content="Best Practice"  Grid.Row="1" Grid.Column="1" Margin="10" HorizontalAlignment="Left" />
                 <CheckBox x:Name="EnableManualReviewRules" Content="Manual Review"  Grid.Row="0" Grid.Column="1" Margin="10" HorizontalAlignment="Left" />
             </Grid>
         </GroupBox>

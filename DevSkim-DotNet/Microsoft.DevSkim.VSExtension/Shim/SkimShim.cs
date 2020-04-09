@@ -6,9 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System;
-using EnvDTE80;
-using EnvDTE;
-using LibGit2Sharp;
+using System.Diagnostics.Design;
 
 namespace Microsoft.DevSkim.VSExtension
 {
@@ -47,19 +45,27 @@ namespace Microsoft.DevSkim.VSExtension
                       .Count() > 1;
         }
 
+        private static Dictionary<string, ValueTuple<DateTime, bool>> LastChecked = new Dictionary<string, ValueTuple<DateTime, bool>>();
+
         private static bool IsIgnored(string path)
         {
-            var repoLoc = Repository.Discover(path);
-
-            if (!string.IsNullOrEmpty(repoLoc))
+            if (LastChecked.TryGetValue(path, out ValueTuple<DateTime, bool> tuple))
             {
-                using (var repo = new Repository(repoLoc))
+                // If the cache is still valid
+                if (tuple.Item1.AddMinutes(1).CompareTo(DateTime.Now) > 0)
                 {
-                    return repo.Ignore.IsPathIgnored(path);
+                    return tuple.Item2;
                 }
             }
+            
+            // https://git-scm.com/docs/git-check-ignore
+            // 0 means one or more matches
+            // 1 means no matches
+            var toople = new ValueTuple<DateTime, bool>(DateTime.Now, Utils.ExternalCommandRunner.RunExternalCommand("git", out string stdOut, out string stdErr, $"check-ignore \"{path}\"", true, Path.GetDirectoryName(path)) == 0);
+            LastChecked[path] = toople;
 
-            return false;
+            
+           return toople.Item2;
         }
 
         /// <summary>

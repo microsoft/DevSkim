@@ -57,7 +57,7 @@ namespace Microsoft.DevSkim.VSExtension
         public bool UseBlockSuppression { get; set; } = false;
 
         [SettingsEntity(Name = "Ignore files listed in .gitignore files.")]
-        public bool UseGitIgnore { get; set; } = true;
+        public bool UseGitIgnore { get; set; } = false;
 
         [ImportingConstructor]
         public Settings(SVsServiceProvider vsServiceProvider)
