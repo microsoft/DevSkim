@@ -4,8 +4,11 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Reflection;
+using System;
+using EnvDTE80;
+using EnvDTE;
+using LibGit2Sharp;
 
 namespace Microsoft.DevSkim.VSExtension
 {
@@ -24,7 +27,7 @@ namespace Microsoft.DevSkim.VSExtension
         #region Public Static Methods
 
         /// <summary>
-        /// Reapllys settings
+        /// Reapplys settings
         /// </summary>
         public static void ApplySettings()
         {
@@ -41,8 +44,22 @@ namespace Microsoft.DevSkim.VSExtension
         {
             return Analyze(text, contenttype, string.Empty)
                       .GroupBy(x => x.Rule.Id)
-                      .Select(x => x.First())
                       .Count() > 1;
+        }
+
+        private static bool IsIgnored(string path)
+        {
+            var repoLoc = Repository.Discover(path);
+
+            if (!string.IsNullOrEmpty(repoLoc))
+            {
+                using (var repo = new Repository(repoLoc))
+                {
+                    return repo.Ignore.IsPathIgnored(path);
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -52,9 +69,17 @@ namespace Microsoft.DevSkim.VSExtension
         /// <param name="contenttype">VS Content Type</param>
         /// <returns>List of actionable and non-actionable issues</returns>
         public static Issue[] Analyze(string text, string contentType, string fileName = "", int lineNumber = 1)
-        {                        
+        {
+            Settings set = Settings.GetSettings();
+            if (set.UseGitIgnore)
+            {
+                if (IsIgnored(fileName))
+                {
+                    return Array.Empty<Issue>();
+                }
+            }
             return _instance.processor.Analyze(text, _instance.GetLanguageList(contentType, fileName), lineNumber);
-        }    
+        }
 
         #endregion
 

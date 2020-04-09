@@ -81,6 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Checker\SinkManager.cs" />
+    <Compile Include="Shim\GitIgnores.cs" />
     <Compile Include="Shim\SuppressorEx.cs" />
     <Compile Include="Shim\SkimShim.cs" />
     <Compile Include="Suggestions\FixSuggestedAction.cs" />
@@ -179,7 +180,18 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="IncludeNuGetPackageReferences" AfterTargets="GetVsixSourceItems">
+    <ItemGroup>
+      <VSIXSourceItem Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' == 'LibGit2Sharp.NativeBinaries'" />
+    </ItemGroup>
+  </Target>
   <ItemGroup>
+    <PackageReference Include="LibGit2Sharp">
+      <Version>0.26.2</Version>
+    </PackageReference>
+    <PackageReference Include="LibGit2Sharp.NativeBinaries">
+      <Version>2.0.306</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers">
       <Version>2.9.8</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
