@@ -308,8 +308,9 @@ export default class DevSkimServer
                 this.worker.UpdateSettings(settings);
 
                 var doAnalyze = true;
+
                 if (settings.useGitIgnore){
-                    let proc = exec(`git check-ignore "${textDocument.uri}`, {cwd: path.dirname(textDocument.uri)});
+                    let proc = exec(`git check-ignore "${textDocument.uri}"`, {cwd: path.dirname(textDocument.uri)});
                     if (proc.subprocess.exitCode == 0){
                         doAnalyze = false;
                     }
