@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System;
 using System.Diagnostics.Design;
+using LibGit2Sharp;
 
 namespace Microsoft.DevSkim.VSExtension
 {
@@ -50,7 +51,7 @@ namespace Microsoft.DevSkim.VSExtension
         private static bool IsIgnored(string path)
         {
             var repoPath = Repository.Discover(path);
-            var repository = Repository(repoPath);
+            var repository = new Repository(repoPath);
             return repository.Ignore.IsPathIgnored(path);
         }
 
