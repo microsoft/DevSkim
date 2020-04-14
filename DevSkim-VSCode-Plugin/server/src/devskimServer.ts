@@ -25,6 +25,8 @@ import { DevSkimSuppression } from "./utility_classes/suppressions";
 import { DebugLogger } from "./utility_classes/logger"
 const { exec } = require('child_process');
 const { path } = require('path');
+const { Git } = require("nodegit");
+
 /**
  * The specific implementation of the DevSkim LSP
  */
@@ -309,11 +311,13 @@ export default class DevSkimServer
 
                 var doAnalyze = true;
 
-                if (settings.useGitIgnore){
-                    let proc = exec(`git check-ignore "${textDocument.uri}"`, {cwd: path.dirname(textDocument.uri)});
-                    if (proc.subprocess.exitCode == 0){
-                        doAnalyze = false;
-                    }
+                if (settings.useGitIgnore)
+                {
+                    Git.Repository.discover(path.dirname(textDocument.uri), 0, null).then(function(repo) {
+                        if (Git.Ignore.PathIsIgnored(repo,textDocument.uri)){
+                            doAnalyze = false;
+                        }
+                    });
                 }
 
                 if (doAnalyze){
