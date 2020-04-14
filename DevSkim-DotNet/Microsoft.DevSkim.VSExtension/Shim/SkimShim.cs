@@ -49,23 +49,9 @@ namespace Microsoft.DevSkim.VSExtension
 
         private static bool IsIgnored(string path)
         {
-            if (LastChecked.TryGetValue(path, out ValueTuple<DateTime, bool> tuple))
-            {
-                // If the cache is still valid
-                if (tuple.Item1.AddMinutes(1).CompareTo(DateTime.Now) > 0)
-                {
-                    return tuple.Item2;
-                }
-            }
-            
-            // https://git-scm.com/docs/git-check-ignore
-            // 0 means one or more matches
-            // 1 means no matches
-            var toople = new ValueTuple<DateTime, bool>(DateTime.Now, Utils.ExternalCommandRunner.RunExternalCommand("git", out string stdOut, out string stdErr, $"check-ignore \"{path}\"", true, Path.GetDirectoryName(path)) == 0);
-            LastChecked[path] = toople;
-
-            
-           return toople.Item2;
+            var repoPath = Repository.Discover(path);
+            var repository = Repository(repoPath);
+            return repository.Ignore.IsPathIgnored(path);
         }
 
         /// <summary>
