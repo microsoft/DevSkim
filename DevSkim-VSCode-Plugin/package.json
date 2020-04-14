@@ -230,7 +230,7 @@
     "check": "yarn run lint && yarn run build && yarn run test",
     "check:bail": "yarn run lint:bail && yarn run build && yarn run test",
     "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server",
-    "vscode:prepublish": "npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production",
+    "vscode:prepublish": "npm run copy-rules && cd ./client && npx webpack-cli --mode production && cd ../server && npx webpack-cli --mode production",
     "webpack": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
@@ -257,7 +257,7 @@
     "ts-node": "^8.6.2",
     "typescript": "^3.8.3",
     "vsce": "^1.74.0",
-    "webpack": "^4.42.0",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
   }
 }
