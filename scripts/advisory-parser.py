@@ -83,7 +83,6 @@ def process_advisory(url):
 	soup = BeautifulSoup(html, 'html5lib')
 
 	rule = copy.deepcopy(RULE_TEMPLATE)
-	num = 0
 	found = False
 
 	rule['description'] = soup.find_all('h2')[0].get_text()
