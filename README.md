@@ -1,11 +1,22 @@
 # DevSkim
 
 DevSkim is a framework of IDE extensions and Language analyzers that provide inline security analysis 
-in the dev environment as the developer writes code. It is designed to work with multiple IDEs
-(VS, VS Code, Sublime Text, etc.), and has a flexible rule model that supports multiple programming
-languages. The idea is to give the developer notification as they are introducing a security
+in the dev environment as the developer writes code. It has a flexible rule model that supports multiple programming
+languages. The goal is to give the developer notification as they are introducing a security
 vulnerability in order to fix the issue at the point of introduction, and to help build awareness
 for the developer.
+
+## Releases
+
+Platform specific binaries of the CLI are available on our GitHub [releases](https://github.com/microsoft/DevSkim/releases) page.
+
+The C# library is available on [NuGet](https://www.nuget.org/packages/Microsoft.CST.DevSkim/).
+
+If you have .NET Core installed already you can install the CLI with `dotnet tool install --global Microsoft.CST.DevSkim.CLI`
+
+The Visual Studio extension is available in the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.MicrosoftDevSkim).
+
+The VS Code extension is available in the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim).
 
 ### Repository Structure
 
