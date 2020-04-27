@@ -64,8 +64,19 @@ namespace Microsoft.DevSkim
 
             string text = _content.Substring(scope.Index, scope.Length);
             List<Boundary> matches = MatchPattern(pattern, text);
-            if (matches.Count > 0)
-                result = true;
+
+            foreach (Boundary match in matches)
+            {
+                Boundary translatedBoundary = new Boundary()
+                {
+                    Length = match.Length,
+                    Index = match.Index + scope.Index
+                };
+                if (ScopeMatch(pattern, translatedBoundary))
+                {
+                    result = true;
+                }
+            }
 
             return result;
         }
