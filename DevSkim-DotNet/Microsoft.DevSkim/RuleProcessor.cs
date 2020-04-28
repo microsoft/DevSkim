@@ -123,6 +123,11 @@ namespace Microsoft.DevSkim
                                 {
                                     if (condition.Pattern is { })
                                     {
+                                        if (!textContainer.ScopeMatch(condition.Pattern, translatedBoundary))
+                                        {
+                                            passedConditions = false;
+                                            break;
+                                        }
                                         bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
                                         if (res && condition.NegateFinding)
                                         {
