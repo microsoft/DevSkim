@@ -190,40 +190,20 @@ namespace Microsoft.DevSkim.VSExtension
                     var oldSecurityErrors = Factory.CurrentSnapshot;
                     var newSecurityErrors = new DevSkimErrorsSnapshot(this.FilePath, oldSecurityErrors.VersionNumber + 1);
 
-                    // Go through the existing errors. If they are on the line we are currently parsing then
-                    // copy them to oldLineErrors, otherwise they go to the new errors.
-                    var oldLineErrors = new List<DevSkimError>();
-                    foreach (var error in oldSecurityErrors.Errors)
-                    {
-                        Debug.Assert(error.NextIndex == -1);
-
-                        if (line.Extent.Contains(error.Span))
-                        {
-                            error.NextIndex = -1;
-                            oldLineErrors.Add(error); // Do not clone old error here ... we'll do that later there is no change.
-                        }
-                        else
-                        {
-                            error.NextIndex = newSecurityErrors.Errors.Count;
-                            newSecurityErrors.Errors.Add(DevSkimError.Clone(error));   // We must clone the old error here.
-                        }
-                    }
-
-                    int expectedErrorCount = newSecurityErrors.Errors.Count + oldLineErrors.Count;
                     bool anyNewErrors = false;
 
                     string text = _textView.TextSnapshot.GetText();
                     
-                    Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath, line.LineNumber + 1);
+                    Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath);
                     foreach (Issue issue in issues)
                     {
-
                         int errorStart = issue.StartLocation.Column;
                         int errorLength = issue.Boundary.Length;
                         if (errorLength > 0)    // Ignore any single character error.
                         {
+                            line = _textView.TextSnapshot.GetLineFromLineNumber(issue.StartLocation.Line);
                             var newSpan = new SnapshotSpan(line.Start + errorStart, errorLength);
-                            var oldError = oldLineErrors.Find((e) => e.Span == newSpan);
+                            var oldError = oldSecurityErrors.Errors.Find((e) => e.Span == newSpan);
 
                             if (oldError != null)
                             {
@@ -241,61 +221,14 @@ namespace Microsoft.DevSkim.VSExtension
 
                     // This does a deep comparison so we will only do the update if the a different set of errors was discovered compared to what we had previously.
                     // If there were any new errors or if we didn't see all the expected errors then there is a change and we need to update the security errors.
-                    if (anyNewErrors || (newSecurityErrors.Errors.Count != expectedErrorCount))
+                    if (anyNewErrors)
                     {
                         UpdateSecurityErrors(newSecurityErrors);
                     }
-                    else
-                    {
-                        // There were no changes so we don't need to update our snapshot.
-                        // We have, however, dirtied the old errors by setting their NextIndex property on the assumption that we would be updating the errors.
-                        // Revert all those changes.
-                        foreach (var error in oldSecurityErrors.Errors)
-                        {
-                            error.NextIndex = -1;
-                        }
-                    }
                 }
 
-                // NormalizedSnapshotSpanCollection.Difference doesn't quite do what we need here. If I have {[5,5), [10,20)} and subtract {[5, 15)} and do a ...Difference, I
-                // end up with {[5,5), [15,20)} (the zero length span at the beginning isn't getting removed). A zero-length span at the end wouldn't be removed but, in this case,
-                // that is the desired behavior (the zero length span at the end could be a change at the beginning of the next line, which we'd want to keep).
-                var newDirtySpans = new List<Span>(_dirtySpans.Count + 1);
-                var extent = line.ExtentIncludingLineBreak;
-
-                for (int i = 0; (i < _dirtySpans.Count); ++i)
-                {
-                    Span s = _dirtySpans[i];
-                    if ((s.End < extent.Start) || (s.Start >= extent.End))          // Intentionally asymmetric
-                    {
-                        newDirtySpans.Add(s);
-                    }
-                    else
-                    {
-                        if (s.Start < extent.Start)
-                        {
-                            newDirtySpans.Add(Span.FromBounds(s.Start, extent.Start));
-                        }
-
-                        if ((s.End >= extent.End) && (extent.End < line.Snapshot.Length))
-                        {
-                            newDirtySpans.Add(Span.FromBounds(extent.End, s.End));  //This could add a zero length span (which is by design since we want to ensure we security check the next line).
-                        }
-                    }
-                }
-
-                _dirtySpans = new NormalizedSnapshotSpanCollection(line.Snapshot, newDirtySpans);
-
-                if (_dirtySpans.Count == 0)
-                {
-                    // We've cleaned up all the dirty spans.
-                    _isUpdating = false;
-                }
-                else
-                {
-                    // Still more work to do.
-                    _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
-                }
+                _dirtySpans = new NormalizedSnapshotSpanCollection(line.Snapshot, new NormalizedSpanCollection());
+                _isUpdating = false;
             }
         }
 
