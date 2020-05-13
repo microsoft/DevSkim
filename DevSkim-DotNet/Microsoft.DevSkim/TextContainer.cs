@@ -74,7 +74,7 @@ namespace Microsoft.DevSkim
                 };
                 if (ScopeMatch(pattern, translatedBoundary))
                 {
-                    result = true;
+                    return true;
                 }
             }
 
