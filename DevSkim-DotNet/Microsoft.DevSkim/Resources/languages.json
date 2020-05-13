@@ -5,11 +5,11 @@
   },
   {
     "name": "cpp",
-    "extensions": [ ".cpp", ".hpp", ".cc", ".hh", ".cxx", ".hxx", ".inl" ]
+    "extensions": [ ".cpp", ".hpp", ".cc", ".hh", ".cxx", ".hxx", ".inl", ".h" ]
   },
   {
     "name": "csharp",
-    "extensions": [ ".cs" ]
+    "extensions": [ ".cs", ".cshtml", ".razor" ]
   },
   {
     "name": "vb",
