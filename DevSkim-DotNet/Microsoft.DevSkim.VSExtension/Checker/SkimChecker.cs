@@ -201,8 +201,8 @@ namespace Microsoft.DevSkim.VSExtension
                         int errorLength = issue.Boundary.Length;
                         if (errorLength > 0)    // Ignore any single character error.
                         {
-                            line = _textView.TextSnapshot.GetLineFromLineNumber(issue.StartLocation.Line);
-                            var newSpan = new SnapshotSpan(line.Start + errorStart, errorLength);
+                            line = _textView.TextSnapshot.GetLineFromLineNumber(issue.StartLocation.Line - 1);
+                            var newSpan = new SnapshotSpan(line.Start + errorStart - 1, errorLength);
                             var oldError = oldSecurityErrors.Errors.Find((e) => e.Span == newSpan);
 
                             if (oldError != null)
@@ -214,17 +214,11 @@ namespace Microsoft.DevSkim.VSExtension
                             else
                             {
                                 newSecurityErrors.Errors.Add(new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo));
-                                anyNewErrors = true;
                             }
                         }
                     }
 
-                    // This does a deep comparison so we will only do the update if the a different set of errors was discovered compared to what we had previously.
-                    // If there were any new errors or if we didn't see all the expected errors then there is a change and we need to update the security errors.
-                    if (anyNewErrors)
-                    {
-                        UpdateSecurityErrors(newSecurityErrors);
-                    }
+                    UpdateSecurityErrors(newSecurityErrors);
                 }
 
                 _dirtySpans = new NormalizedSnapshotSpanCollection(line.Snapshot, new NormalizedSpanCollection());
