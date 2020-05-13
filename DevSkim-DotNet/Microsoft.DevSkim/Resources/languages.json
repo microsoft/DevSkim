@@ -5,7 +5,7 @@
   },
   {
     "name": "cpp",
-    "extensions": [ ".cpp", ".hpp" ]
+    "extensions": [ ".cpp", ".hpp", ".cc", ".hh", ".cxx", ".hxx", ".inl" ]
   },
   {
     "name": "csharp",
