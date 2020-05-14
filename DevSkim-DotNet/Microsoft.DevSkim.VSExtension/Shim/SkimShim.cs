@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System;
-using System.Diagnostics.Design;
-using LibGit2Sharp;
+using Microsoft.DevSkim.VSExtension.Utils;
+using System.Text;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.DevSkim.VSExtension
 {
@@ -48,11 +49,24 @@ namespace Microsoft.DevSkim.VSExtension
 
         private static Dictionary<string, ValueTuple<DateTime, bool>> LastChecked = new Dictionary<string, ValueTuple<DateTime, bool>>();
 
+        [DllImport("shlwapi.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern bool PathFindOnPath([In, Out] StringBuilder pszFile, [In] String[] ppszOtherDirs);
+
         private static bool IsIgnored(string path)
         {
-            var repoPath = Repository.Discover(path);
-            var repository = new Repository(repoPath);
-            return repository.Ignore.IsPathIgnored(path);
+            int MAX_PATH = 260;
+
+            StringBuilder sb = new StringBuilder(string.Empty, MAX_PATH);
+            bool found = PathFindOnPath(sb, null);
+            if (found)
+            {
+                ExternalCommandRunner.RunExternalCommand("git", out string stdOut, out string _, "check-ignore", path);
+                if (stdOut.Contains(path))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
