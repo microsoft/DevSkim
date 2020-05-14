@@ -61,7 +61,7 @@ namespace Microsoft.DevSkim.VSExtension
             if (found)
             {
                 ExternalCommandRunner.RunExternalCommand("git", out string stdOut, out string _, "check-ignore", path);
-                if (stdOut.Contains(path))
+                if (stdOut.Contains(path.Split(Path.DirectorySeparatorChar).Last()))
                 {
                     return true;
                 }
