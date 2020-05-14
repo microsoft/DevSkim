@@ -2,7 +2,7 @@
 
 This is the VS Code plugin project for DevSkim.  It is implemented in two parts - a Client that handles the integration and interaction with VS Code, and an out of proc server that handles the analysis.  This allows for more process intensive analysis without interfering in the responsiveness of the IDE.  
 
-A primer for VS Code Lanuage Servers can be found at <https://code.visualstudio.com/docs/extensions/example-language-server> and a primer on the protocol between the language server and client can be found at <https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md>.
+A primer for VS Code Language Servers can be found at <https://code.visualstudio.com/docs/extensions/example-language-server> and a primer on the protocol between the language server and client can be found at <https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md>.
 
 As with most VS Code extensions, this project is implemented in TypeScript running on Node.js.
 
@@ -14,7 +14,7 @@ and contributions!
 
 ## Running DevSkim in VS Code
 
-For people simply interested in using DevSkim in VS Code, it can be installed and run from the [VS Code Extension Marketplace](https://marketplace.visualstudio.com/items?itemName=MS-DevSkim.vscode-devskim).  In VS Code launch the VS Code Quick Open (Ctrl + P), paste the folloiwng command, and press enter:
+For people simply interested in using DevSkim in VS Code, it can be installed and run from the [VS Code Extension Marketplace](https://marketplace.visualstudio.com/items?itemName=MS-DevSkim.vscode-devskim).  In VS Code launch the VS Code Quick Open (Ctrl + P), paste the following command, and press enter:
 
     ext install ms-devskim.vscode-devskim
 

@@ -123,7 +123,7 @@ namespace Microsoft.DevSkim
                                 {
                                     if (condition.Pattern is { })
                                     {
-                                        bool res = line.MatchPattern(condition.Pattern, match, condition);
+                                        bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
                                         if (res && condition.NegateFinding)
                                         {
                                             passedConditions = false;
