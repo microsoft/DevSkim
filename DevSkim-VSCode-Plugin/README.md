@@ -1,4 +1,4 @@
-﻿# DevSkim
+# DevSkim
 
 DevSkim is a framework of IDE extensions and language analyzers that provide inline security analysis in the dev environment as the developer writes code. It has a flexible rule model that supports multiple programming languages. The goal is to notify the developer as they are introducing a security vulnerability in order to fix the issue at the point of introduction, and to help build awareness for the developer.
 
@@ -14,7 +14,7 @@ DevSkim is a framework of IDE extensions and language analyzers that provide inl
 
 As a developer writes code, DevSkim will flag identified security issues and call attention to them with errors or warnings. Mousing over the issue will show a description of the problem and how to address it, with a link to more information. For some issues, one or more safe alternatives are available in the lightbulb menu so that the issue can be fixed automatically. For issues where the alternative has different parameters than the unsafe API that is called out, guidance for the parameters will be inserted in the form of \<some guidance info\>. For example, when DevSkim turns gets() into fgets() it adds \<size of firstparamname\> to inform a user that they need to provide the size of the buffer.
 
-![](https://raw.githubusercontent.com/microsoft/DevSkim/9c5a19ab8ff8a182c34ca100112d7c2803e0f180/media/DevSkim-VisualStudio-Demo-1.gif)
+![](https://raw.githubusercontent.com/microsoft/DevSkim/9c5a19ab8ff8a182c34ca100112d7c2803e0f180/DevSkim-VSCode-Plugin/vsc-example.gif)
 
 ### Suppressions
 
@@ -24,7 +24,7 @@ For timed suppressions, the default period is 30 days, but this can be adjusted 
 
 Suppressions can be accessed from the lightbulb menu. Once a suppression is added, DevSkim will highlight the issue number that identifies the check being suppressed (the gets() example above is issue number DS181021 for example), and mousing over will provide details. This will let other contributors to a project know what was suppressed, and reduce confusion about the comment.
 
-![](https://raw.githubusercontent.com/microsoft/DevSkim/9c5a19ab8ff8a182c34ca100112d7c2803e0f180/media/DevSkim-VisualStudio-Suppression-Example.png)
+![](https://raw.githubusercontent.com/microsoft/DevSkim/9c5a19ab8ff8a182c34ca100112d7c2803e0f180/DevSkim-VSCode-Plugin/vsc-suppression-example.png)
 
 ## Rules
 
