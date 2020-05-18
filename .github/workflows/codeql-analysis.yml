@@ -33,8 +33,8 @@ jobs:
     #    uses a compiled language
 
     - run: |
-       dotnet restore DevSkim-Dotnet/Microsoft.DevSkim.CLI
-       dotnet build DevSkim-Dotnet/Microsoft.DevSkim.CLI -c Release 
+       dotnet restore DevSkim-Dotnet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj
+       dotnet build DevSkim-Dotnet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj -c Release 
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
