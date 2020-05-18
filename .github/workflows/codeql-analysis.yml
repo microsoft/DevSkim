@@ -33,7 +33,6 @@ jobs:
     #    uses a compiled language
 
     - run: ls
-      working-directory: ./DevSkim-Dotnet
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
