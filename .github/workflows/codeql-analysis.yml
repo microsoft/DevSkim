@@ -34,6 +34,7 @@ jobs:
 
     - run: |
          dotnet restore Microsoft.DevSkim.CLI
+         dotnet build Microsoft.DevSkim.CLI -c Release
       working-directory: ./DevSkim-DotNet
 
     - name: Perform CodeQL Analysis
