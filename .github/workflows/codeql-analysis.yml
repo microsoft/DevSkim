@@ -33,6 +33,8 @@ jobs:
     #    uses a compiled language
 
     - run: |
+       ls
+       pwd
        dotnet restore DevSkim-Dotnet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj
        dotnet build DevSkim-Dotnet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj -c Release 
 
