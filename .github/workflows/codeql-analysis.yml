@@ -32,7 +32,9 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - run: ls
+    - run: |
+         dotnet restore Microsoft.DevSkim.CLI
+      working-directory: ./DevSkim-DotNet
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
