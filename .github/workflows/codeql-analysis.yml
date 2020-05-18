@@ -32,7 +32,8 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - run: |
+    - name: Build DevSkim
+      run: |
          dotnet restore Microsoft.DevSkim.CLI
          dotnet build Microsoft.DevSkim.CLI -c Release
       working-directory: ./DevSkim-DotNet
