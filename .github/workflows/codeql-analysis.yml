@@ -34,9 +34,9 @@ jobs:
 
     - run: |
        ls
-       cd ./DevSkim-Dotnet
-       dotnet restore Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj
-       dotnet build Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj -c Release 
+       dotnet restore Microsoft.DevSkim.CLI
+       dotnet build Microsoft.DevSkim.CLI -c Release
+      working-directory: ./DevSkim-Dotnet
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
