@@ -20,6 +20,9 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
+      
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
@@ -27,10 +30,16 @@ jobs:
       # with:
       #   languages: go, javascript, csharp, python, cpp, java
 
-    - name: Build DevSkim
+    - name: Build DevSkim CLI
       run: |
          dotnet restore Microsoft.DevSkim.CLI
          dotnet build Microsoft.DevSkim.CLI -c Release
+      working-directory: ./DevSkim-DotNet
+
+    - name: Build DevSkim VS Extension
+      run: |
+         dotnet restore Microsoft.DevSkim.VSExtension
+         msbuild Microsoft.DevSkim.VSExtension /p:Configuration=Release /p:Platform=AnyCPU
       working-directory: ./DevSkim-DotNet
 
     - name: Perform CodeQL Analysis
