@@ -1,0 +1,36 @@
+name: "Code Scanning - VSCode Plugin"
+
+on:
+  push:
+    paths:
+    - DevSkim-VSCode-Plugin/*
+  schedule:
+    - cron: '0 3 * * 3'
+
+jobs:
+  CodeQL-Build:
+
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: javascript
+
+    - name: Build DevSkim VSCode Plugin
+      run: |
+         npm install
+         npm run pack-ext
+      working-directory: ./DevSkim-VSCode-Plugin
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

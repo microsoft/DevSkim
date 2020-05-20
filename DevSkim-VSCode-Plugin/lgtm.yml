@@ -1,6 +1,0 @@
-queries:
-  - include: js/jsdoc/unknown-parameter
-  - include: js/jsdoc/malformed-param-tag
-  - include: js/jsdoc/missing-parameter
-  - include: js/node/cyclic-import
-  - include: js/node/unused-npm-dependency
