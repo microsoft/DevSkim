@@ -1,4 +1,4 @@
-name: "Code Scanning - VSCode Plugin"
+name: "Code Scanning - Action"
 
 on:
   push:
