@@ -1,0 +1,44 @@
+name: "Code Scanning - VS Extension"
+
+on:
+  push:
+    paths:
+    - DevSkim-DotNet/Microsoft.DevSkim/*
+    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+  pull_request:
+    paths:
+    - DevSkim-DotNet/Microsoft.DevSkim/*
+    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+  schedule:
+    - cron: '0 3 * * 3'
+
+jobs:
+  CodeQL-Build:
+
+    strategy:
+      fail-fast: false
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: csharp
+
+    - name: Build DevSkim VS Extension
+      run: |
+         dotnet restore Microsoft.DevSkim.VSExtension
+         msbuild Microsoft.DevSkim.VSExtension /p:Configuration=Release /p:Platform=AnyCPU
+      working-directory: ./DevSkim-DotNet
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
