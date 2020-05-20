@@ -5,10 +5,6 @@ on:
     paths:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-  pull_request:
-    paths:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
   schedule:
     - cron: '0 3 * * 3'
 

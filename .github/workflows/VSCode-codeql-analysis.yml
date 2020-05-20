@@ -4,9 +4,6 @@ on:
   push:
     paths:
     - DevSkim-VSCode-Plugin/*
-  pull_request:
-    paths:
-    - DevSkim-VSCode-Plugin/*
   schedule:
     - cron: '0 3 * * 3'
 
