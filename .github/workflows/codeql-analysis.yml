@@ -24,7 +24,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       # Override language selection by uncommenting this and choosing your languages
-      # with:
+       with:
          languages: javascript
 
     - name: Build DevSkim VSCode Plugin
