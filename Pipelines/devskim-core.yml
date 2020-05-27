@@ -48,7 +48,7 @@ stages:
       displayName: Dotnet Publish Linux x64
       inputs:
         command: 'publish'
-        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r linux-x64 /p:DebugType=None'
+        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/linux/DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r linux-x64'
         workingDirectory: '$(SolutionDirectory)'
         publishWebProjects: false
         zipAfterPublish: false
@@ -56,7 +56,7 @@ stages:
       displayName: Dotnet Publish MacOS x64
       inputs:
         command: 'publish'
-        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r osx-x64 /p:DebugType=None'
+        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)/macos/DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r osx-x64'
         workingDirectory: '$(SolutionDirectory)'
         publishWebProjects: false
         zipAfterPublish: false
@@ -107,7 +107,7 @@ stages:
       displayName: Dotnet Publish Windows x86
       inputs:
         command: 'publish'
-        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r win-x86 /p:DebugType=None'
+        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\windows\DevSkim_$(ReleaseVersion) -f netcoreapp3.1 -r win-x86'
         workingDirectory: '$(SolutionDirectory)'
         publishWebProjects: false
         zipAfterPublish: false
@@ -115,7 +115,7 @@ stages:
       displayName: Dotnet Build .NET Core App
       inputs:
         command: 'build'
-        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp\DevSkim_$(ReleaseVersion) -f netcoreapp3.1 /p:DebugType=None'
+        arguments: 'Microsoft.DevSkim.CLI -c $(BuildConfiguration) -o $(Build.BinariesDirectory)\netcoreapp\DevSkim_$(ReleaseVersion) -f netcoreapp3.1'
         workingDirectory: '$(SolutionDirectory)'
         publishWebProjects: false
         zipAfterPublish: false
@@ -371,7 +371,7 @@ stages:
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)/nuget/DevSkim_$(ReleaseVersion)'
-        Pattern: '*.nupkg'
+        Pattern: '*.nupkg, *.snupkg'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [
@@ -442,12 +442,18 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'mv $env:BUILD_BINARIESDIRECTORY/nuget/DevSkim_$(ReleaseVersion)/*.nupkg $env:BUILD_STAGINGDIRECTORY/'
+    - task: PowerShell@2
+      displayName: Move Nuget Symbols
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_BINARIESDIRECTORY/nuget/DevSkim_$(ReleaseVersion)/*.snupkg $env:BUILD_STAGINGDIRECTORY/'
     - task: PublishPipelineArtifact@1
       displayName: Publish Signed Artifacts to Pipeline
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Binaries'
     - task: GitHubRelease@1
+      displayName: Release to GitHub
       inputs:
         gitHubConnection: 'DevSkim'
         repositoryName: 'microsoft/DevSkim'
@@ -462,9 +468,18 @@ stages:
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
     - task: NuGetCommand@2
+      displayName: Publish NuGet Packages
       inputs:
         command: 'push'
         packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'CST-E Nuget CI'
+        verbosityPush: 'Normal'
+    - task: NuGetCommand@2
+      displayName: Publish NuGet Symbols
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.StagingDirectory)/*.snupkg'
         nuGetFeedType: 'external'
         publishFeedCredentials: 'CST-E Nuget CI'
         verbosityPush: 'Normal'
