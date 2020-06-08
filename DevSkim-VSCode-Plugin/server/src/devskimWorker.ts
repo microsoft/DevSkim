@@ -358,7 +358,7 @@ export class DevSkimWorker
 
                         let range: Range = Range.create(lineStart, columnStart, lineEnd, columnEnd);
 
-                        //look for the suppression comment for that finding
+                        // Is this *not* a suppression finding (a real issue)
                         if (!suppressionFinding.showSuppressionFinding &&
                             DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, rule.patterns[patternIndex].scopes) &&
                             DevSkimWorker.MatchesConditions(rule.conditions, documentContents, range, langID)) 
