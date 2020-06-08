@@ -210,7 +210,9 @@ export class DevSkimWorker
             (ruleSeverity == DevskimRuleSeverity.BestPractice &&
                 this.dswSettings.getSettings().enableBestPracticeRules == true) ||
             (ruleSeverity == DevskimRuleSeverity.ManualReview &&
-                this.dswSettings.getSettings().enableManualReviewRules == true);
+                this.dswSettings.getSettings().enableManualReviewRules == true) ||
+            (ruleSeverity == DevskimRuleSeverity.WarningInfo &&
+                this.dswSettings.getSettings().enableWarningInfo == true);
 
     }
 
@@ -377,7 +379,7 @@ export class DevSkimWorker
                         }
                         //throw a pop up if there is a review/suppression comment with the rule id, so that people can figure out what was
                         //suppressed/reviewed
-                        else if (!suppressionFinding.noRange && includeSuppressions) 
+                        else if (!suppressionFinding.noRange && includeSuppressions && this.RuleSeverityEnabled(DevskimRuleSeverity.WarningInfo)) 
                         {
                             //highlight suppression finding for context
                             //this will look

@@ -19,7 +19,7 @@ import { Command, TextEdit } from 'vscode-languageserver-protocol';
 import { TextDocumentIdentifier } from 'vscode-languageserver-types';
 
 import { AutoFix, DevSkimProblem, Fixes, IDevSkimSettings } from "./devskimObjects";
-import {DevSkimWorker} from "./devskimWorker";
+import { DevSkimWorker } from "./devskimWorker";
 import { DevSkimWorkerSettings } from "./devskimWorkerSettings";
 import { DevSkimSuppression } from "./utility_classes/suppressions";
 import { DebugLogger } from "./utility_classes/logger"

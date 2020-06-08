@@ -96,10 +96,6 @@ export interface IToolDescriptor
 	markdown ? : string;
 }
 
-
-/**
- * These are the example settings defined in the client's package.json
- */
 export interface IDevSkimSettings
 {
 	/**
@@ -195,6 +191,11 @@ export interface IDevSkimSettings
 	 * values are "same line as finding" or "line above finding"
 	 */
 	suppressionCommentPlacement: string;
+
+	/**
+	 * Enable flagging suppressed issues.
+	 */
+	enableWarningInfo : boolean;
 	
 	//--------------------------------------
 	//Internal use
@@ -477,6 +478,7 @@ export class DevSkimProblem
 			case DevskimRuleSeverity.Important: return "[Important]";
 			case DevskimRuleSeverity.Moderate: return "[Moderate]";
 			case DevskimRuleSeverity.ManualReview: return "[Review]";
+			case DevskimRuleSeverity.WarningInfo: return "[Suppression Info]";
 			default: return "[Best Practice]";
 		}
 	}
