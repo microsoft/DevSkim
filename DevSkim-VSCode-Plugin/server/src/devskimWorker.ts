@@ -491,7 +491,6 @@ export class DevSkimWorker
         let regionRegex: RegExp = /finding-region\s*\((-*\d+),\s*(-*\d+)\s*\)/;
         let XRegExp = require('xregexp');
 
-
         if (condition.negateFinding == undefined)
         {
             condition.negateFinding = false;
@@ -532,19 +531,11 @@ export class DevSkimWorker
         let match = XRegExp.exec(documentContents, conditionRegex, startPos);
         while (match) 
         {
-            //if we are passed the point we should be looking
+            //if we are past the point we should be looking
             if (match.index > endPos) 
             {
-                if (condition.negateFinding == false) 
-                {
-                    return false;
-                }
-                else 
-                {
-                    break;
-                }
+                break;
             }
-
 
             //calculate what line we are on by grabbing the text before the match & counting the newlines in it
             let lineStart: number = DocumentUtilities.GetLineNumber(documentContents, match.index);
@@ -553,26 +544,14 @@ export class DevSkimWorker
             //look for the suppression comment for that finding
             if (DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, condition.pattern.scopes)) 
             {
-                if (condition.negateFinding == true) 
-                {
-                    return false;
-                }
-                else 
-                {
-                    foundPattern = true;
-                    break;
-                }
+                return condition.negateFinding ? false : true;
             }
+            
             startPos = match.index + match[0].length;
             match = XRegExp.exec(documentContents, conditionRegex, startPos);
         }
-        if (condition.negateFinding == false && foundPattern == false) 
-        {
-            return false;
-        }
-        
 
-        return true;
+        return condition.negateFinding ? true : false;
     }
 
  
