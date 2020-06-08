@@ -359,34 +359,39 @@ export class DevSkimWorker
                         let range: Range = Range.create(lineStart, columnStart, lineEnd, columnEnd);
 
                         // Is this *not* a suppression finding (a real issue)
-                        if (!suppressionFinding.showSuppressionFinding &&
-                            DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, rule.patterns[patternIndex].scopes) &&
-                            DevSkimWorker.MatchesConditions(rule.conditions, documentContents, range, langID)) 
+                        if (!suppressionFinding.showSuppressionFinding)
                         {
-                            let snippet = [];
-                            for (let i=Math.max(0, lineStart - 2); i<=lineEnd + 2; i++)
+                            if (DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, rule.patterns[patternIndex].scopes))
                             {
-                                const snippetLine = DocumentUtilities.GetLine(documentContents, i);
-                                snippet.push(snippetLine.substr(0, 80));
+                                if (DevSkimWorker.MatchesConditions(rule.conditions, documentContents, range, langID)) 
+                                {
+                                    let snippet = [];
+                                    for (let i=Math.max(0, lineStart - 2); i<=lineEnd + 2; i++)
+                                    {
+                                        const snippetLine = DocumentUtilities.GetLine(documentContents, i);
+                                        snippet.push(snippetLine.substr(0, 80));
+                                    }
+    
+                                    //add in any fixes
+                                    let problem: DevSkimProblem = this.MakeProblem(rule, DevSkimWorker.MapRuleSeverity(rule.severity), range, snippet.join('\n'));
+                                    problem.fixes = problem.fixes.concat(DevSkimWorker.MakeFixes(rule, replacementSource, range));
+                                    problem.fixes = problem.fixes.concat(this.dsSuppressions.createActions(rule.id, documentContents, match.index, lineStart, langID, ruleSeverity));
+                                    problem.filePath = documentURI;
+                                    problems.push(problem);
+                                }
                             }
-
-                            //add in any fixes
-                            let problem: DevSkimProblem = this.MakeProblem(rule, DevSkimWorker.MapRuleSeverity(rule.severity), range, snippet.join('\n'));
-                            problem.fixes = problem.fixes.concat(DevSkimWorker.MakeFixes(rule, replacementSource, range));
-                            problem.fixes = problem.fixes.concat(this.dsSuppressions.createActions(rule.id, documentContents, match.index, lineStart, langID, ruleSeverity));
-                            problem.filePath = documentURI;
-                            problems.push(problem);
                         }
                         //throw a pop up if there is a review/suppression comment with the rule id, so that people can figure out what was
                         //suppressed/reviewed
-                        else if (!suppressionFinding.noRange && includeSuppressions && this.RuleSeverityEnabled(DevskimRuleSeverity.WarningInfo)) 
-                        {
-                            //highlight suppression finding for context
-                            //this will look
-                            let problem: DevSkimProblem = this.MakeProblem(rule, DevskimRuleSeverity.WarningInfo, suppressionFinding.suppressionRange,"", range);
-
-                            problems.push(problem);
-
+                        else {
+                            if (!suppressionFinding.noRange && includeSuppressions && this.RuleSeverityEnabled(DevskimRuleSeverity.WarningInfo)) 
+                            {
+                                //highlight suppression finding for context
+                                //this will look
+                                let problem: DevSkimProblem = this.MakeProblem(rule, DevskimRuleSeverity.WarningInfo, suppressionFinding.suppressionRange,"", range);
+    
+                                problems.push(problem);
+                            }
                         }
                         //advance the location we are searching in the line
                         matchPosition = match.index + match[0].length;
