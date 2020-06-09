@@ -104,7 +104,8 @@
         "applies_to": [
             "csharp",
             "powershell",
-            "vb"
+            "vb",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
@@ -187,7 +188,8 @@
         "applies_to": [
             "c",
             "cpp",
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"

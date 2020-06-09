@@ -396,7 +396,8 @@
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "recommendation": "Always use a valid certificate, even during testing.",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Certificate.Validation"

@@ -292,7 +292,8 @@
             "DS126858"
         ],
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"

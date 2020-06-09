@@ -7,7 +7,8 @@
         "applies_to": [
             "csharp",
             "powershell",
-            "vb"
+            "vb",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"

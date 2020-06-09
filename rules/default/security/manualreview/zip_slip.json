@@ -5,7 +5,8 @@
         "description": "Zip archive can contain file names with directory stepping sequence",
         "recommendation": "Make sure that ZipArchiveEntry.FullName doesn't directory stepping characters ..\\",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "CSharp.DangerousFunctionCall"
