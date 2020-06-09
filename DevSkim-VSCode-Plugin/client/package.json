@@ -14,11 +14,9 @@
 		"url": "https://github.com/Microsoft/devskim/issues"
 	},
 	"engines": {
-		"vscode": "^1.33.x"
+		"vscode": "^1.45.0"
 	},
 	"scripts": {
-		"update-vscode": "vscode-install",
-		"postinstall": "vscode-install",
 		"clean": "npx --ignore-existing --quiet rimraf node_modules dist out"
 	},
 	"devDependencies": {
