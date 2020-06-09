@@ -9,7 +9,8 @@
         "applies_to": [
             "c",
             "cpp",
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"

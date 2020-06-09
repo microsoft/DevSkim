@@ -5,7 +5,8 @@
         "description": "The ProtectedData class should be used with additional entropy to reduce the risk of other application calling DPAPI to access the data.",
         "recommendation": "Add additional entropy (per-application secret).",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Storage.Windows.DPAPI"

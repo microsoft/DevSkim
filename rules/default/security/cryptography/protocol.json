@@ -5,7 +5,8 @@
         "description": "It's usually better to rely on the operating system configuration, rather than hardcoding a specific SecurityProtocolType.",
         "recommendation": "Either leave off or set to SecurityProtocolType.Tls12;",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Protocol.TLS"
