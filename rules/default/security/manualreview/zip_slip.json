@@ -9,7 +9,7 @@
             "fsharp"
         ],
         "tags": [
-            "CSharp.DangerousFunctionCall"
+            "DotNet.DangerousFunctionCall"
         ],
         "severity": "manual-review",
         "_comment": "",
