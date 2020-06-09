@@ -348,8 +348,7 @@ export interface Condition
 	lambda: Lambda;
 	search_in: string;
 	_comment?: string;
-	negateFinding?: boolean;
-
+	negate_finding?: boolean;
 }
 
 

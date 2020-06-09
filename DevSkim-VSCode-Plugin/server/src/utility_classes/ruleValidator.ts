@@ -256,8 +256,8 @@ export class RuleValidator implements IRuleValidator
             throw "Condition needs either a pattern or a lambda, and neither are present";
         }
 
-        condition.negateFinding =  (RuleValidator.isSet(loadedCondition.negateFinding, "boolean")) ?
-                                        loadedCondition.negateFinding : false ;        
+        condition.negate_finding =  (RuleValidator.isSet(loadedCondition.negate_finding, "boolean")) ?
+                                        loadedCondition.negate_finding : false ;        
         
         condition.search_in = this.validateSearch(loadedCondition.search_in, loadedRule);
 

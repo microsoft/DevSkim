@@ -491,9 +491,9 @@ export class DevSkimWorker
         let regionRegex: RegExp = /finding-region\s*\((-*\d+),\s*(-*\d+)\s*\)/;
         let XRegExp = require('xregexp');
 
-        if (condition.negateFinding == undefined)
+        if (condition.negate_finding == undefined)
         {
-            condition.negateFinding = false;
+            condition.negate_finding = false;
         }
 
         let modifiers: string[] = (condition.pattern.modifiers != undefined && condition.pattern.modifiers.length > 0) ?
@@ -526,17 +526,11 @@ export class DevSkimWorker
                 endPos = DocumentUtilities.GetDocumentPosition(documentContents, findingRange.end.line + +regionMatch[2] + 1);
             }
         }
-        let foundPattern = false;
         //go through all of the text looking for a match with the given pattern
-        let match = XRegExp.exec(documentContents, conditionRegex, startPos);
+        let subContents = documentContents.substring(startPos,endPos);
+        let match = XRegExp.exec(subContents, conditionRegex, 0);
         while (match) 
         {
-            //if we are past the point we should be looking
-            if (match.index > endPos) 
-            {
-                break;
-            }
-
             //calculate what line we are on by grabbing the text before the match & counting the newlines in it
             let lineStart: number = DocumentUtilities.GetLineNumber(documentContents, match.index);
             let newlineIndex: number = (lineStart == 0) ? -1 : documentContents.substr(0, match.index).lastIndexOf("\n");
@@ -544,14 +538,13 @@ export class DevSkimWorker
             //look for the suppression comment for that finding
             if (DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, condition.pattern.scopes)) 
             {
-                return condition.negateFinding ? false : true;
+                return condition.negate_finding ? false : true;
             }
             
-            startPos = match.index + match[0].length;
-            match = XRegExp.exec(documentContents, conditionRegex, startPos);
+            match = XRegExp.exec(subContents.substr(match.index + match[0].length), conditionRegex, 0);
         }
 
-        return condition.negateFinding ? true : false;
+        return condition.negate_finding ? true : false;
     }
 
  
