@@ -212,7 +212,7 @@ export class DevSkimWorker
             (ruleSeverity == DevskimRuleSeverity.ManualReview &&
                 this.dswSettings.getSettings().enableManualReviewRules == true) ||
             (ruleSeverity == DevskimRuleSeverity.WarningInfo &&
-                this.dswSettings.getSettings().enableWarningInfo == true);
+                this.dswSettings.getSettings().enableSuppressionInfo == true);
 
     }
 

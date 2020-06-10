@@ -195,7 +195,7 @@ export interface IDevSkimSettings
 	/**
 	 * Enable flagging suppressed issues.
 	 */
-	enableWarningInfo : boolean;
+	enableSuppressionInfo : boolean;
 	
 	//--------------------------------------
 	//Internal use

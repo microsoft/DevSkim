@@ -68,8 +68,8 @@ export class DevSkimWorkerSettings
         settings.maxFileSizeKB = (settings.maxFileSizeKB !== undefined && settings.maxFileSizeKB != null) ?
                                             settings.maxFileSizeKB : defaults.maxFileSizeKB ;     
 
-        settings.enableWarningInfo = (settings.enableWarningInfo !== undefined && settings.enableWarningInfo != null) ?
-                                            settings.enableWarningInfo : defaults.enableWarningInfo;
+        settings.enableSuppressionInfo = (settings.enableSuppressionInfo !== undefined && settings.enableSuppressionInfo != null) ?
+                                            settings.enableSuppressionInfo : defaults.enableSuppressionInfo;
         this.settings = settings;
     }
 
@@ -140,7 +140,7 @@ export class DevSkimWorkerSettings
             debugLogging: false,
             maxFileSizeKB: 100,
             toolInfo:  new ToolVersion(),
-            enableWarningInfo: false
+            enableSuppressionInfo: false
         };
     }
 
