@@ -210,7 +210,9 @@ export class DevSkimWorker
             (ruleSeverity == DevskimRuleSeverity.BestPractice &&
                 this.dswSettings.getSettings().enableBestPracticeRules == true) ||
             (ruleSeverity == DevskimRuleSeverity.ManualReview &&
-                this.dswSettings.getSettings().enableManualReviewRules == true);
+                this.dswSettings.getSettings().enableManualReviewRules == true) ||
+            (ruleSeverity == DevskimRuleSeverity.WarningInfo &&
+                this.dswSettings.getSettings().enableSuppressionInfo == true);
 
     }
 
@@ -356,35 +358,40 @@ export class DevSkimWorker
 
                         let range: Range = Range.create(lineStart, columnStart, lineEnd, columnEnd);
 
-                        //look for the suppression comment for that finding
-                        if (!suppressionFinding.showSuppressionFinding &&
-                            DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, rule.patterns[patternIndex].scopes) &&
-                            DevSkimWorker.MatchesConditions(rule.conditions, documentContents, range, langID)) 
+                        // Is this *not* a suppression finding (a real issue)
+                        if (!suppressionFinding.showSuppressionFinding)
                         {
-                            let snippet = [];
-                            for (let i=Math.max(0, lineStart - 2); i<=lineEnd + 2; i++)
+                            if (DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, rule.patterns[patternIndex].scopes))
                             {
-                                const snippetLine = DocumentUtilities.GetLine(documentContents, i);
-                                snippet.push(snippetLine.substr(0, 80));
+                                if (DevSkimWorker.MatchesConditions(rule.conditions, documentContents, range, langID)) 
+                                {
+                                    let snippet = [];
+                                    for (let i=Math.max(0, lineStart - 2); i<=lineEnd + 2; i++)
+                                    {
+                                        const snippetLine = DocumentUtilities.GetLine(documentContents, i);
+                                        snippet.push(snippetLine.substr(0, 80));
+                                    }
+    
+                                    //add in any fixes
+                                    let problem: DevSkimProblem = this.MakeProblem(rule, DevSkimWorker.MapRuleSeverity(rule.severity), range, snippet.join('\n'));
+                                    problem.fixes = problem.fixes.concat(DevSkimWorker.MakeFixes(rule, replacementSource, range));
+                                    problem.fixes = problem.fixes.concat(this.dsSuppressions.createActions(rule.id, documentContents, match.index, lineStart, langID, ruleSeverity));
+                                    problem.filePath = documentURI;
+                                    problems.push(problem);
+                                }
                             }
-
-                            //add in any fixes
-                            let problem: DevSkimProblem = this.MakeProblem(rule, DevSkimWorker.MapRuleSeverity(rule.severity), range, snippet.join('\n'));
-                            problem.fixes = problem.fixes.concat(DevSkimWorker.MakeFixes(rule, replacementSource, range));
-                            problem.fixes = problem.fixes.concat(this.dsSuppressions.createActions(rule.id, documentContents, match.index, lineStart, langID, ruleSeverity));
-                            problem.filePath = documentURI;
-                            problems.push(problem);
                         }
                         //throw a pop up if there is a review/suppression comment with the rule id, so that people can figure out what was
                         //suppressed/reviewed
-                        else if (!suppressionFinding.noRange && includeSuppressions) 
-                        {
-                            //highlight suppression finding for context
-                            //this will look
-                            let problem: DevSkimProblem = this.MakeProblem(rule, DevskimRuleSeverity.WarningInfo, suppressionFinding.suppressionRange,"", range);
-
-                            problems.push(problem);
-
+                        else {
+                            if (!suppressionFinding.noRange && includeSuppressions && this.RuleSeverityEnabled(DevskimRuleSeverity.WarningInfo)) 
+                            {
+                                //highlight suppression finding for context
+                                //this will look
+                                let problem: DevSkimProblem = this.MakeProblem(rule, DevskimRuleSeverity.WarningInfo, suppressionFinding.suppressionRange,"", range);
+    
+                                problems.push(problem);
+                            }
                         }
                         //advance the location we are searching in the line
                         matchPosition = match.index + match[0].length;
@@ -484,10 +491,9 @@ export class DevSkimWorker
         let regionRegex: RegExp = /finding-region\s*\((-*\d+),\s*(-*\d+)\s*\)/;
         let XRegExp = require('xregexp');
 
-
-        if (condition.negateFinding == undefined)
+        if (condition.negate_finding == undefined)
         {
-            condition.negateFinding = false;
+            condition.negate_finding = false;
         }
 
         let modifiers: string[] = (condition.pattern.modifiers != undefined && condition.pattern.modifiers.length > 0) ?
@@ -520,25 +526,11 @@ export class DevSkimWorker
                 endPos = DocumentUtilities.GetDocumentPosition(documentContents, findingRange.end.line + +regionMatch[2] + 1);
             }
         }
-        let foundPattern = false;
         //go through all of the text looking for a match with the given pattern
-        let match = XRegExp.exec(documentContents, conditionRegex, startPos);
+        let subContents = documentContents.substring(startPos,endPos);
+        let match = XRegExp.exec(subContents, conditionRegex, 0);
         while (match) 
         {
-            //if we are passed the point we should be looking
-            if (match.index > endPos) 
-            {
-                if (condition.negateFinding == false) 
-                {
-                    return false;
-                }
-                else 
-                {
-                    break;
-                }
-            }
-
-
             //calculate what line we are on by grabbing the text before the match & counting the newlines in it
             let lineStart: number = DocumentUtilities.GetLineNumber(documentContents, match.index);
             let newlineIndex: number = (lineStart == 0) ? -1 : documentContents.substr(0, match.index).lastIndexOf("\n");
@@ -546,26 +538,13 @@ export class DevSkimWorker
             //look for the suppression comment for that finding
             if (DocumentUtilities.MatchIsInScope(langID, documentContents.substr(0, match.index), newlineIndex, condition.pattern.scopes)) 
             {
-                if (condition.negateFinding == true) 
-                {
-                    return false;
-                }
-                else 
-                {
-                    foundPattern = true;
-                    break;
-                }
+                return condition.negate_finding ? false : true;
             }
-            startPos = match.index + match[0].length;
-            match = XRegExp.exec(documentContents, conditionRegex, startPos);
+            
+            match = XRegExp.exec(subContents.substr(match.index + match[0].length), conditionRegex, 0);
         }
-        if (condition.negateFinding == false && foundPattern == false) 
-        {
-            return false;
-        }
-        
 
-        return true;
+        return condition.negate_finding ? true : false;
     }
 
  

@@ -162,6 +162,11 @@
           "type": "boolean",
           "default": true,
           "description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
+        },
+        "devskim.enableSuppressionInfo": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show findings and squiggles for suppressed issues with additional detail on the suppressed issue."
         }
       }
     }
@@ -247,7 +252,7 @@
     "jest": "^25.2.0",
     "ncp": "^2.0.0",
     "rimraf": "^2.7.1",
-    "ts-jest": "^24.3.0",
+    "ts-jest": "^26.1.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
     "typescript": "^3.8.3",

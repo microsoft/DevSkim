@@ -14,6 +14,7 @@ export interface DevSkimSettings {
     validateRulesFiles: boolean;
     guidanceBaseURL: string;
     removeFindingsOnClose: boolean;
+    enableSuppressionInfo : boolean;
 }
 
 export class DevSkimSettingsObject implements DevSkimSettings {
@@ -29,4 +30,5 @@ export class DevSkimSettingsObject implements DevSkimSettings {
     removeFindingsOnClose: boolean;
     suppressionDurationInDays: number;
     validateRulesFiles: boolean;
+    enableSuppressionInfo : boolean;
 };
