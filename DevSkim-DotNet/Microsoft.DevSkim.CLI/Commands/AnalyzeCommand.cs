@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
@@ -9,11 +8,65 @@ using System.Linq;
 using System.IO;
 using System.Reflection;
 using Microsoft.DevSkim.CLI.Writers;
+using Microsoft.CST.OpenSource.RecursiveExtractor;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
     public class AnalyzeCommand : ICommand
     {
+        #region Private Fields
+
+        private readonly bool _crawlArchives;
+
+        private bool _disableSuppression;
+
+        private string _fileFormat;
+
+        private bool _ignoreDefaultRules;
+
+        private string _outputFile;
+
+        private string _outputFormat;
+
+        private string _path;
+
+        private string[] _rulespath;
+
+        private string[] _severities;
+
+        private bool _suppressError;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public AnalyzeCommand(string path,
+                              string output,
+                              string outputFileFormat,
+                              string outputTextFormat,
+                              List<string> severities,
+                              List<string> rules,
+                              bool ignoreDefault,
+                              bool suppressError,
+                              bool disableSuppression,
+                              bool crawlArchives)
+        {
+            _path = path;
+            _outputFile = output;
+            _fileFormat = outputFileFormat;
+            _outputFormat = outputTextFormat;
+            _severities = severities.ToArray();
+            _rulespath = rules.ToArray();
+            _ignoreDefaultRules = ignoreDefault;
+            _suppressError = suppressError;
+            _disableSuppression = disableSuppression;
+            _crawlArchives = crawlArchives;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public static void Configure(CommandLineApplication command)
         {
             command.Description = "Analyze source code";
@@ -24,7 +77,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             var outputArgument = command.Argument("[output]",
                                                   "Output file");
-            
+
             var outputFileFormat = command.Option("-f|--file-format",
                                                   "Output file format: [text,json,sarif]",
                                                   CommandOptionType.SingleValue);
@@ -53,11 +106,16 @@ namespace Microsoft.DevSkim.CLI.Commands
                                               "Suppress output to standard error",
                                               CommandOptionType.NoValue);
 
+            var crawlArchives = command.Option("-c|--crawl-archives",
+                                       "Enable crawling into archives when processing directories.",
+                                       CommandOptionType.NoValue);
+
             command.ExtendedHelpText = "\nOutput format options:\n%F\tfile path\n%L\tstart line number\n" +
                 "%C\tstart column\n%l\tend line number\n%c\tend column\n%I\tlocation inside file\n" +
                 "%i\tmatch length\n%m\tmatch\n%R\trule id\n%N\trule name\n%S\tseverity\n%D\tissue description\n%T\ttags(comma-separated)";
 
-            command.OnExecute(() => {                
+            command.OnExecute(() =>
+            {
                 return (new AnalyzeCommand(locationArgument.Value,
                                  outputArgument.Value,
                                  outputFileFormat.Value(),
@@ -66,29 +124,9 @@ namespace Microsoft.DevSkim.CLI.Commands
                                  rulesOption.Values,
                                  ignoreOption.HasValue(),
                                  errorOption.HasValue(),
-                                 disableSuppressionOption.HasValue())).Run();                
+                                 disableSuppressionOption.HasValue(),
+                                 crawlArchives.HasValue())).Run();
             });
-        }
-
-        public AnalyzeCommand(string path, 
-                              string output,
-                              string outputFileFormat,
-                              string outputTextFormat,
-                              List<string> severities,
-                              List<string> rules,
-                              bool ignoreDefault,
-                              bool suppressError,
-                              bool disableSuppression)
-        {
-            _path = path;            
-            _outputFile = output;
-            _fileFormat = outputFileFormat;
-            _outputFormat = outputTextFormat;
-            _severities = severities.ToArray();
-            _rulespath = rules.ToArray();
-            _ignoreDefaultRules = ignoreDefault;
-            _suppressError = suppressError;
-            _disableSuppression = disableSuppression;
         }
 
         public int Run()
@@ -136,7 +174,6 @@ namespace Microsoft.DevSkim.CLI.Commands
                         rules.AddString(file.ReadToEnd(), filePath, null);
                     }
                 }
-                           
             }
 
             // Initialize the processor
@@ -160,31 +197,33 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                 }
             }
-                        
-            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? string.IsNullOrEmpty(_outputFile) ? "_dummy" : "text" : _fileFormat, 
+
+            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? string.IsNullOrEmpty(_outputFile) ? "_dummy" : "text" : _fileFormat,
                                                            _outputFormat,
-                                                           string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile));                
-            
+                                                           string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile));
+
             int filesAnalyzed = 0;
             int filesSkipped = 0;
             int filesAffected = 0;
             int issuesCount = 0;
 
             // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
-            IEnumerable <string> fileListing;
+            IEnumerable<FileEntry> fileListing;
+            var extractor = new Extractor();
+
             if (!Directory.Exists(_path))
             {
-                fileListing = new List<string>() { _path };
+                fileListing = extractor.ExtractFile(_path);
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories);
+                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.ExtractFile(x) : new FileEntry[] { new FileEntry(x, new FileStream(x, FileMode.Open, FileAccess.ReadWrite), null, true) });
             }
 
             // Iterate through all files
-            foreach (string filename in fileListing)
+            foreach (FileEntry fileEntry in fileListing)
             {
-                string language = Language.FromFileName(filename);
+                string language = Language.FromFileName(fileEntry.FullPath);
 
                 // Skip files written in unknown language
                 if (string.IsNullOrEmpty(language))
@@ -194,9 +233,13 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
 
                 string fileText = string.Empty;
+
                 try
                 {
-                    fileText = File.ReadAllText(filename);
+                    using (StreamReader reader = new StreamReader(fileEntry.Content))
+                    {
+                        fileText = reader.ReadToEnd();
+                    }
                     filesAnalyzed++;
                 }
                 catch (Exception)
@@ -205,7 +248,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     filesSkipped++;
                     continue;
                 }
-                
+
                 Issue[] issues = processor.Analyze(fileText, language);
 
                 bool issuesFound = issues.Any(iss => iss.IsSuppressionInfo == false) || _disableSuppression && issues.Count() > 0;
@@ -213,7 +256,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 if (issuesFound)
                 {
                     filesAffected++;
-                    Console.Error.WriteLine("file:{0}", filename);
+                    Console.Error.WriteLine("file:{0}", fileEntry.FullPath);
 
                     // Iterate through each issue
                     foreach (Issue issue in issues)
@@ -221,7 +264,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         if (!issue.IsSuppressionInfo || _disableSuppression)
                         {
                             issuesCount++;
-                            Console.Error.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",                                                          
+                            Console.Error.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",
                                                     issue.StartLocation.Line,
                                                     issue.StartLocation.Column,
                                                     issue.EndLocation.Line,
@@ -231,7 +274,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                     issue.Rule.Name);
 
                             IssueRecord record = new IssueRecord(
-                                Filename: filename,
+                                Filename: fileEntry.FullPath,
                                 Filesize: fileText.Length,
                                 TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                 Issue: issue);
@@ -244,7 +287,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
             }
 
-            outputWriter.FlushAndClose();            
+            outputWriter.FlushAndClose();
 
             Console.Error.WriteLine("Issues found: {0} in {1} files", issuesCount, filesAffected);
             Console.Error.WriteLine("Files analyzed: {0}", filesAnalyzed);
@@ -252,6 +295,10 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             return issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private bool ParseSeverity(string severityText, out Severity severity)
         {
@@ -262,18 +309,23 @@ namespace Microsoft.DevSkim.CLI.Commands
                 case "critical":
                     severity = Severity.Critical;
                     break;
+
                 case "important":
                     severity = Severity.Important;
                     break;
+
                 case "moderate":
                     severity = Severity.Moderate;
                     break;
+
                 case "practice":
                     severity = Severity.BestPractice;
                     break;
+
                 case "manual":
                     severity = Severity.ManualReview;
                     break;
+
                 default:
                     result = false;
                     break;
@@ -282,14 +334,6 @@ namespace Microsoft.DevSkim.CLI.Commands
             return result;
         }
 
-        private string _path;
-        private string _outputFile;
-        private string _fileFormat;
-        private string _outputFormat;
-        private string[] _rulespath;
-        private string[] _severities;
-        private bool _ignoreDefaultRules;
-        private bool _suppressError;
-        private bool _disableSuppression;
+        #endregion Private Methods
     }
 }
