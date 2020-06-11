@@ -209,7 +209,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
             IEnumerable<FileEntry> fileListing;
-            var extractor = new Extractor();
+            var extractor = new Extractor(new ExtractorOptions() { ExtractSelfOnFail = false });
 
             if (!Directory.Exists(_path))
             {
