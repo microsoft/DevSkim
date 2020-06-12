@@ -1,22 +1,21 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-
 [assembly: CLSCompliant(true)]
+
 namespace Microsoft.DevSkim
 {
     /// <summary>
-    /// Heart of DevSkim. Parses code applies rules
+    ///     Heart of DevSkim. Parses code applies rules
     /// </summary>
     public class RuleProcessor
     {
         /// <summary>
-        /// Creates instance of RuleProcessor
+        ///     Creates instance of RuleProcessor
         /// </summary>
         public RuleProcessor(RuleSet rules)
         {
@@ -26,16 +25,14 @@ namespace Microsoft.DevSkim
             EnableCache = true;
 
             SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
-        }       
-
-        #region Public Methods
+        }
 
         /// <summary>
-        /// Applies given fix on the provided source code line
+        ///     Applies given fix on the provided source code line
         /// </summary>
-        /// <param name="text">Source code line</param>
-        /// <param name="fixRecord">Fix record to be applied</param>
-        /// <returns>Fixed source code line</returns>
+        /// <param name="text"> Source code line </param>
+        /// <param name="fixRecord"> Fix record to be applied </param>
+        /// <returns> Fixed source code line </returns>
         public static string Fix(string text, CodeFix fixRecord)
         {
             string result = string.Empty;
@@ -54,11 +51,11 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Analyzes given line of code
+        ///     Analyzes given line of code
         /// </summary>
-        /// <param name="text">Source code</param>
-        /// <param name="language">Language</param>
-        /// <returns>Array of matches</returns>
+        /// <param name="text"> Source code </param>
+        /// <param name="language"> Language </param>
+        /// <returns> Array of matches </returns>
         public Issue[] Analyze(string text, string language)
         {
             return Analyze(text, new string[] { language });
@@ -70,18 +67,18 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Analyzes given line of code
+        ///     Analyzes given line of code
         /// </summary>
-        /// <param name="text">Source code</param>
-        /// <param name="languages">List of languages</param>
-        /// <returns>Array of matches</returns>
+        /// <param name="text"> Source code </param>
+        /// <param name="languages"> List of languages </param>
+        /// <returns> Array of matches </returns>
         public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
         {
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty);
-            TextContainer line = (lineNumber > 0)?new TextContainer(textContainer.GetLineContent(lineNumber), (languages.Length > 0) ? languages[0] : string.Empty):textContainer;
+            TextContainer line = (lineNumber > 0) ? new TextContainer(textContainer.GetLineContent(lineNumber), (languages.Length > 0) ? languages[0] : string.Empty) : textContainer;
 
             // Go through each rule
             foreach (Rule rule in rules)
@@ -112,7 +109,7 @@ namespace Microsoft.DevSkim
                                     Index = textContainer.GetBoundaryFromLine(lineNumber).Index + match.Index
                                 };
                             }
-                            
+
                             if (!textContainer.ScopeMatch(pattern, translatedBoundary))
                             {
                                 passedConditions = false;
@@ -153,14 +150,13 @@ namespace Microsoft.DevSkim
                     }
                 }
 
-                // We got matching rule and suppression are enabled,
-                // let's see if we have a supression on the line
+                // We got matching rule and suppression are enabled, let's see if we have a supression on the line
                 if (EnableSuppressions && matchList.Count > 0)
                 {
                     Suppression supp;
                     foreach (Issue result in matchList)
                     {
-                        supp = new Suppression(textContainer,(lineNumber > 0)?lineNumber:result.StartLocation.Line);
+                        supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
                         // If rule is NOT being suppressed then report it
                         var supissue = supp.GetSuppressedIssue(result.Rule.Id);
                         if (supissue is null)
@@ -177,26 +173,26 @@ namespace Microsoft.DevSkim
                         }
                     }
                 }
-                // Otherwise put matchlist to resultlist 
+                // Otherwise put matchlist to resultlist
                 else
                 {
                     resultsList.AddRange(matchList);
                 }
             }
-            
-            // Deal with overrides 
+
+            // Deal with overrides
             List<Issue> removes = new List<Issue>();
             foreach (Issue m in resultsList)
             {
                 if (m.Rule.Overrides != null && m.Rule.Overrides.Length > 0)
                 {
-                    foreach(string ovrd in m.Rule.Overrides)
+                    foreach (string ovrd in m.Rule.Overrides)
                     {
-                        // Find all overriden rules and mark them for removal from issues list   
-                        foreach(Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
+                        // Find all overriden rules and mark them for removal from issues list
+                        foreach (Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
                         {
-                            if (om.Boundary.Index >= m.Boundary.Index && 
-                                om.Boundary.Index <= m.Boundary.Index + m.Boundary.Length )
+                            if (om.Boundary.Index >= m.Boundary.Index &&
+                                om.Boundary.Index <= m.Boundary.Index + m.Boundary.Length)
                                 removes.Add(om);
                         }
                     }
@@ -209,47 +205,48 @@ namespace Microsoft.DevSkim
             return resultsList.ToArray();
         }
 
-        #endregion
-
-        #region Private Methods      
-
         /// <summary>
-        /// Filters the rules for those matching the content type.
-        /// Resolves all the overrides
+        ///     Filters the rules for those matching the content type. Resolves all the overrides
         /// </summary>
-        /// <param name="languages">Languages to filter rules for</param>
-        /// <returns>List of rules</returns>
+        /// <param name="languages"> Languages to filter rules for </param>
+        /// <returns> List of rules </returns>
         private IEnumerable<Rule> GetRulesForLanguages(string[] languages)
-        {            
+        {
             string langid = string.Empty;
 
             if (EnableCache)
             {
                 Array.Sort(languages);
-                // Make language id for cache purposes                
+                // Make language id for cache purposes
                 langid = string.Join(":", languages);
                 // Do we have the ruleset alrady in cache? If so return it
                 if (_rulesCache.ContainsKey(langid))
                     return _rulesCache[langid];
             }
-            
+
             IEnumerable<Rule> filteredRules = _ruleset.ByLanguages(languages);
 
             // Add the list to the cache so we save time on the next call
             if (EnableCache && filteredRules.Count() > 0)
-            {             
+            {
                 _rulesCache.Add(langid, filteredRules);
             }
 
             return filteredRules;
         }
 
-        #endregion
-
-        #region Properties
+        /// <summary>
+        ///     Enables caching of rules queries. Increases performance and memory use!
+        /// </summary>
+        public bool EnableCache { get; set; }
 
         /// <summary>
-        /// Ruleset to be used for analysis
+        ///     Enable suppresion syntax checking during analysis
+        /// </summary>
+        public bool EnableSuppressions { get; set; }
+
+        /// <summary>
+        ///     Ruleset to be used for analysis
         /// </summary>
         public RuleSet Rules
         {
@@ -262,30 +259,15 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Sets severity levels for analysis
+        ///     Sets severity levels for analysis
         /// </summary>
         public Severity SeverityLevel { get; set; }
 
         /// <summary>
-        /// Enable suppresion syntax checking during analysis
-        /// </summary>
-        public bool EnableSuppressions { get; set; }
-
-        /// <summary>
-        /// Enables caching of rules queries.
-        /// Increases performance and memory use!
-        /// </summary>
-        public bool EnableCache { get; set; }
-        #endregion
-
-        #region Fields 
-
-        private RuleSet _ruleset;
-
-        /// <summary>
-        /// Cache for rules filtered by content type
+        ///     Cache for rules filtered by content type
         /// </summary>
         private Dictionary<string, IEnumerable<Rule>> _rulesCache;
-        #endregion
+
+        private RuleSet _ruleset;
     }
 }
