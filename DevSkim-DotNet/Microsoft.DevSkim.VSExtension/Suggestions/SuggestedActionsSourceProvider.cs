@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -15,9 +14,6 @@ namespace Microsoft.DevSkim.VSExtension
     [ContentType("text")]
     internal class SuggestedActionsSourceProvider : ISuggestedActionsSourceProvider
     {
-        [Import(typeof(ITextStructureNavigatorSelectorService))]
-        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
-
         public ISuggestedActionsSource CreateSuggestedActionsSource(ITextView textView, ITextBuffer textBuffer)
         {
             if (textBuffer == null && textView == null)
@@ -27,5 +23,8 @@ namespace Microsoft.DevSkim.VSExtension
 
             return new SuggestedActionsSource(this, textView, textBuffer);
         }
+
+        [Import(typeof(ITextStructureNavigatorSelectorService))]
+        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
     }
 }

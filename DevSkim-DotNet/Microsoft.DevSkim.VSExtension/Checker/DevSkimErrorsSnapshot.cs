@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableControl;
@@ -12,23 +11,11 @@ namespace Microsoft.DevSkim.VSExtension
 {
     public class DevSkimErrorsSnapshot : WpfTableEntriesSnapshotBase
     {
-        private readonly string _filePath;
-        private readonly int _versionNumber;
-        private readonly string _project;
-
-        // We're not using an immutable list here but we cannot modify the list in any way once we've published the snapshot.
+        // We're not using an immutable list here but we cannot modify the list in any way once we've
+        // published the snapshot.
         public readonly List<DevSkimError> Errors = new List<DevSkimError>();
 
         public DevSkimErrorsSnapshot NextSnapshot;
-
-        internal DevSkimErrorsSnapshot(string filePath, int versionNumber)
-        {
-            _filePath = filePath;
-            _versionNumber = versionNumber;
-
-            _project = VSPackage.GetProjectName(_filePath);
-            _project = (_project != null) ? _project : string.Empty;            
-        }
 
         public override int Count
         {
@@ -46,16 +33,23 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
+        public override bool CanCreateDetailsContent(int index)
+        {
+            return true;
+        }
+
         public override int IndexOf(int currentIndex, ITableEntriesSnapshot newerSnapshot)
         {
-            // This and TranslateTo() are used to map errors from one snapshot to a different one (that way the error list can do things like maintain the selection on an error
-            // even when the snapshot containing the error is replaced by a new one).
+            // This and TranslateTo() are used to map errors from one snapshot to a different one (that way
+            // the error list can do things like maintain the selection on an error even when the snapshot
+            // containing the error is replaced by a new one).
             //
-            // You only need to implement Identity() or TranslateTo() and, of the two, TranslateTo() is more efficient for the error list to use.
+            // You only need to implement Identity() or TranslateTo() and, of the two, TranslateTo() is more
+            // efficient for the error list to use.
 
-            // Map currentIndex to the corresponding index in newerSnapshot (and keep doing it until either
-            // we run out of snapshots, we reach newerSnapshot, or the index can no longer be mapped forward).
-            var currentSnapshot = this;            
+            // Map currentIndex to the corresponding index in newerSnapshot (and keep doing it until either we
+            // run out of snapshots, we reach newerSnapshot, or the index can no longer be mapped forward).
+            var currentSnapshot = this;
             do
             {
                 Debug.Assert(currentIndex >= 0);
@@ -68,6 +62,12 @@ namespace Microsoft.DevSkim.VSExtension
             while ((currentSnapshot != null) && (currentSnapshot != newerSnapshot) && (currentIndex >= 0));
 
             return currentIndex;
+        }
+
+        public override bool TryCreateDetailsStringContent(int index, out string content)
+        {
+            content = this.Errors[index].Rule.Description;
+            return (content != null);
         }
 
         public override bool TryGetValue(int index, string columnName, out object content)
@@ -86,7 +86,7 @@ namespace Microsoft.DevSkim.VSExtension
                     // We return the full file path here. The UI handles displaying only the Path.GetFileName().
                     content = _filePath;
                     return true;
-                }                
+                }
                 else if (columnName == StandardTableKeyNames.ErrorCategory)
                 {
                     content = "Security";
@@ -99,7 +99,8 @@ namespace Microsoft.DevSkim.VSExtension
                 }
                 else if (columnName == StandardTableKeyNames.Line)
                 {
-                    // Line and column numbers are 0-based (the UI that displays the line/column number will add one to the value returned here).
+                    // Line and column numbers are 0-based (the UI that displays the line/column number will
+                    // add one to the value returned here).
                     content = this.Errors[index].Span.Start.GetContainingLine().LineNumber;
 
                     return true;
@@ -132,10 +133,12 @@ namespace Microsoft.DevSkim.VSExtension
                             case Severity.Important:
                             case Severity.Moderate:
                                 content = __VSERRORCATEGORY.EC_ERROR;
-                                break;                            
-                            case Severity.BestPractice:                            
+                                break;
+
+                            case Severity.BestPractice:
                                 content = __VSERRORCATEGORY.EC_WARNING;
                                 break;
+
                             default:
                                 content = __VSERRORCATEGORY.EC_MESSAGE;
                                 break;
@@ -157,7 +160,7 @@ namespace Microsoft.DevSkim.VSExtension
                     return true;
                 }
                 else if (columnName == StandardTableKeyNames.ErrorCode)
-                {                    
+                {
                     content = this.Errors[index].Rule.Id;
 
                     return true;
@@ -169,23 +172,25 @@ namespace Microsoft.DevSkim.VSExtension
                     return true;
                 }
 
-                // We should also be providing values for StandardTableKeyNames.Project & StandardTableKeyNames.ProjectName but that is
-                // beyond the scope of this sample.
+                // We should also be providing values for StandardTableKeyNames.Project &
+                // StandardTableKeyNames.ProjectName but that is beyond the scope of this sample.
             }
-             
+
             content = null;
             return false;
         }
 
-        public override bool CanCreateDetailsContent(int index)
+        internal DevSkimErrorsSnapshot(string filePath, int versionNumber)
         {
-            return true;
+            _filePath = filePath;
+            _versionNumber = versionNumber;
+
+            _project = VSPackage.GetProjectName(_filePath);
+            _project = (_project != null) ? _project : string.Empty;
         }
 
-        public override bool TryCreateDetailsStringContent(int index, out string content)
-        {
-            content = this.Errors[index].Rule.Description;
-            return (content != null);
-        }
+        private readonly string _filePath;
+        private readonly string _project;
+        private readonly int _versionNumber;
     }
 }

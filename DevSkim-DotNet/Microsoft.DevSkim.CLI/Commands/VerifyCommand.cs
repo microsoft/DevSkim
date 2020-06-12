@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.Extensions.CommandLineUtils;
 using System;
@@ -7,7 +6,12 @@ using System;
 namespace Microsoft.DevSkim.CLI.Commands
 {
     public class VerifyCommand : ICommand
-   {
+    {
+        public VerifyCommand(string path)
+        {
+            _path = path;
+        }
+
         public static void Configure(CommandLineApplication command)
         {
             command.Description = "Verify integrity and syntax of rules";
@@ -16,18 +20,14 @@ namespace Microsoft.DevSkim.CLI.Commands
             var locationArgument = command.Argument("[path]",
                                                     "Path to rules");
 
-            command.OnExecute(() => {
-                return (new VerifyCommand(locationArgument.Value)).Run();                
+            command.OnExecute(() =>
+            {
+                return (new VerifyCommand(locationArgument.Value)).Run();
             });
         }
 
-        public VerifyCommand(string path)
-        {
-            _path = path;
-        }
-
         public int Run()
-        {            
+        {
             Verifier verifier = new Verifier(_path);
             if (verifier.Verify())
             {

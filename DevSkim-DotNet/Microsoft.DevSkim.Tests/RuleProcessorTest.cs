@@ -1,8 +1,7 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
@@ -12,11 +11,11 @@ namespace Microsoft.DevSkim.Tests
     [ExcludeFromCodeCoverage]
     public class RuleProcessorTest
     {
-        [TestMethod]        
+        [TestMethod]
         public void IsMatch_FalseTest()
         {
-            RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);
-            RuleProcessor processor = new RuleProcessor(ruleset);            
+            RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules", "valid"), null);
+            RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "this is a test string";
 
             // Normal functionality test
@@ -47,16 +46,16 @@ namespace Microsoft.DevSkim.Tests
             string testString = "this is a test string";
 
             // Langugage is empty
-            Issue[] issues = processor.Analyze(testString, string.Empty);            
+            Issue[] issues = processor.Analyze(testString, string.Empty);
         }
-        
+
         [TestMethod]
         public void RuleInfoTest()
         {
-            RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules","valid"), null);
+            RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules", "valid"), null);
             RuleProcessor processor = new RuleProcessor(ruleset);
             string testString = "strcpy(dest,src);";
-            
+
             Issue[] issues = processor.Analyze(testString, "cpp");
             Assert.AreEqual(1, issues.Length, "strcpy should be flagged");
 

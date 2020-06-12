@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Newtonsoft.Json;
 using System;
@@ -19,10 +18,17 @@ namespace Microsoft.DevSkim.CLI.Writers
             this.TextWriter = output;
         }
 
+        public override void FlushAndClose()
+        {
+            TextWriter.Write(JsonConvert.SerializeObject(jsonResult, Formatting.Indented));
+            TextWriter.Flush();
+            TextWriter.Close();
+        }
+
         public override void WriteIssue(IssueRecord issue)
         {
             Dictionary<string, object> item = new Dictionary<string, object>();
-            
+
             if (_formatString.Contains("%F"))
                 item.Add("filename", issue.Filename);
             if (_formatString.Contains("%L"))
@@ -35,7 +41,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 item.Add("end_column", issue.Issue.EndLocation.Column);
             if (_formatString.Contains("%I"))
                 item.Add("match_index", issue.Issue.Boundary.Index);
-            if (_formatString.Contains("%i"))                
+            if (_formatString.Contains("%i"))
                 item.Add("match_length", issue.Issue.Boundary.Length);
             if (_formatString.Contains("%R"))
                 item.Add("rule_id", issue.Issue.Rule.Id);
@@ -54,15 +60,9 @@ namespace Microsoft.DevSkim.CLI.Writers
             jsonResult.Add(item);
         }
 
-        public override void FlushAndClose()
-        {
-            TextWriter.Write(JsonConvert.SerializeObject(jsonResult, Formatting.Indented));
-            TextWriter.Flush();
-            TextWriter.Close();
-        }
+        private string _formatString;
 
         // Store the results here (JSON only)
-        List<Dictionary<string, object>> jsonResult = new List<Dictionary<string, object>>();
-        string _formatString;
+        private List<Dictionary<string, object>> jsonResult = new List<Dictionary<string, object>>();
     }
 }

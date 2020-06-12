@@ -1,16 +1,15 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
-using System.IO;
 
 namespace Microsoft.DevSkim.CLI
 {
-    class Catalogue
+    internal class Catalogue
     {
         public Catalogue(RuleSet rules)
         {
@@ -37,31 +36,33 @@ namespace Microsoft.DevSkim.CLI
                     lineItems.Clear();
                     foreach (string col in columnList)
                     {
-                        lineItems.Add(string.Format("\"{0}\"",GetProperty(rule, col)));
+                        lineItems.Add(string.Format("\"{0}\"", GetProperty(rule, col)));
                     }
 
                     sw.WriteLine(string.Join(",", lineItems));
                 }
                 sw.Close();
                 fs.Close();
-             }
+            }
         }
+
+        private RuleSet _rules;
 
         private string GetProperty(Rule rule, string propName)
         {
-            string result = "#PROPERTY NOT FOUND";      
+            string result = "#PROPERTY NOT FOUND";
 
             Type t = typeof(Rule);
-            foreach(PropertyInfo property in t.GetProperties())
+            foreach (PropertyInfo property in t.GetProperties())
             {
-                foreach(Attribute attr in property.GetCustomAttributes(true))
+                foreach (Attribute attr in property.GetCustomAttributes(true))
                 {
                     if (attr is JsonPropertyAttribute jsonAttr && jsonAttr.PropertyName == propName)
                     {
                         return GetPropertyValue(property, rule);
                     }
                 }
-                
+
                 if (property.Name == propName)
                 {
                     return GetPropertyValue(property, rule);
@@ -79,23 +80,23 @@ namespace Microsoft.DevSkim.CLI
                 case string s:
                     result = s;
                     break;
+
                 case string[] list:
                     result = string.Join(",", list);
                     break;
+
                 case SearchPattern[] _:
                 case SearchCondition[] _:
                 case CodeFix[] _:
                     result = "#UNSUPPORTED PROPERTY";
                     break;
+
                 default:
                     result = property.GetValue(rule)?.ToString() ?? string.Empty;
                     break;
-
             }
 
             return result;
         }
-
-        private RuleSet _rules;
     }
 }

@@ -1,45 +1,18 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.CST.OpenSource.RecursiveExtractor;
+using Microsoft.DevSkim.CLI.Writers;
 using Microsoft.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using Microsoft.DevSkim.CLI.Writers;
-using Microsoft.CST.OpenSource.RecursiveExtractor;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
     public class AnalyzeCommand : ICommand
     {
-        #region Private Fields
-
-        private readonly bool _crawlArchives;
-
-        private bool _disableSuppression;
-
-        private string _fileFormat;
-
-        private bool _ignoreDefaultRules;
-
-        private string _outputFile;
-
-        private string _outputFormat;
-
-        private string _path;
-
-        private string[] _rulespath;
-
-        private string[] _severities;
-
-        private bool _suppressError;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public AnalyzeCommand(string path,
                               string output,
                               string outputFileFormat,
@@ -62,10 +35,6 @@ namespace Microsoft.DevSkim.CLI.Commands
             _disableSuppression = disableSuppression;
             _crawlArchives = crawlArchives;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public static void Configure(CommandLineApplication command)
         {
@@ -296,9 +265,25 @@ namespace Microsoft.DevSkim.CLI.Commands
             return issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues;
         }
 
-        #endregion Public Methods
+        private readonly bool _crawlArchives;
 
-        #region Private Methods
+        private bool _disableSuppression;
+
+        private string _fileFormat;
+
+        private bool _ignoreDefaultRules;
+
+        private string _outputFile;
+
+        private string _outputFormat;
+
+        private string _path;
+
+        private string[] _rulespath;
+
+        private string[] _severities;
+
+        private bool _suppressError;
 
         private bool ParseSeverity(string severityText, out Severity severity)
         {
@@ -333,7 +318,5 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             return result;
         }
-
-        #endregion Private Methods
     }
 }

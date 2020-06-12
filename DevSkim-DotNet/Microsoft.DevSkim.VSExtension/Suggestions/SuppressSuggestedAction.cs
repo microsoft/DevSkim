@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -13,14 +12,6 @@ namespace Microsoft.DevSkim.VSExtension
 {
     internal class SuppressSuggestedAction : ISuggestedAction
     {
-        private readonly ITrackingSpan _span;
-        private readonly ITextSnapshot _snapshot;
-        private readonly Rule _rule;
-        private readonly DateTime _suppDate = DateTime.MaxValue;
-        private readonly string _code;
-        private readonly string _display = string.Empty;
-        private readonly DevSkimError _error;
-
         public SuppressSuggestedAction(DevSkimError error, int days = -1, bool suppressAll = false)
         {
             _error = error;
@@ -39,7 +30,6 @@ namespace Microsoft.DevSkim.VSExtension
                 }
                 else
                     _display = string.Format(Resources.Messages.SuppressIssuePermanently, _rule.Id);
-
             }
             else
             {
@@ -53,7 +43,9 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
-        public SuppressSuggestedAction(ITrackingSpan span, Rule rule) : this(span, rule, -1) { }
+        public SuppressSuggestedAction(ITrackingSpan span, Rule rule) : this(span, rule, -1)
+        {
+        }
 
         public SuppressSuggestedAction(ITrackingSpan span, Rule rule, int days)
         {
@@ -71,7 +63,6 @@ namespace Microsoft.DevSkim.VSExtension
                 }
                 else
                     _display = string.Format(Resources.Messages.SuppressIssuePermanently, rule.Id);
-
             }
             else
             {
@@ -82,7 +73,7 @@ namespace Microsoft.DevSkim.VSExtension
                 }
                 else
                     _display = string.Format(Resources.Messages.SuppressAllIssuesPermanently);
-            }            
+            }
         }
 
         public string DisplayText
@@ -90,6 +81,22 @@ namespace Microsoft.DevSkim.VSExtension
             get
             {
                 return _display;
+            }
+        }
+
+        public bool HasActionSets
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool HasPreview
+        {
+            get
+            {
+                return false;
             }
         }
 
@@ -117,12 +124,8 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
-        public bool HasActionSets
+        public void Dispose()
         {
-            get
-            {
-                return false;
-            }
         }
 
         public Task<IEnumerable<SuggestedActionSet>> GetActionSetsAsync(CancellationToken cancellationToken)
@@ -130,21 +133,9 @@ namespace Microsoft.DevSkim.VSExtension
             return null;
         }
 
-        public bool HasPreview
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         public Task<object> GetPreviewAsync(CancellationToken cancellationToken)
         {
             return null;
-        }
-
-        public void Dispose()
-        {
         }
 
         public void Invoke(CancellationToken cancellationToken)
@@ -154,7 +145,7 @@ namespace Microsoft.DevSkim.VSExtension
                 return;
             }
 
-            string fixedCode = string.Empty;            
+            string fixedCode = string.Empty;
             SuppressionEx supp = new SuppressionEx(_error, ContentType.GetLanguages(_snapshot.ContentType.TypeName)[0]);
             if (_rule == null)
             {
@@ -173,5 +164,13 @@ namespace Microsoft.DevSkim.VSExtension
             telemetryId = Guid.Empty;
             return false;
         }
+
+        private readonly string _code;
+        private readonly string _display = string.Empty;
+        private readonly DevSkimError _error;
+        private readonly Rule _rule;
+        private readonly ITextSnapshot _snapshot;
+        private readonly ITrackingSpan _span;
+        private readonly DateTime _suppDate = DateTime.MaxValue;
     }
 }

@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
 using System.IO;
@@ -7,29 +6,35 @@ using System.IO;
 namespace Microsoft.DevSkim.CLI.Writers
 {
     /// <summary>
-    /// - %F - full path    
-    /// - %L - start line number
-    /// - %C - start column
-    /// - %l - end line number
-    /// - %c - end column
-    /// - %I - location inside file
-    /// - %i - match length
-    /// - %R - rule id
-    /// - %N - rule name
-    /// - %S - severity (Critical, Important, etc.)    
-    /// - %m - string match
-    /// - %T - tags(comma-separated)
+    ///     - %F - full path
+    ///     - %L - start line number
+    ///     - %C - start column
+    ///     - %l - end line number
+    ///     - %c - end column
+    ///     - %I - location inside file
+    ///     - %i - match length
+    ///     - %R - rule id
+    ///     - %N - rule name
+    ///     - %S - severity (Critical, Important, etc.)
+    ///     - %m - string match
+    ///     - %T - tags(comma-separated)
     /// </summary>
     public class SimpleTextWriter : Writer
     {
         public SimpleTextWriter(string formatString, TextWriter writer)
         {
             if (string.IsNullOrEmpty(formatString))
-                _formatString = "%F:%L:%C:%l:%c [%S] %R %N";            
+                _formatString = "%F:%L:%C:%l:%c [%S] %R %N";
             else
                 _formatString = formatString;
 
             this.TextWriter = writer;
+        }
+
+        public override void FlushAndClose()
+        {
+            TextWriter.Flush();
+            TextWriter.Close();
         }
 
         public override void WriteIssue(IssueRecord issue)
@@ -46,17 +51,11 @@ namespace Microsoft.DevSkim.CLI.Writers
             output = output.Replace("%S", issue.Issue.Rule.Severity.ToString());
             output = output.Replace("%D", issue.Issue.Rule.Description);
             output = output.Replace("%m", issue.TextSample);
-            output = output.Replace("%T", string.Join(',',issue.Issue.Rule.Tags ?? Array.Empty<string>()));
+            output = output.Replace("%T", string.Join(',', issue.Issue.Rule.Tags ?? Array.Empty<string>()));
 
             TextWriter.WriteLine(output);
         }
 
-        public override void FlushAndClose()
-        {
-            TextWriter.Flush();
-            TextWriter.Close();
-        }
-
-        string _formatString;
+        private string _formatString;
     }
 }

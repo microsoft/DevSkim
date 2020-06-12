@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -19,25 +18,10 @@ namespace Microsoft.DevSkim.VSExtension
     /// </remarks>
     public class SkimChecker
     {
-        public DevSkimErrorsSnapshot LastSecurityErrors;        
+        public DevSkimErrorsSnapshot LastSecurityErrors;
 
-        private readonly DevSkimProvider _provider;
-        private readonly ITextBuffer _buffer;
-        private readonly ITextView _textView;
-        private readonly Dispatcher _uiThreadDispatcher;        
-
-        private IClassifier _classifier;
-
-        private ITextSnapshot _currentSnapshot;
-        private NormalizedSnapshotSpanCollection _dirtySpans;
-
-        private bool _isUpdating = false;
-        private bool _isDisposed = false;
-
-        private readonly List<DevSkimTagger> _activeTaggers = new List<DevSkimTagger>();
-
-        internal string FilePath;
         internal readonly DevSkimErrorsFactory Factory;
+        internal string FilePath;
 
         internal SkimChecker(DevSkimProvider provider, ITextView textView, ITextBuffer buffer)
         {
@@ -47,29 +31,19 @@ namespace Microsoft.DevSkim.VSExtension
             _currentSnapshot = buffer.CurrentSnapshot;
 
             // Get the name of the underlying document buffer
-            ITextDocument document;            
+            ITextDocument document;
             if (provider.TextDocumentFactoryService.TryGetTextDocument(textView.TextDataModel.DocumentBuffer, out document))
             {
                 this.FilePath = document.FilePath;
                 // Watch out for file name being changed
-                document.FileActionOccurred += Document_FileActionOccurred;                        
+                document.FileActionOccurred += Document_FileActionOccurred;
             }
 
-            // We're assuming we're created on the UI thread so capture the dispatcher so we can do all of our updates on the UI thread.
+            // We're assuming we're created on the UI thread so capture the dispatcher so we can do all of our
+            // updates on the UI thread.
             _uiThreadDispatcher = Dispatcher.CurrentDispatcher;
 
             this.Factory = new DevSkimErrorsFactory(this, new DevSkimErrorsSnapshot(this.FilePath, 0));
-        }
-
-        /// <summary>
-        /// Watch out for file name changes
-        /// </summary>
-        internal void Document_FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
-        {
-            if (this.FilePath != e.FilePath)
-            {
-                this.FilePath = e.FilePath;
-            }
         }
 
         internal void AddTagger(DevSkimTagger tagger)
@@ -91,14 +65,25 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
+        /// <summary>
+        ///     Watch out for file name changes
+        /// </summary>
+        internal void Document_FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
+        {
+            if (this.FilePath != e.FilePath)
+            {
+                this.FilePath = e.FilePath;
+            }
+        }
+
         internal void RemoveTagger(DevSkimTagger tagger)
         {
             _activeTaggers.Remove(tagger);
 
             if (_activeTaggers.Count == 0)
             {
-                // Last tagger was disposed of. This is means there are no longer any open views on the buffer so we can safely shut down
-                // security checking for that buffer.
+                // Last tagger was disposed of. This is means there are no longer any open views on the buffer
+                // so we can safely shut down security checking for that buffer.
                 _buffer.ChangedLowPriority -= this.OnBufferChange;
 
                 _provider.RemoveSkimChecker(this);
@@ -115,6 +100,91 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
+        private readonly List<DevSkimTagger> _activeTaggers = new List<DevSkimTagger>();
+        private readonly ITextBuffer _buffer;
+        private readonly DevSkimProvider _provider;
+        private readonly ITextView _textView;
+        private readonly Dispatcher _uiThreadDispatcher;
+
+        private IClassifier _classifier;
+
+        private ITextSnapshot _currentSnapshot;
+        private NormalizedSnapshotSpanCollection _dirtySpans;
+
+        private bool _isDisposed = false;
+        private bool _isUpdating = false;
+
+        /// <summary>
+        ///     This is where we get the lines for parsing
+        /// </summary>
+        private void DoUpdate()
+        {
+            // It would be good to do all of this work on a background thread but we can't:
+            // _classifier.GetClassificationSpans() should only be called on the UI thread because some
+            // classifiers assume they are called from the UI thread. Raising the TagsChanged event from the
+            // taggers needs to happen on the UI thread (because some consumers might assume it is being
+            // raised on the UI thread).
+            //
+            // Updating the snapshot for the factory and calling the sink can happen on any thread but those
+            // operations are so fast that there is no point.
+            if ((!_isDisposed) && (_dirtySpans.Count > 0))
+            {
+                var line = _dirtySpans[0].Start.GetContainingLine();
+
+                if (line.Length > 0)
+                {
+                    var oldSecurityErrors = Factory.CurrentSnapshot;
+                    var newSecurityErrors = new DevSkimErrorsSnapshot(this.FilePath, oldSecurityErrors.VersionNumber + 1);
+
+                    bool anyNewErrors = false;
+
+                    string text = _textView.TextSnapshot.GetText();
+
+                    Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath);
+                    foreach (Issue issue in issues)
+                    {
+                        int errorStart = issue.StartLocation.Column;
+                        int errorLength = issue.Boundary.Length;
+                        if (errorLength > 0)    // Ignore any single character error.
+                        {
+                            line = _textView.TextSnapshot.GetLineFromLineNumber(issue.StartLocation.Line - 1);
+                            var newSpan = new SnapshotSpan(line.Start + errorStart - 1, errorLength);
+                            var oldError = oldSecurityErrors.Errors.Find((e) => e.Span == newSpan);
+
+                            if (oldError != null)
+                            {
+                                // There was a security error at the same span as the old one so we should be
+                                // able to just reuse it.
+                                oldError.NextIndex = newSecurityErrors.Errors.Count;
+                                newSecurityErrors.Errors.Add(DevSkimError.Clone(oldError));    // Don't clone the old error yet
+                            }
+                            else
+                            {
+                                newSecurityErrors.Errors.Add(new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo));
+                            }
+                        }
+                    }
+
+                    UpdateSecurityErrors(newSecurityErrors);
+                }
+
+                _dirtySpans = new NormalizedSnapshotSpanCollection(line.Snapshot, new NormalizedSpanCollection());
+                _isUpdating = false;
+            }
+        }
+
+        private void KickUpdate()
+        {
+            // TODO: Now called async - We're assuming we will only be called from the UI thread so there
+            // should be no issues with race conditions.
+            if (!_isUpdating)
+            {
+                _isUpdating = true;
+                // TODO: Improve this
+                _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
+            }
+        }
+
         private void OnBufferChange(object sender, TextContentChangedEventArgs e)
         {
             _currentSnapshot = e.After;
@@ -128,7 +198,8 @@ namespace Microsoft.DevSkim.VSExtension
                 newDirtySpans = NormalizedSnapshotSpanCollection.Union(newDirtySpans, new NormalizedSnapshotSpanCollection(e.After, change.NewSpan));
             }
 
-            // Translate all the security errors to the new snapshot (and remove anything that is a dirty region since we will need to check that again).
+            // Translate all the security errors to the new snapshot (and remove anything that is a dirty
+            // region since we will need to check that again).
             var oldSecurityErrors = this.Factory.CurrentSnapshot;
             var newSecurityErrors = new DevSkimErrorsSnapshot(this.FilePath, oldSecurityErrors.VersionNumber + 1);
 
@@ -159,73 +230,6 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
-        private void KickUpdate()
-        {
-            // TODO: Now called async -
-            // We're assuming we will only be called from the UI thread so there should be no issues with race conditions.
-            if (!_isUpdating)
-            {
-                _isUpdating = true;
-                // TODO: Improve this
-                _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
-            }
-        }
-
-        /// <summary>
-        /// This is where we get the lines for parsing
-        /// </summary>
-        private void DoUpdate()
-        {
-            // It would be good to do all of this work on a background thread but we can't:
-            //      _classifier.GetClassificationSpans() should only be called on the UI thread because some classifiers assume they are called from the UI thread.
-            //      Raising the TagsChanged event from the taggers needs to happen on the UI thread (because some consumers might assume it is being raised on the UI thread).
-            // 
-            // Updating the snapshot for the factory and calling the sink can happen on any thread but those operations are so fast that there is no point.
-            if ((!_isDisposed) && (_dirtySpans.Count > 0))
-            {
-                var line = _dirtySpans[0].Start.GetContainingLine();
-
-                if (line.Length > 0)
-                {
-                    var oldSecurityErrors = Factory.CurrentSnapshot;
-                    var newSecurityErrors = new DevSkimErrorsSnapshot(this.FilePath, oldSecurityErrors.VersionNumber + 1);
-
-                    bool anyNewErrors = false;
-
-                    string text = _textView.TextSnapshot.GetText();
-                    
-                    Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath);
-                    foreach (Issue issue in issues)
-                    {
-                        int errorStart = issue.StartLocation.Column;
-                        int errorLength = issue.Boundary.Length;
-                        if (errorLength > 0)    // Ignore any single character error.
-                        {
-                            line = _textView.TextSnapshot.GetLineFromLineNumber(issue.StartLocation.Line - 1);
-                            var newSpan = new SnapshotSpan(line.Start + errorStart - 1, errorLength);
-                            var oldError = oldSecurityErrors.Errors.Find((e) => e.Span == newSpan);
-
-                            if (oldError != null)
-                            {
-                                // There was a security error at the same span as the old one so we should be able to just reuse it.
-                                oldError.NextIndex = newSecurityErrors.Errors.Count;
-                                newSecurityErrors.Errors.Add(DevSkimError.Clone(oldError));    // Don't clone the old error yet
-                            }
-                            else
-                            {
-                                newSecurityErrors.Errors.Add(new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo));
-                            }
-                        }
-                    }
-
-                    UpdateSecurityErrors(newSecurityErrors);
-                }
-
-                _dirtySpans = new NormalizedSnapshotSpanCollection(line.Snapshot, new NormalizedSpanCollection());
-                _isUpdating = false;
-            }
-        }
-
         private void UpdateSecurityErrors(DevSkimErrorsSnapshot securityErrors)
         {
             // Tell our factory to snap to a new snapshot.
@@ -233,8 +237,8 @@ namespace Microsoft.DevSkim.VSExtension
 
             LastSecurityErrors = securityErrors;
 
-            // Tell the provider to mark all the sinks dirty (so, as a side-effect, they will start an update pass that will get the new snapshot
-            // from the factory).
+            // Tell the provider to mark all the sinks dirty (so, as a side-effect, they will start an update
+            // pass that will get the new snapshot from the factory).
             SkimChecker skimChecker = new SkimChecker(this._provider, this._textView, this._buffer);
             skimChecker._isDisposed = true;
             _provider.UpdateAllSinks(skimChecker);

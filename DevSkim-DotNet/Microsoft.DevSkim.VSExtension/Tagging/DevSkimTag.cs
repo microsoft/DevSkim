@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -7,15 +6,15 @@ using Microsoft.VisualStudio.Text.Tagging;
 namespace Microsoft.DevSkim.VSExtension
 {
     /// <summary>
-    /// DevSkim specifig tag
+    ///     DevSkim specifig tag
     /// </summary>
-    class DevSkimTag : IErrorTag
+    internal class DevSkimTag : IErrorTag
     {
         /// <summary>
-        /// Tag
+        ///     Tag
         /// </summary>
-        /// <param name="rule">Rule associated with the tag</param>
-        /// <param name="actionable">Is error actionable</param>
+        /// <param name="rule"> Rule associated with the tag </param>
+        /// <param name="actionable"> Is error actionable </param>
         public DevSkimTag(Rule rule, bool actionable)
         {
             Rule = rule;
@@ -29,8 +28,7 @@ namespace Microsoft.DevSkim.VSExtension
 
         public string ErrorType { get; set; }
 
-        public object ToolTipContent { get; set; }
-
         public Rule Rule { get; set; }
+        public object ToolTipContent { get; set; }
     }
 }

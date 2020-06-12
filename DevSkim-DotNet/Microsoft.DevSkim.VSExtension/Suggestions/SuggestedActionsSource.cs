@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DevSkim.VSExtension
 {
-    class SuggestedActionsSource : ISuggestedActionsSource
+    internal class SuggestedActionsSource : ISuggestedActionsSource
     {
         private readonly SuggestedActionsSourceProvider _factory;
         private readonly ITextBuffer _textBuffer;
@@ -27,7 +26,9 @@ namespace Microsoft.DevSkim.VSExtension
         }
 
 #pragma warning disable 0067
+
         public event EventHandler<EventArgs> SuggestedActionsChanged;
+
 #pragma warning restore 0067
 
         public void Dispose()
@@ -35,7 +36,7 @@ namespace Microsoft.DevSkim.VSExtension
         }
 
         public IEnumerable<SuggestedActionSet> GetSuggestedActions(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
-        {            
+        {
             DevSkimError error = GetErrorUnderCaret(range);
             if (error != null && error.Actionable)
             {
@@ -56,14 +57,14 @@ namespace Microsoft.DevSkim.VSExtension
                 var lineSpan = error.LineTrackingSpan;
 
                 suppActions.Add(new SuppressSuggestedAction(error, suppressDays));
-                suppActions.Add(new SuppressSuggestedAction(error));              
-                                
+                suppActions.Add(new SuppressSuggestedAction(error));
+
                 // If there is multiple issues on the line, offer "Suppress all"
                 if (SkimShim.HasMultipleProblems(lineSpan.GetText(range.Snapshot),
                     lineSpan.TextBuffer.ContentType.TypeName))
                 {
                     suppActions.Add(new SuppressSuggestedAction(error, suppressDays, true));
-                    suppActions.Add(new SuppressSuggestedAction(error, suppressAll: true));                    
+                    suppActions.Add(new SuppressSuggestedAction(error, suppressAll: true));
                 }
 
                 VSPackage.LogEvent(string.Format("Lightbulb invoked on {0} {1}", error.Rule.Id, error.Rule.Name));
@@ -84,7 +85,7 @@ namespace Microsoft.DevSkim.VSExtension
             {
                 DevSkimError error = GetErrorUnderCaret(range);
 
-                return (error != null && error.Actionable);                
+                return (error != null && error.Actionable);
             });
         }
 
@@ -98,12 +99,12 @@ namespace Microsoft.DevSkim.VSExtension
         {
             if (_skimChecker != null)
                 return true;
-                        
+
             return _textBuffer.Properties.TryGetProperty(typeof(SkimChecker), out _skimChecker);
         }
 
         private DevSkimError GetErrorUnderCaret(SnapshotSpan range)
-        {            
+        {
             if (TryGetSkimChecker())
             {
                 DevSkimErrorsSnapshot securityErrors = _skimChecker.LastSecurityErrors;
@@ -112,7 +113,7 @@ namespace Microsoft.DevSkim.VSExtension
                     foreach (var error in securityErrors.Errors)
                     {
                         if (range.IntersectsWith(error.Span))
-                        {                            
+                        {
                             return error;
                         }
                     }
@@ -121,5 +122,5 @@ namespace Microsoft.DevSkim.VSExtension
 
             return null;
         }
-    }   
+    }
 }
