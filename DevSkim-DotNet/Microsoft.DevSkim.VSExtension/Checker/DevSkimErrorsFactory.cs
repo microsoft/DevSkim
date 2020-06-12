@@ -1,16 +1,11 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.DevSkim.VSExtension
 {
-    class DevSkimErrorsFactory : TableEntriesSnapshotFactoryBase
+    internal class DevSkimErrorsFactory : TableEntriesSnapshotFactoryBase
     {
-        private readonly SkimChecker _skimChecker;
-
-        public DevSkimErrorsSnapshot CurrentSnapshot { get; private set; }
-
         public DevSkimErrorsFactory(SkimChecker skimChecker, DevSkimErrorsSnapshot securityErrors)
         {
             _skimChecker = skimChecker;
@@ -18,13 +13,8 @@ namespace Microsoft.DevSkim.VSExtension
             this.CurrentSnapshot = securityErrors;
         }
 
-        internal void UpdateErrors(DevSkimErrorsSnapshot securityErrors)
-        {
-            this.CurrentSnapshot.NextSnapshot = securityErrors;
-            this.CurrentSnapshot = securityErrors;
-        }
+        public DevSkimErrorsSnapshot CurrentSnapshot { get; private set; }
 
-        #region ITableEntriesSnapshotFactory members
         public override int CurrentVersionNumber
         {
             get
@@ -44,10 +34,18 @@ namespace Microsoft.DevSkim.VSExtension
 
         public override ITableEntriesSnapshot GetSnapshot(int versionNumber)
         {
-            // In theory the snapshot could change in the middle of the return statement so snap the snapshot just to be safe.
+            // In theory the snapshot could change in the middle of the return statement so snap the snapshot
+            // just to be safe.
             var snapshot = this.CurrentSnapshot;
             return (versionNumber == snapshot.VersionNumber) ? snapshot : null;
         }
-        #endregion
+
+        internal void UpdateErrors(DevSkimErrorsSnapshot securityErrors)
+        {
+            this.CurrentSnapshot.NextSnapshot = securityErrors;
+            this.CurrentSnapshot = securityErrors;
+        }
+
+        private readonly SkimChecker _skimChecker;
     }
 }

@@ -1,9 +1,8 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
-using System.IO;
 using System.Globalization;
+using System.IO;
 
 namespace Microsoft.DevSkim.CLI
 {
@@ -14,17 +13,12 @@ namespace Microsoft.DevSkim.CLI
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
         }
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        public string Write(Exception ex)
         {
-            LogException((Exception)e.ExceptionObject);
-        }
+            string message = "Message: " + ex.Message + "\r\n";
+            message += "StackTrace: " + ex.StackTrace;
 
-        private void LogException(Exception e)
-        {
-            string fileName = Write(e);
-
-            Console.Error.WriteLine("Critical exception happend. Details dumped into {0}", fileName);
-            Environment.Exit((int)ExitCode.CriticalError);
+            return WriteRaw(message) ?? string.Empty;
         }
 
         public string? WriteRaw(string? rawData)
@@ -63,12 +57,17 @@ namespace Microsoft.DevSkim.CLI
             return fileName;
         }
 
-        public string Write(Exception ex)
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            string message = "Message: " + ex.Message + "\r\n";
-            message += "StackTrace: " + ex.StackTrace;
+            LogException((Exception)e.ExceptionObject);
+        }
 
-            return WriteRaw(message) ?? string.Empty;
+        private void LogException(Exception e)
+        {
+            string fileName = Write(e);
+
+            Console.Error.WriteLine("Critical exception happend. Details dumped into {0}", fileName);
+            Environment.Exit((int)ExitCode.CriticalError);
         }
     }
 }

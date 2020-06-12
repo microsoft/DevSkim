@@ -1,8 +1,7 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.DevSkim.Tests
@@ -16,6 +15,28 @@ namespace Microsoft.DevSkim.Tests
         public void Constructor1FailTest()
         {
             Suppression sup = new Suppression(null);
+        }
+
+        [TestMethod]
+        public void GetNotSuppressedTest()
+        {
+            string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until 1980-07-15";
+            Suppression sup = new Suppression(testString);
+            SuppressedIssue iss = sup.GetSuppressedIssue("DS126858");
+
+            Assert.IsNull(sup.GetSuppressedIssue("DS126858"), "Is suppressed DS126858 should be Null");
+            Assert.IsNull(sup.GetSuppressedIssue("DS168931"), "Is suppressed DS168931 should be Null");
+        }
+
+        [TestMethod]
+        public void GetSuppressedTest()
+        {
+            string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931";
+            Suppression sup = new Suppression(testString);
+            SuppressedIssue iss = sup.GetSuppressedIssue("DS126858");
+
+            Assert.IsNotNull(sup.GetSuppressedIssue("DS126858"), "Is suppressed DS126858 should be instance");
+            Assert.IsNotNull(sup.GetSuppressedIssue("DS168931"), "Is suppressed DS168931 should be instance");
         }
 
         [TestMethod]
@@ -51,28 +72,6 @@ namespace Microsoft.DevSkim.Tests
             Suppression sup = new Suppression(testString);
             // Suppress All test
             Assert.IsTrue(sup.GetIssues().Length == 1, "Supress All failed");
-        }
-
-        [TestMethod]
-        public void GetSuppressedTest()
-        {
-            string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931";
-            Suppression sup = new Suppression(testString);
-            SuppressedIssue iss = sup.GetSuppressedIssue("DS126858");
-
-            Assert.IsNotNull(sup.GetSuppressedIssue("DS126858"), "Is suppressed DS126858 should be instance");
-            Assert.IsNotNull(sup.GetSuppressedIssue("DS168931"), "Is suppressed DS168931 should be instance");
-        }
-
-        [TestMethod]
-        public void GetNotSuppressedTest()
-        {
-            string testString = "MD5 hash = new MD5CryptoServiceProvider(); //DevSkim: ignore DS126858,DS168931 until 1980-07-15";
-            Suppression sup = new Suppression(testString);
-            SuppressedIssue iss = sup.GetSuppressedIssue("DS126858");
-
-            Assert.IsNull(sup.GetSuppressedIssue("DS126858"), "Is suppressed DS126858 should be Null");
-            Assert.IsNull(sup.GetSuppressedIssue("DS168931"), "Is suppressed DS168931 should be Null");
         }
     }
 }

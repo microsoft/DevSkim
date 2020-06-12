@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 
 namespace Microsoft.DevSkim.CLI.Writers
 {
@@ -17,33 +16,6 @@ namespace Microsoft.DevSkim.CLI.Writers
             _rules = new Dictionary<string, CodeAnalysis.Sarif.Rule>();
 
             this.TextWriter = textWriter;
-        }
-
-        public override void WriteIssue(IssueRecord issue)
-        {
-            Result resultItem = new Result();
-            MapRuleToResult(issue.Issue.Rule, ref resultItem);
-            AddRuleToSarifRule(issue.Issue.Rule);
-
-            CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location();
-            loc.AnalysisTarget = new PhysicalLocation(new Uri(issue.Filename),
-                                                      null,
-                                                      new Region(issue.Issue.StartLocation.Line,
-                                                                 issue.Issue.StartLocation.Column,
-                                                                 issue.Issue.EndLocation.Line,
-                                                                 issue.Issue.EndLocation.Column,
-                                                                 issue.Issue.Boundary.Index,
-                                                                 issue.Issue.Boundary.Length
-                                                       ));
-            resultItem.Snippet = issue.TextSample;
-
-            if (issue.Issue.Rule.Fixes != null)
-                resultItem.Fixes = GetFixits(issue);
-
-            resultItem.Locations = new List<CodeAnalysis.Sarif.Location>();
-            resultItem.Locations.Add(loc);
-            _results.Add(resultItem);            
-            
         }
 
         public override void FlushAndClose()
@@ -69,7 +41,6 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifLog.Runs = new List<Run>();
                 sarifLog.Runs.Add(runItem);
 
-
                 JsonSerializerSettings settings = new JsonSerializerSettings()
                 {
                     ContractResolver = SarifContractResolver.Instance,
@@ -82,28 +53,64 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
         }
 
-        private void MapRuleToResult(Rule rule, ref Result resultItem)
+        public override void WriteIssue(IssueRecord issue)
         {
-            switch (rule.Severity)
-            {
-                case Severity.Critical:
-                case Severity.Important:
-                case Severity.Moderate:
-                    resultItem.Level = ResultLevel.Error;
-                    break;
-                case Severity.BestPractice:
-                    resultItem.Level = ResultLevel.Warning;
-                    break;
-                default:
-                    resultItem.Level = ResultLevel.Note;
-                    break;
-            }
+            Result resultItem = new Result();
+            MapRuleToResult(issue.Issue.Rule, ref resultItem);
+            AddRuleToSarifRule(issue.Issue.Rule);
 
-            resultItem.RuleId = rule.Id;
-            resultItem.Message = rule.Name;
-            foreach (string tag in rule.Tags ?? Array.Empty<string>())
+            CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location();
+            loc.AnalysisTarget = new PhysicalLocation(new Uri(issue.Filename),
+                                                      null,
+                                                      new Region(issue.Issue.StartLocation.Line,
+                                                                 issue.Issue.StartLocation.Column,
+                                                                 issue.Issue.EndLocation.Line,
+                                                                 issue.Issue.EndLocation.Column,
+                                                                 issue.Issue.Boundary.Index,
+                                                                 issue.Issue.Boundary.Length
+                                                       ));
+            resultItem.Snippet = issue.TextSample;
+
+            if (issue.Issue.Rule.Fixes != null)
+                resultItem.Fixes = GetFixits(issue);
+
+            resultItem.Locations = new List<CodeAnalysis.Sarif.Location>();
+            resultItem.Locations.Add(loc);
+            _results.Add(resultItem);
+        }
+
+        private List<Result> _results;
+
+        private Dictionary<string, CodeAnalysis.Sarif.Rule> _rules;
+
+        private void AddRuleToSarifRule(Rule devskimRule)
+        {
+            if (!_rules.ContainsKey(devskimRule.Id))
             {
-                resultItem.Tags.Add(tag);
+                CodeAnalysis.Sarif.Rule sarifRule = new CodeAnalysis.Sarif.Rule();
+                sarifRule.Id = devskimRule.Id;
+                sarifRule.Name = devskimRule.Name;
+                sarifRule.FullDescription = devskimRule.Description;
+                sarifRule.HelpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/master/guidance/" + devskimRule.RuleInfo);
+
+                switch (devskimRule.Severity)
+                {
+                    case Severity.Critical:
+                    case Severity.Important:
+                    case Severity.Moderate:
+                        sarifRule.DefaultLevel = ResultLevel.Error;
+                        break;
+
+                    case Severity.BestPractice:
+                        sarifRule.DefaultLevel = ResultLevel.Warning;
+                        break;
+
+                    default:
+                        sarifRule.DefaultLevel = ResultLevel.Note;
+                        break;
+                }
+
+                _rules.Add(devskimRule.Id, sarifRule);
             }
         }
 
@@ -129,36 +136,31 @@ namespace Microsoft.DevSkim.CLI.Writers
             return fixes;
         }
 
-        private void AddRuleToSarifRule(Rule devskimRule)
+        private void MapRuleToResult(Rule rule, ref Result resultItem)
         {
-            if (!_rules.ContainsKey(devskimRule.Id))
+            switch (rule.Severity)
             {
-                CodeAnalysis.Sarif.Rule sarifRule = new CodeAnalysis.Sarif.Rule();
-                sarifRule.Id = devskimRule.Id;
-                sarifRule.Name = devskimRule.Name;
-                sarifRule.FullDescription = devskimRule.Description;
-                sarifRule.HelpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/master/guidance/" + devskimRule.RuleInfo);
+                case Severity.Critical:
+                case Severity.Important:
+                case Severity.Moderate:
+                    resultItem.Level = ResultLevel.Error;
+                    break;
 
-                switch (devskimRule.Severity)
-                {
-                    case Severity.Critical:
-                    case Severity.Important:
-                    case Severity.Moderate:
-                        sarifRule.DefaultLevel = ResultLevel.Error;
-                        break;
-                    case Severity.BestPractice:
-                        sarifRule.DefaultLevel = ResultLevel.Warning;
-                        break;
-                    default:
-                        sarifRule.DefaultLevel = ResultLevel.Note;
-                        break;
-                }
+                case Severity.BestPractice:
+                    resultItem.Level = ResultLevel.Warning;
+                    break;
 
-                _rules.Add(devskimRule.Id, sarifRule);
+                default:
+                    resultItem.Level = ResultLevel.Note;
+                    break;
+            }
+
+            resultItem.RuleId = rule.Id;
+            resultItem.Message = rule.Name;
+            foreach (string tag in rule.Tags ?? Array.Empty<string>())
+            {
+                resultItem.Tags.Add(tag);
             }
         }
-        
-        private Dictionary<string, CodeAnalysis.Sarif.Rule> _rules;
-        private List<Result> _results;
     }
 }

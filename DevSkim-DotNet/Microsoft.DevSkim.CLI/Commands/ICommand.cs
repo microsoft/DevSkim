@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 namespace Microsoft.DevSkim.CLI.Commands
 {

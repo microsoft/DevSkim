@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 
 namespace Microsoft.DevSkim.CLI
 {
-    class Verifier
+    internal class Verifier
     {
         public Verifier(string[] paths)
         {
@@ -17,15 +16,25 @@ namespace Microsoft.DevSkim.CLI
             _paths = paths;
         }
 
-        public Verifier(string path) 
+        public Verifier(string path)
             : this(new string[] { path })
         {
+        }
+
+        public RuleSet CompiledRuleset
+        {
+            get { return _rules; }
+        }
+
+        public ErrorMessage[] Messages
+        {
+            get { return _messages.ToArray(); }
         }
 
         public bool Verify()
         {
             bool isCompiled = true;
-            
+
             foreach (string rulesPath in _paths)
             {
                 if (Directory.Exists(rulesPath))
@@ -47,7 +56,7 @@ namespace Microsoft.DevSkim.CLI
 
             foreach (ErrorMessage message in _messages)
             {
-                Console.Error.WriteLine("file:{0}", message.File);                
+                Console.Error.WriteLine("file:{0}", message.File);
 
                 if (!string.IsNullOrEmpty(message.Path))
                     Console.Error.WriteLine("\tproperty: {0}", message.Path);
@@ -59,13 +68,19 @@ namespace Microsoft.DevSkim.CLI
                 Console.Error.WriteLine("\tmessage: {0}", message.Message);
 
                 Console.Error.WriteLine();
-            }            
+            }
 
             return isCompiled;
         }
 
+        private List<ErrorMessage> _messages = new List<ErrorMessage>();
+
+        private string[] _paths;
+
+        private RuleSet _rules;
+
         private void CheckIntegrity()
-        {            
+        {
             string[] languages = Language.GetNames();
 
             foreach (Rule rule in _rules.AsEnumerable())
@@ -147,19 +162,5 @@ namespace Microsoft.DevSkim.CLI
 
             return noProblem;
         }
-
-        public ErrorMessage[] Messages
-        {
-            get { return _messages.ToArray(); }
-        }
-
-        public RuleSet CompiledRuleset
-        {
-            get { return _rules; }
-        }
-
-        private List<ErrorMessage> _messages = new List<ErrorMessage>();
-        private RuleSet _rules;
-        private string[] _paths;
     }
 }

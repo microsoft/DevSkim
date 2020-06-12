@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
 using System.IO;
@@ -14,15 +13,19 @@ namespace Microsoft.DevSkim.CLI.Writers
                 writerName = "_dummy";
 
             switch (writerName.ToLowerInvariant())
-            {  
+            {
                 case "_dummy":
                     return new DummyWriter();
+
                 case "json":
-                    return new JsonWriter(format, output);                    
+                    return new JsonWriter(format, output);
+
                 case "text":
                     return new SimpleTextWriter(format, output);
+
                 case "sarif":
                     return new SarifWriter(output);
+
                 default:
                     throw new Exception("wrong output");
             }

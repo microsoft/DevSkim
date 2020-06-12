@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
@@ -10,38 +9,6 @@ namespace Microsoft.DevSkim.Tests
     [ExcludeFromCodeCoverage]
     public class LanguageTest
     {
-        [TestMethod]
-        public void LanguageQueryTest()
-        {
-            string file = @"c:\myproject\program.cs";
-            string lang = Language.FromFileName(file);
-            Assert.AreEqual("csharp", lang, "Incorect language was return for " + file);
-
-            file = @"program.cs";
-            lang = Language.FromFileName(file);
-            Assert.AreEqual("csharp", lang, "Incorect language was return for " + file);
-
-            file = @"program.js";
-            lang = Language.FromFileName(file);
-            Assert.AreEqual("javascript", lang, "Incorect language was return for " + file);
-
-            file = @"query.sql";
-            lang = Language.FromFileName(file);
-            Assert.AreEqual("sql", lang, "Incorect language was return for " + file);
-
-            file = @"packages.config";
-            lang = Language.FromFileName(file);
-            Assert.AreEqual("packages.config", lang, "Incorect language was return for " + file);            
-
-            file = @"program.klyngon";
-            lang = Language.FromFileName(file);
-            Assert.AreEqual(string.Empty, lang, "Incorect language was return for " + file);
-
-            file = null;
-            lang = Language.FromFileName(file);
-            Assert.AreEqual(string.Empty, lang, "Incorect language was return for " + file);
-        }
-
         [TestMethod]
         public void LanguageCommentPrefixTest()
         {
@@ -56,7 +23,6 @@ namespace Microsoft.DevSkim.Tests
             lang = "sql";
             preffix = Language.GetCommentInline(lang);
             Assert.AreEqual("--", preffix, "Incorect prefix for " + lang);
-
 
             lang = "klyngon";
             preffix = Language.GetCommentInline(lang);
@@ -85,6 +51,38 @@ namespace Microsoft.DevSkim.Tests
             lang = null;
             suffix = Language.GetCommentSuffix(lang);
             Assert.AreEqual(string.Empty, suffix, "Incorect suffix for " + lang);
+        }
+
+        [TestMethod]
+        public void LanguageQueryTest()
+        {
+            string file = @"c:\myproject\program.cs";
+            string lang = Language.FromFileName(file);
+            Assert.AreEqual("csharp", lang, "Incorect language was return for " + file);
+
+            file = @"program.cs";
+            lang = Language.FromFileName(file);
+            Assert.AreEqual("csharp", lang, "Incorect language was return for " + file);
+
+            file = @"program.js";
+            lang = Language.FromFileName(file);
+            Assert.AreEqual("javascript", lang, "Incorect language was return for " + file);
+
+            file = @"query.sql";
+            lang = Language.FromFileName(file);
+            Assert.AreEqual("sql", lang, "Incorect language was return for " + file);
+
+            file = @"packages.config";
+            lang = Language.FromFileName(file);
+            Assert.AreEqual("packages.config", lang, "Incorect language was return for " + file);
+
+            file = @"program.klyngon";
+            lang = Language.FromFileName(file);
+            Assert.AreEqual(string.Empty, lang, "Incorect language was return for " + file);
+
+            file = null;
+            lang = Language.FromFileName(file);
+            Assert.AreEqual(string.Empty, lang, "Incorect language was return for " + file);
         }
     }
 }

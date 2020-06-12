@@ -5,7 +5,7 @@ using System.Windows.Forms;
 namespace Microsoft.DevSkim.VSExtension
 {
     /// <summary>
-    /// Interaction logic for OptionsDialogPageControl.xaml
+    ///     Interaction logic for OptionsDialogPageControl.xaml
     /// </summary>
     public partial class OptionsDialogPageControl : System.Windows.Controls.UserControl
     {

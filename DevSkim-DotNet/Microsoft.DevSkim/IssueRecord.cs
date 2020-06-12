@@ -1,15 +1,9 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 namespace Microsoft.DevSkim
 {
     public class IssueRecord
     {
-        public string Filename { get; }
-        public int Filesize { get; }
-        public string TextSample { get; }
-        public Issue Issue { get; }
-
         public IssueRecord(string Filename, int Filesize, string TextSample, Issue Issue)
         {
             this.Filename = Filename;
@@ -17,5 +11,10 @@ namespace Microsoft.DevSkim
             this.TextSample = TextSample;
             this.Issue = Issue;
         }
+
+        public string Filename { get; }
+        public int Filesize { get; }
+        public Issue Issue { get; }
+        public string TextSample { get; }
     }
 }

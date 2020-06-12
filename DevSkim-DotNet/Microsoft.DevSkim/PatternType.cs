@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Newtonsoft.Json;
 using System;
@@ -7,7 +6,7 @@ using System;
 namespace Microsoft.DevSkim
 {
     /// <summary>
-    /// Pattern Type for search pattern
+    ///     Pattern Type for search pattern
     /// </summary>
     public enum PatternType
     {
@@ -18,10 +17,25 @@ namespace Microsoft.DevSkim
     }
 
     /// <summary>
-    /// Json converter for Pattern Type
+    ///     Json converter for Pattern Type
     /// </summary>
-    class PatternTypeConverter : JsonConverter
+    internal class PatternTypeConverter : JsonConverter
     {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(string);
+        }
+
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            if (reader.Value is string enumString)
+            {
+                enumString = enumString.Replace("-", "");
+                return Enum.Parse(typeof(PatternType), enumString, true);
+            }
+            return null;
+        }
+
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             if (value is PatternType svr)
@@ -37,22 +51,6 @@ namespace Microsoft.DevSkim
                 writer.WriteValue(svrstr);
                 writer.WriteValue(svr.ToString().ToLower());
             }
-            
-        }
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            if (reader.Value is string enumString)
-            {
-                enumString = enumString.Replace("-", "");
-                return Enum.Parse(typeof(PatternType), enumString, true);
-            }
-            return null;
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(string);
         }
     }
 }

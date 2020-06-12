@@ -28,6 +28,34 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
+        ///     Enables caching of rules queries. Increases performance and memory use!
+        /// </summary>
+        public bool EnableCache { get; set; }
+
+        /// <summary>
+        ///     Enable suppresion syntax checking during analysis
+        /// </summary>
+        public bool EnableSuppressions { get; set; }
+
+        /// <summary>
+        ///     Ruleset to be used for analysis
+        /// </summary>
+        public RuleSet Rules
+        {
+            get { return _ruleset; }
+            set
+            {
+                _ruleset = value;
+                _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
+            }
+        }
+
+        /// <summary>
+        ///     Sets severity levels for analysis
+        /// </summary>
+        public Severity SeverityLevel { get; set; }
+
+        /// <summary>
         ///     Applies given fix on the provided source code line
         /// </summary>
         /// <param name="text"> Source code line </param>
@@ -206,6 +234,13 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
+        ///     Cache for rules filtered by content type
+        /// </summary>
+        private Dictionary<string, IEnumerable<Rule>> _rulesCache;
+
+        private RuleSet _ruleset;
+
+        /// <summary>
         ///     Filters the rules for those matching the content type. Resolves all the overrides
         /// </summary>
         /// <param name="languages"> Languages to filter rules for </param>
@@ -234,40 +269,5 @@ namespace Microsoft.DevSkim
 
             return filteredRules;
         }
-
-        /// <summary>
-        ///     Enables caching of rules queries. Increases performance and memory use!
-        /// </summary>
-        public bool EnableCache { get; set; }
-
-        /// <summary>
-        ///     Enable suppresion syntax checking during analysis
-        /// </summary>
-        public bool EnableSuppressions { get; set; }
-
-        /// <summary>
-        ///     Ruleset to be used for analysis
-        /// </summary>
-        public RuleSet Rules
-        {
-            get { return _ruleset; }
-            set
-            {
-                _ruleset = value;
-                _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
-            }
-        }
-
-        /// <summary>
-        ///     Sets severity levels for analysis
-        /// </summary>
-        public Severity SeverityLevel { get; set; }
-
-        /// <summary>
-        ///     Cache for rules filtered by content type
-        /// </summary>
-        private Dictionary<string, IEnumerable<Rule>> _rulesCache;
-
-        private RuleSet _ruleset;
     }
 }

@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -17,13 +16,6 @@ namespace Microsoft.DevSkim.VSExtension
 {
     internal class FixSuggestedAction : ISuggestedAction
     {
-        private readonly ITrackingSpan _span;
-        private readonly ITextSnapshot _snapshot;                
-        private readonly CodeFix _fix;
-        private readonly Rule _rule;
-        private readonly string _fixedCode;
-        private readonly string _display;
-
         public FixSuggestedAction(ITrackingSpan span, Rule rule, CodeFix fix)
         {
             _rule = rule;
@@ -40,6 +32,22 @@ namespace Microsoft.DevSkim.VSExtension
             get
             {
                 return _display;
+            }
+        }
+
+        public bool HasActionSets
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool HasPreview
+        {
+            get
+            {
+                return false;
             }
         }
 
@@ -67,25 +75,13 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
-        public bool HasActionSets
+        public void Dispose()
         {
-            get
-            {
-                return false;
-            }
         }
 
         public Task<IEnumerable<SuggestedActionSet>> GetActionSetsAsync(CancellationToken cancellationToken)
         {
             return null;
-        }
-
-        public bool HasPreview
-        {
-            get
-            {
-                return false;
-            }
         }
 
         public Task<object> GetPreviewAsync(CancellationToken cancellationToken)
@@ -95,18 +91,14 @@ namespace Microsoft.DevSkim.VSExtension
             var line = snapShot.GetLineFromPosition(_span.GetStartPoint(snapShot).Position);
 
             SnapshotSpan preSpan = new SnapshotSpan(line.Start, theSpan.Start);
-            SnapshotSpan postSpan = new SnapshotSpan(theSpan.End, line.End);            
+            SnapshotSpan postSpan = new SnapshotSpan(theSpan.End, line.End);
 
             var textBlock = new TextBlock();
-            textBlock.Padding = new Thickness(5);            
+            textBlock.Padding = new Thickness(5);
             textBlock.Inlines.Add(new Run() { Text = preSpan.GetText() });
             textBlock.Inlines.Add(new Run() { Text = _fixedCode, Foreground = new SolidColorBrush(Color.FromRgb(0x34, 0xAF, 0x00)) });
             textBlock.Inlines.Add(new Run() { Text = postSpan.GetText() });
             return Task.FromResult<object>(textBlock);
-        }
-
-        public void Dispose()
-        {
         }
 
         public void Invoke(CancellationToken cancellationToken)
@@ -126,5 +118,12 @@ namespace Microsoft.DevSkim.VSExtension
             telemetryId = Guid.Empty;
             return false;
         }
+
+        private readonly string _display;
+        private readonly CodeFix _fix;
+        private readonly string _fixedCode;
+        private readonly Rule _rule;
+        private readonly ITextSnapshot _snapshot;
+        private readonly ITrackingSpan _span;
     }
 }

@@ -1,16 +1,14 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Reflection;
 
 namespace Microsoft.DevSkim.VSExtension
 {
     /// <summary>
-    /// Shim around DevSkim. Parses code applies rules
+    ///     Shim around DevSkim. Parses code applies rules
     /// </summary>
     public class SkimShim
     {
@@ -21,22 +19,31 @@ namespace Microsoft.DevSkim.VSExtension
             LoadRules();
         }
 
-        #region Public Static Methods
-
         /// <summary>
-        /// Reapllys settings
+        ///     Analyze text for issues
         /// </summary>
-        public static void ApplySettings()
+        /// <param name="text"> line of code </param>
+        /// <param name="contenttype"> VS Content Type </param>
+        /// <returns> List of actionable and non-actionable issues </returns>
+        public static Issue[] Analyze(string text, string contentType, string fileName = "")
         {
-            _instance.LoadRules();            
+            return _instance.processor.Analyze(text, _instance.GetLanguageList(contentType, fileName));
         }
 
         /// <summary>
-        /// Indicates if there are more than one issue on the given line
+        ///     Reapllys settings
         /// </summary>
-        /// <param name="text">line of code</param>
-        /// <param name="contenttype">VS Content Type</param>
-        /// <returns>True if more than one issue exists</returns>
+        public static void ApplySettings()
+        {
+            _instance.LoadRules();
+        }
+
+        /// <summary>
+        ///     Indicates if there are more than one issue on the given line
+        /// </summary>
+        /// <param name="text"> line of code </param>
+        /// <param name="contenttype"> VS Content Type </param>
+        /// <returns> True if more than one issue exists </returns>
         public static bool HasMultipleProblems(string text, string contenttype)
         {
             return Analyze(text, contenttype, string.Empty)
@@ -45,31 +52,22 @@ namespace Microsoft.DevSkim.VSExtension
                       .Count() > 1;
         }
 
-        /// <summary>
-        /// Analyze text for issues
-        /// </summary>
-        /// <param name="text">line of code</param>
-        /// <param name="contenttype">VS Content Type</param>
-        /// <returns>List of actionable and non-actionable issues</returns>
-        public static Issue[] Analyze(string text, string contentType, string fileName = "")
-        {                        
-            return _instance.processor.Analyze(text, _instance.GetLanguageList(contentType, fileName));
-        }    
+        private static SkimShim _instance = new SkimShim();
 
-        #endregion
+        private RuleProcessor processor;
 
-        #region Private
+        private RuleSet ruleset;
 
         /// <summary>
-        /// Get list of applicable lenguages based on file name and VS content type
+        ///     Get list of applicable lenguages based on file name and VS content type
         /// </summary>
-        /// <param name="contentType">Visual Studio content type</param>
-        /// <param name="fileName">Filename</param>
-        /// <returns></returns>
+        /// <param name="contentType"> Visual Studio content type </param>
+        /// <param name="fileName"> Filename </param>
+        /// <returns> </returns>
         private string[] GetLanguageList(string contentType, string fileName)
         {
             string flang = Language.FromFileName(fileName);
-            List<string> langs = new List<string>(ContentType.GetLanguages(contentType));                
+            List<string> langs = new List<string>(ContentType.GetLanguages(contentType));
 
             if (!langs.Contains(flang))
             {
@@ -80,7 +78,7 @@ namespace Microsoft.DevSkim.VSExtension
         }
 
         /// <summary>
-        /// Reloads rules based on settings
+        ///     Reloads rules based on settings
         /// </summary>
         private void LoadRules()
         {
@@ -110,12 +108,5 @@ namespace Microsoft.DevSkim.VSExtension
             if (set.EnableBestPracticeRules) processor.SeverityLevel |= Severity.BestPractice;
             if (set.EnableManualReviewRules) processor.SeverityLevel |= Severity.ManualReview;
         }
-
-        private RuleProcessor processor;
-        private RuleSet ruleset;
-
-        private static SkimShim _instance = new SkimShim();
-
-        #endregion
     }
 }

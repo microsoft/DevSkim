@@ -133,6 +133,6 @@
   },
   {
     "name": "cobol",
-    "extensions": [ ".cbl",".cob",".cpy" ]
+    "extensions": [ ".cbl", ".cob", ".cpy" ]
   }
 ]

@@ -1,26 +1,27 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
 
 namespace Microsoft.DevSkim
 {
     /// <summary>
-    /// Issue severity
+    ///     Issue severity
     /// </summary>
     [Flags]
-    public enum Confidence 
-    {        
+    public enum Confidence
+    {
         /// <summary>
-        /// Issues that might exist
+        ///     Issues that might exist
         /// </summary>
         Low = 1,
+
         /// <summary>
-        /// Issues that likely exist
+        ///     Issues that likely exist
         /// </summary>
         Medium = 2,
+
         /// <summary>
-        /// Issues that definitely exist
+        ///     Issues that definitely exist
         /// </summary>
         High = 4,
     }

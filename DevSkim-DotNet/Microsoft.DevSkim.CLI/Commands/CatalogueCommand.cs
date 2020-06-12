@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.Extensions.CommandLineUtils;
 using System.Collections.Generic;
@@ -8,6 +7,13 @@ namespace Microsoft.DevSkim.CLI.Commands
 {
     public class CatalogueCommand : ICommand
     {
+        public CatalogueCommand(string path, string output, List<string> properties)
+        {
+            _path = path;
+            _outputfile = output;
+            _columns = properties.ToArray();
+        }
+
         public static void Configure(CommandLineApplication command)
         {
             command.Description = "Create csv file catalogue of rules";
@@ -23,18 +29,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                                               "Column in catalogue",
                                               CommandOptionType.MultipleValue);
 
-            command.OnExecute(() => {
+            command.OnExecute(() =>
+            {
                 return (new CatalogueCommand(locationArgument.Value,
                                  outputArgument.Value,
-                                 columnsOptions.Values)).Run();                
+                                 columnsOptions.Values)).Run();
             });
-        }
-
-        public CatalogueCommand(string path, string output, List<string> properties)
-        {
-            _path = path;
-            _outputfile = output;
-            _columns = properties.ToArray();
         }
 
         public int Run()
@@ -43,15 +43,15 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             if (!verifier.Verify())
                 return (int)ExitCode.IssuesExists;
-            
+
             Catalogue catalogue = new Catalogue(verifier.CompiledRuleset);
             catalogue.ToCsv(_outputfile, _columns);
 
             return (int)ExitCode.NoIssues;
         }
 
-        private string _path;
-        private string _outputfile;
         private string[] _columns;
+        private string _outputfile;
+        private string _path;
     }
 }

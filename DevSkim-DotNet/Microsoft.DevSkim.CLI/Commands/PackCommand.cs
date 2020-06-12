@@ -1,16 +1,22 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
     public class PackCommand : ICommand
     {
+        public PackCommand(string path, string output, bool indent)
+        {
+            _path = path;
+            _outputfile = output;
+            _indent = indent;
+        }
+
         public static void Configure(CommandLineApplication command)
         {
             command.Description = "Pack rules into a single file";
@@ -26,22 +32,16 @@ namespace Microsoft.DevSkim.CLI.Commands
                                               "Indent the output json",
                                               CommandOptionType.NoValue);
 
-            command.OnExecute(() => {
+            command.OnExecute(() =>
+            {
                 return (new PackCommand(locationArgument.Value,
                                  outputArgument.Value,
-                                 indentOption.HasValue())).Run();                
+                                 indentOption.HasValue())).Run();
             });
         }
 
-        public PackCommand(string path, string output, bool indent)
-        {
-            _path = path;
-            _outputfile = output;
-            _indent = indent;
-        }
-
         public int Run()
-        {            
+        {
             Verifier verifier = new Verifier(_path);
 
             if (!verifier.Verify())
@@ -65,8 +65,8 @@ namespace Microsoft.DevSkim.CLI.Commands
             return (int)ExitCode.NoIssues;
         }
 
-        private string _path;
-        private string _outputfile;
         private bool _indent;
+        private string _outputfile;
+        private string _path;
     }
 }

@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Newtonsoft.Json;
 using System;
@@ -12,24 +11,12 @@ using System.Text.RegularExpressions;
 namespace Microsoft.DevSkim
 {
     /// <summary>
-    /// Storage for rules
+    ///     Storage for rules
     /// </summary>
     public class RuleSet : IEnumerable<Rule>
     {
         /// <summary>
-        /// Delegate for deserialization error handler
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Error arguments</param>
-        public delegate void DeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
-        
-        /// <summary>
-        /// Event raised if deserialization error is encoutered while loading JSON rules
-        /// </summary>
-        public event DeserializationError? OnDeserializationError;
-
-        /// <summary>
-        /// Creates instance of Ruleset
+        ///     Creates instance of Ruleset
         /// </summary>
         public RuleSet()
         {
@@ -37,11 +24,23 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Parse a directory with rule files and loads the rules
+        ///     Delegate for deserialization error handler
         /// </summary>
-        /// <param name="path">Path to rules folder</param>
-        /// <param name="tag">Tag for the rules</param>
-        /// <returns>Ruleset</returns>
+        /// <param name="sender"> Sender object </param>
+        /// <param name="e"> Error arguments </param>
+        public delegate void DeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
+
+        /// <summary>
+        ///     Event raised if deserialization error is encoutered while loading JSON rules
+        /// </summary>
+        public event DeserializationError? OnDeserializationError;
+
+        /// <summary>
+        ///     Parse a directory with rule files and loads the rules
+        /// </summary>
+        /// <param name="path"> Path to rules folder </param>
+        /// <param name="tag"> Tag for the rules </param>
+        /// <returns> Ruleset </returns>
         public static RuleSet FromDirectory(string path, string? tag = null)
         {
             RuleSet result = new RuleSet();
@@ -51,11 +50,11 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Load rules from a file
+        ///     Load rules from a file
         /// </summary>
-        /// <param name="filename">Filename with rules</param>
-        /// <param name="tag">Tag for the rules</param>
-        /// <returns>Ruleset</returns>
+        /// <param name="filename"> Filename with rules </param>
+        /// <param name="tag"> Tag for the rules </param>
+        /// <returns> Ruleset </returns>
         public static RuleSet FromFile(string filename, string? tag = null)
         {
             RuleSet result = new RuleSet();
@@ -65,12 +64,12 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Load rules from JSON string
+        ///     Load rules from JSON string
         /// </summary>
-        /// <param name="jsonstring">JSON string</param>
-        /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
-        /// <param name="tag">Tag for the rules</param>
-        /// <returns>Ruleset</returns>
+        /// <param name="jsonstring"> JSON string </param>
+        /// <param name="sourcename"> Name of the source (file, stream, etc..) </param>
+        /// <param name="tag"> Tag for the rules </param>
+        /// <returns> Ruleset </returns>
         public static RuleSet FromString(string jsonstring, string sourcename = "string", string? tag = null)
         {
             RuleSet result = new RuleSet();
@@ -80,10 +79,10 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Parse a directory with rule files and loads the rules
+        ///     Parse a directory with rule files and loads the rules
         /// </summary>
-        /// <param name="path">Path to rules folder</param>
-        /// <param name="tag">Tag for the rules</param>        
+        /// <param name="path"> Path to rules folder </param>
+        /// <param name="tag"> Tag for the rules </param>
         public void AddDirectory(string path, string? tag = null)
         {
             if (path == null)
@@ -99,10 +98,10 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Load rules from a file
+        ///     Load rules from a file
         /// </summary>
-        /// <param name="filename">Filename with rules</param>
-        /// <param name="tag">Tag for the rules</param>
+        /// <param name="filename"> Filename with rules </param>
+        /// <param name="tag"> Tag for the rules </param>
         public void AddFile(string filename, string? tag = null)
         {
             if (string.IsNullOrEmpty(filename))
@@ -118,11 +117,29 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Load rules from JSON string
+        ///     Adds the elements of the collection to the Ruleset
         /// </summary>
-        /// <param name="jsonstring">JSON string</param>
-        /// <param name="sourcename">Name of the source (file, stream, etc..)</param>
-        /// <param name="tag">Tag for the rules</param>
+        /// <param name="collection"> Collection of rules </param>
+        public void AddRange(IEnumerable<Rule> collection)
+        {
+            _rules.AddRange(collection);
+        }
+
+        /// <summary>
+        ///     Add rule into Ruleset
+        /// </summary>
+        /// <param name="rule"> </param>
+        public void AddRule(Rule rule)
+        {
+            _rules.Add(rule);
+        }
+
+        /// <summary>
+        ///     Load rules from JSON string
+        /// </summary>
+        /// <param name="jsonstring"> JSON string </param>
+        /// <param name="sourcename"> Name of the source (file, stream, etc..) </param>
+        /// <param name="tag"> Tag for the rules </param>
         public void AddString(string jsonstring, string sourcename, string? tag = null)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
@@ -163,28 +180,10 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Add rule into Ruleset
+        ///     Filters rules within Ruleset by languages
         /// </summary>
-        /// <param name="rule"></param>
-        public void AddRule(Rule rule)
-        {
-            _rules.Add(rule);
-        }
-
-        /// <summary>
-        /// Adds the elements of the collection to the Ruleset
-        /// </summary>
-        /// <param name="collection">Collection of rules</param>
-        public void AddRange(IEnumerable<Rule> collection)
-        {
-            _rules.AddRange(collection);
-        }
-
-        /// <summary>
-        /// Filters rules within Ruleset by languages
-        /// </summary>
-        /// <param name="languages">Languages</param>
-        /// <returns>Filtered rules</returns>
+        /// <param name="languages"> Languages </param>
+        /// <returns> Filtered rules </returns>
         public IEnumerable<Rule> ByLanguages(string[] languages)
         {
             // Otherwise preprare the rules for the content type and store it in cache.
@@ -208,9 +207,64 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        /// Method santizes pattern to be a valid regex
+        ///     Count of rules in the ruleset
         /// </summary>
-        /// <param name="pattern"></param>
+        public int Count()
+        {
+            return _rules.Count();
+        }
+
+        /// <summary>
+        ///     Returns an enumerator that iterates through the Ruleset
+        /// </summary>
+        /// <returns> Enumerator </returns>
+        public IEnumerator GetEnumerator()
+        {
+            return this._rules.GetEnumerator();
+        }
+
+        /// <summary>
+        ///     Returns an enumerator that iterates through the Ruleset
+        /// </summary>
+        /// <returns> Enumerator </returns>
+        IEnumerator<Rule> IEnumerable<Rule>.GetEnumerator()
+        {
+            return this._rules.GetEnumerator();
+        }
+
+        private List<Rule> _rules;
+
+        /// <summary>
+        ///     Tests if array contains given elements
+        /// </summary>
+        /// <param name="source"> Source array </param>
+        /// <param name="comps"> List of elements to look for </param>
+        /// <returns> True if source array contains element from comps array </returns>
+        private bool ArrayContains(string[] source, string[] comps)
+        {
+            foreach (string c in comps)
+            {
+                if (source.Contains(c))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Handler for deserialization error
+        /// </summary>
+        /// <param name="sender"> Sender object </param>
+        /// <param name="errorArgs"> Error arguments </param>
+        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
+        {
+            OnDeserializationError?.Invoke(sender, errorArgs);
+        }
+
+        /// <summary>
+        ///     Method santizes pattern to be a valid regex
+        /// </summary>
+        /// <param name="pattern"> </param>
         private void SanitizePatternRegex(SearchPattern pattern)
         {
             if (pattern.PatternType == PatternType.RegexWord)
@@ -229,69 +283,5 @@ namespace Microsoft.DevSkim
                 pattern.Pattern = string.Format(@"{0}", Regex.Escape(pattern.Pattern));
             }
         }
-
-        /// <summary>
-        /// Handler for deserialization error
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="errorArgs">Error arguments</param>
-        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
-        {
-            OnDeserializationError?.Invoke(sender, errorArgs);
-        }
-
-        /// <summary>
-        /// Tests if array contains given elements
-        /// </summary>
-        /// <param name="source">Source array</param>
-        /// <param name="comps">List of elements to look for</param>
-        /// <returns>True if source array contains element from comps array</returns>
-        private bool ArrayContains(string[] source, string[] comps)
-        {
-            foreach (string c in comps)
-            {
-                if (source.Contains(c))
-                    return true;
-            }
-
-            return false;
-        }
-
-        #region IEnumerable interface
-
-        /// <summary>
-        /// Count of rules in the ruleset
-        /// </summary>        
-        public int Count()
-        {
-            return _rules.Count();
-        }
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the Ruleset
-        /// </summary>
-        /// <returns>Enumerator</returns>
-        public IEnumerator GetEnumerator()
-        {
-            return this._rules.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the Ruleset
-        /// </summary>
-        /// <returns>Enumerator</returns>
-        IEnumerator<Rule> IEnumerable<Rule>.GetEnumerator()
-        {
-            return this._rules.GetEnumerator();
-        }
-
-        #endregion
-
-        #region Fields
-
-        private List<Rule> _rules;
-        
-        #endregion
     }
-
 }

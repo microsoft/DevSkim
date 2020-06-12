@@ -1,72 +1,64 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Settings;
 using System;
 using System.ComponentModel.Composition;
-using System.Reflection;
 using System.Diagnostics;
-using Microsoft.VisualStudio.ComponentModelHost;
+using System.Reflection;
 
 namespace Microsoft.DevSkim.VSExtension
 {
-    public class SettingsEntity : Attribute
-    {
-        public string Name { get; set; }
-    }
-
     /// <summary>
-    /// Store for DevSkim settings.
-    /// Takes care of persistance between Visual Studio restarts
+    ///     Store for DevSkim settings. Takes care of persistance between Visual Studio restarts
     /// </summary>
     [SettingsEntity(Name = "Microsoft.DevSkim")]
     [Export(typeof(Settings))]
     public class Settings
     {
-
-        [SettingsEntity(Name = "SuppressDays")]
-        public int SuppressDays { get; set; } = 30;
-
-        [SettingsEntity(Name = "UseDefaultRules")]
-        public bool UseDefaultRules { get; set; } = true;
-
-        [SettingsEntity(Name = "UseCustomRules")]
-        public bool UseCustomRules { get; set; } = false;
-
-        [SettingsEntity(Name = "CustomRulesPath")]
-        public string CustomRulesPath { get; set; } = "";
-
-        [SettingsEntity(Name = "EnableImportantRules")]
-        public bool EnableImportantRules { get; set; } = true;
-
-        [SettingsEntity(Name = "EnableModerateRules")]
-        public bool EnableModerateRules { get; set; } = true;
-
-        [SettingsEntity(Name = "EnableBestPracticeRules")]
-        public bool EnableBestPracticeRules { get; set; } = true;
-
-        [SettingsEntity(Name = "EnableManualReviewRules")]
-        public bool EnableManualReviewRules { get; set; } = false;
-
-        [SettingsEntity(Name = "Insert DevSkim suppression messages on the line before the issue.")]
-        public bool UsePreviousLineSuppression { get; set; } = false;
-
-        [SettingsEntity(Name = "Use Block comment style suppression messages.")]
-        public bool UseBlockSuppression { get; set; } = false;
-
         [ImportingConstructor]
         public Settings(SVsServiceProvider vsServiceProvider)
         {
             var shellSettingsManager = new ShellSettingsManager(vsServiceProvider);
-            writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);            
+            writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
         }
 
+        [SettingsEntity(Name = "CustomRulesPath")]
+        public string CustomRulesPath { get; set; } = "";
+
+        [SettingsEntity(Name = "EnableBestPracticeRules")]
+        public bool EnableBestPracticeRules { get; set; } = true;
+
+        [SettingsEntity(Name = "EnableImportantRules")]
+        public bool EnableImportantRules { get; set; } = true;
+
+        [SettingsEntity(Name = "EnableManualReviewRules")]
+        public bool EnableManualReviewRules { get; set; } = false;
+
+        [SettingsEntity(Name = "EnableModerateRules")]
+        public bool EnableModerateRules { get; set; } = true;
+
+        [SettingsEntity(Name = "SuppressDays")]
+        public int SuppressDays { get; set; } = 30;
+
+        [SettingsEntity(Name = "Use Block comment style suppression messages.")]
+        public bool UseBlockSuppression { get; set; } = false;
+
+        [SettingsEntity(Name = "UseCustomRules")]
+        public bool UseCustomRules { get; set; } = false;
+
+        [SettingsEntity(Name = "UseDefaultRules")]
+        public bool UseDefaultRules { get; set; } = true;
+
+        [SettingsEntity(Name = "Insert DevSkim suppression messages on the line before the issue.")]
+        public bool UsePreviousLineSuppression { get; set; } = false;
+
         /// <summary>
-        /// Get instnace of settings
+        ///     Get instnace of settings
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public static Settings GetSettings()
         {
             if (_instance == null)
@@ -78,11 +70,11 @@ namespace Microsoft.DevSkim.VSExtension
             _instance.Load();
 
             return _instance;
-        }        
+        }
 
         /// <summary>
-        /// Load settings from store. Generally there is no need to call
-        /// this method. Settings are autoloaded in GetSettings method
+        ///     Load settings from store. Generally there is no need to call this method. Settings are
+        ///     autoloaded in GetSettings method
         /// </summary>
         public void Load()
         {
@@ -103,8 +95,8 @@ namespace Microsoft.DevSkim.VSExtension
                         string val = writableSettingsStore.GetString(collectionName, entity.Name, property.GetValue(this).ToString());
                         object o = Convert.ChangeType(val, property.PropertyType);
                         property.SetValue(this, o);
-                     }
-                }                
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -113,12 +105,12 @@ namespace Microsoft.DevSkim.VSExtension
         }
 
         /// <summary>
-        /// Save settings to persistant store
+        ///     Save settings to persistant store
         /// </summary>
         public void Save()
         {
-             try
-             {
+            try
+            {
                 Type type = typeof(Settings);
 
                 // Get name of the persistant store from the class attribute
@@ -139,15 +131,20 @@ namespace Microsoft.DevSkim.VSExtension
 
                         writableSettingsStore.SetString(collectionName, entity.Name, property.GetValue(this).ToString());
                     }
-                } 
-             }
-             catch (Exception ex)
-             {
-                 Debug.Fail(ex.Message);
-             }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Fail(ex.Message);
+            }
         }
 
         private static Settings _instance;
-        readonly WritableSettingsStore writableSettingsStore;
+        private readonly WritableSettingsStore writableSettingsStore;
+    }
+
+    public class SettingsEntity : Attribute
+    {
+        public string Name { get; set; }
     }
 }

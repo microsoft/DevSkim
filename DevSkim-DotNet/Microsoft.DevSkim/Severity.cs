@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Newtonsoft.Json;
 using System;
@@ -7,57 +6,45 @@ using System;
 namespace Microsoft.DevSkim
 {
     /// <summary>
-    /// Issue severity
+    ///     Issue severity
     /// </summary>
     [Flags]
-    public enum Severity 
-    {        
+    public enum Severity
+    {
         /// <summary>
-        /// Critial issues
+        ///     Critial issues
         /// </summary>
         Critical = 1,
+
         /// <summary>
-        /// Important issues
+        ///     Important issues
         /// </summary>
         Important = 2,
+
         /// <summary>
-        /// Moderate issues
+        ///     Moderate issues
         /// </summary>
         Moderate = 4,
+
         /// <summary>
-        /// Best Practice 
+        ///     Best Practice
         /// </summary>
         BestPractice = 8,
+
         /// <summary>
-        /// Issues that require manual review
+        ///     Issues that require manual review
         /// </summary>
         ManualReview = 16
     }
 
     /// <summary>
-    /// Json Converter for Severity
+    ///     Json Converter for Severity
     /// </summary>
-    class SeverityConverter : JsonConverter
+    internal class SeverityConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        public override bool CanConvert(Type objectType)
         {
-            if (value is Severity svr)
-            {
-                string svrstr = svr.ToString().ToLower();
-
-                switch (svr)
-                {
-                    case Severity.BestPractice:
-                        svrstr = "best-practice";
-                        break;
-                    case Severity.ManualReview:
-                        svrstr = "manual-review";
-                        break;
-                }
-
-                writer.WriteValue(svrstr);
-            }
-            
+            return objectType == typeof(string);
         }
 
         public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
@@ -70,9 +57,25 @@ namespace Microsoft.DevSkim
             return null;
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            return objectType == typeof(string);
+            if (value is Severity svr)
+            {
+                string svrstr = svr.ToString().ToLower();
+
+                switch (svr)
+                {
+                    case Severity.BestPractice:
+                        svrstr = "best-practice";
+                        break;
+
+                    case Severity.ManualReview:
+                        svrstr = "manual-review";
+                        break;
+                }
+
+                writer.WriteValue(svrstr);
+            }
         }
     }
 }

@@ -16,7 +16,6 @@
     "languages": [ "python" ]
   },
 
-
   {
     "vs_type": "JavaScript",
     "languages": [ "javascript", "javascriptreact" ]
@@ -29,11 +28,10 @@
     "vs_type": "CoffeeScript",
     "languages": [ "coffeescript" ]
   },
-  
 
   {
     "vs_type": "Java",
-    "languages": ["java" ]
+    "languages": [ "java" ]
   },
   {
     "vs_type": "code++.Objective-C",
@@ -43,7 +41,6 @@
     "vs_type": "code++.Swift",
     "languages": [ "swift" ]
   },
-
 
   {
     "vs_type": "code++.Perl",
@@ -55,7 +52,7 @@
   },
   {
     "vs_type": "code++.Ruby",
-    "languages": ["ruby" ]
+    "languages": [ "ruby" ]
   },
   {
     "vs_type": "code++.Lua",
@@ -102,7 +99,6 @@
     "languages": [ "php" ]
   },
 
-
   {
     "vs_type": "PowerShell",
     "languages": [ "powershell" ]
@@ -119,7 +115,6 @@
     "vs_type": "code++.Shell Script (Bash)",
     "languages": [ "shellscript" ]
   },
-
 
   {
     "vs_type": "SQL Server Tools",

@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Text;
 using System.Text.RegularExpressions;
@@ -8,11 +7,12 @@ namespace Microsoft.DevSkim.VSExtension
 {
     public class DevSkimError
     {
-        public readonly SnapshotSpan Span;
-        public readonly Rule Rule;
         public readonly bool Actionable;
+        public readonly Rule Rule;
+        public readonly SnapshotSpan Span;
 
-        // This is used by SecurityErrorsSnapshot.TranslateTo() to map this error to the corresponding error in the next snapshot.
+        // This is used by SecurityErrorsSnapshot.TranslateTo() to map this error to the corresponding error
+        // in the next snapshot.
         public int NextIndex = -1;
 
         public DevSkimError(SnapshotSpan span, Rule rule, bool actionable)
@@ -20,38 +20,6 @@ namespace Microsoft.DevSkim.VSExtension
             this.Span = span;
             this.Rule = rule;
             this.Actionable = actionable;
-        }
-
-        public ITrackingSpan ErrorTrackingSpan
-        {
-            get
-            {
-                return Span.Snapshot.CreateTrackingSpan(Span, SpanTrackingMode.EdgeInclusive);
-            }
-        }
-
-        public ITrackingSpan LineTrackingSpan
-        {
-            get
-            {
-                return Span.Snapshot.CreateTrackingSpan(Span.Snapshot.GetLineFromPosition(Span.Start).Extent, SpanTrackingMode.EdgeInclusive);
-            }
-        }
-
-        public ITextSnapshot Snapshot
-        {
-            get
-            {
-                return this.Span.Snapshot;   
-            }
-        }
-
-        public string LineText 
-        { 
-            get
-            {
-                return LineTrackingSpan.GetText(Snapshot);
-            }
         }
 
         public string ErrorText
@@ -62,15 +30,16 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
-        public int LineNumber
+        public ITrackingSpan ErrorTrackingSpan
         {
             get
             {
-                return Snapshot.GetLineNumberFromPosition(Span.Start);
+                return Span.Snapshot.CreateTrackingSpan(Span, SpanTrackingMode.EdgeInclusive);
             }
         }
 
-        public ITrackingSpan LineAndSuppressionCommentTrackingSpan { 
+        public ITrackingSpan LineAndSuppressionCommentTrackingSpan
+        {
             get
             {
                 var reg = new Regex(Suppression.pattern);
@@ -121,6 +90,38 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
+        public int LineNumber
+        {
+            get
+            {
+                return Snapshot.GetLineNumberFromPosition(Span.Start);
+            }
+        }
+
+        public string LineText
+        {
+            get
+            {
+                return LineTrackingSpan.GetText(Snapshot);
+            }
+        }
+
+        public ITrackingSpan LineTrackingSpan
+        {
+            get
+            {
+                return Span.Snapshot.CreateTrackingSpan(Span.Snapshot.GetLineFromPosition(Span.Start).Extent, SpanTrackingMode.EdgeInclusive);
+            }
+        }
+
+        public ITextSnapshot Snapshot
+        {
+            get
+            {
+                return this.Span.Snapshot;
+            }
+        }
+
         public static DevSkimError Clone(DevSkimError error)
         {
             return new DevSkimError(error.Span, error.Rule, error.Actionable);
@@ -130,8 +131,9 @@ namespace Microsoft.DevSkim.VSExtension
         {
             var newSpan = error.Span.TranslateTo(newSnapshot, SpanTrackingMode.EdgeExclusive);
 
-            // We want to only translate the error if the length of the error span did not change (if it did change, it would imply that
-            // there was some text edit inside the error and, therefore, that the error is no longer valid).
+            // We want to only translate the error if the length of the error span did not change (if it did
+            // change, it would imply that there was some text edit inside the error and, therefore, that the
+            // error is no longer valid).
             return (newSpan.Length == error.Span.Length)
                    ? new DevSkimError(newSpan, error.Rule, error.Actionable)
                    : null;

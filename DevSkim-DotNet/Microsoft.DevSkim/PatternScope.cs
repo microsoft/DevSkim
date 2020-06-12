@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Newtonsoft.Json;
 using System;
@@ -16,19 +15,13 @@ namespace Microsoft.DevSkim
     }
 
     /// <summary>
-    /// Json converter for Pattern Type
+    ///     Json converter for Pattern Type
     /// </summary>
-    class PatternScopeConverter : JsonConverter
+    internal class PatternScopeConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        public override bool CanConvert(Type objectType)
         {
-            if (value is PatternScope svr)
-            {
-                string svrstr = svr.ToString().ToLower();
-
-                writer.WriteValue(svrstr);
-                writer.WriteValue(svr.ToString().ToLower());
-            }
+            return objectType == typeof(string);
         }
 
         public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
@@ -42,9 +35,15 @@ namespace Microsoft.DevSkim
             return null;
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            return objectType == typeof(string);
+            if (value is PatternScope svr)
+            {
+                string svrstr = svr.ToString().ToLower();
+
+                writer.WriteValue(svrstr);
+                writer.WriteValue(svr.ToString().ToLower());
+            }
         }
     }
 }

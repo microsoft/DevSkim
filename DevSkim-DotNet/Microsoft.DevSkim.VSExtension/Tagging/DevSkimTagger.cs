@@ -1,5 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved.
-// Licensed under the MIT License.
+﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -8,10 +7,29 @@ using System.Collections.Generic;
 
 namespace Microsoft.DevSkim.VSExtension
 {
-    class DevSkimTagger : ITagger<DevSkimTag>, IDisposable
+    internal class DevSkimTagger : ITagger<DevSkimTag>, IDisposable
     {
-        private readonly SkimChecker _skimChecker;
-        private DevSkimErrorsSnapshot _securityErrors;
+        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
+
+        public void Dispose()
+        {
+            // Called when the tagger is no longer needed (generally when the ITextView is closed).
+            _skimChecker.RemoveTagger(this);
+        }
+
+        public IEnumerable<ITagSpan<DevSkimTag>> GetTags(NormalizedSnapshotSpanCollection spans)
+        {
+            if (_securityErrors != null)
+            {
+                foreach (var error in _securityErrors.Errors)
+                {
+                    if (spans.IntersectsWith(error.Span))
+                    {
+                        yield return new TagSpan<DevSkimTag>(error.Span, new DevSkimTag(error.Rule, error.Actionable));
+                    }
+                }
+            }
+        }
 
         internal DevSkimTagger(SkimChecker skimhecker)
         {
@@ -28,7 +46,8 @@ namespace Microsoft.DevSkim.VSExtension
             var h = this.TagsChanged;
             if (h != null)
             {
-                // Raise a single tags changed event over the span that could have been affected by the change in the errors.
+                // Raise a single tags changed event over the span that could have been affected by the change
+                // in the errors.
                 int start = int.MaxValue;
                 int end = int.MinValue;
 
@@ -51,26 +70,7 @@ namespace Microsoft.DevSkim.VSExtension
             }
         }
 
-        public void Dispose()
-        {
-            // Called when the tagger is no longer needed (generally when the ITextView is closed).
-            _skimChecker.RemoveTagger(this);
-        }
-
-        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
-
-        public IEnumerable<ITagSpan<DevSkimTag>> GetTags(NormalizedSnapshotSpanCollection spans)
-        {
-            if (_securityErrors != null)
-            {
-                foreach (var error in _securityErrors.Errors)
-                {
-                    if (spans.IntersectsWith(error.Span))
-                    {
-                        yield return new TagSpan<DevSkimTag>(error.Span, new DevSkimTag(error.Rule, error.Actionable));
-                    }
-                }
-            }
-        }
+        private readonly SkimChecker _skimChecker;
+        private DevSkimErrorsSnapshot _securityErrors;
     }
 }
