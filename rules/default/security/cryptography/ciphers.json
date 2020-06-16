@@ -33,7 +33,8 @@
             "DS106864"
         ],
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Symmetric.PotentiallyWeakAlgorithm"
@@ -114,7 +115,8 @@
         "description": "The DES cipher was found, which is widely considered to be broken.",
         "recommendation": "Use AES instead.",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
@@ -237,7 +239,8 @@
         "description": "The RC2 cipher was found, which is considered to be broken.",
         "recommendation": "Use AES instead.",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Cryptography.Symmetric.WeakOrBrokenAlgorithm.RC2"

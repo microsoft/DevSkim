@@ -113,7 +113,8 @@
         "description": "Deserializing attacker-supplied data using Newtonsoft.JSON with TypeNameHandling can result in code execution.",
         "recommendation": "Use TypeNameHandling.None",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "fsharp"
         ],
         "tags": [
             "Deserialization"
