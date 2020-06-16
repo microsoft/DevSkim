@@ -10,7 +10,7 @@ before opening an issue.
 
 ## Security Issues
 
-If you discover a security vulnerability in this project, please see [SECURITY.md](https://github.com/microsoft/DevSkim/blob/master/SECURITY.md) for information on how to report it privately.
+If you discover a security vulnerability in this project, please see [SECURITY.md](https://github.com/microsoft/DevSkim/blob/main/SECURITY.md) for information on how to report it privately.
 
 ## Microsoft Support Policy
 

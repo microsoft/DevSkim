@@ -91,7 +91,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifRule.Id = devskimRule.Id;
                 sarifRule.Name = devskimRule.Name;
                 sarifRule.FullDescription = devskimRule.Description;
-                sarifRule.HelpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/master/guidance/" + devskimRule.RuleInfo);
+                sarifRule.HelpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo);
 
                 switch (devskimRule.Severity)
                 {

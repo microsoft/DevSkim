@@ -25,7 +25,7 @@
 * Fixed analysis exception that would trigger on certain workspace changes
 
 ## Version 0.1.3
-* Added setting devskim.ignoreFiles to exclude specific files and directories from analysis.  The defaults are to ignore "out/\*","bin/\*", "node_modules/\*", ".vscode/\*","yarn.lock", "logs/\*", "\*.log" however the defaults can be overridden in the usersettings.  If there are other files that you think should be in the defaults please either open an issue on our github repo or edit [package.json](https://github.com/Microsoft/DevSkim-VSCode-Plugin/blob/master/client/package.json) and submit a PR  
+* Added setting devskim.ignoreFiles to exclude specific files and directories from analysis.  The defaults are to ignore "out/\*","bin/\*", "node_modules/\*", ".vscode/\*","yarn.lock", "logs/\*", "\*.log" however the defaults can be overridden in the usersettings.  If there are other files that you think should be in the defaults please either open an issue on our github repo or edit [package.json](https://github.com/Microsoft/DevSkim-VSCode-Plugin/blob/main/client/package.json) and submit a PR  
 * Added setting devskim.ignoreRulesList to allow the user to disable the processing of certain rules.  If a rule is being disabled because it is incorrectly flagging problems, please also open an issue on our Github repo so we can try and tune the rule better.  If you ran into problems other people are likely also hitting issues
 * new rule to detect plaintext HTTP usage and prompt for HTTPS
 

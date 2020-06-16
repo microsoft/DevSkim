@@ -113,7 +113,7 @@ export class DevSkimWorkerSettings
         return {
             enableBestPracticeRules: false,
             enableManualReviewRules: false,
-            guidanceBaseURL: "https://github.com/Microsoft/DevSkim/blob/master/guidance/",
+            guidanceBaseURL: "https://github.com/Microsoft/DevSkim/blob/main/guidance/",
             ignoreFiles: [
                 "\\.(exe|dll|so|dylib|bin|so\\..*)$",
                 "\\.(png|jpg|jpeg|gif|psd|ico|mp3|mpeg|bmp)$",

@@ -125,7 +125,7 @@
         },
         "devskim.guidanceBaseURL": {
           "type": "string",
-          "default": "https://github.com/Microsoft/DevSkim/blob/master/guidance/",
+          "default": "https://github.com/Microsoft/DevSkim/blob/main/guidance/",
           "description": "Each finding has a guidance file that describes the issue and solutions in more detail.  By default, those files live on the DevSkim github repo however, with this setting, organizations can clone and customize that repo, and specify their own base URL for the guidance."
         },
         "devskim.ignoreFiles": {

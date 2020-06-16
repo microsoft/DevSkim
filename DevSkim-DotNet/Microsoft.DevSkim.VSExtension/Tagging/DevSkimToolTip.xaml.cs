@@ -41,7 +41,7 @@ namespace Microsoft.DevSkim.VSExtension
             this.Url.NavigateUri = new Uri(url_preffix + rule.RuleInfo);
         }
 
-        private const string url_preffix = "https://github.com/Microsoft/DevSkim/blob/master/guidance/";
+        private const string url_preffix = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
         private Rule _rule;
 
         private void Url_RequestNavigate(object sender, RequestNavigateEventArgs e)
