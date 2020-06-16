@@ -7,7 +7,7 @@ schedules:
     displayName: Daily SDL Build (if changed)
     branches:
       include:
-      - master
+      - main
 
 stages:
 - stage: Publish
