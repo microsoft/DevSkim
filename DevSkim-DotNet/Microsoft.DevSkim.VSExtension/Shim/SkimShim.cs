@@ -1,6 +1,5 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Microsoft.DevSkim.VSExtension.Shim;
 using Microsoft.DevSkim.VSExtension.Utils;
 using System;
 using System.Collections.Generic;

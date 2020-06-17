@@ -40,6 +40,8 @@ namespace Microsoft.DevSkim.VSExtension
 
             optionsDialogControl.UsePreviousLineSuppression.IsChecked = _settings.UsePreviousLineSuppression;
             optionsDialogControl.UseBlockSuppression.IsChecked = _settings.UseBlockSuppression;
+
+            optionsDialogControl.UseGitIgnore.IsChecked = _settings.UseGitIgnore;
         }
 
         protected override void OnApply(PageApplyEventArgs args)
@@ -83,6 +85,8 @@ namespace Microsoft.DevSkim.VSExtension
 
             _settings.UsePreviousLineSuppression = (bool)optionsDialogControl.UsePreviousLineSuppression.IsChecked;
             _settings.UseBlockSuppression = (bool)optionsDialogControl.UseBlockSuppression.IsChecked;
+
+            _settings.UseGitIgnore = (bool)optionsDialogControl.UseGitIgnore.IsChecked;
 
             int val;
             if (int.TryParse(optionsDialogControl.SuppressDays.Text, out val) && val > 0)
