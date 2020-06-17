@@ -53,7 +53,7 @@ namespace Microsoft.DevSkim.VSExtension
         public bool UseDefaultRules { get; set; } = true;
 
         [SettingsEntity(Name = "Ignore files listed in .gitignore files.")]
-        public bool UseGitIgnore { get; set; } = false;
+        public bool UseGitIgnore { get; set; } = true;
 
         [SettingsEntity(Name = "Insert DevSkim suppression messages on the line before the issue.")]
         public bool UsePreviousLineSuppression { get; set; } = false;
