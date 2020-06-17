@@ -1,5 +1,8 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.DevSkim.VSExtension.Shim;
+using Microsoft.DevSkim.VSExtension.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,11 +30,20 @@ namespace Microsoft.DevSkim.VSExtension
         /// <returns> List of actionable and non-actionable issues </returns>
         public static Issue[] Analyze(string text, string contentType, string fileName = "")
         {
+            Settings set = Settings.GetSettings();
+            if (set.UseGitIgnore)
+            {
+                if (helper.IsIgnored(fileName))
+                {
+                    return Array.Empty<Issue>();
+                }
+            }
+
             return _instance.processor.Analyze(text, _instance.GetLanguageList(contentType, fileName));
         }
 
         /// <summary>
-        ///     Reapllys settings
+        ///     Reapplys settings
         /// </summary>
         public static void ApplySettings()
         {
@@ -53,7 +65,7 @@ namespace Microsoft.DevSkim.VSExtension
         }
 
         private static SkimShim _instance = new SkimShim();
-
+        private static GitHelper helper = new GitHelper();
         private RuleProcessor processor;
 
         private RuleSet ruleset;
