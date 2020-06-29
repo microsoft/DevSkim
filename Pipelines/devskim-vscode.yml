@@ -17,6 +17,7 @@ pr:
     - main
   paths:
     include:
+    - Pipelines
     - DevSkim-VSCode-Plugin/*
 
 stages:

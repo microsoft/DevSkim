@@ -18,6 +18,7 @@ pr:
     - main
   paths:
     include:
+    - Pipelines
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
     - rules/*
