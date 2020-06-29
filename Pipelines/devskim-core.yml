@@ -51,13 +51,13 @@ stages:
       jobName: 'pack_lib'
       dotnetVersion: '3.1.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
-      projectName: 'DevSkim'
+      projectName: 'DevSkim_Lib'
   - template: templates/nuget-build-job.yml
     parameters:
       jobName: 'pack_cli'
       dotnetVersion: '3.1.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
-      projectName: 'DevSkim'
+      projectName: 'DevSkim_CLI'
 
 - stage: Release
   dependsOn:
