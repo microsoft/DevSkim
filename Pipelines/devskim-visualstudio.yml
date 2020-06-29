@@ -23,6 +23,12 @@ pr:
     - rules/*
 
 stages:
+- stage: SDL
+  jobs:
+  - template: templates/sdl-job.yml
+    parameters:
+      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
+
 - stage: Build
   jobs:
   - job: build_extension
@@ -71,12 +77,14 @@ stages:
         ArtifactName: 'Unsigned_Extension'
         publishLocation: 'Container'
 
-
+- stage: Release
+  dependsOn:
+  - SDL
+  - Build
+  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+  jobs:
   - job: sign_hash_release
     displayName: Code Sign, Generate Hashes, Publish Public Release
-    dependsOn:
-    - build_extension
-    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI', 'Manual'))
     pool:
       vmImage: 'windows-latest'
     steps:
