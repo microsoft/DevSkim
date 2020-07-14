@@ -58,9 +58,8 @@ namespace Microsoft.DevSkim.CLI.Writers
             Result resultItem = new Result();
             MapRuleToResult(issue.Issue.Rule, ref resultItem);
             AddRuleToSarifRule(issue.Issue.Rule);
-
             CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location();
-            loc.AnalysisTarget = new PhysicalLocation(new Uri(issue.Filename),
+            loc.AnalysisTarget = new PhysicalLocation(new Uri(Path.GetFullPath(issue.Filename)),
                                                       null,
                                                       new Region(issue.Issue.StartLocation.Line,
                                                                  issue.Issue.StartLocation.Column,
@@ -128,7 +127,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                                                      ));
 
                     List<FileChange> changes = new List<FileChange>();
-                    changes.Add(new FileChange(new Uri(issue.Filename), null, replacements));
+                    changes.Add(new FileChange(new Uri(Path.GetFullPath(issue.Filename)), null, replacements));
 
                     fixes.Add(new Fix(fix.Name, changes));
                 }
