@@ -12,6 +12,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -51,7 +52,7 @@
                 <CheckBox x:Name="EnableImportantRules" Content="Important"  Grid.Row="0" Grid.Column="0" Margin="10" HorizontalAlignment="Left" />
                 <CheckBox x:Name="EnableModerateRules" Content="Moderate"  Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Left" />
 
-                <CheckBox x:Name="EnableBestPracticeRules" Content="Best Practice"  Grid.Row="2" Grid.Column="0" Margin="10" HorizontalAlignment="Left" />
+                <CheckBox x:Name="EnableBestPracticeRules" Content="Best Practice"  Grid.Row="1" Grid.Column="1" Margin="10" HorizontalAlignment="Left" />
                 <CheckBox x:Name="EnableManualReviewRules" Content="Manual Review"  Grid.Row="0" Grid.Column="1" Margin="10" HorizontalAlignment="Left" />
             </Grid>
         </GroupBox>
@@ -79,6 +80,19 @@
             </Grid>
         </GroupBox>
 
-        <TextBlock Grid.Row="3" Text="Changes require solution to be closed!" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+        <GroupBox x:Name="groupBox4" Header="Ignore Files" HorizontalAlignment="Stretch"  VerticalAlignment="Top" Grid.Row="4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <CheckBox x:Name="UseGitIgnore" Content="Ignore files listed in .gitignore files."  Grid.Row="0" Margin="10" HorizontalAlignment="Left" />
+            </Grid>
+        </GroupBox>
+
+        <TextBlock Grid.Row="5" Text="Changes require solution to be closed!" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
     </Grid>
 </UserControl>
