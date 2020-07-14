@@ -1,0 +1,23 @@
+name: 'DevSkim'
+description: 'Run DevSkim Code Analysis'
+inputs:
+  directory-to-scan:
+    description: 'The directory to scan. Repository root used by default.'
+    required: false
+    default: 'GITHUB_WORKSPACE'
+  should-scan-archives:
+    description: 'Optionally scan the contents of archives.'
+    required: false
+    default: false
+  output-filename:
+    description: 'The filename for the output in the repository root.'
+    required: false
+    default: "devskim-results.sarif"
+outputs:
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args: 
+    - ${{ inputs.directory-to-scan }}
+    - ${{ inputs.should-scan-archives }}
+    - ${{ inputs.output-filename }}
