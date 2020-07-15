@@ -44,6 +44,8 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             if (OutputPath is string)
             {
+                TextWriter.Close();
+                File.Delete(OutputPath);
                 sarifLog.Save(OutputPath);
             }
             else
@@ -57,10 +59,10 @@ namespace Microsoft.DevSkim.CLI.Writers
                 {
                     TextWriter.WriteLine(sr.ReadLine());
                 }
-            }
 
-            TextWriter.Flush();
-            TextWriter.Close();
+                TextWriter.Flush();
+                TextWriter.Close();
+            }
         }
 
         public override void WriteIssue(IssueRecord issue)
