@@ -9,7 +9,7 @@ namespace Microsoft.DevSkim.CLI.Writers
     {
 #nullable disable
 
-        public StreamWriter TextWriter { get; set; }
+        public TextWriter TextWriter { get; set; }
 #nullable restore
 
         public abstract void FlushAndClose();

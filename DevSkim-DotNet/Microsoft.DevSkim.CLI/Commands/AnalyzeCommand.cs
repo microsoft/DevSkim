@@ -169,7 +169,8 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? string.IsNullOrEmpty(_outputFile) ? "_dummy" : "text" : _fileFormat,
                                                            _outputFormat,
-                                                           string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile));
+                                                           (string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile)),
+                                                           _outputFile);
 
             int filesAnalyzed = 0;
             int filesSkipped = 0;
@@ -246,7 +247,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                 Filename: fileEntry.FullPath,
                                 Filesize: fileText.Length,
                                 TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
-                                Issue: issue);
+                                Issue: issue,
+                                Language: language);
 
                             outputWriter.WriteIssue(record);
                         }

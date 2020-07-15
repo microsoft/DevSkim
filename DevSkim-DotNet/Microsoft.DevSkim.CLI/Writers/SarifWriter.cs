@@ -1,18 +1,21 @@
 ﻿using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.CodeAnalysis.Sarif.Readers;
 using Newtonsoft.Json;
+using NLog.LayoutRenderers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Microsoft.DevSkim.CLI.Writers
 {
     public class SarifWriter : Writer
     {
-        public SarifWriter(StreamWriter writer)
+        public SarifWriter(TextWriter writer, string? outputPath)
         {
             TextWriter = writer;
+            OutputPath = outputPath;
         }
 
         public override void FlushAndClose()
@@ -24,6 +27,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             if (Assembly.GetEntryAssembly() is Assembly entryAssembly)
             {
+                runItem.Tool.Driver = new ToolComponent();
                 runItem.Tool.Driver.Name = entryAssembly.GetName().Name;
 
                 runItem.Tool.Driver.FullName = entryAssembly.GetCustomAttribute<AssemblyProductAttribute>()?
@@ -31,13 +35,29 @@ namespace Microsoft.DevSkim.CLI.Writers
 
                 runItem.Tool.Driver.Version = entryAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                                                     .InformationalVersion;
-
+                runItem.Tool.Driver.Rules = _rules.Select(x => x.Value).ToList();
                 runItem.Results = _results;
             }
 
             sarifLog.Runs = new List<Run>();
             sarifLog.Runs.Add(runItem);
-            sarifLog.Save(TextWriter);
+
+            if (OutputPath is string)
+            {
+                sarifLog.Save(OutputPath);
+            }
+            else
+            {
+                //Use the text writer
+                var path = Path.GetTempFileName();
+                sarifLog.Save(path);
+
+                var sr = new StreamReader(path);
+                while (!sr.EndOfStream)
+                {
+                    TextWriter.WriteLine(sr.ReadLine());
+                }
+            }
 
             TextWriter.Flush();
             TextWriter.Close();
@@ -65,7 +85,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                                                                     new MultiformatMessageString(issue.TextSample, $"`{issue.TextSample}`", null), // 
                                                                     null), // Properties
                                                                  null, // Message?
-                                                                 "codelanguagegoeshere", // Codelanguage
+                                                                 issue.Language, // Codelanguage
                                                                  null), // Properties
                                                        null, // Context Region
                                                        null); // Properties
@@ -81,6 +101,8 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         private Dictionary<string, ReportingDescriptor> _rules = new Dictionary<string, ReportingDescriptor>();
 
+        public string? OutputPath { get; }
+
         private void AddRuleToSarifRule(Rule devskimRule)
         {
             if (!_rules.ContainsKey(devskimRule.Id))
@@ -90,7 +112,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifRule.Name = devskimRule.Name;
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.HelpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo);
-                
+                sarifRule.DefaultConfiguration = new ReportingConfiguration() { Enabled = true };
                 switch (devskimRule.Severity)
                 {
                     case Severity.Critical:
