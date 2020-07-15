@@ -20,7 +20,7 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - name: DevSkim
-      uses: microsoft/DevSkim-Action@v0.9
+      uses: microsoft/DevSkim-Action@v0.9.1
     - uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: devskim-results.sarif
