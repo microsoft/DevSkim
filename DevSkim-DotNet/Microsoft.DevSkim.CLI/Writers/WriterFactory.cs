@@ -7,7 +7,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public class WriterFactory
     {
-        public static Writer GetWriter(string writerName, string format, TextWriter output)
+        public static Writer GetWriter(string writerName, string format, TextWriter output, string? outputPath)
         {
             if (string.IsNullOrEmpty(writerName))
                 writerName = "_dummy";
@@ -24,7 +24,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                     return new SimpleTextWriter(format, output);
 
                 case "sarif":
-                    return new SarifWriter(output);
+                    return new SarifWriter(output, outputPath);
 
                 default:
                     throw new Exception("wrong output");
