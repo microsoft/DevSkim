@@ -262,7 +262,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Console.Error.WriteLine("Files analyzed: {0}", filesAnalyzed);
             Console.Error.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues;
+            return (int)ExitCode.NoIssues;
         }
 
         private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
