@@ -186,7 +186,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.ExtractFile(x) : new FileEntry[] { new FileEntry(x, new FileStream(x, FileMode.Open, FileAccess.ReadWrite), null, true) });
+                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.ExtractFile(x) : FilenameToFileEntryArray(x));
             }
 
             // Iterate through all files
@@ -263,6 +263,17 @@ namespace Microsoft.DevSkim.CLI.Commands
             Console.Error.WriteLine("Files skipped: {0}", filesSkipped);
 
             return issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues;
+        }
+
+        private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
+        {
+            try
+            {
+                var fs = new FileStream(x, FileMode.Open, FileAccess.ReadWrite);
+                return new FileEntry[] { new FileEntry(x, fs, null, true) };
+            }
+            catch (Exception) { }
+            return Array.Empty<FileEntry>();
         }
 
         private readonly bool _crawlArchives;
