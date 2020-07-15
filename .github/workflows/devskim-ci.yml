@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: DevSkim
-      uses: microsoft/DevSkim-Action
+      uses: microsoft/DevSkim-Action@v0.9.2
     - uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: devskim-results.sarif
