@@ -70,25 +70,26 @@ namespace Microsoft.DevSkim.CLI.Writers
             AddRuleToSarifRule(issue.Issue.Rule);
 
             CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location();
-            loc.PhysicalLocation = new PhysicalLocation(new Address() { FullyQualifiedName = Path.GetFullPath(issue.Filename) },
-                                                      null,
-                                                      new Region(issue.Issue.StartLocation.Line,
-                                                                 issue.Issue.StartLocation.Column,
-                                                                 issue.Issue.EndLocation.Line,
-                                                                 issue.Issue.EndLocation.Column,
-                                                                 issue.Issue.Boundary.Index,
-                                                                 issue.Issue.Boundary.Length,
-                                                                 0, // Byte Offset
-                                                                 0, // Byte Length
-                                                                 new ArtifactContent(issue.TextSample,
-                                                                    null, // "binary"?
-                                                                    new MultiformatMessageString(issue.TextSample, $"`{issue.TextSample}`", null), // 
-                                                                    null), // Properties
-                                                                 null, // Message?
-                                                                 issue.Language, // Codelanguage
-                                                                 null), // Properties
-                                                       null, // Context Region
-                                                       null); // Properties
+            loc.PhysicalLocation = new PhysicalLocation()
+            {
+                Address = new Address() { FullyQualifiedName = Path.GetFullPath(issue.Filename) },
+                Region = new Region()
+                {
+                    StartLine = issue.Issue.StartLocation.Line,
+                    StartColumn = issue.Issue.StartLocation.Column,
+                    EndLine = issue.Issue.EndLocation.Line,
+                    EndColumn = issue.Issue.EndLocation.Column,
+                    CharOffset = issue.Issue.Boundary.Index,
+                    CharLength = issue.Issue.Boundary.Length,
+                    Snippet = new ArtifactContent()
+                    {
+                        Text = issue.TextSample,
+                        Rendered = new MultiformatMessageString(issue.TextSample, $"`{issue.TextSample}`", null),
+                    },
+                    SourceLanguage = issue.Language
+                }
+            };
+
             if (issue.Issue.Rule.Fixes != null)
                 resultItem.Fixes = GetFixits(issue);
 
