@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Threading;
 
 namespace Microsoft.DevSkim.VSExtension
@@ -141,7 +142,8 @@ namespace Microsoft.DevSkim.VSExtension
                     string text = _textView.TextSnapshot.GetText();
 
                     Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath);
-                    foreach (Issue issue in issues)
+                    // Don't populate suppressed issues
+                    foreach (Issue issue in issues.Where(x => !x.IsSuppressionInfo))
                     {
                         int errorStart = issue.StartLocation.Column;
                         int errorLength = issue.Boundary.Length;

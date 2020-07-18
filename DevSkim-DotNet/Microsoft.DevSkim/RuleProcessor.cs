@@ -21,7 +21,7 @@ namespace Microsoft.DevSkim
         {
             _ruleset = rules;
             _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
-            EnableSuppressions = false;
+            EnableSuppressions = true;
             EnableCache = true;
 
             SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
