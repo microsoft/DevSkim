@@ -202,8 +202,8 @@
     <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes">
       <Version>15.0.34</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Shell.14.0">
-      <Version>14.3.25407</Version>
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0">
+      <Version>16.6.30107.105</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Shell.Framework">
       <Version>16.6.30107.105</Version>
