@@ -17,7 +17,7 @@ namespace Microsoft.DevSkim.VSExtension
         public SkimShim()
         {
             ruleset = new RuleSet();
-            processor = new RuleProcessor(ruleset);
+            processor = new RuleProcessor(ruleset) { EnableSuppressions = true };
             LoadRules();
         }
 

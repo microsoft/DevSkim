@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Runtime.InteropServices;
+
 [assembly: AssemblyTitle("Microsoft.DevSkim.VSExtension.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]

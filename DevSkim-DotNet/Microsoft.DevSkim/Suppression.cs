@@ -25,7 +25,6 @@ namespace Microsoft.DevSkim
                 throw new ArgumentNullException("text");
             }
             _lineText = text;
-
             ParseLine();
         }
 
@@ -98,57 +97,21 @@ namespace Microsoft.DevSkim
                 return null;
         }
 
-        private const string KeywordAll = "all";
-        private const string KeywordIgnore = "ignore";
-        private const string KeywordPrefix = "DevSkim:";
-        private const string KeywordUntil = "until";
-        private DateTime _expirationDate = DateTime.MaxValue;
-        private List<SuppressedIssue> _issues = new List<SuppressedIssue>();
-        private int _lineNumber;
-        private string _lineText;
-        private int _suppressLength = -1;
-        private int _suppressStart = -1;
-        private TextContainer? _text;
-        private Regex reg = new Regex(pattern);
+        protected const string KeywordAll = "all";
+        protected const string KeywordIgnore = "ignore";
+        protected const string KeywordPrefix = "DevSkim:";
+        protected const string KeywordUntil = "until";
+        protected DateTime _expirationDate = DateTime.MaxValue;
+        protected List<SuppressedIssue> _issues = new List<SuppressedIssue>();
+        protected int _lineNumber;
+        protected string _lineText;
+        protected int _suppressLength = -1;
+        protected int _suppressStart = -1;
+        protected TextContainer? _text;
+        protected Regex reg = new Regex(pattern);
 
-        /// <summary>
-        ///     Parse the line of code to find rule suppressors
-        /// </summary>
-        private void ParseLine()
+        protected void ParseLine()
         {
-            // If we have multiple lines to look at
-            if (_text != null)
-            {
-                // If the line with the issue doesn't contain a suppression check the lines above it
-                if (!_lineText.Contains(KeywordPrefix))
-                {
-                    if (_lineNumber > 1)
-                    {
-                        var content = _text.GetLineContent(--_lineNumber);
-                        if (content.Contains(Language.GetCommentSuffix(_text.Language)))
-                        {
-                            while (_lineNumber >= 1)
-                            {
-                                if (reg.IsMatch(_text.GetLineContent(_lineNumber)))
-                                {
-                                    _lineText = _text.GetLineContent(_lineNumber);
-                                    break;
-                                }
-                                else if (_text.GetLineContent(_lineNumber).Contains(Language.GetCommentPrefix(_text.Language)))
-                                {
-                                    break;
-                                }
-                                _lineNumber--;
-                            }
-                        }
-                        else if (content.Contains(Language.GetCommentInline(_text.Language)))
-                        {
-                            _lineText = content;
-                        }
-                    }
-                }
-            }
-
             Match match = reg.Match(_lineText);
 
             if (match.Success)
