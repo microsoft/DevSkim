@@ -148,22 +148,8 @@ namespace Microsoft.DevSkim
                                 {
                                     if (condition.Pattern is { })
                                     {
-                                        bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
-                                        if (res && condition.NegateFinding)
-                                        {
-                                            passedConditions = false;
-                                            break;
-                                        }
-                                        if (!res && condition.NegateFinding)
-                                        {
-                                            passedConditions = true;
-                                            break;
-                                        }
-                                        if (!res)
-                                        {
-                                            passedConditions = false;
-                                            break;
-                                        }
+                                        bool res = lineContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
+                                        passedConditions = condition.NegateFinding ? !res : res;
                                     }
                                 }
                             }
