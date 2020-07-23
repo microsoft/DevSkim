@@ -148,7 +148,7 @@ namespace Microsoft.DevSkim
                                 {
                                     if (condition.Pattern is { })
                                     {
-                                        bool res = lineContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
+                                        bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
                                         passedConditions = condition.NegateFinding ? !res : res;
                                     }
                                 }
