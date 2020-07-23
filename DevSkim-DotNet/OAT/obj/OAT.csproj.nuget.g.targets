@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+  <ImportGroup Condition=" '$(TargetFramework)' == '' AND '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)nerdbank.gitversioning\3.1.91\buildCrossTargeting\Nerdbank.GitVersioning.targets" Condition="Exists('$(NuGetPackageRoot)nerdbank.gitversioning\3.1.91\buildCrossTargeting\Nerdbank.GitVersioning.targets')" />
+  </ImportGroup>
+  <ImportGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' AND '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)netstandard.library\2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('$(NuGetPackageRoot)netstandard.library\2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
+    <Import Project="$(NuGetPackageRoot)nerdbank.gitversioning\3.1.91\build\Nerdbank.GitVersioning.targets" Condition="Exists('$(NuGetPackageRoot)nerdbank.gitversioning\3.1.91\build\Nerdbank.GitVersioning.targets')" />
+  </ImportGroup>
+  <ImportGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' AND '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)nerdbank.gitversioning\3.1.91\build\Nerdbank.GitVersioning.targets" Condition="Exists('$(NuGetPackageRoot)nerdbank.gitversioning\3.1.91\build\Nerdbank.GitVersioning.targets')" />
+  </ImportGroup>
+</Project>

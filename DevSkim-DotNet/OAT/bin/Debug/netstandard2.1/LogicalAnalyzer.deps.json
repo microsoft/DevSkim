@@ -1,0 +1,101 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.1/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
+      "LogicalAnalyzer/1.0.3-beta": {
+        "dependencies": {
+          "CompareNETObjects": "4.66.0",
+          "Nerdbank.GitVersioning": "3.1.91",
+          "Newtonsoft.Json": "12.0.3",
+          "Serilog": "2.9.0"
+        },
+        "runtime": {
+          "LogicalAnalyzer.dll": {}
+        }
+      },
+      "CompareNETObjects/4.66.0": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.5.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/KellermanSoftware.Compare-NET-Objects.dll": {
+            "assemblyVersion": "4.66.0.0",
+            "fileVersion": "4.66.0.0"
+          }
+        }
+      },
+      "Microsoft.CSharp/4.5.0": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.CSharp.dll": {
+            "assemblyVersion": "4.0.4.0",
+            "fileVersion": "4.6.26515.6"
+          }
+        }
+      },
+      "Nerdbank.GitVersioning/3.1.91": {},
+      "Newtonsoft.Json/12.0.3": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.3.23909"
+          }
+        }
+      },
+      "Serilog/2.9.0": {
+        "runtime": {
+          "lib/netstandard2.0/Serilog.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.9.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LogicalAnalyzer/1.0.3-beta": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CompareNETObjects/4.66.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fK9o1z5ZwHb70yLRSp0aMCk3FH1oshVsOVVImB55yL6wnaPDncn3ryL3MTvcyrhJBLC3Yq4YR6xJWXLTBAApJQ==",
+      "path": "comparenetobjects/4.66.0",
+      "hashPath": "comparenetobjects.4.66.0.nupkg.sha512"
+    },
+    "Microsoft.CSharp/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
+      "path": "microsoft.csharp/4.5.0",
+      "hashPath": "microsoft.csharp.4.5.0.nupkg.sha512"
+    },
+    "Nerdbank.GitVersioning/3.1.91": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eQI9TrHjxDtM4eUtl8zCAT5DGtQgZ6mpRd/qkHBEWUeLK/cn1wXnTdJ/6ffs5tlFDP1mEmGHc//wUzFdfr4Eiw==",
+      "path": "nerdbank.gitversioning/3.1.91",
+      "hashPath": "nerdbank.gitversioning.3.1.91.nupkg.sha512"
+    },
+    "Newtonsoft.Json/12.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
+      "path": "newtonsoft.json/12.0.3",
+      "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
+    },
+    "Serilog/2.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QzcrD33A3+CsVvwi1I5CSei67ikQnkGrw7SscgL+vZTghaC2aNYg8fiUcedXHzKJFNjgje9rBjzwYGQTKEaXaA==",
+      "path": "serilog/2.9.0",
+      "hashPath": "serilog.2.9.0.nupkg.sha512"
+    }
+  }
+}

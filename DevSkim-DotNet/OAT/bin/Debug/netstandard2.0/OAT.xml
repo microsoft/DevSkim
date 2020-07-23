@@ -1,0 +1,993 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OAT</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CST.OAT.Analyzer">
+            <summary>
+            This is the core engine of OAT
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.#ctor">
+            <summary>
+            The constructor for Analyzer takes no arguments.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Analyzer.PropertyExtractionDelegate">
+            <summary>
+            This delegate is for iterating into complex objects like dictionaries that the Analyzer doesn't natively understand
+            </summary>
+            <param name="obj">Target object</param>
+            <param name="index">String based index into the object</param>
+            <returns>(If we successfully extracted, The extraction result)</returns>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Analyzer.ObjectToValuesDelegate">
+            <summary>
+            This delegate is for turning complex objects like dictionaries that the Analyzer doesn't natively support into a dictionary or list of strings that OAT can use for default operations
+            </summary>
+            <param name="obj">Target object</param>
+            <returns>(If the object was parsed, A list of Strings that were extracted, A List of KVP that were extracted)</returns>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Analyzer.OperationDelegate">
+            <summary>
+            This delegate allows extending the Analyzer with a custom operation.
+            </summary>
+            <param name="clause">The clause being applied</param>
+            <param name="state1">The first object state</param>
+            <param name="state2">The second object state</param>
+            <returns>(If the Operation delegate applies to the clause, If the operation was successful)</returns>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Analyzer.BuiltinOperationDelegate">
+            <summary>
+            Default Operation Delegates don't return applies
+            </summary>
+            <param name="clause"></param>
+            <param name="state1"></param>
+            <param name="state2"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Analyzer.ValidationDelegate">
+            <summary>
+            This delegate allows extending the Analyzer with extra rule validation for custom rules.
+            </summary>
+            <param name="r">The Target Rule</param>
+            <param name="c">The Target Clause</param>
+            <returns>(If the validation applied, The Enumerable of Violations found)</returns>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.CustomPropertyExtractionDelegates">
+            <summary>
+            The PropertyExtractionDelegates that will be used in order of attempt.  Once successful the others won't be run.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.CustomObjectToValuesDelegates">
+            <summary>
+            The ObjectToValuesDelegates that will be used in order of attempt. Once successful the others won't be run.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.CustomOperationDelegates">
+            <summary>
+            The OperationDelegates that will be used in order of attempt.  Once successful the others won't be run.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.EqualsOperationDelegate">
+            <summary>
+            The EQ Operation Delegate. Set to override EQ behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.LessThanOperationDelegate">
+            <summary>
+            The LT Operation Delegate. Set to override LT behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.GreaterThanOperationDelegate">
+            <summary>
+            The GT Operation Delegate. Set to override GT behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.RegexOperationDelegate">
+            <summary>
+            The REGEX Operation Delegate. Set to override REGEX behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.ContainsOperationDelegate">
+            <summary>
+            The CONTAINS Operation Delegate. Set to override CONTAINS behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.ContainsAnyOperationDelegate">
+            <summary>
+            The CONTAINS_ANY Operation Delegate. Set to override CONTAINS_ANY behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.WasModifiedOperationDelegate">
+            <summary>
+            The WAS_MODIFIED Operation Delegate. Set to override WAS_MODIFIED behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.EndsWithOperationDelegate">
+            <summary>
+            The ENDS_WITH Operation Delegate. Set to override ENDS_WITH behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.StartsWithOperationDelegate">
+            <summary>
+            The STARTS_WITH Operation Delegate. Set to override STARTS_WITH behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.IsNullOperationDelegate">
+            <summary>
+            The IS_NULL Operation Delegate. Set to override IS_NULL behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.IsTrueOperationDelegate">
+            <summary>
+            The IS_TRUE Operation Delegate. Set to override IS_TRUE behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.IsAfterOperationDelegate">
+            <summary>
+            The IS_AFTER Operation Delegate. Set to override IS_AFTER behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.IsBeforeOperationDelegate">
+            <summary>
+            The IS_BEFORE Operation Delegate. Set to override IS_BEFORE behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.IsExpiredOperationDelegate">
+            <summary>
+            The IS_EXPIRED Operation Delegate. Set to override IS_EXPIRED behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.ContainsKeyOperationDelegate">
+            <summary>
+            The CONTAINS_KEY Operation Delegate. Set to override CONTAINS_KEY behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Analyzer.CustomOperationValidationDelegates">
+            <summary>
+            The ValidationDelegates that will be used in order of attempt when encountering a CustomOperation in EnumerateRuleIssues.
+            All will be run. Order not guaranteed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.GetValueByPropertyString(System.Object,System.String)">
+            <summary>
+            Extracts a value stored at the specified path inside an object. Can crawl into Lists and
+            Dictionaries of strings and return any top-level object.
+            </summary>
+            <param name="targetObject">The object to parse</param>
+            <param name="pathToProperty">The path of the property to fetch</param>
+            <returns>The object found</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.PrintViolations(System.Collections.Generic.IEnumerable{Microsoft.CST.OAT.Violation})">
+            <summary>
+                Prints out the Enumerable of violations to Warning
+            </summary>
+            <param name="violations">An Enumerable of Violations to print</param>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.GetTags(System.Collections.Generic.IEnumerable{Microsoft.CST.OAT.Rule},System.Object,System.Object)">
+            <summary>
+                Get the Tags which apply to the object given the Rules
+            </summary>
+            <param name="rules">The Rules to apply</param>
+            <param name="state1">The first state of the object</param>
+            <param name="state2">The second state of the object</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.GetCaptures(System.Collections.Generic.IEnumerable{Microsoft.CST.OAT.Rule},System.Object,System.Object)">
+            <summary>
+            Get the RuleCaptures for the List of rules as applied to the objects
+            </summary>
+            <param name="rules">List of Rules to run</param>
+            <param name="state1">First state of object</param>
+            <param name="state2">Second state of object</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.GetCapture(Microsoft.CST.OAT.Rule,System.Object,System.Object)">
+            <summary>
+            Checks if the Rule matches and obtains its Capture
+            </summary>
+            <param name="rule">The Rule to test</param>
+            <param name="state1">object state1</param>
+            <param name="state2">object state2</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.Analyze(System.Collections.Generic.IEnumerable{Microsoft.CST.OAT.Rule},System.Object,System.Object)">
+            <summary>
+                Which rules apply to this object given up to two states?
+            </summary>
+            <param name="rules">The rules to apply</param>
+            <param name="state1">The first state</param>
+            <param name="state2">The second state</param>
+            <returns>A Stack of Rules which apply</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.Applies(Microsoft.CST.OAT.Rule,System.Object,System.Object)">
+            <summary>
+                Does the rule apply to the object?
+            </summary>
+            <param name="rule">The Rule to apply</param>
+            <param name="state1">The first state of the object</param>
+            <param name="state2">The second state of the object</param>
+            <returns>True if the rule applies</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.IsRuleValid(Microsoft.CST.OAT.Rule)">
+            <summary>
+            Determines if there are any problems with the provided rule.
+            </summary>
+            <param name="rule">The rule to parse.</param>
+            <returns>True if there are no issues.</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.EnumerateRuleIssues(System.Collections.Generic.IEnumerable{Microsoft.CST.OAT.Rule})">
+            <summary>
+            Verifies the provided rules and provides a list of issues with the rules.
+            </summary>
+            <param name="rules">Enumerable of Rules.</param>
+            <returns>Enumerable of issues with the rules.</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.AnalyzeClause(Microsoft.CST.OAT.Clause,System.Object,System.Object)">
+            <summary>
+            Determine if a Clause is true or false
+            </summary>
+            <param name="clause">The Clause to Analyze</param>
+            <param name="state1">The first object state</param>
+            <param name="state2">The second object state</param>
+            <returns>If the Clause is true</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.GetValueByPropertyOrFieldName(System.Object,System.String)">
+            <summary>
+            Gets the object value stored at the field or property named by the string. Property tried first.  Returns null if none found.
+            </summary>
+            <param name="obj">The target object</param>
+            <param name="propertyName">The Property or Field name</param>
+            <returns>The object at that Name or null</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.StringToRegex(System.String)">
+            <summary>
+            Returns the compiled regex for a string.  Backed by an internal cache to make subsequent uses of the same expression fast.
+            </summary>
+            <param name="built"></param>
+            <returns>The created Regex or null on error</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.NopOperation(Microsoft.CST.OAT.Clause,System.Object,System.Object)">
+            <summary>
+            Returns false.
+            </summary>
+            <param name="clause"></param>
+            <param name="state1"></param>
+            <param name="state2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.ObjectToValues(System.Object)">
+            <summary>
+            Extracts string Values from an Object.  Will call the custom ObjectToValues delegate.
+            </summary>
+            <param name="obj"></param>
+            <returns>A tuple of A list of Strings extracted and a List of KVP extracted.</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Analyzer.TryShortcut(System.Boolean,Microsoft.CST.OAT.BOOL_OPERATOR)">
+            <summary>
+            Try to shortcut a boolean operation
+            </summary>
+            <param name="current">The current boolean state</param>
+            <param name="operation">The Operation</param>
+            <returns>(If you can use a shortcut, the result of the shortcut)</returns>
+        </member>
+        <member name="T:Microsoft.CST.OAT.BOOL_OPERATOR">
+            <summary>
+            The boolean operators supported by the Analyzer.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.BOOL_OPERATOR.AND">
+            <summary>
+            Logical and
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.BOOL_OPERATOR.OR">
+            <summary>
+            Logical or
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.BOOL_OPERATOR.XOR">
+            <summary>
+            Logical xor
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.BOOL_OPERATOR.NAND">
+            <summary>
+            Logical not and
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.BOOL_OPERATOR.NOR">
+            <summary>
+            Logical not or
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.BOOL_OPERATOR.NOT">
+            <summary>
+            Logical not
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Clause">
+            <summary>
+                Clauses contain an Operation and associated data
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Clause.#ctor(Microsoft.CST.OAT.Operation,System.String)">
+            <summary>
+            Create a Clause
+            </summary>
+            <param name="operation">The Operation to Perform</param>
+            <param name="field">Optionally, the path to the field to operate on</param>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.Data">
+            <summary>
+                A list of strings passed to the operation
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.DictData">
+            <summary>
+                A dictionary of strings passed to the operation
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.Field">
+             <summary>
+                 Which field or property of the Target should this Clause apply to?
+            
+                 null is wildcard
+             </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.Label">
+             <summary>
+                 The Label used for the boolean Expression in the Rule containing this Clause
+            
+                 May be null iff Expression is null
+             </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.Operation">
+            <summary>
+                The Operation to perform
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.CustomOperation">
+            <summary>
+                A string indicating what custom operation should be performed, if Operation is CUSTOM
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.Invert">
+            <summary>
+            If the result of the Operation should be inverted
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Clause.Capture">
+            <summary>
+            When calling Capture functionality if the result of this clause should be Captured
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.ClauseCapture">
+            <summary>
+            Holds a clause and object states, can be extended to hold a Result with specific data
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.ClauseCapture.#ctor(Microsoft.CST.OAT.Clause,System.Object,System.Object)">
+            <summary>
+            A basic Clause Capture constructor
+            </summary>
+            <param name="clause"></param>
+            <param name="state1"></param>
+            <param name="state2"></param>
+        </member>
+        <member name="P:Microsoft.CST.OAT.ClauseCapture.Clause">
+            <summary>
+            The Clause that caused the capture
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.ClauseCapture.State1">
+            <summary>
+            Object state 1
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.ClauseCapture.State2">
+            <summary>
+            Object state 2
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Utils.Logger">
+            <summary>
+            This is the logger class for OAT
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Utils.Logger.Debug">
+            <summary>
+            Should Debug Logging be enabled
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Utils.Logger.Quiet">
+            <summary>
+            Should Quiet logging be enabled (Warn and above)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Utils.Logger.Verbose">
+            <summary>
+            Should Verbose logging be enabled
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Utils.Logger.SetupQuiet">
+            <summary>
+            Setup Quiet Logging
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Utils.Logger.SetupVerbose">
+            <summary>
+            Set up Verbose Logging
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Utils.Logger.SetupDebug">
+            <summary>
+            Set up Debug Logging
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Utils.Logger.SetupInformation">
+            <summary>
+            Set up Information Logging
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Utils.Strings">
+            <summary>
+            Localized string fetcher
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Utils.Strings.Get(System.String)">
+            <summary>
+            Get the string at the key specified in the current locale
+            </summary>
+            <param name="key">The key to get</param>
+            <returns>A string looked up from the table or the key itself if not present</returns>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Utils.Strings.Setup(System.String)">
+            <summary>
+            Load the specified locale's resources.  Currently only "" is supported for English.
+            </summary>
+            <param name="locale">The name of the locale</param>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Utils.Strings.IsLoaded">
+            <summary>
+            If there is any data available in the internal dictionary
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Utils.Strings.stringList">
+            <summary>
+                Internal member structure holding string resources
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Operation">
+            <summary>
+                Operations available for Analysis rules.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.Regex">
+            <summary>
+                Generates regular expressions from the Data list provided and tests them against the specified
+                field. If any match it is a success.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.Equals">
+            <summary>
+                Checks that any value in the Data list or DictData dictionary have a match in the specified
+                field's object as appropriate.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.LessThan">
+            <summary>
+                Checks whether any of the specified fields values when parsed as an int is less than first value in
+                the Data list as Parsed as an int
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.GreaterThan">
+            <summary>
+                Checks whether any of the specified fields values when parsed as an int is greater than first value in
+                the Data list as Parsed as an int
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.Contains">
+            <summary>
+                Checks if the specified fields values contain all of the data in the Data list or DictData
+                dictionary as appropriate for the field.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.WasModified">
+            <summary>
+                Checks if the specified field was modified between the two runs.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.EndsWith">
+            <summary>
+                Checks if the specified field ends with any of the strings in the Data list.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.StartsWith">
+            <summary>
+                Checks if the specified field starts with any of the strings in the Data list.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.ContainsAny">
+            <summary>
+                Checks if the specified fields values contain any of the data in the Data list or DictData
+                dictionary as appropriate for the field.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.IsNull">
+            <summary>
+                Checks if the specified field is null in both states.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.IsTrue">
+            <summary>
+                Checks if the specified field is true in either state.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.IsBefore">
+            <summary>
+                Checks if the specified field, as parsed as time, is before the time specified in the first
+                entry of the Data list
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.IsAfter">
+            <summary>
+                Checks if the specified field, as parsed as time, is after the time specified in the first
+                entry of the Data list
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.IsExpired">
+            <summary>
+                Checks if the specified field, as parsed as time, is before DateTime.Now.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.ContainsKey">
+            <summary>
+                Checks if the field, if a dictionary, contains the specified key
+            </summary>
+        </member>
+        <member name="F:Microsoft.CST.OAT.Operation.Custom">
+            <summary>
+                Specifies that a custom operation has been specified
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseBothDataDictData">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} contains both Data and DictData which is not allowed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseCharactersAfterClosedParentheses">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains invalid characters after a close parenthesis {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseCharactersBeforeOpenParentheses">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains invalid characters before open parenthesis in label {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseCharactersBetweenClosedParentheses">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains invalid characters between close parentheses in label {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseCharactersBetweenOpenParentheses">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains invalid characters between open parentheses in label {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseCloseParenthesesInNot">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains close parenthesis in NOT operator {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseDictDataUnexpected">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} contains DictData which is innapropriate for operation {2}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseDuplicateName">
+            <summary>
+              Looks up a localized string similar to Rule {0} has clauses with duplicate name {1}.&quot;).
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseEndsWithOperator">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} ends with an operator..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseExpectedDateTime">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} does not contain exactly one DateTime in its Data field..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseExpectedInt">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} does not contain exactly one integer in its Data field..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseExpressionButMissingLabels">
+            <summary>
+              Looks up a localized string similar to In rule {0} expression is not null but some clauses have no label..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseInvalidLabel">
+            <summary>
+              Looks up a localized string similar to Rule {0} has clauses invalid name {1}. Names may not contains spaces or parentheses..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseInvalidNotOperator">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains NOT where a non-NOT operator was expected..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseInvalidOperator">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains invalid boolean operator {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseInvalidRegex">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} contains invalid Regex {2}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseMissingCustomOperation">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} has specified custom operation but the CustomOperation field is missing..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseMissingLabels">
+            <summary>
+              Looks up a localized string similar to In rule {0} if any clause has labels they all must have labels..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseMissingListData">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} is missing Data List..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseMissingValidationForOperation">
+            <summary>
+              Looks up a localized string similar to Operation {0} in Clause {2} of Rule {1} was not validated by any of the available custom validation delegates..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseMultipleConsecutiveNots">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains multiple NOTs in a row..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseNoData">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} does not contain any Data and will always return false..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseNoDataOrDictData">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} does not contain any Data or DictData and will always return false..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseParenthesisInLabel">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains invalid parenthesis in label {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseRedundantData">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} contains redundant Data field which will be ignored..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseRedundantDictData">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} contains redundant DictData field which will be ignored..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseUnbalancedParentheses">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} has unbalanced parentheses..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseUndefinedLabel">
+            <summary>
+              Looks up a localized string similar to Expression {0} in rule {1} contains undefined label {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseUnexpectedDictData">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} contains unexpected Dictionary Data..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseUnsuppportedOperator">
+            <summary>
+              Looks up a localized string similar to Rule {0} Clause {1} uses unsupported Operator {2}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Resources.Err_ClauseUnusedLabel">
+            <summary>
+              Looks up a localized string similar to Clause {0} is declared but never used in rule {1}..
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Rule">
+            <summary>
+                A Rule holds Clauses and optionally has an Expression.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Rule.#ctor(System.String)">
+            <summary>
+            The constructor for a Rule
+            </summary>
+            <param name="Name">The Name of the rule</param>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Rule.Clauses">
+            <summary>
+                The list of Clauses to apply
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Rule.Description">
+            <summary>
+                A description of the rule
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Rule.Expression">
+             <summary>
+                 The boolean expression to apply over the Clauses.
+            
+                 If Expression is null the Clauses will be ANDed together.
+             </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Rule.Name">
+            <summary>
+                The name of the Rule
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Rule.Target">
+            <summary>
+                The Name of the targeted object's Type
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Rule.Severity">
+            <summary>
+                An int associated with the rule
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Rule.Tags">
+            <summary>
+                A set of Tags assigned to the rule
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Captures.RuleCapture">
+            <summary>
+            The capture object that holds a rule and the clause captures
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Captures.RuleCapture.#ctor(Microsoft.CST.OAT.Rule,System.Collections.Generic.List{Microsoft.CST.OAT.ClauseCapture})">
+            <summary>
+            The constructor for a Rule Capture
+            </summary>
+            <param name="r">The Rule</param>
+            <param name="captures">The ClauseCaptures</param>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Captures.RuleCapture.Rule">
+            <summary>
+            The Rule this capture was triggered by
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Captures.RuleCapture.Captures">
+            <summary>
+            The ClauseCaptures associated with the Rule
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.TypedClauseCapture`1">
+            <summary>
+            Holds a clause and object states, can be extended to hold a Result with specific data
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.TypedClauseCapture`1.#ctor(Microsoft.CST.OAT.Clause,`0,System.Object,System.Object)">
+            <summary>
+            A basic Clause Capture constructor
+            </summary>
+            <param name="clause"></param>
+            <param name="result">The object to hold</param>
+            <param name="state1"></param>
+            <param name="state2"></param>
+        </member>
+        <member name="P:Microsoft.CST.OAT.TypedClauseCapture`1.Result">
+            <summary>
+            The result data
+            </summary>
+        </member>
+        <member name="T:Microsoft.CST.OAT.Violation">
+            <summary>
+            A violation found when validating rules
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Violation.Rule">
+            <summary>
+                The Rule associated with this violation
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Violation.Clauses">
+            <summary>
+                The clauses associated with this violation
+            </summary>
+        </member>
+        <member name="P:Microsoft.CST.OAT.Violation.Description">
+            <summary>
+                The text description of the violation
+            </summary>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Violation.#ctor(System.String,Microsoft.CST.OAT.Rule)">
+            <summary>
+            Simplest constructor.
+            
+            Arguments may not be null.
+            </summary>
+            <param name="description">The description for the violation.</param>
+            <param name="rule">The Rule the violation references</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when any parameter is null.</exception>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Violation.#ctor(System.String,Microsoft.CST.OAT.Rule,Microsoft.CST.OAT.Clause)">
+            <summary>
+            Use this constructor if you have only a single clause
+            
+            Arguments may not be null.
+            </summary>
+            <param name="description">The description for the violation.</param>
+            <param name="rule">The Rule the violation references</param>
+            <param name="clause">The Clause the violation references</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when any parameter is null.</exception>
+        </member>
+        <member name="M:Microsoft.CST.OAT.Violation.#ctor(System.String,Microsoft.CST.OAT.Rule,Microsoft.CST.OAT.Clause[])">
+             <summary>
+             Use this constructor if you have multiple clauses.
+            
+             Arguments may not be null.
+             </summary>
+             <param name="description">The description for the violation.</param>
+             <param name="rule">The Rule the violation references</param>
+             <param name="clauses">The Clauses the violation references</param>
+             <exception cref="T:System.ArgumentNullException">Thrown when any parameter is null.</exception>
+        </member>
+        <member name="T:System.Index">
+            <summary>Represent a type can be used to index a collection either from the start or the end.</summary>
+            <remarks>
+            Index is used by the C# compiler to support the new index syntax
+            <code>
+            int[] someArray = new int[5] { 1, 2, 3, 4, 5 } ;
+            int lastElement = someArray[^1]; // lastElement = 5
+            </code>
+            </remarks>
+        </member>
+        <member name="M:System.Index.#ctor(System.Int32,System.Boolean)">
+            <summary>Construct an Index using a value and indicating if the index is from the start or from the end.</summary>
+            <param name="value">The index value. it has to be zero or positive number.</param>
+            <param name="fromEnd">Indicating if the index is from the start or from the end.</param>
+            <remarks>
+            If the Index constructed from the end, index value 1 means pointing at the last element and index value 0 means pointing at beyond last element.
+            </remarks>
+        </member>
+        <member name="P:System.Index.Start">
+            <summary>Create an Index pointing at first element.</summary>
+        </member>
+        <member name="P:System.Index.End">
+            <summary>Create an Index pointing at beyond last element.</summary>
+        </member>
+        <member name="M:System.Index.FromStart(System.Int32)">
+            <summary>Create an Index from the start at the position indicated by the value.</summary>
+            <param name="value">The index value from the start.</param>
+        </member>
+        <member name="M:System.Index.FromEnd(System.Int32)">
+            <summary>Create an Index from the end at the position indicated by the value.</summary>
+            <param name="value">The index value from the end.</param>
+        </member>
+        <member name="P:System.Index.Value">
+            <summary>Returns the index value.</summary>
+        </member>
+        <member name="P:System.Index.IsFromEnd">
+            <summary>Indicates whether the index is from the start or the end.</summary>
+        </member>
+        <member name="M:System.Index.GetOffset(System.Int32)">
+            <summary>Calculate the offset from the start using the giving collection length.</summary>
+            <param name="length">The length of the collection that the Index will be used with. length has to be a positive value</param>
+            <remarks>
+            For performance reason, we don't validate the input length parameter and the returned offset value against negative values.
+            we don't validate either the returned offset is greater than the input length.
+            It is expected Index will be used with collections which always have non negative length/count. If the returned offset is negative and
+            then used to index a collection will get out of range exception which will be same affect as the validation.
+            </remarks>
+        </member>
+        <member name="M:System.Index.Equals(System.Object)">
+            <summary>Indicates whether the current Index object is equal to another object of the same type.</summary>
+            <param name="value">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Index.Equals(System.Index)">
+            <summary>Indicates whether the current Index object is equal to another Index object.</summary>
+            <param name="other">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Index.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+        </member>
+        <member name="M:System.Index.op_Implicit(System.Int32)~System.Index">
+            <summary>Converts integer number to an Index.</summary>
+        </member>
+        <member name="M:System.Index.ToString">
+            <summary>Converts the value of the current Index object to its equivalent string representation.</summary>
+        </member>
+        <member name="T:System.Range">
+            <summary>Represent a range has start and end indexes.</summary>
+            <remarks>
+            Range is used by the C# compiler to support the range syntax.
+            <code>
+            int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
+            int[] subArray1 = someArray[0..2]; // { 1, 2 }
+            int[] subArray2 = someArray[1..^0]; // { 2, 3, 4, 5 }
+            </code>
+            </remarks>
+        </member>
+        <member name="P:System.Range.Start">
+            <summary>Represent the inclusive start index of the Range.</summary>
+        </member>
+        <member name="P:System.Range.End">
+            <summary>Represent the exclusive end index of the Range.</summary>
+        </member>
+        <member name="M:System.Range.#ctor(System.Index,System.Index)">
+            <summary>Construct a Range object using the start and end indexes.</summary>
+            <param name="start">Represent the inclusive start index of the range.</param>
+            <param name="end">Represent the exclusive end index of the range.</param>
+        </member>
+        <member name="M:System.Range.Equals(System.Object)">
+            <summary>Indicates whether the current Range object is equal to another object of the same type.</summary>
+            <param name="value">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Range.Equals(System.Range)">
+            <summary>Indicates whether the current Range object is equal to another Range object.</summary>
+            <param name="other">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Range.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+        </member>
+        <member name="M:System.Range.ToString">
+            <summary>Converts the value of the current Range object to its equivalent string representation.</summary>
+        </member>
+        <member name="M:System.Range.StartAt(System.Index)">
+            <summary>Create a Range object starting from start index to the end of the collection.</summary>
+        </member>
+        <member name="M:System.Range.EndAt(System.Index)">
+            <summary>Create a Range object starting from first element in the collection to the end Index.</summary>
+        </member>
+        <member name="P:System.Range.All">
+            <summary>Create a Range object starting from first element to the end.</summary>
+        </member>
+        <member name="M:System.Range.GetOffsetAndLength(System.Int32)">
+            <summary>Calculate the start offset and length of range object using a collection length.</summary>
+            <param name="length">The length of the collection that the range will be used with. length has to be a positive value.</param>
+            <remarks>
+            For performance reason, we don't validate the input length parameter against negative values.
+            It is expected Range will be used with collections which always have non negative length/count.
+            We validate the range is inside the length scope though.
+            </remarks>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray``1(``0[],System.Range)">
+            <summary>
+            Slices the specified array using the specified range.
+            </summary>
+        </member>
+    </members>
+</doc>
