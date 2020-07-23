@@ -1,8 +1,10 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.CST.OAT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 [assembly: CLSCompliant(true)]
@@ -94,6 +96,7 @@ namespace Microsoft.DevSkim
             return Analyze(text, new string[] { language }, lineNumber);
         }
 
+
         /// <summary>
         ///     Analyzes given line of code
         /// </summary>
@@ -105,94 +108,164 @@ namespace Microsoft.DevSkim
             // Get rules for the given content type
             IEnumerable<Rule> rules = GetRulesForLanguages(languages);
             List<Issue> resultsList = new List<Issue>();
-            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty);
-            TextContainer line = (lineNumber > 0) ? new TextContainer(textContainer.GetLineContent(lineNumber), (languages.Length > 0) ? languages[0] : string.Empty) : textContainer;
+            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
 
-            // Go through each rule
-            foreach (Rule rule in rules)
+            var analyzer = new Analyzer();
+            analyzer.CustomOperationDelegates.Add(ScopedRegexOperation);
+            analyzer.CustomOperationDelegates.Add(WithinOperation);
+
+            (bool Applies, bool Result, ClauseCapture? cc) WithinOperation(Clause c, object? state1, object? state2)
             {
-                List<Issue> matchList = new List<Issue>();
-
-                // Skip rules that don't apply based on settings
-                if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
-                    continue;
-
-                // Go through each matching pattern of the rule
-                foreach (SearchPattern pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
+                if (c.CustomOperation == "Within")
                 {
-                    // Get all matches for the pattern
-                    List<Boundary> matches = line.MatchPattern(pattern);
-
-                    if (matches.Count > 0)
+                    if (c is WithinClause wc && state1 is TextContainer tc)
                     {
-                        foreach (Boundary match in matches)
+                        // Subtracting before would give us the end of the line N before but we want the start so go back 1 more
+                        var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (wc.Before + 1))];
+                        var end = tc.LineEnds[Math.Min(tc.LineEnds.Count - 1, tc.LineNumber + wc.After)];
+                        var target = tc.FullContent[start..end];
+                        foreach (var pattern in c.Data.Select(x => analyzer.StringToRegex(x)))
                         {
-                            bool passedConditions = true;
-                            var translatedBoundary = match;
-                            if (lineNumber >= 0)
+                            if (pattern?.IsMatch(target) is true)
                             {
-                                translatedBoundary = new Boundary()
-                                {
-                                    Length = match.Length,
-                                    Index = textContainer.GetBoundaryFromLine(lineNumber).Index + match.Index
-                                };
+                                return (true, !wc.Invert, null);
                             }
+                        }
+                    }
+                    return (true, false, null);
+                }
+                return (false, false, null);
+            }
 
-                            if (!textContainer.ScopeMatch(pattern, translatedBoundary))
+            (bool Applies, bool Result, ClauseCapture? cc) ScopedRegexOperation(Clause c, object? state1, object? state2)
+            {
+                if (c.CustomOperation == "ScopedRegex")
+                {
+                    if (state1 is TextContainer tc && c is ScopedRegexClause src)
+                    {
+                        var scopes = new List<PatternScope>();
+                        foreach (var datum in c.Data ?? new List<string>())
+                        {
+                            scopes.Add((PatternScope)Enum.Parse(typeof(PatternScope), datum));
+                        }
+                        var matchList = new List<Boundary>();
+                        if (analyzer != null)
+                        {
+                            var res = analyzer.RegexOperationDelegate.Invoke(c, state1, null);
+                            if (res.Result && res.Capture is TypedClauseCapture<MatchCollection> mc)
                             {
-                                passedConditions = false;
-                            }
-                            else
-                            {
-                                foreach (SearchCondition condition in rule.Conditions.Where(x => x is SearchCondition))
+                                var matches = new List<Match>();
+                                foreach (var match in mc.Result)
                                 {
-                                    if (condition.Pattern is { })
+                                    if (match is Match m)
                                     {
-                                        bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
-                                        passedConditions = condition.NegateFinding ? !res : res;
+                                        Boundary translatedBoundary = new Boundary()
+                                        {
+                                            Length = m.Length,
+                                            Index = m.Index + tc.GetLineBoundary(tc.LineNumber).Index
+                                        };
+                                        // Should return only scoped matches
+                                        if (tc.ScopeMatch(scopes, translatedBoundary))
+                                        {
+                                            matches.Add(m);
+                                        }
                                     }
                                 }
-                            }
-
-                            if (passedConditions)
-                            {
-                                Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
-
-                                matchList.Add(issue);
+                                var result = c.Invert ? matches.Count == 0 : matches.Count > 0;
+                                return (true, result, result && c.Capture ? new TypedClauseCapture<List<Match>>(c, matches, state1, null) : null);
                             }
                         }
                     }
+                    return (true, false, null);
                 }
-
-                // We got matching rule and suppression are enabled, let's see if we have a supression on the line
-                if (EnableSuppressions && matchList.Count > 0)
-                {
-                    Suppression supp;
-                    foreach (Issue result in matchList)
-                    {
-                        supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
-                        // If rule is NOT being suppressed then report it
-                        var supissue = supp.GetSuppressedIssue(result.Rule.Id);
-                        if (supissue is null)
-                        {
-                            resultsList.Add(result);
-                        }
-                        // Otherwise add the suppression info instead
-                        else
-                        {
-                            result.IsSuppressionInfo = true;
-
-                            if (!resultsList.Any(x => x.Rule.Id == result.Rule.Id && x.Boundary.Index == result.Boundary.Index))
-                                resultsList.Add(result);
-                        }
-                    }
-                }
-                // Otherwise put matchlist to resultlist
-                else
-                {
-                    resultsList.AddRange(matchList);
-                }
+                return (false, false, null);
             }
+
+            // Go through each rule
+            //foreach (Rule rule in rules)
+            //{
+            //    List<Issue> matchList = new List<Issue>();
+
+            //    // Skip rules that don't apply based on settings
+            //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
+            //        continue;
+
+            //    // Go through each matching pattern of the rule
+            //    foreach (SearchPattern pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
+            //    {
+            //        // Get all matches for the pattern
+            //        List<Boundary> matches = line.MatchPattern(pattern);
+
+            //        if (matches.Count > 0)
+            //        {
+            //            foreach (Boundary match in matches)
+            //            {
+            //                bool passedConditions = true;
+            //                var translatedBoundary = match;
+            //                if (lineNumber >= 0)
+            //                {
+            //                    translatedBoundary = new Boundary()
+            //                    {
+            //                        Length = match.Length,
+            //                        Index = textContainer.GetBoundaryFromLine(lineNumber).Index + match.Index
+            //                    };
+            //                }
+
+            //                if (!textContainer.ScopeMatch(pattern, translatedBoundary))
+            //                {
+            //                    passedConditions = false;
+            //                }
+            //                else
+            //                {
+            //                    foreach (SearchCondition condition in rule.Conditions.Where(x => x is SearchCondition))
+            //                    {
+            //                        if (condition.Pattern is { })
+            //                        {
+            //                            bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
+            //                            passedConditions = condition.NegateFinding ? !res : res;
+            //                        }
+            //                    }
+            //                }
+
+            //                if (passedConditions)
+            //                {
+            //                    Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
+
+            //                    matchList.Add(issue);
+            //                }
+            //            }
+            //        }
+            //    }
+
+            //    // We got matching rule and suppression are enabled, let's see if we have a supression on the line
+            //    if (EnableSuppressions && matchList.Count > 0)
+            //    {
+            //        Suppression supp;
+            //        foreach (Issue result in matchList)
+            //        {
+            //            supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
+            //            // If rule is NOT being suppressed then report it
+            //            var supissue = supp.GetSuppressedIssue(result.Rule.Id);
+            //            if (supissue is null)
+            //            {
+            //                resultsList.Add(result);
+            //            }
+            //            // Otherwise add the suppression info instead
+            //            else
+            //            {
+            //                result.IsSuppressionInfo = true;
+
+            //                if (!resultsList.Any(x => x.Rule.Id == result.Rule.Id && x.Boundary.Index == result.Boundary.Index))
+            //                    resultsList.Add(result);
+            //            }
+            //        }
+            //    }
+            //    // Otherwise put matchlist to resultlist
+            //    else
+            //    {
+            //        resultsList.AddRange(matchList);
+            //    }
+            //}
 
             // Deal with overrides
             List<Issue> removes = new List<Issue>();

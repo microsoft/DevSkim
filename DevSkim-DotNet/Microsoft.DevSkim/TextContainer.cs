@@ -16,42 +16,41 @@ namespace Microsoft.DevSkim
         ///     Creates new instance
         /// </summary>
         /// <param name="content"> Text to work with </param>
-        public TextContainer(string content, string language)
+        public TextContainer(string content, string language, int lineNumber = -1)
         {
             Language = language;
-            _content = content;
-            _lineEnds = new List<int>() { 0 };
+            LineNumber = lineNumber;
+            FullContent = content;
+            Line = LineNumber == -1 ? FullContent : GetLineContent(lineNumber);
+            LineEnds = new List<int>() { 0 };
 
             // Find line end in the text
             int pos = 0;
-            while (pos > -1 && pos < _content.Length)
+            while (pos > -1 && pos < FullContent.Length)
             {
-                if (++pos < _content.Length)
+                if (++pos < FullContent.Length)
                 {
-                    pos = _content.IndexOf('\n', pos);
-                    _lineEnds.Add(pos);
+                    pos = FullContent.IndexOf(Environment.NewLine, pos);
+                    LineEnds.Add(pos);
                 }
             }
 
             // Text can end with \n or not
-            if (_lineEnds[_lineEnds.Count - 1] == -1)
-                _lineEnds[_lineEnds.Count - 1] = (_content.Length > 0) ? content.Length - 1 : 0;
-        }
+            if (LineEnds[LineEnds.Count - 1] == -1)
+                LineEnds[LineEnds.Count - 1] = (FullContent.Length > 0) ? content.Length - 1 : 0;
 
-        public string Content
-        {
-            get
-            {
-                return _content;
-            }
-            private set
-            {
-                _content = value;
-            }
+            prefix = DevSkim.Language.GetCommentPrefix(Language);
+            suffix = DevSkim.Language.GetCommentSuffix(Language);
+            inline = DevSkim.Language.GetCommentInline(Language);
         }
 
         public string Language { get; set; }
-
+        public int LineNumber { get; }
+        public string FullContent { get; }
+        public string Line { get; }
+        string prefix;
+        string suffix;
+        string inline;
         /// <summary>
         ///     Returns the Boundary of a specified line number
         /// </summary>
@@ -61,7 +60,7 @@ namespace Microsoft.DevSkim
         {
             Boundary result = new Boundary();
 
-            if (lineNumber >= _lineEnds.Count)
+            if (lineNumber >= LineEnds.Count)
             {
                 return result;
             }
@@ -70,10 +69,10 @@ namespace Microsoft.DevSkim
             var start = 0;
             if (lineNumber > 0)
             {
-                start = _lineEnds[lineNumber - 1] + 1;
+                start = LineEnds[lineNumber - 1] + 1;
             }
             result.Index = start;
-            result.Length = _lineEnds[lineNumber] - result.Index + 1;
+            result.Length = LineEnds[lineNumber] - result.Index + 1;
 
             return result;
         }
@@ -87,12 +86,12 @@ namespace Microsoft.DevSkim
         {
             Boundary result = new Boundary();
 
-            for (int i = 0; i < _lineEnds.Count; i++)
+            for (int i = 0; i < LineEnds.Count; i++)
             {
-                if (_lineEnds[i] >= index)
+                if (LineEnds[i] >= index)
                 {
-                    result.Index = (i > 0 && _lineEnds[i - 1] > 0) ? _lineEnds[i - 1] + 1 : 0;
-                    result.Length = _lineEnds[i] - result.Index + 1;
+                    result.Index = (i > 0 && LineEnds[i - 1] > 0) ? LineEnds[i - 1] + 1 : 0;
+                    result.Length = LineEnds[i] - result.Index + 1;
                     break;
                 }
             }
@@ -107,9 +106,9 @@ namespace Microsoft.DevSkim
         /// <returns> Text </returns>
         public string GetLineContent(int line)
         {
-            int index = _lineEnds[line];
+            int index = LineEnds[line];
             Boundary bound = GetLineBoundary(index);
-            return _content.Substring(bound.Index, bound.Length);
+            return FullContent.Substring(bound.Index, bound.Length);
         }
 
         /// <summary>
@@ -128,59 +127,17 @@ namespace Microsoft.DevSkim
             }
             else
             {
-                for (int i = 0; i < _lineEnds.Count; i++)
+                for (int i = 0; i < LineEnds.Count; i++)
                 {
-                    if (_lineEnds[i] >= index)
+                    if (LineEnds[i] >= index)
                     {
                         result.Line = i;
-                        result.Column = index - _lineEnds[i - 1];
+                        result.Column = index - LineEnds[i - 1];
 
                         break;
                     }
                 }
             }
-            return result;
-        }
-
-        /// <summary>
-        ///     Returns all boundaries matching the pattern
-        /// </summary>
-        /// <param name="pattern"> Search pattern </param>
-        /// <returns> List of boundaries </returns>
-        public List<Boundary> MatchPattern(SearchPattern pattern)
-        {
-            return MatchPattern(pattern, _content);
-        }
-
-        /// <summary>
-        ///     Returns all boundaries matching the pattern
-        /// </summary>
-        /// <param name="pattern"> Search pattern </param>
-        /// <param name="boundary"> Content boundary </param>
-        /// <param name="searchIn"> Search in command </param>
-        /// <returns> </returns>
-        public bool MatchPattern(SearchPattern pattern, Boundary boundary, SearchCondition condition)
-        {
-            bool result = false;
-
-            Boundary scope = ParseSearchBoundary(boundary, condition.SearchIn ?? "finding-only");
-
-            string text = _content.Substring(scope.Index, scope.Length);
-            List<Boundary> matches = MatchPattern(pattern, text);
-
-            foreach (Boundary match in matches)
-            {
-                Boundary translatedBoundary = new Boundary()
-                {
-                    Length = match.Length,
-                    Index = match.Index + scope.Index
-                };
-                if (ScopeMatch(pattern, translatedBoundary))
-                {
-                    return true;
-                }
-            }
-
             return result;
         }
 
@@ -191,24 +148,20 @@ namespace Microsoft.DevSkim
         /// <param name="boundary"> Boundary in a text </param>
         /// <param name="text"> Text </param>
         /// <returns> True if boundary is matching the pattern scope </returns>
-        public bool ScopeMatch(SearchPattern pattern, Boundary boundary)
+        public bool ScopeMatch(IEnumerable<PatternScope> patterns, Boundary boundary)
         {
-            string prefix = DevSkim.Language.GetCommentPrefix(Language);
-            string suffix = DevSkim.Language.GetCommentSuffix(Language);
-            string inline = DevSkim.Language.GetCommentInline(Language);
-
-            if (pattern.Scopes.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
+            if (patterns.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
 
-            bool isInComment = (IsBetween(Content, boundary.Index, prefix, suffix, inline)
-                               || IsBetween(Content, boundary.Index, inline, "\n"));
+            bool isInComment = (IsBetween(FullContent, boundary.Index, prefix, suffix, inline)
+                               || IsBetween(FullContent, boundary.Index, inline, "\n"));
 
-            return !(isInComment && !pattern.Scopes.Contains(PatternScope.Comment));
+            return !(isInComment && !patterns.Contains(PatternScope.Comment));
         }
 
-        private string _content;
+        public List<int> LineEnds;
 
-        private List<int> _lineEnds;
+        public List<int> LineStarts { get; }
 
         /// <summary>
         ///     Return boundary defined by line and its offset
@@ -226,10 +179,10 @@ namespace Microsoft.DevSkim
 
             if (index < 0)
                 index = 0;
-            if (index >= _lineEnds.Count)
-                index = _lineEnds.Count - 1;
+            if (index >= LineEnds.Count)
+                index = LineEnds.Count - 1;
 
-            return _lineEnds[index];
+            return LineEnds[index];
         }
 
         /// <summary>
@@ -266,103 +219,6 @@ namespace Microsoft.DevSkim
                     result = true;
             }
 
-            return result;
-        }
-
-        /// <summary>
-        ///     Returns all boundaries matching the pattern in a text
-        /// </summary>
-        /// <param name="pattern"> Search pattern </param>
-        /// <param name="text"> Text </param>
-        /// <returns> List of boundaries </returns>
-        private List<Boundary> MatchPattern(SearchPattern pattern, string text)
-        {
-            List<Boundary> matchList = new List<Boundary>();
-
-            RegexOptions reopt = RegexOptions.None;
-            if (pattern.Modifiers != null && pattern.Modifiers.Length > 0)
-            {
-                reopt |= (pattern.Modifiers.Contains("i")) ? RegexOptions.IgnoreCase : RegexOptions.None;
-                reopt |= (pattern.Modifiers.Contains("m")) ? RegexOptions.Multiline : RegexOptions.None;
-            }
-
-            Regex patRegx = pattern.GetRegex(reopt);
-            MatchCollection matches = patRegx.Matches(text);
-            if (matches.Count > 0)
-            {
-                foreach (Match? m in matches)
-                {
-                    if (m is { })
-                    {
-                        matchList.Add(new Boundary() { Index = m.Index, Length = m.Length });
-                    }
-                }
-            }
-
-            return matchList;
-        }
-
-        /// <summary>
-        ///     Return boundary based on searchIn command and given boundary
-        /// </summary>
-        /// <param name="boundary"> Relative boundary </param>
-        /// <param name="searchIn"> Search in command </param>
-        /// <returns> Boundary </returns>
-        private Boundary ParseSearchBoundary(Boundary boundary, string searchIn)
-        {
-            // Default boundary is the finding line
-            Boundary result = GetLineBoundary(boundary.Index);
-            string srch = (string.IsNullOrEmpty(searchIn)) ? string.Empty : searchIn.ToLower();
-
-            if (srch == "finding-only")
-            {
-                result.Index = boundary.Index;
-                result.Length = boundary.Length;
-            }
-            else if (srch.StartsWith("finding-region"))
-            {
-                if (ParseSearchIn(srch, out int[] args))
-                {
-                    Location loc = GetLocation(boundary.Index);
-                    result.Index = BoundaryByLine(loc.Line, args[0]);
-                    result.Length = BoundaryByLine(loc.Line, args[1]) - result.Index;
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Parse search in command and return arguments
-        /// </summary>
-        /// <param name="searchIn"> text to ba parsed </param>
-        /// <param name="args"> arguments </param>
-        /// <returns> True if parsing was succsessful </returns>
-        private bool ParseSearchIn(string searchIn, out int[] args)
-        {
-            bool result = false;
-            List<int> arglist = new List<int>();
-
-            Regex reg = new Regex(".*\\((.*),(.*)\\)");
-            Match m = reg.Match(searchIn);
-            if (m.Success)
-            {
-                result = true;
-                for (int i = 1; i < m.Groups.Count; i++)
-                {
-                    if (int.TryParse(m.Groups[i].Value, out int value))
-                    {
-                        arglist.Add(value);
-                    }
-                    else
-                    {
-                        result = false;
-                        break;
-                    }
-                }
-            }
-
-            args = arglist.ToArray();
             return result;
         }
     }
