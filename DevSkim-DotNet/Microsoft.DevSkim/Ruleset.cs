@@ -23,7 +23,7 @@ namespace Microsoft.DevSkim
             _rules = new List<Rule>();
         }
 
-        internal OatRuleHolder DevSkimRuleToOatRule(Rule rule)
+        internal ConvertedOatRule DevSkimRuleToConvertedOatRule(Rule rule)
         {
             throw new NotImplementedException();
         }

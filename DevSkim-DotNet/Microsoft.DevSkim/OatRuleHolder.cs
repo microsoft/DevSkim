@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Microsoft.DevSkim
 {
-    class OatRuleHolder : CST.OAT.Rule
+    class ConvertedOatRule : CST.OAT.Rule
     {
-        public OatRuleHolder(string name, Rule rule): base (name)
+        public ConvertedOatRule(string name, Rule rule): base (name)
         {
             Rule = rule;
         }

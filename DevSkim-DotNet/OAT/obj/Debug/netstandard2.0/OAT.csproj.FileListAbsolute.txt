@@ -10,3 +10,15 @@ D:\GitHub\LogicalAnalyzer\OAT\bin\Debug\netstandard2.0\OAT.pdb
 D:\GitHub\LogicalAnalyzer\OAT\bin\Debug\netstandard2.0\OAT.xml
 D:\GitHub\LogicalAnalyzer\OAT\obj\Debug\netstandard2.0\OAT.dll
 D:\GitHub\LogicalAnalyzer\OAT\obj\Debug\netstandard2.0\OAT.pdb
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\bin\Debug\netstandard2.0\OAT.deps.json
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\bin\Debug\netstandard2.0\OAT.dll
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\bin\Debug\netstandard2.0\OAT.pdb
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\bin\Debug\netstandard2.0\OAT.xml
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\OAT.csprojAssemblyReference.cache
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\Microsoft.CST.OAT.Resources.resources
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\OAT.csproj.GenerateResource.cache
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\OAT.AssemblyInfoInputs.cache
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\OAT.AssemblyInfo.cs
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\OAT.csproj.CoreCompileInputs.cache
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\OAT.dll
+D:\GitHub\DevSkim\DevSkim-DotNet\OAT\obj\Debug\netstandard2.0\OAT.pdb

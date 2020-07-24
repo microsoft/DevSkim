@@ -9,8 +9,8 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Reflection.AssemblyVersionAttribute("0.4.0.0")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("0.4.176.21574")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.4.176+465403c6a5")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("0.4.180.64768")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.4.180+00fde92e4f")]
 #if NETSTANDARD || NETFRAMEWORK || NETCOREAPP
 [System.CodeDom.Compiler.GeneratedCode("Nerdbank.GitVersioning.Tasks","3.1.91.19327")]
 #endif
@@ -19,14 +19,14 @@
 #endif
 internal static partial class ThisAssembly {
     internal const string AssemblyVersion = "0.4.0.0";
-    internal const string AssemblyFileVersion = "0.4.176.21574";
-    internal const string AssemblyInformationalVersion = "0.4.176+465403c6a5";
+    internal const string AssemblyFileVersion = "0.4.180.64768";
+    internal const string AssemblyInformationalVersion = "0.4.180+00fde92e4f";
     internal const string AssemblyName = "OAT";
     internal const string AssemblyTitle = "OAT";
     internal const string AssemblyConfiguration = "Debug";
-    internal const string GitCommitId = "465403c6a5ba36f4fe0991070e98e9d0785f0afd";
+    internal const string GitCommitId = "00fde92e4fa043473777f61f731cebe17be3e8b9";
     internal const bool IsPublicRelease = false;
     internal const bool IsPrerelease = false;
-    internal static readonly System.DateTime GitCommitDate = new System.DateTime(637311166450000000L, System.DateTimeKind.Utc);
+    internal static readonly System.DateTime GitCommitDate = new System.DateTime(637311836320000000L, System.DateTimeKind.Utc);
     internal const string RootNamespace = "Microsoft.CST.OAT";
 }

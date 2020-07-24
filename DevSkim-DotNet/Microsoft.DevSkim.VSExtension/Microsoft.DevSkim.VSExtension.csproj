@@ -190,6 +190,9 @@
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost">
       <Version>16.6.255</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.CoreUtility">
+      <Version>16.6.255</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Imaging">
       <Version>16.6.30107.105</Version>
     </PackageReference>
@@ -198,6 +201,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification">
       <Version>16.6.255</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.RemoteControl">
+      <Version>16.3.23</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes">
       <Version>15.0.34</Version>
@@ -226,8 +232,17 @@
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.9.0">
       <Version>9.0.30730</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Telemetry">
+      <Version>16.3.59</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Text.Data">
+      <Version>16.6.255</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf">
       <Version>16.6.255</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading">
+      <Version>16.6.13</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers">
       <Version>16.6.13</Version>

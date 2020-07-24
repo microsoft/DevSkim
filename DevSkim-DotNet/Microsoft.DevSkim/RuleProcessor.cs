@@ -127,7 +127,7 @@ namespace Microsoft.DevSkim
                 {
                     if (cap is TypedClauseCapture<List<Boundary>> tcc)
                     {
-                        if (capture.Rule is OatRuleHolder orh)
+                        if (capture.Rule is ConvertedOatRule orh)
                         {
                             foreach (var boundary in tcc.Result)
                             {
@@ -275,9 +275,9 @@ namespace Microsoft.DevSkim
             }
         }
 
-        private IEnumerable<OatRuleHolder> GetOatRulesForLanguages(string[] languages)
+        private IEnumerable<ConvertedOatRule> GetOatRulesForLanguages(string[] languages)
         {
-            return GetRulesForLanguages(languages).Select(x => _ruleset.DevSkimRuleToOatRule(x));
+            return GetRulesForLanguages(languages).Select(x => _ruleset.DevSkimRuleToConvertedOatRule(x));
         }
 
         /// <summary>
