@@ -44,7 +44,7 @@ namespace Microsoft.CST.OAT.Utils
                         {
                             var keyStr = dictionaryEntry.Key.ToString();
                             var valueStr = dictionaryEntry.Value?.ToString();
-                            if (!string.IsNullOrEmpty(keyStr) && !string.IsNullOrEmpty(valueStr))
+                            if (keyStr is string && valueStr is string)
                                 stringList.Add(keyStr, valueStr);
                         }
                     }

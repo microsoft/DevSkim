@@ -36,7 +36,8 @@
             <param name="clause">The clause being applied</param>
             <param name="state1">The first object state</param>
             <param name="state2">The second object state</param>
-            <returns>(If the Operation delegate applies to the clause, If the operation was successful)</returns>
+            <param name="captures">The previously found clause captures</param>
+            <returns>(If the Operation delegate applies to the clause, If the operation was successful, if capturing is enabled the ClauseCapture)</returns>
         </member>
         <member name="T:Microsoft.CST.OAT.Analyzer.BuiltinOperationDelegate">
             <summary>

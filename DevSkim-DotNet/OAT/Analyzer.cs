@@ -64,8 +64,9 @@ namespace Microsoft.CST.OAT
         /// <param name="clause">The clause being applied</param>
         /// <param name="state1">The first object state</param>
         /// <param name="state2">The second object state</param>
-        /// <returns>(If the Operation delegate applies to the clause, If the operation was successful)</returns>
-        public delegate (bool Applies, bool Result, ClauseCapture? Capture) OperationDelegate(Clause clause, object? state1, object? state2);
+        /// <param name="captures">The previously found clause captures</param>
+        /// <returns>(If the Operation delegate applies to the clause, If the operation was successful, if capturing is enabled the ClauseCapture)</returns>
+        public delegate (bool Applies, bool Result, ClauseCapture? Capture) OperationDelegate(Clause clause, object? state1, object? state2, IEnumerable<ClauseCapture>? captures);
 
         /// <summary>
         /// Default Operation Delegates don't return applies
@@ -332,7 +333,7 @@ namespace Microsoft.CST.OAT
                     {
                         foreach (var clause in rule.Clauses)
                         {
-                            var (ClauseMatches, ClauseCapture) = GetClauseCapture(clause, state1, state2);
+                            var (ClauseMatches, ClauseCapture) = GetClauseCapture(clause, state1, state2, ruleCapture.Captures);
                             if (ClauseMatches)
                             {
                                 if (ClauseCapture != null)
@@ -350,7 +351,7 @@ namespace Microsoft.CST.OAT
                     // Otherwise we evaluate the expression
                     else
                     {
-                        var (ExpressionMatches, Captures) = Evaluate(rule.Expression.Split(' '), rule.Clauses, state1, state2);
+                        var (ExpressionMatches, Captures) = Evaluate(rule.Expression.Split(' '), rule.Clauses, state1, state2, ruleCapture.Captures);
                         if (ExpressionMatches)
                         {
                             ruleCapture.Captures.AddRange(Captures);
@@ -773,7 +774,7 @@ namespace Microsoft.CST.OAT
             return false;
         }
 
-        private (bool Applies, ClauseCapture? Capture) GetClauseCapture(Clause clause, object? state1 = null, object? state2 = null)
+        private (bool Applies, ClauseCapture? Capture) GetClauseCapture(Clause clause, object? state1 = null, object? state2 = null, IEnumerable<ClauseCapture>? captures = null)
         {
             if (clause.Field is string)
             {
@@ -785,7 +786,7 @@ namespace Microsoft.CST.OAT
             {
                 foreach (var del in CustomOperationDelegates)
                 {
-                    var res = del?.Invoke(clause, state1, state2);
+                    var res = del?.Invoke(clause, state1, state2, captures);
                     if (res.HasValue && res.Value.Applies)
                     {
                         return (res.Value.Result, !clause.Capture ? null : res.Value.Capture);
@@ -1685,7 +1686,7 @@ namespace Microsoft.CST.OAT
                         if (!found)
                         {
                             var val = obj?.ToString();
-                            if (!string.IsNullOrEmpty(val))
+                            if (val is string)
                             {
                                 valsToCheck.Add(val);
                             }
@@ -1715,7 +1716,7 @@ namespace Microsoft.CST.OAT
             };
         }
 
-        private (bool Success, List<ClauseCapture>? Capture) Evaluate(string[] splits, List<Clause> Clauses, object? state1, object? state2)
+        private (bool Success, List<ClauseCapture>? Capture) Evaluate(string[] splits, List<Clause> Clauses, object? state1, object? state2, IEnumerable<ClauseCapture>? captures = null)
         {
             bool current = false;
 
@@ -1748,7 +1749,8 @@ namespace Microsoft.CST.OAT
                     bool EvaluateLambda()
                     {
                         // Recursively evaluate the contents of the parentheses
-                        var evaluation = Evaluate(splits[i..(matchingParen + 1)], Clauses, state1, state2);
+                        var capturesUnion = captures is null ? captureOut : captureOut.Union(captures);
+                        var evaluation = Evaluate(splits[i..(matchingParen + 1)], Clauses, state1, state2, capturesUnion);
 
                         if (evaluation.Success)
                         {
@@ -1812,7 +1814,8 @@ namespace Microsoft.CST.OAT
                         }
                         else
                         {
-                            var res2 = GetClauseCapture(res.First(), state1, state2);
+                            var captureEnumerable = captures is null ? captureOut : captureOut.Union(captures);
+                            var res2 = GetClauseCapture(res.First(), state1, state2, captureEnumerable);
 
                             if (res2.Applies && res2.Capture != null)
                             {

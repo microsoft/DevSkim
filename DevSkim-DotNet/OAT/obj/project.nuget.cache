@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ITBWom0hA6tJAMAeOxYY36XFUBZacShsOLIi0opHbby1nRO+jc6iOIW1T2C1jn0OOh3ZexaxiY+A+LVbDcfcnQ==",
+  "dgSpecHash": "Lh/POzXfuoN65IG7ADiCUlyoehKUQ2ZR6UTlIBoyUtXXhrrcf6rEp8zttY31ywLwLukm6HTa6CzTGYM+0n4k7Q==",
   "success": true,
-  "projectFilePath": "D:\\GitHub\\LogicalAnalyzer\\OAT\\OAT.csproj",
+  "projectFilePath": "D:\\GitHub\\DevSkim\\DevSkim-DotNet\\OAT\\OAT.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Gstoc\\.nuget\\packages\\comparenetobjects\\4.66.0\\comparenetobjects.4.66.0.nupkg.sha512",
     "C:\\Users\\Gstoc\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

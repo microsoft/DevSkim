@@ -114,30 +114,53 @@ namespace Microsoft.DevSkim
             analyzer.CustomOperationDelegates.Add(ScopedRegexOperation);
             analyzer.CustomOperationDelegates.Add(WithinOperation);
 
-            (bool Applies, bool Result, ClauseCapture? cc) WithinOperation(Clause c, object? state1, object? state2)
+            (bool Applies, bool Result, ClauseCapture? cc) WithinOperation(Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures)
             {
                 if (c.CustomOperation == "Within")
                 {
                     if (c is WithinClause wc && state1 is TextContainer tc)
                     {
-                        // Subtracting before would give us the end of the line N before but we want the start so go back 1 more
-                        var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (wc.Before + 1))];
-                        var end = tc.LineEnds[Math.Min(tc.LineEnds.Count - 1, tc.LineNumber + wc.After)];
-                        var target = tc.FullContent[start..end];
-                        foreach (var pattern in c.Data.Select(x => analyzer.StringToRegex(x)))
+                        if (wc.FindingOnly)
                         {
-                            if (pattern?.IsMatch(target) is true)
+                            foreach (var capture in captures ?? Array.Empty<ClauseCapture>())
                             {
-                                return (true, !wc.Invert, null);
+                                if (capture is TypedClauseCapture<List<Match>> tcc)
+                                {
+                                    var res = ProcessLambda(tcc.Result[0].Groups[0].Value);
+                                    if (res.Applies)
+                                    {
+                                        return res;
+                                    }
+                                }
                             }
                         }
+                        else
+                        {
+                            var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (wc.Before + 1))];
+                            var end = tc.LineEnds[Math.Min(tc.LineEnds.Count - 1, tc.LineNumber + wc.After)];
+                            return ProcessLambda(tc.FullContent[start..end]);
+                        }
+                        // Subtracting before would give us the end of the line N before but we want the start so go back 1 more
+                        
+                        (bool Applies, bool Result, ClauseCapture? capture) ProcessLambda(string target)
+                        {
+                            foreach (var pattern in c.Data.Select(x => analyzer.StringToRegex(x)))
+                            {
+                                if (pattern?.IsMatch(target) is true)
+                                {
+                                    return (true, !wc.Invert, null);
+                                }
+                            }
+                            return (false, false, null);
+                        }
+                        
                     }
                     return (true, false, null);
                 }
                 return (false, false, null);
             }
 
-            (bool Applies, bool Result, ClauseCapture? cc) ScopedRegexOperation(Clause c, object? state1, object? state2)
+            (bool Applies, bool Result, ClauseCapture? cc) ScopedRegexOperation(Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures)
             {
                 if (c.CustomOperation == "ScopedRegex")
                 {

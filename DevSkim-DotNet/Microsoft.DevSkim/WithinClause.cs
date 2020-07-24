@@ -10,6 +10,6 @@ namespace Microsoft.DevSkim
 
         public int Before { get; set; }
         public int After { get; set; }
-        public bool IncludeLine { get; set; }
+        public bool FindingOnly { get; set; }
     }
 }

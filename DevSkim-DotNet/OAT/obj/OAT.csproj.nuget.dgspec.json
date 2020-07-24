@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\LogicalAnalyzer\\OAT\\OAT.csproj": {}
+    "D:\\GitHub\\DevSkim\\DevSkim-DotNet\\OAT\\OAT.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\LogicalAnalyzer\\OAT\\OAT.csproj": {
+    "D:\\GitHub\\DevSkim\\DevSkim-DotNet\\OAT\\OAT.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\LogicalAnalyzer\\OAT\\OAT.csproj",
+        "projectUniqueName": "D:\\GitHub\\DevSkim\\DevSkim-DotNet\\OAT\\OAT.csproj",
         "projectName": "OAT",
-        "projectPath": "D:\\GitHub\\LogicalAnalyzer\\OAT\\OAT.csproj",
+        "projectPath": "D:\\GitHub\\DevSkim\\DevSkim-DotNet\\OAT\\OAT.csproj",
         "packagesPath": "C:\\Users\\Gstoc\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\LogicalAnalyzer\\OAT\\obj\\",
+        "outputPath": "D:\\GitHub\\DevSkim\\DevSkim-DotNet\\OAT\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "configFilePaths": [
