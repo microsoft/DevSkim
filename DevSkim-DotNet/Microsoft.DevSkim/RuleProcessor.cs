@@ -106,13 +106,73 @@ namespace Microsoft.DevSkim
         public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
         {
             // Get rules for the given content type
-            IEnumerable<Rule> rules = GetRulesForLanguages(languages);
+            //IEnumerable<Rule> rules = GetRulesForLanguages(languages);
+            // Skip rules that are disabled or don't have the right severity
+            //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
+            //        continue;
+
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
+
+            var rules = new List<CST.OAT.Rule>();
 
             var analyzer = new Analyzer();
             analyzer.CustomOperationDelegates.Add(ScopedRegexOperation);
             analyzer.CustomOperationDelegates.Add(WithinOperation);
+
+            var captures = analyzer.GetCaptures(rules, textContainer);
+            foreach(var capture in captures)
+            {
+                // Capture to Issue
+//                ((TypedClauseCapture<List<Match>>)capture.Captures[0]).Result.First().Groups[0].Value;
+//                Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
+                //if (EnableSuppressions && matchList.Count > 0)
+                //{
+                //   var supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
+                //     If rule is NOT being suppressed then report it
+                //    var supissue = supp.GetSuppressedIssue(result.Rule.Id);
+                //    if (supissue is null)
+                //    {
+                //        resultsList.Add(result);
+                //    }
+                //     Otherwise add the suppression info instead
+                //    else
+                //    {
+                //        result.IsSuppressionInfo = true;
+
+                //        if (!resultsList.Any(x => x.Rule.Id == result.Rule.Id && x.Boundary.Index == result.Boundary.Index))
+                //            resultsList.Add(result);
+                //    }
+                //}
+                //else
+                //{
+                //    resultsList.AddRange(matchList);
+                //}
+            }
+
+            // Deal with overrides
+            List<Issue> removes = new List<Issue>();
+            foreach (Issue m in resultsList)
+            {
+                if (m.Rule.Overrides != null && m.Rule.Overrides.Length > 0)
+                {
+                    foreach (string ovrd in m.Rule.Overrides)
+                    {
+                        // Find all overriden rules and mark them for removal from issues list
+                        foreach (Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
+                        {
+                            if (om.Boundary.Index >= m.Boundary.Index &&
+                                om.Boundary.Index <= m.Boundary.Index + m.Boundary.Length)
+                                removes.Add(om);
+                        }
+                    }
+                }
+            }
+
+            // Remove overriden rules
+            resultsList.RemoveAll(x => removes.Contains(x));
+
+            return resultsList.ToArray();
 
             (bool Applies, bool Result, ClauseCapture? cc) WithinOperation(Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures)
             {
@@ -203,116 +263,6 @@ namespace Microsoft.DevSkim
                 }
                 return (false, false, null);
             }
-
-            // Go through each rule
-            //foreach (Rule rule in rules)
-            //{
-            //    List<Issue> matchList = new List<Issue>();
-
-            //    // Skip rules that don't apply based on settings
-            //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
-            //        continue;
-
-            //    // Go through each matching pattern of the rule
-            //    foreach (SearchPattern pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
-            //    {
-            //        // Get all matches for the pattern
-            //        List<Boundary> matches = line.MatchPattern(pattern);
-
-            //        if (matches.Count > 0)
-            //        {
-            //            foreach (Boundary match in matches)
-            //            {
-            //                bool passedConditions = true;
-            //                var translatedBoundary = match;
-            //                if (lineNumber >= 0)
-            //                {
-            //                    translatedBoundary = new Boundary()
-            //                    {
-            //                        Length = match.Length,
-            //                        Index = textContainer.GetBoundaryFromLine(lineNumber).Index + match.Index
-            //                    };
-            //                }
-
-            //                if (!textContainer.ScopeMatch(pattern, translatedBoundary))
-            //                {
-            //                    passedConditions = false;
-            //                }
-            //                else
-            //                {
-            //                    foreach (SearchCondition condition in rule.Conditions.Where(x => x is SearchCondition))
-            //                    {
-            //                        if (condition.Pattern is { })
-            //                        {
-            //                            bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
-            //                            passedConditions = condition.NegateFinding ? !res : res;
-            //                        }
-            //                    }
-            //                }
-
-            //                if (passedConditions)
-            //                {
-            //                    Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
-
-            //                    matchList.Add(issue);
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //    // We got matching rule and suppression are enabled, let's see if we have a supression on the line
-            //    if (EnableSuppressions && matchList.Count > 0)
-            //    {
-            //        Suppression supp;
-            //        foreach (Issue result in matchList)
-            //        {
-            //            supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
-            //            // If rule is NOT being suppressed then report it
-            //            var supissue = supp.GetSuppressedIssue(result.Rule.Id);
-            //            if (supissue is null)
-            //            {
-            //                resultsList.Add(result);
-            //            }
-            //            // Otherwise add the suppression info instead
-            //            else
-            //            {
-            //                result.IsSuppressionInfo = true;
-
-            //                if (!resultsList.Any(x => x.Rule.Id == result.Rule.Id && x.Boundary.Index == result.Boundary.Index))
-            //                    resultsList.Add(result);
-            //            }
-            //        }
-            //    }
-            //    // Otherwise put matchlist to resultlist
-            //    else
-            //    {
-            //        resultsList.AddRange(matchList);
-            //    }
-            //}
-
-            // Deal with overrides
-            List<Issue> removes = new List<Issue>();
-            foreach (Issue m in resultsList)
-            {
-                if (m.Rule.Overrides != null && m.Rule.Overrides.Length > 0)
-                {
-                    foreach (string ovrd in m.Rule.Overrides)
-                    {
-                        // Find all overriden rules and mark them for removal from issues list
-                        foreach (Issue om in resultsList.FindAll(x => x.Rule.Id == ovrd))
-                        {
-                            if (om.Boundary.Index >= m.Boundary.Index &&
-                                om.Boundary.Index <= m.Boundary.Index + m.Boundary.Length)
-                                removes.Add(om);
-                        }
-                    }
-                }
-            }
-
-            // Remove overriden rules
-            resultsList.RemoveAll(x => removes.Contains(x));
-
-            return resultsList.ToArray();
         }
 
         /// <summary>
