@@ -25,7 +25,10 @@ namespace Microsoft.DevSkim
 
         internal ConvertedOatRule DevSkimRuleToConvertedOatRule(Rule rule)
         {
-            throw new NotImplementedException();
+            return new ConvertedOatRule(rule.Id, rule)
+            {
+                // The specifics for the actual OAT Rule.
+            };
         }
 
         /// <summary>
