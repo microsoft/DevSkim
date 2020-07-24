@@ -123,9 +123,36 @@ namespace Microsoft.DevSkim
             var captures = analyzer.GetCaptures(rules, textContainer);
             foreach(var capture in captures)
             {
-                // Capture to Issue
-//                ((TypedClauseCapture<List<Match>>)capture.Captures[0]).Result.First().Groups[0].Value;
-//                Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
+
+                // Turn matches into boundaries.
+                //                ((TypedClauseCapture<List<Match>>)capture.Captures[0]).Result.First().Groups[0].Value;
+                //if (matches.Count > 0)
+                //{
+                //    foreach (Match? m in matches)
+                //    {
+                //        if (m is { })
+                //        {
+                //            matchList.Add(new Boundary() { Index = m.Index, Length = m.Length });
+                //        }
+                //    }
+                //}
+
+                /// Translate boundaries into absolute positions
+                //foreach (Boundary match in matches)
+                //{
+                //    Boundary translatedBoundary = new Boundary()
+                //    {
+                //        Length = match.Length,
+                //        Index = match.Index + scope.Index
+                //    };
+                //    if (ScopeMatch(pattern, translatedBoundary))
+                //    {
+                //        return true;
+                //    }
+                //}
+
+                // Turn Boundary into Issue
+                // Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
                 //if (EnableSuppressions && matchList.Count > 0)
                 //{
                 //   var supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
