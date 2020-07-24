@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.DevSkim
+﻿namespace Microsoft.DevSkim
 {
     public class ConvertedOatRule : CST.OAT.Rule
     {
