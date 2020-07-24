@@ -23,6 +23,11 @@ namespace Microsoft.DevSkim
             _rules = new List<Rule>();
         }
 
+        internal OatRuleHolder DevSkimRuleToOatRule(Rule rule)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///     Delegate for deserialization error handler
         /// </summary>

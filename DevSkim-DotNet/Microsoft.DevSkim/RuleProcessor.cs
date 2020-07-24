@@ -106,15 +106,13 @@ namespace Microsoft.DevSkim
         public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
         {
             // Get rules for the given content type
-            //IEnumerable<Rule> rules = GetRulesForLanguages(languages);
+            IEnumerable<CST.OAT.Rule> rules = GetOatRulesForLanguages(languages);
             // Skip rules that are disabled or don't have the right severity
             //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
             //        continue;
 
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
-
-            var rules = new List<CST.OAT.Rule>();
 
             var analyzer = new Analyzer();
             analyzer.CustomOperationDelegates.Add(ScopedRegexOperation);
@@ -123,58 +121,43 @@ namespace Microsoft.DevSkim
             var captures = analyzer.GetCaptures(rules, textContainer);
             foreach(var capture in captures)
             {
-
                 // Turn matches into boundaries.
-                //                ((TypedClauseCapture<List<Match>>)capture.Captures[0]).Result.First().Groups[0].Value;
-                //if (matches.Count > 0)
-                //{
-                //    foreach (Match? m in matches)
-                //    {
-                //        if (m is { })
-                //        {
-                //            matchList.Add(new Boundary() { Index = m.Index, Length = m.Length });
-                //        }
-                //    }
-                //}
+                var matches = capture.Captures;
+                foreach (var cap in capture.Captures)
+                {
+                    if (cap is TypedClauseCapture<List<Boundary>> tcc)
+                    {
+                        if (capture.Rule is OatRuleHolder orh)
+                        {
+                            foreach (var boundary in tcc.Result)
+                            {
+                                var issue = new Issue(Boundary: boundary, StartLocation: textContainer.GetLocation(boundary.Index), EndLocation: textContainer.GetLocation(boundary.Index + boundary.Length), Rule: orh.Rule);
+                                if (EnableSuppressions)
+                                {
+                                    var supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : issue.StartLocation.Line);
+                                    var supissue = supp.GetSuppressedIssue(issue.Rule.Id);
+                                    if (supissue is null)
+                                    {
+                                        resultsList.Add(issue);
+                                    }
+                                    //Otherwise add the suppression info instead
+                                    else
+                                    {
+                                        issue.IsSuppressionInfo = true;
 
-                /// Translate boundaries into absolute positions
-                //foreach (Boundary match in matches)
-                //{
-                //    Boundary translatedBoundary = new Boundary()
-                //    {
-                //        Length = match.Length,
-                //        Index = match.Index + scope.Index
-                //    };
-                //    if (ScopeMatch(pattern, translatedBoundary))
-                //    {
-                //        return true;
-                //    }
-                //}
+                                        if (!resultsList.Any(x => x.Rule.Id == issue.Rule.Id && x.Boundary.Index == issue.Boundary.Index))
+                                            resultsList.Add(issue);
+                                    }
+                                }
+                                else
+                                {
+                                    resultsList.Add(issue);
+                                }
+                            }
 
-                // Turn Boundary into Issue
-                // Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
-                //if (EnableSuppressions && matchList.Count > 0)
-                //{
-                //   var supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
-                //     If rule is NOT being suppressed then report it
-                //    var supissue = supp.GetSuppressedIssue(result.Rule.Id);
-                //    if (supissue is null)
-                //    {
-                //        resultsList.Add(result);
-                //    }
-                //     Otherwise add the suppression info instead
-                //    else
-                //    {
-                //        result.IsSuppressionInfo = true;
-
-                //        if (!resultsList.Any(x => x.Rule.Id == result.Rule.Id && x.Boundary.Index == result.Boundary.Index))
-                //            resultsList.Add(result);
-                //    }
-                //}
-                //else
-                //{
-                //    resultsList.AddRange(matchList);
-                //}
+                        }
+                    }
+                }
             }
 
             // Deal with overrides
@@ -264,7 +247,7 @@ namespace Microsoft.DevSkim
                             var res = analyzer.RegexOperationDelegate.Invoke(c, state1, null);
                             if (res.Result && res.Capture is TypedClauseCapture<MatchCollection> mc)
                             {
-                                var matches = new List<Match>();
+                                var boundaries = new List<Boundary>();
                                 foreach (var match in mc.Result)
                                 {
                                     if (match is Match m)
@@ -277,12 +260,12 @@ namespace Microsoft.DevSkim
                                         // Should return only scoped matches
                                         if (tc.ScopeMatch(scopes, translatedBoundary))
                                         {
-                                            matches.Add(m);
+                                            boundaries.Add(translatedBoundary);
                                         }
                                     }
                                 }
-                                var result = c.Invert ? matches.Count == 0 : matches.Count > 0;
-                                return (true, result, result && c.Capture ? new TypedClauseCapture<List<Match>>(c, matches, state1, null) : null);
+                                var result = c.Invert ? boundaries.Count == 0 : boundaries.Count > 0;
+                                return (true, result, result && c.Capture ? new TypedClauseCapture<List<Boundary>>(c, boundaries, state1, null) : null);
                             }
                         }
                     }
@@ -290,6 +273,11 @@ namespace Microsoft.DevSkim
                 }
                 return (false, false, null);
             }
+        }
+
+        private IEnumerable<OatRuleHolder> GetOatRulesForLanguages(string[] languages)
+        {
+            return GetRulesForLanguages(languages).Select(x => _ruleset.DevSkimRuleToOatRule(x));
         }
 
         /// <summary>
