@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim
@@ -21,6 +22,7 @@ namespace Microsoft.DevSkim
         public RuleSet()
         {
             _rules = new List<Rule>();
+            _oatRules = new List<ConvertedOatRule>();
         }
 
         internal ConvertedOatRule DevSkimRuleToConvertedOatRule(Rule rule)
@@ -131,6 +133,7 @@ namespace Microsoft.DevSkim
         public void AddRange(IEnumerable<Rule> collection)
         {
             _rules.AddRange(collection);
+            _oatRules.AddRange(collection.Select(x => DevSkimRuleToConvertedOatRule(x)));
         }
 
         /// <summary>
@@ -140,6 +143,7 @@ namespace Microsoft.DevSkim
         public void AddRule(Rule rule)
         {
             _rules.Add(rule);
+            _oatRules.Add(DevSkimRuleToConvertedOatRule(rule));
         }
 
         /// <summary>
@@ -184,6 +188,7 @@ namespace Microsoft.DevSkim
                 }
 
                 _rules.AddRange(ruleList);
+                _oatRules.AddRange(ruleList.Select(x => DevSkimRuleToConvertedOatRule(x)));
             }
         }
 
@@ -192,26 +197,9 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="languages"> Languages </param>
         /// <returns> Filtered rules </returns>
-        public IEnumerable<Rule> ByLanguages(string[] languages)
+        public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            // Otherwise preprare the rules for the content type and store it in cache.
-            List<Rule> filteredRules = new List<Rule>();
-
-            foreach (Rule r in _rules)
-            {
-                if (r.AppliesTo != null && ArrayContains(r.AppliesTo, languages))
-                {
-                    // Put rules with defined language (applies_to) on top
-                    filteredRules.Insert(0, r);
-                }
-                else if (r.AppliesTo == null || r.AppliesTo.Length == 0)
-                {
-                    // Put rules without applies_to on the bottom
-                    filteredRules.Add(r);
-                }
-            }
-
-            return filteredRules;
+            return _oatRules.Where(x => x.Rule.AppliesTo is string[] appliesList && ArrayContains(appliesList,languages));
         }
 
         /// <summary>
@@ -219,7 +207,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         public int Count()
         {
-            return _rules.Count();
+            return _rules.Count;
         }
 
         /// <summary>
@@ -241,6 +229,7 @@ namespace Microsoft.DevSkim
         }
 
         private List<Rule> _rules;
+        private List<ConvertedOatRule> _oatRules;
 
         /// <summary>
         ///     Tests if array contains given elements

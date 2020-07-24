@@ -22,7 +22,7 @@ namespace Microsoft.DevSkim
         public RuleProcessor(RuleSet rules)
         {
             _ruleset = rules;
-            _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
+            _rulesCache = new Dictionary<string, IEnumerable<ConvertedOatRule>>();
             EnableSuppressions = false;
             EnableCache = true;
 
@@ -48,7 +48,7 @@ namespace Microsoft.DevSkim
             set
             {
                 _ruleset = value;
-                _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
+                _rulesCache = new Dictionary<string, IEnumerable<ConvertedOatRule>>();
             }
         }
 
@@ -106,7 +106,7 @@ namespace Microsoft.DevSkim
         public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
         {
             // Get rules for the given content type
-            IEnumerable<CST.OAT.Rule> rules = GetOatRulesForLanguages(languages);
+            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages);
             // Skip rules that are disabled or don't have the right severity
             //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
             //        continue;
@@ -118,8 +118,7 @@ namespace Microsoft.DevSkim
             analyzer.CustomOperationDelegates.Add(ScopedRegexOperation);
             analyzer.CustomOperationDelegates.Add(WithinOperation);
 
-            var captures = analyzer.GetCaptures(rules, textContainer);
-            foreach(var capture in captures)
+            foreach(var capture in analyzer.GetCaptures(rules, textContainer))
             {
                 // Turn matches into boundaries.
                 var matches = capture.Captures;
@@ -277,13 +276,13 @@ namespace Microsoft.DevSkim
 
         private IEnumerable<ConvertedOatRule> GetOatRulesForLanguages(string[] languages)
         {
-            return GetRulesForLanguages(languages).Select(x => _ruleset.DevSkimRuleToConvertedOatRule(x));
+            return GetRulesForLanguages(languages);
         }
 
         /// <summary>
         ///     Cache for rules filtered by content type
         /// </summary>
-        private Dictionary<string, IEnumerable<Rule>> _rulesCache;
+        private Dictionary<string, IEnumerable<ConvertedOatRule>> _rulesCache;
 
         private RuleSet _ruleset;
 
@@ -292,7 +291,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="languages"> Languages to filter rules for </param>
         /// <returns> List of rules </returns>
-        private IEnumerable<Rule> GetRulesForLanguages(string[] languages)
+        private IEnumerable<ConvertedOatRule> GetRulesForLanguages(string[] languages)
         {
             string langid = string.Empty;
 
@@ -306,7 +305,7 @@ namespace Microsoft.DevSkim
                     return _rulesCache[langid];
             }
 
-            IEnumerable<Rule> filteredRules = _ruleset.ByLanguages(languages);
+            IEnumerable<ConvertedOatRule> filteredRules = _ruleset.ByLanguages(languages);
 
             // Add the list to the cache so we save time on the next call
             if (EnableCache && filteredRules.Count() > 0)
