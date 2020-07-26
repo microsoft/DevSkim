@@ -11,52 +11,54 @@ namespace Microsoft.DevSkim
     public class ScopedRegexOperation : OatOperation
     {
         private RegexOperation regexEngine;
-        public ScopedRegexOperation(Analyzer analyzer) : base(Operation.Custom,analyzer)
+        public ScopedRegexOperation(Analyzer analyzer) : base(Operation.Custom,ScopedRegexOperationDelegate, ScopedRegexValidationDelegate,analyzer, "ScopedRegex")
         {
             regexEngine = new RegexOperation(analyzer);
-            OperationDelegate = (Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures) =>
+        }
+
+        private IEnumerable<Violation> ScopedRegexValidationDelegate(Rule rule, Clause clause)
+        {
+            return new List<Violation>();
+        }
+
+        public OperationResult ScopedRegexOperationDelegate(Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures)
+        {
+            if (state1 is TextContainer tc && c is ScopedRegexClause src)
             {
-                if (c.CustomOperation == "ScopedRegex")
+                var scopes = new List<PatternScope>();
+                foreach (var datum in c.Data ?? new List<string>())
                 {
-                    if (state1 is TextContainer tc && c is ScopedRegexClause src)
+                    scopes.Add((PatternScope)Enum.Parse(typeof(PatternScope), datum));
+                }
+                var matchList = new List<Boundary>();
+                if (Analyzer != null)
+                {
+                    var res = regexEngine.OperationDelegate.Invoke(c, state1, null, null);
+                    if (res.Result && res.Capture is TypedClauseCapture<MatchCollection> mc)
                     {
-                        var scopes = new List<PatternScope>();
-                        foreach (var datum in c.Data ?? new List<string>())
+                        List<Boundary> boundaries = new List<Boundary>();
+                        foreach (var match in mc.Result)
                         {
-                            scopes.Add((PatternScope)Enum.Parse(typeof(PatternScope), datum));
-                        }
-                        var matchList = new List<Boundary>();
-                        if (analyzer != null)
-                        {
-                            var res = regexEngine.OperationDelegate.Invoke(c, state1, null, null);
-                            if (res.Result && res.Capture is TypedClauseCapture<MatchCollection> mc)
+                            if (match is Match m)
                             {
-                                List<Boundary> boundaries = new List<Boundary>();
-                                foreach (var match in mc.Result)
+                                Boundary translatedBoundary = new Boundary()
                                 {
-                                    if (match is Match m)
-                                    {
-                                        Boundary translatedBoundary = new Boundary()
-                                        {
-                                            Length = m.Length,
-                                            Index = m.Index + tc.GetLineBoundary(tc.LineNumber).Index
-                                        };
-                                        // Should return only scoped matches
-                                        if (tc.ScopeMatch(scopes, translatedBoundary))
-                                        {
-                                            boundaries.Add(translatedBoundary);
-                                        }
-                                    }
+                                    Length = m.Length,
+                                    Index = m.Index + tc.GetLineBoundary(tc.LineNumber).Index
+                                };
+                                // Should return only scoped matches
+                                if (tc.ScopeMatch(scopes, translatedBoundary))
+                                {
+                                    boundaries.Add(translatedBoundary);
                                 }
-                                var result = c.Invert ? boundaries.Count == 0 : boundaries.Count > 0;
-                                return new OperationResult(result, result && c.Capture ? new TypedClauseCapture<List<Boundary>>(c, boundaries, state1) : null);
                             }
                         }
+                        var result = c.Invert ? boundaries.Count == 0 : boundaries.Count > 0;
+                        return new OperationResult(result, result && c.Capture ? new TypedClauseCapture<List<Boundary>>(c, boundaries, state1) : null);
                     }
-                    return new OperationResult(false, null);
                 }
-                return new OperationResult(false, null);
-            };
+            }
+            return new OperationResult(false, null);
         }
     }
 }

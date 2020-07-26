@@ -4,7 +4,6 @@ using Microsoft.CST.OAT;
 
 namespace Microsoft.DevSkim
 {
-    [System.CLSCompliant(false)]
     public class ScopedRegexClause : Clause
     {
         public ScopedRegexClause(PatternScope scope, string? field = null) : base(Operation.Custom, field)
