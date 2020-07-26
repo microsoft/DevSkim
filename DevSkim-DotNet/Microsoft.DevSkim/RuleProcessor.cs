@@ -1,6 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.CST.OAT;
+using Microsoft.CST.OAT.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,10 @@ namespace Microsoft.DevSkim
             EnableCache = true;
 
             SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
+
+            analyzer = new Analyzer();
+            analyzer.SetOperation(new WithinOperation(analyzer));
+            analyzer.SetOperation(new ScopedRegexOperation(analyzer));
         }
 
         /// <summary>
@@ -55,6 +60,8 @@ namespace Microsoft.DevSkim
         ///     Sets severity levels for analysis
         /// </summary>
         public Severity SeverityLevel { get; set; }
+
+        private Analyzer analyzer;
 
         /// <summary>
         ///     Applies given fix on the provided source code line
@@ -112,10 +119,6 @@ namespace Microsoft.DevSkim
 
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
-
-            var analyzer = new Analyzer();
-            analyzer.CustomOperationDelegates.Add(ScopedRegexOperation);
-            analyzer.CustomOperationDelegates.Add(WithinOperation);
 
             foreach(var capture in analyzer.GetCaptures(rules, textContainer))
             {
@@ -181,96 +184,6 @@ namespace Microsoft.DevSkim
             resultsList.RemoveAll(x => removes.Contains(x));
 
             return resultsList.ToArray();
-
-            (bool Applies, bool Result, ClauseCapture? cc) WithinOperation(Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures)
-            {
-                if (c.CustomOperation == "Within")
-                {
-                    if (c is WithinClause wc && state1 is TextContainer tc)
-                    {
-                        if (wc.FindingOnly)
-                        {
-                            foreach (var capture in captures ?? Array.Empty<ClauseCapture>())
-                            {
-                                if (capture is TypedClauseCapture<List<Match>> tcc)
-                                {
-                                    var res = ProcessLambda(tcc.Result[0].Groups[0].Value);
-                                    if (res.Applies)
-                                    {
-                                        return res;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (wc.Before + 1))];
-                            var end = tc.LineEnds[Math.Min(tc.LineEnds.Count - 1, tc.LineNumber + wc.After)];
-                            return ProcessLambda(tc.FullContent[start..end]);
-                        }
-                        // Subtracting before would give us the end of the line N before but we want the start so go back 1 more
-                        
-                        (bool Applies, bool Result, ClauseCapture? capture) ProcessLambda(string target)
-                        {
-                            foreach (var pattern in c.Data.Select(x => analyzer.StringToRegex(x)))
-                            {
-                                if (pattern?.IsMatch(target) is true)
-                                {
-                                    return (true, !wc.Invert, null);
-                                }
-                            }
-                            return (false, false, null);
-                        }
-                        
-                    }
-                    return (true, false, null);
-                }
-                return (false, false, null);
-            }
-
-            (bool Applies, bool Result, ClauseCapture? cc) ScopedRegexOperation(Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures)
-            {
-                if (c.CustomOperation == "ScopedRegex")
-                {
-                    if (state1 is TextContainer tc && c is ScopedRegexClause src)
-                    {
-                        var scopes = new List<PatternScope>();
-                        foreach (var datum in c.Data ?? new List<string>())
-                        {
-                            scopes.Add((PatternScope)Enum.Parse(typeof(PatternScope), datum));
-                        }
-                        var matchList = new List<Boundary>();
-                        if (analyzer != null)
-                        {
-                            var res = analyzer.RegexOperationDelegate.Invoke(c, state1, null);
-                            if (res.Result && res.Capture is TypedClauseCapture<MatchCollection> mc)
-                            {
-                                var boundaries = new List<Boundary>();
-                                foreach (var match in mc.Result)
-                                {
-                                    if (match is Match m)
-                                    {
-                                        Boundary translatedBoundary = new Boundary()
-                                        {
-                                            Length = m.Length,
-                                            Index = m.Index + tc.GetLineBoundary(tc.LineNumber).Index
-                                        };
-                                        // Should return only scoped matches
-                                        if (tc.ScopeMatch(scopes, translatedBoundary))
-                                        {
-                                            boundaries.Add(translatedBoundary);
-                                        }
-                                    }
-                                }
-                                var result = c.Invert ? boundaries.Count == 0 : boundaries.Count > 0;
-                                return (true, result, result && c.Capture ? new TypedClauseCapture<List<Boundary>>(c, boundaries, state1, null) : null);
-                            }
-                        }
-                    }
-                    return (true, false, null);
-                }
-                return (false, false, null);
-            }
         }
 
         private IEnumerable<ConvertedOatRule> GetOatRulesForLanguages(string[] languages)

@@ -1,10 +1,14 @@
-﻿namespace Microsoft.CST.OAT
+﻿using System.Collections.Generic;
+
+namespace Microsoft.CST.OAT
 {
     /// <summary>
     /// Holds a clause and object states, can be extended to hold a Result with specific data
     /// </summary>
     public class TypedClauseCapture<T> : ClauseCapture
     {
+        private Clause c;
+
         /// <summary>
         /// A basic Clause Capture constructor
         /// </summary>

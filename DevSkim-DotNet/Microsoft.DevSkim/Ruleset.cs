@@ -95,7 +95,7 @@ namespace Microsoft.DevSkim
         public void AddDirectory(string path, string? tag = null)
         {
             if (path == null)
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
 
             if (!Directory.Exists(path))
                 throw new DirectoryNotFoundException();

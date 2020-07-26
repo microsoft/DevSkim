@@ -137,8 +137,6 @@ namespace Microsoft.DevSkim.VSExtension
                     var oldSecurityErrors = Factory.CurrentSnapshot;
                     var newSecurityErrors = new DevSkimErrorsSnapshot(this.FilePath, oldSecurityErrors.VersionNumber + 1);
 
-                    bool anyNewErrors = false;
-
                     string text = _textView.TextSnapshot.GetText();
 
                     Issue[] issues = SkimShim.Analyze(text, line.Snapshot.ContentType.TypeName, FilePath);

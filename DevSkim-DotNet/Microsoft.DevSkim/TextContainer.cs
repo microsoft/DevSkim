@@ -30,14 +30,14 @@ namespace Microsoft.DevSkim
             {
                 if (++pos < FullContent.Length)
                 {
-                    pos = FullContent.IndexOf(Environment.NewLine, pos);
+                    pos = FullContent.IndexOf(Environment.NewLine, pos, StringComparison.InvariantCultureIgnoreCase);
                     LineEnds.Add(pos);
                 }
             }
 
             // Text can end with \n or not
             if (LineEnds[LineEnds.Count - 1] == -1)
-                LineEnds[LineEnds.Count - 1] = (FullContent.Length > 0) ? content.Length - 1 : 0;
+                LineEnds[LineEnds.Count - 1] = (FullContent.Length > 0) ? FullContent.Length - 1 : 0;
 
             prefix = DevSkim.Language.GetCommentPrefix(Language);
             suffix = DevSkim.Language.GetCommentSuffix(Language);

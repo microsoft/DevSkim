@@ -57,5 +57,19 @@ namespace Microsoft.CST.OAT
         /// When calling Capture functionality if the result of this clause should be Captured
         /// </summary>
         public bool Capture { get; set; }
+
+        internal string Key 
+        { 
+            get
+            {
+                if (string.IsNullOrEmpty(_key))
+                {
+                    _key = string.Format("{0}{1}{2}", Operation, CustomOperation is null ? "" : " - ", CustomOperation is null ? "" : CustomOperation);
+                }
+                return _key;
+            }
+        }
+
+        private string _key = "";
     }
 }

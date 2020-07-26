@@ -338,5 +338,14 @@ namespace Microsoft.CST.OAT {
                 return ResourceManager.GetString("Err_ClauseUnusedLabel", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule {0} Clause {1} has Operation {2} with undefined validation delegate..
+        /// </summary>
+        internal static string Err_ValidationDelegateUndefined__0__1__2_ {
+            get {
+                return ResourceManager.GetString("Err_ValidationDelegateUndefined_{0}{1}{2}", resourceCulture);
+            }
+        }
     }
 }

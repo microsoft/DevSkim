@@ -210,4 +210,7 @@
   <data name="Err_ClauseUnusedLabel" xml:space="preserve">
     <value>Clause {0} is declared but never used in rule {1}.</value>
   </data>
+  <data name="Err_ValidationDelegateUndefined_{0}{1}{2}" xml:space="preserve">
+    <value>Rule {0} Clause {1} has Operation {2} with undefined validation delegate.</value>
+  </data>
 </root>

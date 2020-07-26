@@ -22,7 +22,7 @@ namespace Microsoft.DevSkim
         {
             if (text is null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
             _lineText = text;
             ParseLine();
@@ -32,7 +32,7 @@ namespace Microsoft.DevSkim
         {
             if (text is null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
             _text = text;
             _lineNumber = lineNumber;
@@ -101,14 +101,14 @@ namespace Microsoft.DevSkim
         protected const string KeywordIgnore = "ignore";
         protected const string KeywordPrefix = "DevSkim:";
         protected const string KeywordUntil = "until";
-        protected DateTime _expirationDate = DateTime.MaxValue;
-        protected List<SuppressedIssue> _issues = new List<SuppressedIssue>();
-        protected int _lineNumber;
-        protected string _lineText;
-        protected int _suppressLength = -1;
-        protected int _suppressStart = -1;
-        protected TextContainer? _text;
-        protected Regex reg = new Regex(pattern);
+        protected DateTime _expirationDate { get; set; } = DateTime.MaxValue;
+        protected List<SuppressedIssue> _issues { get; set; } = new List<SuppressedIssue>();
+        protected int _lineNumber { get; set; }
+        protected string _lineText { get; set; }
+        protected int _suppressLength { get; set; } = -1;
+        protected int _suppressStart { get; set; } = -1;
+        protected TextContainer? _text { get; set; }
+        protected Regex reg { get; set; } = new Regex(pattern);
 
         protected void ParseLine()
         {
