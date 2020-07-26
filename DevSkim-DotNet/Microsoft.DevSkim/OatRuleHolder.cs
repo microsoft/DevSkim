@@ -4,9 +4,9 @@
     {
         public ConvertedOatRule(string name, Rule rule): base (name)
         {
-            Rule = rule;
+            DevSkimRule = rule;
         }
 
-        public Rule Rule { get; }
+        public Rule DevSkimRule { get; }
     }
 }

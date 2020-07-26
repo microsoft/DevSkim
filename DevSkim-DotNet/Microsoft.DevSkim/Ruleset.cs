@@ -28,7 +28,9 @@ namespace Microsoft.DevSkim
         {
             return new ConvertedOatRule(rule.Id, rule)
             {
-                // The specifics for the actual OAT Rule.
+                // Property1 = Data,
+                // Property2 = Data,
+                // ...
             };
         }
 
@@ -198,7 +200,7 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            return _oatRules.Where(x => x.Rule.AppliesTo is string[] appliesList && ArrayContains(appliesList,languages));
+            return _oatRules.Where(x => x.DevSkimRule.AppliesTo is string[] appliesList && ArrayContains(appliesList,languages));
         }
 
         /// <summary>

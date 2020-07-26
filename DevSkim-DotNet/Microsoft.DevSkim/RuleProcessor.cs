@@ -132,7 +132,7 @@ namespace Microsoft.DevSkim
                         {
                             foreach (var boundary in tcc.Result)
                             {
-                                var issue = new Issue(Boundary: boundary, StartLocation: textContainer.GetLocation(boundary.Index), EndLocation: textContainer.GetLocation(boundary.Index + boundary.Length), Rule: orh.Rule);
+                                var issue = new Issue(Boundary: boundary, StartLocation: textContainer.GetLocation(boundary.Index), EndLocation: textContainer.GetLocation(boundary.Index + boundary.Length), Rule: orh.DevSkimRule);
                                 if (EnableSuppressions)
                                 {
                                     var supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : issue.StartLocation.Line);
