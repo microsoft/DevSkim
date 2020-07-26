@@ -248,7 +248,7 @@ namespace System.Runtime.CompilerServices
                 throw new ArgumentNullException(nameof(array));
             }
 
-            (int offset, int length) = range.GetOffsetAndLength(array.Length);
+            (var offset, var length) = range.GetOffsetAndLength(array.Length);
 
             if (default(T) != null || typeof(T[]) == array.GetType())
             {

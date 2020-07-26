@@ -1,12 +1,8 @@
 ﻿using Microsoft.CST.OAT.Utils;
-using Serilog;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Microsoft.CST.OAT.Operations
 {
@@ -47,7 +43,7 @@ namespace Microsoft.CST.OAT.Operations
                     foreach (var datum in clause.Data ?? new List<string>())
                     {
 #if !NETSTANDARD2_0
-                        if (Enum.TryParse(typeHolder.GetType(), datum, out object result))
+                        if (Enum.TryParse(typeHolder.GetType(), datum, out var result))
                         {
                             if (result is Enum eresult)
                             {

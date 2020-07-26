@@ -58,8 +58,8 @@ namespace Microsoft.CST.OAT
         /// </summary>
         public bool Capture { get; set; }
 
-        internal string Key 
-        { 
+        internal string Key
+        {
             get
             {
                 if (string.IsNullOrEmpty(_key))

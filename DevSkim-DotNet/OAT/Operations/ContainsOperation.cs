@@ -1,12 +1,8 @@
 ﻿using Microsoft.CST.OAT.Utils;
-using Serilog;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Microsoft.CST.OAT.Operations
 {
@@ -48,7 +44,7 @@ namespace Microsoft.CST.OAT.Operations
                     foreach (var datum in clause.Data ?? new List<string>())
                     {
 #if !NETSTANDARD2_0
-                        if (Enum.TryParse(typeHolder.GetType(), datum, out object result))
+                        if (Enum.TryParse(typeHolder.GetType(), datum, out var result))
                         {
                             if (result is Enum eresult)
                             {
@@ -101,15 +97,36 @@ namespace Microsoft.CST.OAT.Operations
             }
 
             (var stateOneList, var stateOneDict) = Analyzer?.ObjectToValues(state1) ?? (new List<string>(), new List<KeyValuePair<string, string>>());
+
+/* Unmerged change from project 'OAT (netstandard2.1)'
+Before:
+            (List<string>? stateTwoList, List<KeyValuePair<string, string>>? stateTwoDict) = Analyzer?.ObjectToValues(state2) ?? (new List<string>(), new List<KeyValuePair<string, string>>());
+After:
+            (List<string>? stateTwoList, var stateTwoDict) = Analyzer?.ObjectToValues(state2) ?? (new List<string>(), new List<KeyValuePair<string, string>>());
+*/
             (var stateTwoList, var stateTwoDict) = Analyzer?.ObjectToValues(state2) ?? (new List<string>(), new List<KeyValuePair<string, string>>());
 
             if (clause.DictData is List<KeyValuePair<string, string>> ContainsData)
             {
                 if (stateOneDict.Any())
                 {
+
+/* Unmerged change from project 'OAT (netstandard2.1)'
+Before:
+                    IEnumerable<KeyValuePair<string, string>>? res = stateOneDict.Where(x => (!clause.Invert && ContainsData.Contains(x)) || (clause.Invert && !ContainsData.Contains(x)));
+After:
+                    var res = stateOneDict.Where(x => (!clause.Invert && ContainsData.Contains(x)) || (clause.Invert && !ContainsData.Contains(x)));
+*/
                     var res = stateOneDict.Where(x => (!clause.Invert && ContainsData.Contains(x)) || (clause.Invert && !ContainsData.Contains(x)));
                     if (res.Any())
                     {
+
+/* Unmerged change from project 'OAT (netstandard2.1)'
+Before:
+                        TypedClauseCapture<List<KeyValuePair<string, string>>>? captured = clause.Capture ?
+After:
+                        var captured = clause.Capture ?
+*/
                         var captured = clause.Capture ?
                             new TypedClauseCapture<List<KeyValuePair<string, string>>>(clause, res.ToList(), state1, null) :
                             null;
@@ -118,9 +135,23 @@ namespace Microsoft.CST.OAT.Operations
                 }
                 if (stateTwoDict.Any())
                 {
+
+/* Unmerged change from project 'OAT (netstandard2.1)'
+Before:
+                    IEnumerable<KeyValuePair<string, string>>? res = stateTwoDict.Where(x => (!clause.Invert && ContainsData.Contains(x)) || (clause.Invert && !ContainsData.Contains(x)));
+After:
+                    var res = stateTwoDict.Where(x => (!clause.Invert && ContainsData.Contains(x)) || (clause.Invert && !ContainsData.Contains(x)));
+*/
                     var res = stateTwoDict.Where(x => (!clause.Invert && ContainsData.Contains(x)) || (clause.Invert && !ContainsData.Contains(x)));
                     if (res.Any())
                     {
+
+/* Unmerged change from project 'OAT (netstandard2.1)'
+Before:
+                        TypedClauseCapture<List<KeyValuePair<string, string>>>? captured = clause.Capture ?
+After:
+                        var captured = clause.Capture ?
+*/
                         var captured = clause.Capture ?
                             new TypedClauseCapture<List<KeyValuePair<string, string>>>(clause, res.ToList(), null, state2) :
                             null;

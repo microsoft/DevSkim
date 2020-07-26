@@ -5,7 +5,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.CST.OAT.Operations
@@ -21,7 +20,7 @@ namespace Microsoft.CST.OAT.Operations
         /// Create an OatOperation given an analyzer
         /// </summary>
         /// <param name="analyzer">The analyzer context to work with</param>
-        public RegexOperation(Analyzer analyzer) : base(Operation.Regex,analyzer)
+        public RegexOperation(Analyzer analyzer) : base(Operation.Regex, analyzer)
         {
             OperationDelegate = RegexOperationDelegate;
             ValidationDelegate = RegexValidationDelegate;

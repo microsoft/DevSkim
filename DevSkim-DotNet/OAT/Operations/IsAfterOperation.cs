@@ -1,12 +1,8 @@
 ﻿using Microsoft.CST.OAT.Utils;
-using Serilog;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Microsoft.CST.OAT.Operations
 {
@@ -27,7 +23,7 @@ namespace Microsoft.CST.OAT.Operations
 
         private IEnumerable<Violation> IsAfterValidationDelegate(Rule rule, Clause clause)
         {
-            if (clause.Data?.Count == null || clause.Data is List<string> clauseList2 && (clauseList2.Count != 1 || !DateTime.TryParse(clause.Data.First(), out DateTime _)))
+            if (clause.Data?.Count == null || clause.Data is List<string> clauseList2 && (clauseList2.Count != 1 || !DateTime.TryParse(clause.Data.First(), out var _)))
             {
                 yield return new Violation(string.Format(Strings.Get("Err_ClauseExpectedDateTime"), rule.Name, clause.Label ?? rule.Clauses.IndexOf(clause).ToString(CultureInfo.InvariantCulture)), rule, clause);
             }
@@ -44,7 +40,7 @@ namespace Microsoft.CST.OAT.Operations
             {
                 foreach (var data in clause.Data ?? new List<string>())
                 {
-                    var compareTime = DateTime.TryParse(data, out DateTime result);
+                    var compareTime = DateTime.TryParse(data, out var result);
 
                     if (state1 is DateTime date1)
                     {

@@ -1,5 +1,4 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License.
-using KellermanSoftware.CompareNetObjects;
 using Microsoft.CST.OAT.Captures;
 using Microsoft.CST.OAT.Operations;
 using Microsoft.CST.OAT.Utils;
@@ -10,8 +9,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Microsoft.CST.OAT
@@ -41,18 +38,6 @@ namespace Microsoft.CST.OAT
             SetOperation(new RegexOperation(this));
             SetOperation(new StartsWithOperation(this));
             SetOperation(new WasModifiedOperation(this));
-        }
-
-        private IEnumerable<Violation> EqualsValidationDelegate(Rule rule, Clause clause)
-        {
-            if ((clause.Data?.Count == null || clause.Data?.Count == 0))
-            {
-                yield return new Violation(string.Format(Strings.Get("Err_ClauseNoData"), rule.Name, clause.Label ?? rule.Clauses.IndexOf(clause).ToString(CultureInfo.InvariantCulture)), rule, clause);
-            }
-            if (clause.DictData != null || clause.DictData?.Count > 0)
-            {
-                yield return new Violation(string.Format(Strings.Get("Err_ClauseDictDataUnexpected"), rule.Name, clause.Label ?? rule.Clauses.IndexOf(clause).ToString(CultureInfo.InvariantCulture), clause.Operation.ToString()), rule, clause);
-            }
         }
 
         /// <summary>
@@ -121,14 +106,14 @@ namespace Microsoft.CST.OAT
                 var value = GetValueByPropertyOrFieldName(targetObject, pathPortions[0]);
 
                 // For the rest of the path we walk each portion to get the next object
-                for (int pathPortionIndex = 1; pathPortionIndex < pathPortions.Length; pathPortionIndex++)
+                for (var pathPortionIndex = 1; pathPortionIndex < pathPortions.Length; pathPortionIndex++)
                 {
                     if (value == null) { break; }
 
                     switch (value)
                     {
                         case Dictionary<string, string> stringDict:
-                            if (stringDict.TryGetValue(pathPortions[pathPortionIndex], out string? stringValue))
+                            if (stringDict.TryGetValue(pathPortions[pathPortionIndex], out var stringValue))
                             {
                                 value = stringValue;
                             }
@@ -139,7 +124,7 @@ namespace Microsoft.CST.OAT
                             break;
 
                         case List<string> stringList:
-                            if (int.TryParse(pathPortions[pathPortionIndex], out int ArrayIndex) && stringList.Count > ArrayIndex)
+                            if (int.TryParse(pathPortions[pathPortionIndex], out var ArrayIndex) && stringList.Count > ArrayIndex)
                             {
                                 value = stringList[ArrayIndex];
                             }
@@ -284,7 +269,7 @@ namespace Microsoft.CST.OAT
                     // Otherwise we evaluate the expression
                     else
                     {
-                        var (ExpressionMatches, Captures) = Evaluate(rule.Expression.Split(' '), rule.Clauses, state1, state2, ruleCapture.Captures);
+                        (var ExpressionMatches, var Captures) = Evaluate(rule.Expression.Split(' '), rule.Clauses, state1, state2, ruleCapture.Captures);
                         if (ExpressionMatches)
                         {
                             ruleCapture.Captures.AddRange(Captures);
@@ -381,7 +366,7 @@ namespace Microsoft.CST.OAT
             {
                 Strings.Setup();
             }
-            foreach (Rule rule in rules ?? Array.Empty<Rule>())
+            foreach (var rule in rules ?? Array.Empty<Rule>())
             {
                 var clauseLabels = rule.Clauses.GroupBy(x => x.Label);
 
@@ -421,10 +406,10 @@ namespace Microsoft.CST.OAT
                     // Are parenthesis balanced Are spaces correct Are all variables defined by
                     // clauses? Are variables and operators alternating?
                     var splits = expression.Split(' ');
-                    int foundStarts = 0;
-                    int foundEnds = 0;
-                    bool expectingOperator = false;
-                    for (int i = 0; i < splits.Length; i++)
+                    var foundStarts = 0;
+                    var foundEnds = 0;
+                    var expectingOperator = false;
+                    for (var i = 0; i < splits.Length; i++)
                     {
                         foundStarts += splits[i].Count(x => x.Equals('('));
                         foundEnds += splits[i].Count(x => x.Equals(')'));
@@ -438,7 +423,7 @@ namespace Microsoft.CST.OAT
                             var lastOpen = -1;
                             var lastClose = -1;
 
-                            for (int j = 0; j < splits[i].Length; j++)
+                            for (var j = 0; j < splits[i].Length; j++)
                             {
                                 // Check that the parenthesis are balanced
                                 if (splits[i][j] == '(')
@@ -492,7 +477,7 @@ namespace Microsoft.CST.OAT
                             else
                             {
                                 foundLabels.Add(variable);
-                                if (string.IsNullOrWhiteSpace(variable) || (!rule.Clauses.Any(x => x.Label == variable) && !(int.TryParse(variable, out int result) && result < rule.Clauses.Count)))
+                                if (string.IsNullOrWhiteSpace(variable) || (!rule.Clauses.Any(x => x.Label == variable) && !(int.TryParse(variable, out var result) && result < rule.Clauses.Count)))
                                 {
                                     yield return new Violation(string.Format(Strings.Get("Err_ClauseUndefinedLabel"), expression, rule.Name, splits[i].Replace("(", "").Replace(")", "")), rule);
                                 }
@@ -503,7 +488,7 @@ namespace Microsoft.CST.OAT
                         else
                         {
                             // If we can't enum parse the operator
-                            if (!Enum.TryParse<BOOL_OPERATOR>(splits[i], out BOOL_OPERATOR op))
+                            if (!Enum.TryParse<BOOL_OPERATOR>(splits[i], out var op))
                             {
                                 yield return new Violation(string.Format(Strings.Get("Err_ClauseInvalidOperator"), expression, rule.Name, splits[i]), rule);
                             }
@@ -587,10 +572,10 @@ namespace Microsoft.CST.OAT
                 state1 = GetValueByPropertyString(state1, clause.Field);
             }
 
-            var key = string.Format("{0}{1}{2}",clause.Operation,clause.CustomOperation is null ? "" : " - ",clause.CustomOperation is null?"":clause.CustomOperation);
+            var key = string.Format("{0}{1}{2}", clause.Operation, clause.CustomOperation is null ? "" : " - ", clause.CustomOperation is null ? "" : clause.CustomOperation);
             if (delegates.ContainsKey(clause.Key))
             {
-                return delegates[clause.Key].OperationDelegate.Invoke(clause, state1, state2,captures);
+                return delegates[clause.Key].OperationDelegate.Invoke(clause, state1, state2, captures);
             }
             else
             {
@@ -601,9 +586,9 @@ namespace Microsoft.CST.OAT
 
         private static int FindMatchingParen(string[] splits, int startingIndex)
         {
-            int foundStarts = 0;
-            int foundEnds = 0;
-            for (int i = startingIndex; i < splits.Length; i++)
+            var foundStarts = 0;
+            var foundEnds = 0;
+            for (var i = startingIndex; i < splits.Length; i++)
             {
                 foundStarts += splits[i].Count(x => x.Equals('('));
                 foundEnds += splits[i].Count(x => x.Equals(')'));
@@ -712,18 +697,18 @@ namespace Microsoft.CST.OAT
 
         private (bool Success, List<ClauseCapture>? Capture) Evaluate(string[] splits, List<Clause> Clauses, object? state1, object? state2, IEnumerable<ClauseCapture>? captures = null)
         {
-            bool current = false;
+            var current = false;
 
             var captureOut = new List<ClauseCapture>();
 
             var invertNextStatement = false;
             var operatorExpected = false;
 
-            BOOL_OPERATOR Operator = BOOL_OPERATOR.OR;
+            var Operator = BOOL_OPERATOR.OR;
 
             var updated_i = 0;
 
-            for (int i = 0; i < splits.Length; i = updated_i)
+            for (var i = 0; i < splits.Length; i = updated_i)
             {
                 if (operatorExpected)
                 {
@@ -791,9 +776,9 @@ namespace Microsoft.CST.OAT
                             Log.Debug($"Multiple Clauses match the label {res.First().Label} so skipping evaluation of expression.  Run EnumerateRuleIssues to identify rule issues.");
                             return (false, null);
                         }
-                        
+
                         // If we couldn't find a label match fall back to trying to parse this as an index into clauses
-                        if (res.Count() == 0 && int.TryParse(targetLabel, out int result) && Clauses.Count > result)
+                        if (res.Count() == 0 && int.TryParse(targetLabel, out var result) && Clauses.Count > result)
                         {
                             res = new Clause[] { Clauses[result] };
                         }

@@ -53,9 +53,9 @@ namespace Microsoft.CST.OAT
         /// <exception cref="System.ArgumentNullException">Thrown when any parameter is null.</exception>
         public Violation(string description, Rule rule, Clause[] clauses)
         {
-            this.Description = description ?? throw new ArgumentNullException(nameof(description), $"{nameof(description)} may not be null");
-            this.Rule = rule ?? throw new ArgumentNullException(nameof(rule), $"{nameof(rule)} may not be null");
-            this.Clauses = clauses ?? throw new ArgumentNullException(nameof(clauses), $"{nameof(clauses)} may not be null");
+            Description = description ?? throw new ArgumentNullException(nameof(description), $"{nameof(description)} may not be null");
+            Rule = rule ?? throw new ArgumentNullException(nameof(rule), $"{nameof(rule)} may not be null");
+            Clauses = clauses ?? throw new ArgumentNullException(nameof(clauses), $"{nameof(clauses)} may not be null");
         }
     }
 }

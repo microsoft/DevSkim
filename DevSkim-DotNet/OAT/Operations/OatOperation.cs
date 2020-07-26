@@ -1,8 +1,6 @@
 ﻿using Microsoft.CST.OAT.Utils;
 using Serilog;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.CST.OAT.Operations
 {
@@ -36,7 +34,7 @@ namespace Microsoft.CST.OAT.Operations
         /// <param name="validationDelegate">The Validation Delegate</param>
         /// <param name="analyzer">The Analyzer Context</param>
         /// <param name="customOperation">The CustomOperation to use if operation is Custom</param>
-        public OatOperation(Operation operation, OperationDelegate operationDelegate, ValidationDelegate validationDelegate, Analyzer analyzer, string? customOperation = null) : this(operation,analyzer)
+        public OatOperation(Operation operation, OperationDelegate operationDelegate, ValidationDelegate validationDelegate, Analyzer analyzer, string? customOperation = null) : this(operation, analyzer)
         {
             OperationDelegate = operationDelegate;
             ValidationDelegate = validationDelegate;
