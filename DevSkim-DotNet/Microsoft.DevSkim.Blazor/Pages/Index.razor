@@ -1,7 +1,23 @@
 ﻿@page "/"
+@using System.IO;
+@using Tewr.Blazor.FileReader; 
+@inject IFileReaderService fileReaderService;
 
-<h1>Hello, world!</h1>
+<input type="file" @ref=inputTypeFileElement />
+<button @onclick=ReadFile>Read file</button>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+@functions {
+    ElementReference inputTypeFileElement;
+    public async Task ReadFile()
+    {
+        foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
+        {
+            // Read into buffer and act (uses less memory)
+            await using (Stream stream = await file.OpenReadAsync())
+            {
+                // Do (async) stuff with stream...
+                await stream.ReadAsync(buffer, ...);
+            }
+        }
+    }
+}
