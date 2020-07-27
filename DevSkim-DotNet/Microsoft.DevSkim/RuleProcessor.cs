@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-[assembly: CLSCompliant(true)]
-
 namespace Microsoft.DevSkim
 {
     /// <summary>

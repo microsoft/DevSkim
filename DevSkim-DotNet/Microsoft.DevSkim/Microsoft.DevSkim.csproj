@@ -46,6 +46,10 @@
     <ProjectReference Include="..\OAT\OAT.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.2.31" />
+  </ItemGroup>
+  
   <Target Name="PreBuild" BeforeTargets="BeforeCompile">
     <Exec Command="dotnet ../../RulePacker/devskim.dll pack ../../rules Resources/devskim-rules.json" />
   </Target>

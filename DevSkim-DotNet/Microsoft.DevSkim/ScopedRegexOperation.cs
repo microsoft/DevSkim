@@ -11,12 +11,15 @@ namespace Microsoft.DevSkim
     public class ScopedRegexOperation : OatOperation
     {
         private RegexOperation regexEngine;
-        public ScopedRegexOperation(Analyzer analyzer) : base(Operation.Custom,ScopedRegexOperationDelegate, ScopedRegexValidationDelegate,analyzer, "ScopedRegex")
+        public ScopedRegexOperation(Analyzer analyzer) : base(Operation.Custom,analyzer)
         {
+            CustomOperation = "ScopedRegex";
+            OperationDelegate = ScopedRegexOperationDelegate;
+            ValidationDelegate = ScopedRegexOperationValidationDelegate;
             regexEngine = new RegexOperation(analyzer);
         }
 
-        private IEnumerable<Violation> ScopedRegexValidationDelegate(Rule rule, Clause clause)
+        public IEnumerable<Violation> ScopedRegexOperationValidationDelegate(Rule r, Clause c)
         {
             return new List<Violation>();
         }
