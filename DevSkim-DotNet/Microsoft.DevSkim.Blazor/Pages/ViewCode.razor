@@ -1,0 +1,32 @@
+@page "/viewcode"
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
+
+<code class="language-@Language">
+@Code
+</code>
+
+@code {
+    [Parameter]
+    public string RunId { get; set; }
+
+    [Parameter]
+    public string CodePath { get; set; }
+
+    public string Code { get; set; }
+
+    public string Language { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
+        if (results != null)
+        {
+            if (results.RunIds.Contains(RunId))
+            {
+                var key = $"DevSkim-{RunId}-Code:{CodePath}";
+                Code = await localStorage.GetItemAsStringAsync(key);
+                Language = Microsoft.DevSkim.Language.FromFileName(CodePath);
+            }
+        }
+    }
+}
