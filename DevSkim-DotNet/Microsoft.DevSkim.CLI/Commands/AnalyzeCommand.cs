@@ -112,6 +112,23 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return (int)ExitCode.CriticalError;
             }
 
+            // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
+            IEnumerable<FileEntry> fileListing;
+            var extractor = new Extractor(new ExtractorOptions() { ExtractSelfOnFail = false });
+
+            if (!Directory.Exists(_path))
+            {
+                fileListing = extractor.ExtractFile(_path);
+            }
+            else
+            {
+                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.ExtractFile(x) : FilenameToFileEntryArray(x));
+            }
+            return RunFileEntries(fileListing);
+        }
+
+        public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
+        {
             Verifier? verifier = null;
             if (_rulespath.Count() > 0)
             {
@@ -169,26 +186,13 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? string.IsNullOrEmpty(_outputFile) ? "_dummy" : "text" : _fileFormat,
                                                            _outputFormat,
-                                                           (string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile)),
+                                                           (outputStreamWriter is null)?(string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile)):outputStreamWriter,
                                                            _outputFile);
 
             int filesAnalyzed = 0;
             int filesSkipped = 0;
             int filesAffected = 0;
             int issuesCount = 0;
-
-            // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
-            IEnumerable<FileEntry> fileListing;
-            var extractor = new Extractor(new ExtractorOptions() { ExtractSelfOnFail = false });
-
-            if (!Directory.Exists(_path))
-            {
-                fileListing = extractor.ExtractFile(_path);
-            }
-            else
-            {
-                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.ExtractFile(x) : FilenameToFileEntryArray(x));
-            }
 
             // Iterate through all files
             foreach (FileEntry fileEntry in fileListing)

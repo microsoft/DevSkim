@@ -10,13 +10,23 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
+    <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="0.1.225" />
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="2.0.0.20200" />
     <PackageReference Include="Tewr.Blazor.FileReader.Wasm" Version="0.11.19128" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.csproj" />
+    <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.2.31" />
   </ItemGroup>
 
 </Project>
