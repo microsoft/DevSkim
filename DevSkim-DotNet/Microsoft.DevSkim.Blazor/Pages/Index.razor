@@ -1,41 +1,184 @@
 ﻿@page "/"
 @using System.IO;
+@using System.Diagnostics;
 @using Tewr.Blazor.FileReader;
 @using Microsoft.CST.OpenSource.RecursiveExtractor;
 @using Microsoft.DevSkim.CLI.Commands;
 @inject IFileReaderService fileReaderService;
 
+@*<input type="file" @ref=inputTypeFileElement />
+    <button @onclick=ReadFile>Read file</button>
 
-<input type="file" @ref=inputTypeFileElement />
-<button @onclick=ReadFile>Read file</button>
+    @functions {
+        ElementReference inputTypeFileElement;
+        Extractor extractor = new Extractor(new ExtractorOptions() { EnableTiming = false, ExtractSelfOnFail = false });
 
-@functions {
-    ElementReference inputTypeFileElement;
+        public async Task ReadFile()
+        {
+            var fileEntries = new List<FileEntry>();
+            try
+            {
+                var files = await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync();
+                foreach (var file in files)
+                {
+                    var info = await file.ReadFileInfoAsync();
+                    using var stream = await file.OpenReadAsync();
+                    var streamEntries = extractor.ExtractStream(info.Name, stream, true);
+                    fileEntries.AddRange(streamEntries);
+                }
+
+                var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
+                    ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
+                using var ms = new MemoryStream();
+                using var writer = new StreamWriter(ms);
+                cmd.RunFileEntries(fileEntries, writer);
+
+                using var reader = new StreamReader(ms);
+                // Write results to storage
+
+                foreach (var entry in fileEntries)
+                {
+                    Console.WriteLine(entry.FullPath);
+                    // Save to storage
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+        }
+    }*@
+
+<input type="file" @ref=inputElement />
+<button @onclick=ReadFile class="btn btn-primary">Read file</button>
+<button @onclick=ClearFile class="btn btn-primary">Clear</button>
+<button @onclick=CancelFile disabled=@IsCancelDisabled class="btn btn-primary">Cancel</button>
+<br />
+<br />
+<progress max="@max" value="@value" />
+<br />
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+@code
+{
+    private static string nl = Environment.NewLine;
+    [Parameter]
+    public int BufferSize { get; set; } = 20480;
+    public long max;
+    public long value;
+    ElementReference inputElement;
+    public System.Threading.CancellationTokenSource cancellationTokenSource;
+    string Output { get; set; }
+
+    public bool CanCancel { get; set; }
+    public bool IsCancelDisabled => !CanCancel;
     Extractor extractor = new Extractor(new ExtractorOptions() { EnableTiming = false, ExtractSelfOnFail = false });
+
+    public async Task ClearFile()
+    {
+        await fileReaderService.CreateReference(inputElement).ClearValue();
+    }
 
     public async Task ReadFile()
     {
         var fileEntries = new List<FileEntry>();
-        foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
+
+        max = 0;
+        value = 0;
+        Output = string.Empty;
+        this.StateHasChanged();
+        var files = await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync();
+        foreach (var file in files)
         {
-            var info = await file.ReadFileInfoAsync();
-            using var stream = await file.OpenReadAsync();
-            var streamEntries = extractor.ExtractStream(info.Name, stream, true);
-            fileEntries.AddRange(streamEntries);
+            var fileInfo = await file.ReadFileInfoAsync();
+            max = fileInfo.Size;
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
+            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
+            foreach (var property in fileInfo.NonStandardProperties.Keys)
+            {
+                Output += $"{nameof(IFileInfo)}.{property} (nonstandard): {fileInfo.NonStandardProperties[property]}{nl}";
+            }
+            Output += $"Reading file...";
+            this.StateHasChanged();
+            Console.WriteLine(Output);
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = new System.Threading.CancellationTokenSource();
+            CanCancel = true;
+
+            const int onlyReportProgressAfterThisPercentDelta = 10;
+
+            // Subscribe to progress (change of position)
+            fileInfo.PositionInfo.PositionChanged += (s, e) =>
+            {
+                // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
+                if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
+                {
+                    stopwatch.Stop();
+                    Output += $"Read {(e.PositionDeltaSinceAcknowledge)} bytes ({e.Percentage:00}%). {e.Position} / {fileInfo.Size}{nl}";
+                    this.InvokeAsync(this.StateHasChanged);
+                    e.Acknowledge();
+                    value = e.Position;
+                    stopwatch.Start();
+                }
+            };
+
+            try
+            {
+                using var stream = await file.OpenReadAsync();
+                var streamEntries = extractor.ExtractStream(fileInfo.Name, stream, true);
+                fileEntries.AddRange(streamEntries.Where(x => !(x is null)));
+            }
+            catch (OperationCanceledException)
+            {
+                Output += $"Operation was cancelled";
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(1);
+            }
+            finally
+            {
+                CanCancel = false;
+            }
+
+            var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
+                    ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
+            using var ms = new MemoryStream();
+            using var writer = new StreamWriter(ms);
+
+            try
+            {
+                cmd.RunFileEntries(fileEntries, writer);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            using var reader = new StreamReader(ms);
+            // Write results to storage
+
+            foreach (var entry in fileEntries)
+            {
+                Console.WriteLine(entry.FullPath);
+                // Save to storage
+            }
+
+            value = max;
+            Output += $"Done reading file {fileInfo.Name} - {fileInfo.Size} bytes in {stopwatch.ElapsedMilliseconds}ms.{nl}.";
+            this.StateHasChanged();
         }
+    }
 
-        var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
-            ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
-        using var ms = new MemoryStream();
-        using var writer = new StreamWriter(ms);
-        cmd.RunFileEntries(fileEntries, writer);
-
-        using var reader = new StreamReader(ms);
-        // Write results to storage
-
-        foreach (var entry in fileEntries)
-        {
-            // Save to storage
-        }
+    public async Task CancelFile()
+    {
+        Output += $"Cancel requested.{nl}";
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(1);
+        cancellationTokenSource.Cancel();
     }
 }

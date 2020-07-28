@@ -130,7 +130,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
         {
             Verifier? verifier = null;
-            if (_rulespath.Count() > 0)
+            if (_rulespath.Length > 0)
             {
                 // Setup the rules
                 verifier = new Verifier(_rulespath);

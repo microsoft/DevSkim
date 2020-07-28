@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\devskim-rules.json" />
     <EmbeddedResource Include="Resources\comments.json" />
     <EmbeddedResource Include="Resources\languages.json" />
   </ItemGroup>
@@ -42,8 +41,8 @@
     <PackageReference Update="Nerdbank.GitVersioning" Version="3.2.31" />
   </ItemGroup>
   
-  <Target Name="PreBuild" BeforeTargets="BeforeCompile">
+  <!--<Target Name="PreBuild" BeforeTargets="BeforeCompile">
     <Exec Command="dotnet ../../RulePacker/devskim.dll pack ../../rules Resources/devskim-rules.json" />
-  </Target>
+  </Target>-->
   
 </Project>
