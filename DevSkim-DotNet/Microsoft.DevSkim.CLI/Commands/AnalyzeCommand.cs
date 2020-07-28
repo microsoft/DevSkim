@@ -187,7 +187,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? string.IsNullOrEmpty(_outputFile) ? "_dummy" : "text" : _fileFormat,
                                                            _outputFormat,
                                                            (outputStreamWriter is null)?(string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile)):outputStreamWriter,
-                                                           _outputFile);
+                                                           (outputStreamWriter is null)?_outputFile:null);
 
             int filesAnalyzed = 0;
             int filesSkipped = 0;

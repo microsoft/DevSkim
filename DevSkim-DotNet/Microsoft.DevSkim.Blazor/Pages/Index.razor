@@ -131,14 +131,25 @@
             try
             {
                 using var stream = await file.OpenReadAsync();
-                var streamEntries = extractor.ExtractStream(fileInfo.Name, stream, true);
-                fileEntries.AddRange(streamEntries.Where(x => !(x is null)));
+                using var fs = new FileStream(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.DeleteOnClose);
+                await stream.CopyToAsync(fs);
+                var streamEntries = extractor.ExtractStream(fileInfo.Name, fs, false);
+                var length = streamEntries.First().Content.Length;
+                fileEntries.AddRange(streamEntries);
             }
             catch (OperationCanceledException)
             {
                 Output += $"Operation was cancelled";
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(1);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                var stackTrace = e.StackTrace;
+                var type = e.GetType();
+                var name = type.Name;
+                type = e.GetType();
             }
             finally
             {
@@ -147,7 +158,8 @@
 
             var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
                     ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
-            using var ms = new MemoryStream();
+            var filename = Path.GetTempFileName();
+            using var ms = new FileStream(filename,FileMode.Open);
             using var writer = new StreamWriter(ms);
 
             try
@@ -156,10 +168,15 @@
             }
             catch (Exception e)
             {
+                var message = e.Message;
+                var stackTrace = e.StackTrace;
+                var type = e.GetType();
+                var name = type.Name;
                 Console.WriteLine(e.Message);
             }
 
-            using var reader = new StreamReader(ms);
+            using var fs = new FileStream(filename, FileMode.Open);
+            using var reader = new StreamReader(fs);
             // Write results to storage
 
             foreach (var entry in fileEntries)
