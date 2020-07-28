@@ -136,7 +136,12 @@
             using var reader = new StreamReader(fs);
 
             var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
-            var runId = DateTime.Now.ToLongTimeString();
+            if (results == null)
+            {
+                results = new Results();
+            }
+            var runId = "One";
+            //                DateTime.Now.ToLongTimeString();
             var key = $"DevSkim-{runId}-Results";
             results.RunIds.Add(runId);
             await localStorage.SetItemAsync(key, reader.ReadToEnd());
@@ -145,6 +150,7 @@
 
             foreach (var entry in fileEntries)
             {
+                var pos = entry.Content.Position;
                 var sr = new StreamReader(entry.Content);
                 key = $"DevSkim-{runId}-Code:{entry.FullPath}";
                 await localStorage.SetItemAsync(key, sr.ReadToEnd());

@@ -28,7 +28,6 @@
                 Language = Microsoft.DevSkim.Language.FromFileName(CodePath);
 
                 key = $"DevSkim-{RunId}-Results";
-
                 var Results = await localStorage.GetItemAsStringAsync(key);
             }
         }
