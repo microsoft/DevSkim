@@ -5,50 +5,7 @@
 @using Microsoft.CST.OpenSource.RecursiveExtractor;
 @using Microsoft.DevSkim.CLI.Commands;
 @inject IFileReaderService fileReaderService;
-
-@*<input type="file" @ref=inputTypeFileElement />
-    <button @onclick=ReadFile>Read file</button>
-
-    @functions {
-        ElementReference inputTypeFileElement;
-        Extractor extractor = new Extractor(new ExtractorOptions() { EnableTiming = false, ExtractSelfOnFail = false });
-
-        public async Task ReadFile()
-        {
-            var fileEntries = new List<FileEntry>();
-            try
-            {
-                var files = await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync();
-                foreach (var file in files)
-                {
-                    var info = await file.ReadFileInfoAsync();
-                    using var stream = await file.OpenReadAsync();
-                    var streamEntries = extractor.ExtractStream(info.Name, stream, true);
-                    fileEntries.AddRange(streamEntries);
-                }
-
-                var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
-                    ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
-                using var ms = new MemoryStream();
-                using var writer = new StreamWriter(ms);
-                cmd.RunFileEntries(fileEntries, writer);
-
-                using var reader = new StreamReader(ms);
-                // Write results to storage
-
-                foreach (var entry in fileEntries)
-                {
-                    Console.WriteLine(entry.FullPath);
-                    // Save to storage
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-        }
-    }*@
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <input type="file" @ref=inputElement />
 <button @onclick=ReadFile class="btn btn-primary">Read file</button>
@@ -131,9 +88,9 @@
             try
             {
                 using var stream = await file.OpenReadAsync();
-                using var fs = new FileStream(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.DeleteOnClose);
-                await stream.CopyToAsync(fs);
-                var streamEntries = extractor.ExtractStream(fileInfo.Name, fs, false);
+                using var fileStream = new FileStream(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.DeleteOnClose);
+                await stream.CopyToAsync(fileStream);
+                var streamEntries = extractor.ExtractStream(fileInfo.Name, fileStream, false);
                 var length = streamEntries.First().Content.Length;
                 fileEntries.AddRange(streamEntries);
             }
@@ -159,7 +116,7 @@
             var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
                     ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
             var filename = Path.GetTempFileName();
-            using var ms = new FileStream(filename,FileMode.Open);
+            using var ms = new FileStream(filename, FileMode.Open);
             using var writer = new StreamWriter(ms);
 
             try
@@ -177,13 +134,24 @@
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
-            // Write results to storage
+
+            var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
+            var runId = DateTime.Now.ToLongTimeString();
+            var key = $"DevSkim-{runId}-Results";
+            results.RunIds.Add(runId);
+            await localStorage.SetItemAsync(key, reader.ReadToEnd());
+
+            results.ResultLocations[runId] = key;
 
             foreach (var entry in fileEntries)
             {
-                Console.WriteLine(entry.FullPath);
-                // Save to storage
+                var sr = new StreamReader(entry.Content);
+                key = $"DevSkim-{runId}-Code:{entry.FullPath}";
+                await localStorage.SetItemAsync(key, sr.ReadToEnd());
+                results.FileLocations[runId][entry.FullPath] = key;
             }
+
+            await localStorage.SetItemAsync("DevSkimResults", results);
 
             value = max;
             Output += $"Done reading file {fileInfo.Name} - {fileInfo.Size} bytes in {stopwatch.ElapsedMilliseconds}ms.{nl}.";

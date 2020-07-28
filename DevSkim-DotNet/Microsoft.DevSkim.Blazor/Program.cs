@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tewr.Blazor.FileReader;
+using Blazored.LocalStorage;
 
 namespace Microsoft.DevSkim.Blazor
 {
@@ -17,6 +18,7 @@ namespace Microsoft.DevSkim.Blazor
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
+            builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
