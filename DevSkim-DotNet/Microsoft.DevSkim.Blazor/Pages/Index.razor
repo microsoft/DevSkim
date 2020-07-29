@@ -4,7 +4,8 @@
 @using Tewr.Blazor.FileReader;
 @using Microsoft.CST.OpenSource.RecursiveExtractor;
 @using Microsoft.DevSkim.CLI.Commands;
-@using Newtonsoft.Json; 
+@using Microsoft.CodeAnalysis.Sarif;
+@using Newtonsoft.Json;
 @inject IFileReaderService fileReaderService;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
@@ -74,8 +75,8 @@
             // Subscribe to progress (change of position)
             fileInfo.PositionInfo.PositionChanged += (s, e) =>
             {
-                // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
-                if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
+            // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
+            if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
                 {
                     stopwatch.Stop();
                     Output += $"Read {(e.PositionDeltaSinceAcknowledge)} bytes ({e.Percentage:00}%). {e.Position} / {fileInfo.Size}{nl}";
@@ -139,8 +140,8 @@
                 results.FileLocations[runId][entry.FullPath] = key;
             }
 
-            var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
-                ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
+            var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>() { "manual", "critical", "important", "moderate" }, rules: new List<string>(),
+                ignoreDefault: false, suppressError: true, disableSuppression: true, crawlArchives: true);
             var filename = Path.GetTempFileName();
             using var ms = new FileStream(filename, FileMode.Open);
             using var writer = new StreamWriter(ms);
@@ -161,7 +162,10 @@
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
             key = Guid.NewGuid().ToString();
-            await localStorage.SetItemAsync(key, reader.ReadToEnd());
+            var sarifString = reader.ReadToEnd();
+            var sarifStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(sarifString));
+            var sarifLog = SarifLog.Load(sarifStream);
+            await localStorage.SetItemAsync(key, sarifString);
             results.ResultLocations[runId] = key;
 
             await localStorage.SetItemAsync("DevSkimResults", results);

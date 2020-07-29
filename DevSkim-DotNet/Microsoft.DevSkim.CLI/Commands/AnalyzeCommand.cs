@@ -157,7 +157,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                 {
                     using (StreamReader file = new StreamReader(resource))
                     {
-                        rules.AddString(file.ReadToEnd(), filePath, null);
+                        var rulesString = file.ReadToEnd();
+                        rules.AddString(rulesString, filePath, null);
                     }
                 }
             }
@@ -225,7 +226,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 Issue[] issues = processor.Analyze(fileText, language);
 
-                bool issuesFound = issues.Any(iss => iss.IsSuppressionInfo == false) || _disableSuppression && issues.Count() > 0;
+                bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || _disableSuppression && issues.Any();
 
                 if (issuesFound)
                 {
