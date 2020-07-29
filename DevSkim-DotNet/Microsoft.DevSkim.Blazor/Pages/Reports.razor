@@ -21,17 +21,22 @@
 
 <br />
 
-<textarea style="max-width: 100%;" cols="100" rows="10">@Status</textarea>
-<textarea style="max-width: 100%;" cols="100" rows="100">@Output</textarea>
+<div style="width:800px; height:300px; border-style:solid; border-color:black;">@Status</div>
+<div style="width:800px; height:1200px; border-style:solid; border-color:black;">
+    @foreach (var finding in Findings)
+    {
+        <div>
+           <span>@finding.Key</span> <a href="/viewcode/@finding.Value">@finding.Value</a>
+        </div>
+    }
+</div>
 
 @code {
-
-
     private static string nl = Environment.NewLine;
     private string SelectedRun { get; set; } = "";
     public string Status { get; set; } = "Idle";
-    public string Output { get; set; } = "";
     public IList<string> RunList = new List<string> {};
+    public IDictionary<string, string> Findings = new Dictionary<string, string>();
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -61,7 +66,7 @@
             Status += $"Found {RunList.Count} runs.{nl}";
             this.StateHasChanged();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             var message = e.Message;
             var stackTrace = e.StackTrace;
@@ -76,7 +81,7 @@
         var runId = SelectedRun;
         if (String.IsNullOrWhiteSpace(runId))
         {
-            Output = "No run selected.";
+            Status += $"No run selected.{nl}";
             this.StateHasChanged();
             return;
         }
@@ -85,12 +90,10 @@
         this.StateHasChanged();
 
         var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
-        Output = $"Results of {runId}:{nl}";
         foreach (var item in res.FileLocations[runId])
         {
-            Output += $"{item.ToString()}{nl}";
+            Findings.Add(item.Key, item.Value);
         }
-
         Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";
         this.StateHasChanged();
     }
