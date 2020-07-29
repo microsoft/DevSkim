@@ -1,49 +1,57 @@
 ﻿@page "/reports"
 @using System.Diagnostics;
-@using Microsoft.CodeAnalysis.Sarif; 
+@using Microsoft.CodeAnalysis.Sarif;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
-<h1>Viewer</h1>
+<h1>Report Viewer</h1>
 
-<button @onclick="GetResults">Get Results</button>
+<Dropdown TItem="string">
+    <InitialTip>Select Run</InitialTip>
+    <ChildContent>
+        @foreach (var runId in RunList)
+        {
+            <DropdownListItem Item="@runId">@runId</DropdownListItem>
+        }
+    </ChildContent>
+</Dropdown>
+
 <br />
+
+<!-- <button onclick="GetResults">Get Results</button> -->
+<button>Get Results</button>
+
+<br />
+
 <textarea style="max-width: 100%;" cols="100" rows="10">@Status</textarea>
 <textarea style="max-width: 100%;" cols="100" rows="100">@Output</textarea>
 
 @code {
     [Parameter]
+    public string SelectedRun { get; set; } = "";
+
+    private static string nl = Environment.NewLine;
     public string Status { get; set; } = "Idle";
     public string Output { get; set; } = "";
+    public IList<string> RunList = new List<string> {"test1", "test2"};
 
-    public async Task GetResults()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
+        if (firstRender)
+        {
+            await ReadStorage();
+        }
+    }
 
-        Status += $"Retrieving results storage...";
-        this.StateHasChanged();
+    public async Task ReadStorage()
+    {
         try
         {
-            var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
-            var runList = results.RunIds;
-
-            Status += $"Found {runList.Count} runs.";
+            Status = $"Reading storage...{nl}";
             this.StateHasChanged();
+            //var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
+            //RunList = res.RunIds;
 
-            var runId = runList.First();
-            Status += $"Retrieving first run ID (default): {runId}";
-            this.StateHasChanged();
-            var key = $"DevSkim-{runId}-Results";
-            var sarifData = await localStorage.GetItemAsync<Results>(key);
-
-            Status += $"Reading results...";
-            this.StateHasChanged();
-            Output += $"{sarifData}";
-            // Actual useful parsing goes here.
-
-            Status += $"Finished reading results for run ID: {runId}";
-            stopwatch.Stop();
-            Status += $"Elapsed time: {stopwatch.Elapsed}";
+            Status += $"Found {RunList.Count} runs.{nl}";
             this.StateHasChanged();
         }
         catch(Exception e)
@@ -54,5 +62,27 @@
             var name = type.Name;
             Console.WriteLine(e.Message);
         }
+    }
+
+    public async Task GetResults(string runId)
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+
+        Status += $"Retrieving run Id: {runId}{nl}";
+        this.StateHasChanged();
+        var key = $"DevSkim-{runId}-Results";
+        var sarifData = await localStorage.GetItemAsync<Results>(key);
+
+        Status += $"Reading results...{nl}";
+        this.StateHasChanged();
+        Output += $"{sarifData}{nl}";
+        // Actual useful parsing goes here.
+
+        Status += $"Finished reading results for run Id: {runId}{nl}";
+        stopwatch.Stop();
+        Status += $"Elapsed time: {stopwatch.Elapsed}{nl}";
+        this.StateHasChanged();
     }
 }
