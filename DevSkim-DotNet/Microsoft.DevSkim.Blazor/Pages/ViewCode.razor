@@ -10,7 +10,7 @@
         <p>Viewing code for <b>@FileName</b> during <b>@RunId</b></p>
         @foreach (var result in filteredResults)
         {
-            <p>@result.RelatedLocations[0].PhysicalLocation.Region.Snippet</p>
+            <p>Taco: @result.RelatedLocations[0].PhysicalLocation.Region.Snippet</p>
         }
     }
     else
@@ -56,13 +56,22 @@
             var results = loadedSarif.Runs[0].Results;
             var preparedFileName = System.IO.Path.GetFullPath(FileName ?? string.Empty);
 
+            var filteredResults = new List<Result>();
+
             if (results != null)
             {
-                filteredResults = results.Where(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName.Equals(preparedFileName)));
+                foreach(var result in results)
+                {
+                    foreach(var location in result.Locations)
+                    {
+                        if (preparedFileName.Equals(location.PhysicalLocation.Address.FullyQualifiedName))
+                        {
+                            filteredResults.Add(result);
+                            break;
+                        }
+                    }
+                }
             }
-            var myresults = filteredResults;
-            string? theirresults = null;
-            System.Diagnostics.Debug.WriteLine(preparedFileName);
         }
         this.StateHasChanged();
     }
