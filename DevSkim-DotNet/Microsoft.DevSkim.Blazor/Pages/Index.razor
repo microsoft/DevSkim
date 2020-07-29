@@ -4,6 +4,7 @@
 @using Tewr.Blazor.FileReader;
 @using Microsoft.CST.OpenSource.RecursiveExtractor;
 @using Microsoft.DevSkim.CLI.Commands;
+@using Newtonsoft.Json; 
 @inject IFileReaderService fileReaderService;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
@@ -136,8 +137,6 @@
                 var codeFile = new CodeFile(code, entry.FullPath, runId);
                 await localStorage.SetItemAsync(key, codeFile);
                 results.FileLocations[runId][entry.FullPath] = key;
-                var fetchedCodeFile = await localStorage.GetItemAsync<CodeFile>(key);
-                Console.WriteLine(fetchedCodeFile.FileName == codeFile.FileName);
             }
 
             var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
@@ -161,7 +160,9 @@
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
+            key = Guid.NewGuid().ToString();
             await localStorage.SetItemAsync(key, reader.ReadToEnd());
+            results.ResultLocations[runId] = key;
 
             await localStorage.SetItemAsync("DevSkimResults", results);
 

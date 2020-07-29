@@ -1,6 +1,7 @@
 @page "/viewcode/{Guid}"
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text;
+@using Newtonsoft.Json; 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <div>
@@ -35,9 +36,10 @@
         var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
         var theGuid = Guid;
         var results = await localStorage.GetItemAsync<CodeFile>(Guid);
+
         Code = results.Content;
         FileName = results.FileName;
-        Language = Microsoft.DevSkim.Language.FromFileName(FileName);
+        Language = Microsoft.DevSkim.Language.FromFileName(FileName ?? string.Empty);
         RunId = results.RunId;
 
         this.StateHasChanged();
