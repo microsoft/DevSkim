@@ -32,7 +32,7 @@
     private static string nl = Environment.NewLine;
     public string Status { get; set; } = "Idle";
     public string Output { get; set; } = "";
-    public IList<string> RunList = new List<string> {"test1", "test2"};
+    public IList<string> RunList = new List<string> {};
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -48,8 +48,10 @@
         {
             Status = $"Reading storage...{nl}";
             this.StateHasChanged();
-            //var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
-            //RunList = res.RunIds;
+            var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
+            if (res == null)
+                res = new Results();
+            RunList = res.RunIds;
 
             Status += $"Found {RunList.Count} runs.{nl}";
             this.StateHasChanged();
