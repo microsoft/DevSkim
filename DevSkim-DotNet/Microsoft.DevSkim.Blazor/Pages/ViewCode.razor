@@ -8,10 +8,10 @@
     @if (FileName != null)
     {
         <p>Viewing code for <b>@FileName</b> during <b>@RunId</b></p>
-        @*@foreach (var result in filteredResults)
+        @foreach (var result in filteredResults)
         {
             <p>@result.RelatedLocations[0].PhysicalLocation.Region.Snippet</p>
-        }*@
+        }
     }
     else
     {
@@ -54,12 +54,16 @@
             using var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(sarif));
             var loadedSarif = SarifLog.Load(stream);
             var results = loadedSarif.Runs[0].Results;
+            var preparedFileName = System.IO.Path.GetFullPath(FileName ?? string.Empty);
+
             if (results != null)
             {
-                filteredResults = results.Where(x => x?.AnalysisTarget?.Uri?.OriginalString?.Equals(FileName.TrimStart(':')) ?? false);
+                filteredResults = results.Where(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName.Equals(preparedFileName)));
             }
+            var myresults = filteredResults;
+            string? theirresults = null;
+            System.Diagnostics.Debug.WriteLine(preparedFileName);
         }
-
         this.StateHasChanged();
     }
 }

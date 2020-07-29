@@ -76,7 +76,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location();
             loc.PhysicalLocation = new PhysicalLocation()
             {
-                Address = new Address() { FullyQualifiedName = Path.GetFullPath(issue.Filename.TrimStart(':')) },
+                Address = new Address() { FullyQualifiedName = Path.GetFullPath(issue.Filename) },
                 Region = new Region()
                 {
                     StartLine = issue.Issue.StartLocation.Line,
@@ -153,7 +153,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                         CharLength = issue.Issue.Boundary.Length,
                     }, new ArtifactContent() { Text = RuleProcessor.Fix(issue.TextSample, fix) }, null));
 
-                    var path = Path.GetFullPath(issue.Filename.TrimStart(':'));
+                    var path = Path.GetFullPath(issue.Filename);
                     var changes = new ArtifactChange[] 
                     {
                         new ArtifactChange(
