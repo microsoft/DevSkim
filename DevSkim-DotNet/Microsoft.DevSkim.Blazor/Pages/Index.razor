@@ -130,7 +130,7 @@
                 var pos = entry.Content.Position;
                 var sr = new StreamReader(entry.Content);
                 key = $"DevSkim-{runId}-Code:{entry.FullPath}";
-                var code = await sr.ReadToEndAsync();
+                var code = sr.ReadToEnd();
                 sr.BaseStream.Position = 0;
                 await localStorage.SetItemAsync(key, code);
                 results.FileLocations[runId][entry.FullPath] = key;
@@ -157,7 +157,7 @@
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
-            await localStorage.SetItemAsync(key, await reader.ReadToEndAsync());
+            await localStorage.SetItemAsync(key, reader.ReadToEnd());
 
             await localStorage.SetItemAsync("DevSkimResults", results);
 

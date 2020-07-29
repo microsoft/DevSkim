@@ -22,27 +22,37 @@
 
         Status += $"Retrieving results storage...";
         this.StateHasChanged();
-        var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
-        var runList = results.RunIds;
+        try
+        {
+            var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
+            var runList = results.RunIds;
 
-        Status += $"Found {runList.Count} runs.";
-        this.StateHasChanged();
+            Status += $"Found {runList.Count} runs.";
+            this.StateHasChanged();
 
-        var runId = runList.First();
-        Status += $"Retrieving first run ID (default): {runId}";
-        this.StateHasChanged();
-        var key = $"DevSkim-{runId}-Results";
-        var sarifData = await localStorage.GetItemAsync<Results>(key);
+            var runId = runList.First();
+            Status += $"Retrieving first run ID (default): {runId}";
+            this.StateHasChanged();
+            var key = $"DevSkim-{runId}-Results";
+            var sarifData = await localStorage.GetItemAsync<Results>(key);
 
-        Status += $"Reading results...";
-        this.StateHasChanged();
-        Output += $"{sarifData}";
-        // Actual useful parsing goes here.
+            Status += $"Reading results...";
+            this.StateHasChanged();
+            Output += $"{sarifData}";
+            // Actual useful parsing goes here.
 
-        Status += $"Finished reading results for run ID: {runId}";
-        stopwatch.Stop();
-        Status += $"Elapsed time: {stopwatch.Elapsed}";
-        this.StateHasChanged();
-
+            Status += $"Finished reading results for run ID: {runId}";
+            stopwatch.Stop();
+            Status += $"Elapsed time: {stopwatch.Elapsed}";
+            this.StateHasChanged();
+        }
+        catch(Exception e)
+        {
+            var message = e.Message;
+            var stackTrace = e.StackTrace;
+            var type = e.GetType();
+            var name = type.Name;
+            Console.WriteLine(e.Message);
+        }
     }
 }
