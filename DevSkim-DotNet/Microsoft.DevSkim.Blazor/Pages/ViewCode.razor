@@ -3,22 +3,32 @@
 @using System.Text;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
-Viewing code given @Guid for @FileName during @RunId 
-<code class="language-@Language">
+<div>
+    @if (FileName != null)
+    {
+        <p>Viewing code for <b>@FileName</b> during <b>@RunId</b></p>
+    }
+    else
+    {
+        <p>Could not fetch file information given @Guid</p>
+    }
+</div>
+
+<code class="lang-@Language">
     @Code
 </code>
 
 @code {
     [Parameter]
-    public string Guid { get; set; }
+    public string Guid { get; set; } = "Not Provided";
 
-    public string FileName { get; set; }
+    public string? FileName { get; set; }
 
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
-    public string RunId { get; set; }
+    public string? RunId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

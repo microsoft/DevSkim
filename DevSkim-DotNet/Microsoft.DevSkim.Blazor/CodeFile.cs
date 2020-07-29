@@ -17,8 +17,8 @@ namespace Microsoft.DevSkim.Blazor
             this.FileName = FileName;
             this.RunId = RunId;
         }
-        public string Content { get; set; }
-        public string FileName { get; set; }
-        public string RunId { get; set; }
+        public string? Content { get; set; }
+        public string? FileName { get; set; }
+        public string? RunId { get; set; }
     }
 }

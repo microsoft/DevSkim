@@ -24,8 +24,8 @@
     public long max;
     public long value;
     ElementReference inputElement;
-    public System.Threading.CancellationTokenSource cancellationTokenSource;
-    string Output { get; set; }
+    public System.Threading.CancellationTokenSource? cancellationTokenSource;
+    string Output { get; set; } = string.Empty;
 
     public bool CanCancel { get; set; }
     public bool IsCancelDisabled => !CanCancel;
