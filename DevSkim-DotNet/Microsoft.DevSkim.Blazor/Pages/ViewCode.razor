@@ -1,11 +1,18 @@
-@page "/viewcode"
+@page "/viewcode/{CodePath}/{RunId}"
+@using Microsoft.CodeAnalysis.Sarif;
+@using System.Text;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <code class="language-@Language">
-@Code
+    @Code
 </code>
 
 @code {
+    protected override void OnParametersSet()
+    {
+        //the param will be set now
+        var test = RunId;
+    }
     [Parameter]
     public string RunId { get; set; }
 
@@ -29,6 +36,11 @@
 
                 key = $"DevSkim-{RunId}-Results";
                 var Results = await localStorage.GetItemAsStringAsync(key);
+                var sarifStream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Results));
+                var log = SarifLog.Load(sarifStream);
+                var runs = log.Runs;
+                var result = runs.First().Results.First();
+                Code = await localStorage.GetItemAsStringAsync(results.FileLocations[RunId][result.AnalysisTarget.Uri.OriginalString]);
             }
         }
     }
