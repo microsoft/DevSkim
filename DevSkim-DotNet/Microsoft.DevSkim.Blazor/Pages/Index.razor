@@ -113,8 +113,31 @@
                 CanCancel = false;
             }
 
+            var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
+            if (results == null)
+            {
+                results = new Results();
+            }
+            var runId = DateTime.Now.ToLongTimeString();
+            var key = $"DevSkim-{runId}-Results";
+            results.RunIds.Add(runId);
+            results.FileLocations.Add(runId, new Dictionary<string, string>());
+
+            results.ResultLocations[runId] = key;
+
+            foreach (var entry in fileEntries)
+            {
+                var pos = entry.Content.Position;
+                var sr = new StreamReader(entry.Content);
+                key = $"DevSkim-{runId}-Code:{entry.FullPath}";
+                var code = await sr.ReadToEndAsync();
+                sr.BaseStream.Position = 0;
+                await localStorage.SetItemAsync(key, code);
+                results.FileLocations[runId][entry.FullPath] = key;
+            }
+
             var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>(), rules: new List<string>(),
-                    ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
+                ignoreDefault: true, suppressError: true, disableSuppression: true, crawlArchives: true);
             var filename = Path.GetTempFileName();
             using var ms = new FileStream(filename, FileMode.Open);
             using var writer = new StreamWriter(ms);
@@ -134,28 +157,7 @@
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
-
-            var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
-            if (results == null)
-            {
-                results = new Results();
-            }
-            var runId = "One";
-            //                DateTime.Now.ToLongTimeString();
-            var key = $"DevSkim-{runId}-Results";
-            results.RunIds.Add(runId);
-            await localStorage.SetItemAsync(key, reader.ReadToEnd());
-
-            results.ResultLocations[runId] = key;
-
-            foreach (var entry in fileEntries)
-            {
-                var pos = entry.Content.Position;
-                var sr = new StreamReader(entry.Content);
-                key = $"DevSkim-{runId}-Code:{entry.FullPath}";
-                await localStorage.SetItemAsync(key, sr.ReadToEnd());
-                results.FileLocations[runId][entry.FullPath] = key;
-            }
+            await localStorage.SetItemAsync(key, await reader.ReadToEndAsync());
 
             await localStorage.SetItemAsync("DevSkimResults", results);
 
