@@ -1,47 +1,58 @@
-@page "/viewcode/{CodePath}/{RunId}"
+@page "/viewcode/{Guid}"
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
+Viewing code for @FileName during @RunId 
 <code class="language-@Language">
     @Code
 </code>
 
 @code {
-    protected override void OnParametersSet()
-    {
-        //the param will be set now
-        var test = RunId;
-    }
     [Parameter]
-    public string RunId { get; set; }
+    public string Guid { get; set; }
 
-    [Parameter]
-    public string CodePath { get; set; }
+    public string FileName { get; set; }
 
     public string Code { get; set; }
 
     public string Language { get; set; }
 
+    public string RunId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
-        if (results != null)
+        try
         {
-            if (results.RunIds.Contains(RunId))
-            {
-                var key = $"DevSkim-{RunId}-Code:{CodePath}";
-                Code = await localStorage.GetItemAsStringAsync(key);
-                Language = Microsoft.DevSkim.Language.FromFileName(CodePath);
-
-                key = $"DevSkim-{RunId}-Results";
-                var Results = await localStorage.GetItemAsStringAsync(key);
-                var sarifStream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Results));
-                var log = SarifLog.Load(sarifStream);
-                var runs = log.Runs;
-                var result = runs.First().Results.First();
-                Code = await localStorage.GetItemAsStringAsync(results.FileLocations[RunId][result.AnalysisTarget.Uri.OriginalString]);
-            }
+            var results = await localStorage.GetItemAsync<CodeFile>(Guid);
+            Code = results.Content;
+            FileName = results.FileName;
+            Language = Microsoft.DevSkim.Language.FromFileName(FileName);
+            RunId = results.RunId;
         }
+        catch(Exception e)
+        {
+            var message = e.Message;
+            var stackTrace = e.StackTrace;
+            var type = e.GetType();
+            var name = type.Name;
+            Console.WriteLine(e.Message);
+        }
+        //if (results != null)
+        //{
+        //    if (results.RunIds.Contains(RunId))
+        //    {
+        //        var key = $"DevSkim-{RunId}-Code:{CodePath}";
+        //        Code = await localStorage.GetItemAsStringAsync(key);
+
+        //        key = $"DevSkim-{RunId}-Results";
+        //        var Results = await localStorage.GetItemAsStringAsync(key);
+        //        var sarifStream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Results));
+        //        var log = SarifLog.Load(sarifStream);
+        //        var runs = log.Runs;
+        //        var result = runs.First().Results.First();
+        //        Code = await localStorage.GetItemAsStringAsync(results.FileLocations[RunId][result.AnalysisTarget.Uri.OriginalString]);
+        //    }
+        //}
     }
 }

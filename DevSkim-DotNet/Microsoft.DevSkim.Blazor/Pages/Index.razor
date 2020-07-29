@@ -129,10 +129,12 @@
             {
                 var pos = entry.Content.Position;
                 var sr = new StreamReader(entry.Content);
-                key = $"DevSkim-{runId}-Code:{entry.FullPath}";
+                key = Guid.NewGuid().ToString();
                 var code = sr.ReadToEnd();
                 sr.BaseStream.Position = 0;
-                await localStorage.SetItemAsync(key, code);
+
+                var codeFile = new CodeFile(code, entry.FullPath, runId);
+                await localStorage.SetItemAsync(key, codeFile);
                 results.FileLocations[runId][entry.FullPath] = key;
             }
 
