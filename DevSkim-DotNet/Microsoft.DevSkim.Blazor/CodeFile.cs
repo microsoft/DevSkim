@@ -7,6 +7,8 @@ namespace Microsoft.DevSkim.Blazor
 {
     public class CodeFile
     {
+        public CodeFile() { }
+
         public CodeFile(string Content, string FileName, string RunId)
         {
             this.Content = Content;
