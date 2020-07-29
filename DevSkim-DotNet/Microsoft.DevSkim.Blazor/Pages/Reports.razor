@@ -1,0 +1,48 @@
+﻿@page "/reports"
+@using System.Diagnostics;
+@using Microsoft.CodeAnalysis.Sarif; 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
+
+<h1>Viewer</h1>
+
+<button @onclick="GetResults">Get Results</button>
+<br />
+<textarea style="max-width: 100%;" cols="5" rows="10">@Status</textarea>
+<textarea style="max-width: 100%;" cols="5" rows="100">@Output</textarea>
+
+@code {
+    [Parameter]
+    public string Status { get; set; } = "Idle";
+    public string Output { get; set; } = "";
+
+    public async Task GetResults()
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        Status += $"Retrieving results storage...";
+        this.StateHasChanged();
+        var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
+        var runList = results.RunIds;
+
+        Status += $"Found {runList.Count} runs.";
+        this.StateHasChanged();
+
+        var runId = runList.First();
+        Status += $"Retrieving first run ID (default): {runId}";
+        this.StateHasChanged();
+        var key = $"DevSkim-{runId}-Results";
+        var sarifData = await localStorage.GetItemAsync<Results>(key);
+
+        Status += $"Reading results...";
+        this.StateHasChanged();
+        Output += $"{sarifData}";
+        // Actual useful parsing goes here.
+
+        Status += $"Finished reading results for run ID: {runId}";
+        stopwatch.Stop();
+        Status += $"Elapsed time: {stopwatch.Elapsed}";
+        this.StateHasChanged();
+
+    }
+}
