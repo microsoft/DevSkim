@@ -32,6 +32,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
         var theGuid = Guid;
         var results = await localStorage.GetItemAsync<CodeFile>(Guid);
         Code = results.Content;
