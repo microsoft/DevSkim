@@ -17,7 +17,7 @@
 
 <br />
 
-<button @onclick="GetResults">Get Results</button>
+<button @onclick="GetResults">Get Results</button> <button @onclick="ClearLocalStorage">Clear Storage</button>
 
 <br />
 
@@ -45,6 +45,16 @@
         {
             await ReadStorage();
         }
+    }
+
+    public async void ClearLocalStorage()
+    {
+        SelectedRun = "";
+        Status = "Idle";
+        RunList.Clear();
+        Findings.Clear();
+        await localStorage.ClearAsync();
+        StateHasChanged();
     }
 
     private void OnSelected(string selection)
@@ -78,23 +88,41 @@
 
     public async Task GetResults()
     {
-        var runId = SelectedRun;
-        if (String.IsNullOrWhiteSpace(runId))
+        try
         {
-            Status += $"No run selected.{nl}";
+            var runId = SelectedRun;
+            if (String.IsNullOrWhiteSpace(runId))
+            {
+                Status = $"No run selected.{nl}";
+                this.StateHasChanged();
+                return;
+            }
+
+            Status += $"Reading results of Run ID: {runId}{nl}";
             this.StateHasChanged();
-            return;
+
+            var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
+
+            // Displays run summary parsed from sarif
+            var location = res.ResultLocations[runId];
+            var sarif = await localStorage.GetItemAsync<string>(location);
+            Findings.Add(sarif, "");
+
+            // Lists run files and GUID links
+            foreach (var loc in res.FileLocations[runId])
+            {
+                Findings.Add(loc.Key, loc.Value);
+            }
+            Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";
+            this.StateHasChanged();
         }
-
-        Status += $"Reading results of Run ID: {runId}{nl}";
-        this.StateHasChanged();
-
-        var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
-        foreach (var item in res.FileLocations[runId])
+        catch (Exception e)
         {
-            Findings.Add(item.Key, item.Value);
+            var message = e.Message;
+            var stackTrace = e.StackTrace;
+            var type = e.GetType();
+            var name = type.Name;
+            Console.WriteLine(e.Message);
         }
-        Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";
-        this.StateHasChanged();
     }
 }
