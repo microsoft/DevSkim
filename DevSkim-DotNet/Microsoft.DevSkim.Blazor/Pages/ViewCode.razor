@@ -1,38 +1,49 @@
 @page "/viewcode/{Guid}"
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text;
-@using Newtonsoft.Json; 
+@using Newtonsoft.Json;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
-    <div>
-        @if (FileName != null)
+<div>
+    @if (FileName != null)
+    {
+        <p>Viewing Results for <b>@FileName</b> during run "<b>@RunId</b>"</p>
+        @foreach (var result in filteredResults)
         {
-            <p>Viewing Results for "<b>@FileName</b>" during run "<b>@RunId</b>"</p>
-            @foreach (var result in filteredResults)
-            {
-                <p>Rule: @result.RuleId</p>
-                <p>Message: @result.Message.Text</p>
-                <p>Found on line @result.Locations[0].PhysicalLocation.Region.StartLine</p>
-                <code class="lang-@Language">
-                    @result.Locations[0].PhysicalLocation.Region.Snippet.Text
-                </code>
+            <p>Rule: @result.RuleId</p>
+            <p>Message: @result.Message.Text</p>
+            <p>Found on line @result.Locations[0].PhysicalLocation.Region.StartLine</p>
+            <p>Code Snippet:</p>
+            <code style="display:block; white-space:pre-wrap" class="lang-@Language">
+@GetContextFromLine(result.Locations[0].PhysicalLocation.Region.StartLine, result.Locations[0].PhysicalLocation.Region.EndLine, 3)
+            </code>
 
-            }
         }
-        else
-        {
-            <p>Could not fetch file information given @Guid</p>
-        }
-    </div>
+    }
+    else
+    {
+        <p>Could not fetch file information given @Guid</p>
+    }
+</div>
 
 
 @code {
+
+    public string GetContextFromLine(int startLine, int endLine, int numLinesContext)
+    {
+        var start = Math.Max(0, startLine - numLinesContext);
+        var end = Math.Min(CodeLines.Length, endLine + numLinesContext);
+        return string.Join(Environment.NewLine, CodeLines[start..end]);
+    }
+
     [Parameter]
     public string Guid { get; set; } = "Not Provided";
 
     public string? FileName { get; set; }
 
     public string? Code { get; set; }
+
+    public string[] CodeLines { get; set; }
 
     public string? Language { get; set; }
 
@@ -47,6 +58,7 @@
         var codeFile = await localStorage.GetItemAsync<CodeFile>(Guid);
 
         Code = codeFile.Content;
+        CodeLines = Code.Split(Environment.NewLine);
         FileName = codeFile.FileName;
         Language = Microsoft.DevSkim.Language.FromFileName(FileName ?? string.Empty);
         RunId = codeFile.RunId;
@@ -61,9 +73,9 @@
 
             if (results != null)
             {
-                foreach(var result in results)
+                foreach (var result in results)
                 {
-                    foreach(var location in result.Locations)
+                    foreach (var location in result.Locations)
                     {
                         if (preparedFileName.Equals(location.PhysicalLocation.Address.FullyQualifiedName))
                         {
