@@ -3,7 +3,7 @@
 @using System.Text;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
-Viewing code for @FileName during @RunId 
+Viewing code given @Guid for @FileName during @RunId 
 <code class="language-@Language">
     @Code
 </code>
@@ -22,37 +22,13 @@ Viewing code for @FileName during @RunId
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            var results = await localStorage.GetItemAsync<CodeFile>(Guid);
-            Code = results.Content;
-            FileName = results.FileName;
-            Language = Microsoft.DevSkim.Language.FromFileName(FileName);
-            RunId = results.RunId;
-        }
-        catch(Exception e)
-        {
-            var message = e.Message;
-            var stackTrace = e.StackTrace;
-            var type = e.GetType();
-            var name = type.Name;
-            Console.WriteLine(e.Message);
-        }
-        //if (results != null)
-        //{
-        //    if (results.RunIds.Contains(RunId))
-        //    {
-        //        var key = $"DevSkim-{RunId}-Code:{CodePath}";
-        //        Code = await localStorage.GetItemAsStringAsync(key);
+        var theGuid = Guid;
+        var results = await localStorage.GetItemAsync<CodeFile>(Guid);
+        Code = results.Content;
+        FileName = results.FileName;
+        Language = Microsoft.DevSkim.Language.FromFileName(FileName);
+        RunId = results.RunId;
 
-        //        key = $"DevSkim-{RunId}-Results";
-        //        var Results = await localStorage.GetItemAsStringAsync(key);
-        //        var sarifStream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Results));
-        //        var log = SarifLog.Load(sarifStream);
-        //        var runs = log.Runs;
-        //        var result = runs.First().Results.First();
-        //        Code = await localStorage.GetItemAsStringAsync(results.FileLocations[RunId][result.AnalysisTarget.Uri.OriginalString]);
-        //    }
-        //}
+        this.StateHasChanged();
     }
 }
