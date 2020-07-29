@@ -56,7 +56,7 @@
             var results = loadedSarif.Runs[0].Results;
             if (results != null)
             {
-                filteredResults = results.Where(x => x?.AnalysisTarget?.Uri?.OriginalString?.Equals(FileName) ?? false);
+                filteredResults = results.Where(x => x?.AnalysisTarget?.Uri?.OriginalString?.Equals(FileName.TrimStart(':')) ?? false);
             }
         }
 
