@@ -4,24 +4,27 @@
 @using Newtonsoft.Json; 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
-<div>
-    @if (FileName != null)
-    {
-        <p>Viewing code for <b>@FileName</b> during <b>@RunId</b></p>
-        @foreach (var result in filteredResults)
+    <div>
+        @if (FileName != null)
         {
-            <p>Taco: @result.RelatedLocations[0].PhysicalLocation.Region.Snippet</p>
-        }
-    }
-    else
-    {
-        <p>Could not fetch file information given @Guid</p>
-    }
-</div>
+            <p>Viewing Results for "<b>@FileName</b>" during run "<b>@RunId</b>"</p>
+            @foreach (var result in filteredResults)
+            {
+                <p>Rule: @result.RuleId</p>
+                <p>Message: @result.Message.Text</p>
+                <p>Found on line @result.Locations[0].PhysicalLocation.Region.StartLine</p>
+                <code class="lang-@Language">
+                    @result.Locations[0].PhysicalLocation.Region.Snippet.Text
+                </code>
 
-<code class="lang-@Language">
-    @Code
-</code>
+            }
+        }
+        else
+        {
+            <p>Could not fetch file information given @Guid</p>
+        }
+    </div>
+
 
 @code {
     [Parameter]
@@ -35,7 +38,7 @@
 
     public string? RunId { get; set; }
 
-    private IEnumerable<Result> filteredResults = Array.Empty<Result>();
+    private List<Result> filteredResults = new List<Result>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,8 +58,6 @@
             var loadedSarif = SarifLog.Load(stream);
             var results = loadedSarif.Runs[0].Results;
             var preparedFileName = System.IO.Path.GetFullPath(FileName ?? string.Empty);
-
-            var filteredResults = new List<Result>();
 
             if (results != null)
             {
