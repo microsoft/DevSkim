@@ -1,13 +1,13 @@
 ﻿@page "/reports"
-@using System.Diagnostics;
 @using Microsoft.CodeAnalysis.Sarif;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <h1>Report Viewer</h1>
 
-<Dropdown TItem="string">
-    <InitialTip>Select Run</InitialTip>
+<div>Select Run</div>
+<Dropdown TItem="string" OnSelected="@OnSelected">
     <ChildContent>
+        <div class="dropdown-divider"></div>
         @foreach (var runId in RunList)
         {
             <DropdownListItem Item="@runId">@runId</DropdownListItem>
@@ -17,8 +17,7 @@
 
 <br />
 
-<!-- <button onclick="GetResults">Get Results</button> -->
-<button>Get Results</button>
+<button @onclick="GetResults">Get Results</button>
 
 <br />
 
@@ -26,13 +25,14 @@
 <textarea style="max-width: 100%;" cols="100" rows="100">@Output</textarea>
 
 @code {
-    [Parameter]
-    public string SelectedRun { get; set; } = "";
+
 
     private static string nl = Environment.NewLine;
+    private string SelectedRun { get; set; } = "";
     public string Status { get; set; } = "Idle";
     public string Output { get; set; } = "";
     public IList<string> RunList = new List<string> {};
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -40,6 +40,11 @@
         {
             await ReadStorage();
         }
+    }
+
+    private void OnSelected(string selection)
+    {
+        SelectedRun = selection;
     }
 
     public async Task ReadStorage()
@@ -66,25 +71,27 @@
         }
     }
 
-    public async Task GetResults(string runId)
+    public async Task GetResults()
     {
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
+        var runId = SelectedRun;
+        if (String.IsNullOrWhiteSpace(runId))
+        {
+            Output = "No run selected.";
+            this.StateHasChanged();
+            return;
+        }
 
-
-        Status += $"Retrieving run Id: {runId}{nl}";
+        Status += $"Reading results of Run ID: {runId}{nl}";
         this.StateHasChanged();
-        var key = $"DevSkim-{runId}-Results";
-        var sarifData = await localStorage.GetItemAsync<Results>(key);
 
-        Status += $"Reading results...{nl}";
-        this.StateHasChanged();
-        Output += $"{sarifData}{nl}";
-        // Actual useful parsing goes here.
+        var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
+        Output = $"Results of {runId}:{nl}";
+        foreach (var item in res.FileLocations[runId])
+        {
+            Output += $"{item.ToString()}{nl}";
+        }
 
-        Status += $"Finished reading results for run Id: {runId}{nl}";
-        stopwatch.Stop();
-        Status += $"Elapsed time: {stopwatch.Elapsed}{nl}";
+        Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";
         this.StateHasChanged();
     }
 }
