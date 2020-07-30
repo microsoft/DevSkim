@@ -153,8 +153,7 @@ namespace Microsoft.DevSkim
             if (patterns.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
 
-            bool isInComment = (IsBetween(FullContent, boundary.Index, prefix, suffix, inline)
-                               || IsBetween(FullContent, boundary.Index, inline, "\n"));
+            bool isInComment = IsBetween(FullContent, boundary.Index, prefix, suffix, inline);
 
             return !(isInComment && !patterns.Contains(PatternScope.Comment));
         }
