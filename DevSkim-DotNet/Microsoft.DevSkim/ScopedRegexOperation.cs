@@ -15,28 +15,17 @@ namespace Microsoft.DevSkim
         {
             CustomOperation = "ScopedRegex";
             OperationDelegate = ScopedRegexOperationDelegate;
-            ValidationDelegate = ScopedRegexOperationValidationDelegate;
             regexEngine = new RegexOperation(analyzer);
-        }
-
-        public IEnumerable<Violation> ScopedRegexOperationValidationDelegate(Rule r, Clause c)
-        {
-            return new List<Violation>();
         }
 
         public OperationResult ScopedRegexOperationDelegate(Clause c, object? state1, object? state2, IEnumerable<ClauseCapture>? captures)
         {
             if (state1 is TextContainer tc && c is ScopedRegexClause src)
             {
-                var scopes = new List<PatternScope>();
-                foreach (var datum in c.Data ?? new List<string>())
-                {
-                    scopes.Add((PatternScope)Enum.Parse(typeof(PatternScope), datum));
-                }
                 var matchList = new List<Boundary>();
                 if (Analyzer != null)
                 {
-                    var res = regexEngine.OperationDelegate.Invoke(c, state1, null, null);
+                    var res = regexEngine.OperationDelegate.Invoke(src, state1, null, null);
                     if (res.Result && res.Capture is TypedClauseCapture<MatchCollection> mc)
                     {
                         List<Boundary> boundaries = new List<Boundary>();
@@ -50,7 +39,7 @@ namespace Microsoft.DevSkim
                                     Index = m.Index + tc.GetLineBoundary(tc.LineNumber).Index
                                 };
                                 // Should return only scoped matches
-                                if (tc.ScopeMatch(scopes, translatedBoundary))
+                                if (tc.ScopeMatch(src.Scopes, translatedBoundary))
                                 {
                                     boundaries.Add(translatedBoundary);
                                 }

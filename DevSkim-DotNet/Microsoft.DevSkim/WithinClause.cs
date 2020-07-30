@@ -11,5 +11,6 @@ namespace Microsoft.DevSkim
         public int Before { get; set; }
         public int After { get; set; }
         public bool FindingOnly { get; set; }
+        public bool SameLineOnly { get; internal set; }
     }
 }

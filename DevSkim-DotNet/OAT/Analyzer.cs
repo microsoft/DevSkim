@@ -215,14 +215,18 @@ namespace Microsoft.CST.OAT
         {
             var results = new ConcurrentStack<RuleCapture>();
 
-            Parallel.ForEach(rules, rule =>
+            //Parallel.ForEach(rules, rule =>
+            //{
+            foreach(var rule in rules)
             {
                 var captured = GetCapture(rule, state1, state2);
                 if (captured.RuleMatches && captured.Result != null)
                 {
                     results.Push(captured.Result);
                 }
-            });
+            }
+                
+            //});
 
             return results;
         }

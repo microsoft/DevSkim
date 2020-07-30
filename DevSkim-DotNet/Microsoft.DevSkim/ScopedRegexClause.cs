@@ -6,12 +6,12 @@ namespace Microsoft.DevSkim
 {
     public class ScopedRegexClause : Clause
     {
-        public ScopedRegexClause(PatternScope scope, string? field = null) : base(Operation.Custom, field)
+        public ScopedRegexClause(PatternScope[] scopes, string? field = null) : base(Operation.Custom, field)
         {
-            Scope = scope;
+            Scopes = scopes;
             CustomOperation = "ScopedRegex";
         }
 
-        public PatternScope Scope { get; }
+        public PatternScope[] Scopes { get; }
     }
 }

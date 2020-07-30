@@ -1,11 +1,14 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.CST.OAT;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim
@@ -24,13 +27,107 @@ namespace Microsoft.DevSkim
             _oatRules = new List<ConvertedOatRule>();
         }
 
-        internal ConvertedOatRule DevSkimRuleToConvertedOatRule(Rule rule)
+        private Regex searchInRegex = new Regex(".*\\((.*),(.*)\\)",RegexOptions.Compiled);
+
+
+        internal ConvertedOatRule? DevSkimRuleToConvertedOatRule(Rule rule)
         {
+            var clauses = new List<Clause>();
+            int clauseNumber = 0;
+            var expression = new StringBuilder("(");
+            foreach(var pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
+            {
+                if (pattern.Pattern != null)
+                {
+                    clauses.Add(new ScopedRegexClause(pattern.Scopes ?? new PatternScope[] { PatternScope.All })
+                    {
+                        Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                        Data = new List<string>() { pattern.Pattern },
+                        Capture = true
+                    });
+                    if (clauseNumber > 0)
+                    {
+                        expression.Append(" OR ");
+                    }
+                    expression.Append(clauseNumber);
+                    clauseNumber++;
+                }
+            }
+            if (clauses.Any())
+            {
+                expression.Append(")");
+            }
+            else
+            {
+                return null;
+            }
+            foreach(var condition in rule.Conditions ?? Array.Empty<SearchCondition>())
+            {
+                if (condition.Pattern != null)
+                {
+                    if (condition.SearchIn is null)
+                    {
+                        clauses.Add(new WithinClause()
+                        {
+                            Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                            Invert = condition.NegateFinding,
+                            SameLineOnly = true,
+                        });
+                        expression.Append(" AND ");
+                        expression.Append(clauseNumber);
+                        clauseNumber++;
+                    }
+                    else if (condition.SearchIn.StartsWith("finding-region", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var argList = new List<int>();
+                        Match m = searchInRegex.Match(condition.SearchIn);
+                        if (m.Success)
+                        {
+                            for (int i = 1; i < m.Groups.Count; i++)
+                            {
+                                if (int.TryParse(m.Groups[i].Value, out int value))
+                                {
+                                    argList.Add(value);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                        if (argList.Count == 2)
+                        {
+                            clauses.Add(new WithinClause()
+                            {
+                                Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                                Invert = condition.NegateFinding,
+                                FindingOnly = false,
+                                Before = argList[0],
+                                After = argList[1]
+                            });
+                            expression.Append(" AND ");
+                            expression.Append(clauseNumber);
+                            clauseNumber++;
+                        }
+                    }
+                    else if (condition.SearchIn.Equals("finding-only", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        clauses.Add(new WithinClause()
+                        {
+                            Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                            Invert = condition.NegateFinding,
+                            FindingOnly = true,
+                        });
+                        expression.Append(" AND ");
+                        expression.Append(clauseNumber);
+                        clauseNumber++;
+                    }
+                }
+            }
             return new ConvertedOatRule(rule.Id, rule)
             {
-                // Property1 = Data,
-                // Property2 = Data,
-                // ...
+                Clauses = clauses,
+                Expression = expression.ToString()
             };
         }
 
@@ -200,7 +297,7 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            return _oatRules.Where(x => x.DevSkimRule.AppliesTo is string[] appliesList && ArrayContains(appliesList,languages));
+            return _oatRules.Where(x => x.DevSkimRule.AppliesTo is null || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y))));
         }
 
         /// <summary>

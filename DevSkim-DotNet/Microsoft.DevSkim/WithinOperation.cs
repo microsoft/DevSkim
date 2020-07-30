@@ -29,6 +29,12 @@ namespace Microsoft.DevSkim
                             }
                         }
                     }
+                    else if (wc.SameLineOnly)
+                    {
+                        var start = tc.LineEnds[Math.Max(tc.LineNumber - 1,0)];
+                        var end = tc.LineEnds[tc.LineNumber];
+                        var process = ProcessLambda(tc.FullContent[start..end]);
+                    }
                     else
                     {
                         var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (wc.Before + 1))];
