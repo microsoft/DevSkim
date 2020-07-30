@@ -9,6 +9,8 @@
 @inject IFileReaderService fileReaderService;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
+<h2>Scan</h2>
+<p>Choose the file or archive that contains the code you want to scan.</p>
 <input type="file" @ref=inputElement />
 <button @onclick=ReadFile class="btn btn-primary">Read file</button>
 <button @onclick=ClearFile class="btn btn-primary">Clear</button>
