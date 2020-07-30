@@ -51,7 +51,7 @@
     @foreach (var finding in Findings)
     {
         <div>
-            <i>@finding.Value.Item4:</i> <span>@finding.Key</span> <a href="/viewcode/@finding.Value.Item1">@finding.Value.Item2 @finding.Value.Item3 found.</a>
+            <i>@finding.Value.Item4:</i> <span>@finding.Key</span> <a href="viewcode/@finding.Value.Item1">@finding.Value.Item2 @finding.Value.Item3 found.</a>
         </div>
     }
 </div>

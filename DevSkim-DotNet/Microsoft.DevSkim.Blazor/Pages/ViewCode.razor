@@ -8,7 +8,7 @@
         @if (FileName != null)
         {
             <h1>@FileName</h1>
-            <p>Run: <a href="/Reports/@Results.RunIdMap.Where(x => x.Value == RunId).FirstOrDefault().Key">@RunId</a></p>
+            <p>Run: <a href="Reports/@Results.RunIdMap.Where(x => x.Value == RunId).FirstOrDefault().Key">@RunId</a></p>
             @foreach (var result in filteredResults)
             {
     <div style="border-radius: 25px; border: 2px solid #808080; padding: 20px;">
@@ -30,7 +30,6 @@
 
 
 @code {
-
     private FailureLevel GetSeverityForRule(string ruleId)
     {
         var severities = loadedSarif.Runs[0].Tool.Driver.Rules.Where(y => y.Id == ruleId);

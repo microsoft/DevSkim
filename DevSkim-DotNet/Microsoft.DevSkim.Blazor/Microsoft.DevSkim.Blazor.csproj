@@ -16,7 +16,6 @@
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="2.0.0.20200" />
-    <PackageReference Include="Tewr.Blazor.FileReader.Wasm" Version="0.11.19128" />
   </ItemGroup>
 
   <ItemGroup>
