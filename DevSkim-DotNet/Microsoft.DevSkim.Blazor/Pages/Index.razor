@@ -54,7 +54,7 @@
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Output += $"Reading file...";
+            Output += $"Reading file..."+nl;
             this.StateHasChanged();
             Console.WriteLine(Output);
             cancellationTokenSource?.Dispose();

@@ -29,7 +29,7 @@
     @foreach (var finding in Findings)
     {
         <div>
-            <span>@finding.Key</span> <a href="/viewcode/@finding.Value">@finding.Value</a>
+            <span>@finding.Key</span> <a href="/viewcode/@finding.Value.Item1">@finding.Value.Item2 issues found. </a>
         </div>
     }
 </div>
@@ -41,7 +41,7 @@
     private string SelectedRun { get; set; } = "";
     public string Status { get; set; } = "Idle";
     public IList<string> RunList = new List<string> { };
-    public IDictionary<string, string> Findings = new Dictionary<string, string>();
+    public IDictionary<string, (string,int)> Findings = new Dictionary<string, (string, int)>();
     private Results results;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -118,7 +118,7 @@
             // Displays run summary parsed from sarif
             var location = res.ResultLocations[runId];
             var sarif = await localStorage.GetItemAsync<string>(location);
-            Findings.Add(sarif, "");
+            Findings.Add(sarif, ("",0));
 
             using var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(sarif));
             var log = SarifLog.Load(stream);
@@ -126,9 +126,9 @@
             // Lists run files and GUID links
             foreach (var loc in res.FileLocations[runId])
             {
-                if (log.Runs[0].Results.Any(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName == loc.Key)))
+                if (log.Runs[0].Results.Count(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName == loc.Key)) is int count && count > 0)
                 {
-                    Findings.Add(loc.Key, loc.Value);
+                    Findings.Add(loc.Key, (loc.Value, count));
                 }
             }
             Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";
