@@ -39,17 +39,6 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void IsMatch_InvalidLanguageTest()
-        {
-            RuleProcessor processor = new RuleProcessor(new RuleSet());
-            string testString = "this is a test string";
-
-            // Langugage is empty
-            Issue[] issues = processor.Analyze(testString, string.Empty);
-        }
-
-        [TestMethod]
         public void RuleInfoTest()
         {
             RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules", "valid"), null);
