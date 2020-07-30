@@ -136,7 +136,7 @@
             using var writer = new StreamWriter(ms);
 
             Output += "Beginning DevSkim run."+nl;
-            this.InvokeAsync(this.StateHasChanged);
+            this.StateHasChanged();
 
             try
             {
@@ -152,7 +152,7 @@
                 Console.WriteLine(e.Message);
             }
             Output += "Completing DevSkim run. Beginning save."+nl;
-            this.InvokeAsync(this.StateHasChanged);
+            this.StateHasChanged();
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
