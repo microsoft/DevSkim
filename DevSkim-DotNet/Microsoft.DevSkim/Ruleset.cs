@@ -100,6 +100,7 @@ namespace Microsoft.DevSkim
                         {
                             clauses.Add(new WithinClause()
                             {
+                                Data = new List<string>() { condition.Pattern.Pattern },
                                 Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                                 Invert = condition.NegateFinding,
                                 FindingOnly = false,
@@ -115,6 +116,7 @@ namespace Microsoft.DevSkim
                     {
                         clauses.Add(new WithinClause()
                         {
+                            Data = new List<string>() { condition.Pattern.Pattern },
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
                             FindingOnly = true,

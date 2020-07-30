@@ -197,28 +197,40 @@ namespace Microsoft.DevSkim
             bool result = false;
             string preText = string.Concat(text.Substring(0, index));
             int lastPrefix = preText.LastIndexOf(prefix, StringComparison.InvariantCulture);
-            if (!string.IsNullOrEmpty(inline) && lastPrefix >= 0)
-            {
-                int lastInline = preText.Substring(0, lastPrefix).LastIndexOf(inline, StringComparison.InvariantCulture);
-
-                // For example in C#, If this /* is actually commented out by a //
-                if (lastInline >= 0 && lastInline < lastPrefix && !preText.Substring(lastInline, lastPrefix - lastInline).Contains('\n'))
-                {
-                    lastPrefix = -1;
-                }
-            }
             if (lastPrefix >= 0)
             {
-                var commentedText = text.Substring(lastPrefix);
-                int nextSuffix = commentedText.IndexOf(suffix, StringComparison.Ordinal);
+                int lastInline = preText.Substring(0, lastPrefix).LastIndexOf(inline, StringComparison.InvariantCulture);
+                // For example in C#, If this /* is actually commented out by a //
+                if (!(lastInline >= 0 && lastInline < lastPrefix && !preText.Substring(lastInline, lastPrefix - lastInline).Contains(Environment.NewLine)))
+                {
+                    var commentedText = text.Substring(lastPrefix);
+                    int nextSuffix = commentedText.IndexOf(suffix, StringComparison.Ordinal);
 
-                // If the index is in between the last prefix before the index and the next suffix after that
-                // prefix Then it is commented out
-                if (lastPrefix + nextSuffix > index)
-                    result = true;
+                    // If the index is in between the last prefix before the index and the next suffix after that
+                    // prefix Then it is commented out
+                    if (lastPrefix + nextSuffix > index)
+                        return true;
+                }
+            }
+            if (!string.IsNullOrEmpty(inline))
+            {
+                int lastInline = preText.LastIndexOf(inline, StringComparison.InvariantCulture);
+                if (lastInline >= 0)
+                {
+                    var commentedText = text.Substring(lastInline);
+                    int endOfLine = commentedText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                    if (endOfLine < 0)
+                    {
+                        endOfLine = commentedText.Length - 1;
+                    }
+                    if (index > lastInline && index < lastInline + endOfLine)
+                    {
+                        return true;
+                    }
+                }
             }
 
-            return result;
+            return false;
         }
     }
 }

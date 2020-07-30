@@ -6,7 +6,10 @@ namespace Microsoft.DevSkim
 {
     internal class WithinClause : Clause
     {
-        public WithinClause(string? field = null) : base(Operation.Custom, field) { }
+        public WithinClause(string? field = null) : base(Operation.Custom, field) 
+        {
+            CustomOperation = "Within";
+        }
 
         public int Before { get; set; }
         public int After { get; set; }

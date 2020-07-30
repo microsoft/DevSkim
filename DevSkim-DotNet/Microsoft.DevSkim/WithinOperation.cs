@@ -32,7 +32,7 @@ namespace Microsoft.DevSkim
                     else if (wc.SameLineOnly)
                     {
                         var start = tc.LineEnds[Math.Max(tc.LineNumber - 1,0)];
-                        var end = tc.LineEnds[tc.LineNumber];
+                        var end = tc.LineEnds[tc.LineNumber == -1 ? tc.LineEnds.Count - 1 : tc.LineNumber];
                         var process = ProcessLambda(tc.FullContent[start..end]);
                     }
                     else
@@ -52,7 +52,7 @@ namespace Microsoft.DevSkim
                                 return new OperationResult(!wc.Invert, null);
                             }
                         }
-                        return new OperationResult(false, null);
+                        return new OperationResult(wc.Invert, null);
                     }
 
                 }
