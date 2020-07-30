@@ -54,15 +54,6 @@
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
-            foreach (var property in fileInfo.NonStandardProperties.Keys)
-            {
-                Output += $"{nameof(IFileInfo)}.{property} (nonstandard): {fileInfo.NonStandardProperties[property]}{nl}";
-            }
             Output += $"Reading file...";
             this.StateHasChanged();
             Console.WriteLine(Output);
@@ -145,6 +136,8 @@
             using var writer = new StreamWriter(ms);
 
             Output += "Beginning DevSkim run."+nl;
+            this.InvokeAsync(this.StateHasChanged);
+
             try
             {
 
@@ -159,6 +152,8 @@
                 Console.WriteLine(e.Message);
             }
             Output += "Completing DevSkim run. Beginning save."+nl;
+            this.InvokeAsync(this.StateHasChanged);
+
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
             var sarifString = reader.ReadToEnd();
