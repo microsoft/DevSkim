@@ -120,7 +120,7 @@
             {
                 results = new Results();
             }
-            var runId = DateTime.Now.ToLongTimeString();
+            var runId = DateTime.Now.ToLongDateString();
             var key = $"DevSkim-{runId}-Results";
             results.RunIds.Add(runId);
             results.FileLocations.Add(runId, new Dictionary<string, string>());
