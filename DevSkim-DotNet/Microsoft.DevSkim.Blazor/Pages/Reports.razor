@@ -1,4 +1,5 @@
 ﻿@page "/reports"
+@page "/reports/{CurrentRunId:string}"
 @using Microsoft.CodeAnalysis.Sarif;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
@@ -17,7 +18,8 @@
 
 <br />
 
-<button @onclick="GetResults">Get Results</button> <button @onclick="ClearLocalStorage">Clear Storage</button>
+<button @onclick="GetResults">Get Results</button>
+<button @onclick="ClearLocalStorage">Clear Storage</button>
 
 <br />
 
@@ -26,16 +28,18 @@
     @foreach (var finding in Findings)
     {
         <div>
-           <span>@finding.Key</span> <a href="/viewcode/@finding.Value">@finding.Value</a>
+            <span>@finding.Key</span> <a href="/viewcode/@finding.Value">@finding.Value</a>
         </div>
     }
 </div>
 
 @code {
+    [Parameter]
+    public string CurrentRunId { get; set; } = string.Empty;
     private static string nl = Environment.NewLine;
     private string SelectedRun { get; set; } = "";
     public string Status { get; set; } = "Idle";
-    public IList<string> RunList = new List<string> {};
+    public IList<string> RunList = new List<string> { };
     public IDictionary<string, string> Findings = new Dictionary<string, string>();
 
 
@@ -44,6 +48,11 @@
         if (firstRender)
         {
             await ReadStorage();
+            if (!string.IsNullOrEmpty(CurrentRunId))
+            {
+                SelectedRun = CurrentRunId;
+                await GetResults();
+            }
         }
     }
 
@@ -60,6 +69,7 @@
     private void OnSelected(string selection)
     {
         SelectedRun = selection;
+        GetResults();
     }
 
     public async Task ReadStorage()

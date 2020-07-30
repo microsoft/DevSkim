@@ -9,14 +9,14 @@
 <div>
     @if (FileName != null)
     {
-        <p>Viewing Results for <b>@FileName</b> during run "<b>@RunId</b>"</p>
+        <p>Viewing Results for <b>@FileName</b> during run <a href="/Reports/@RunId">@RunId</a></p>
         @foreach (var result in filteredResults)
         {
             <p>Rule: @result.RuleId</p>
             <p>Message: @result.Message.Text</p>
             <p>Found on line @result.Locations[0].PhysicalLocation.Region.StartLine</p>
             <p>Code Snippet:</p>
-            <pre class="rainbow-braces line-numbers lang-@Language" data-line="@result.Locations[0].PhysicalLocation.Region.StartLine" data-start="@Math.Max(0,result.Locations[0].PhysicalLocation.Region.StartLine-5)" ><code style="display:block; white-space:pre-wrap">
+            <pre class="rainbow-braces line-numbers lang-@Language" data-line="@result.Locations[0].PhysicalLocation.Region.StartLine-@result.Locations[0].PhysicalLocation.Region.EndLine" data-start="@Math.Max(0,result.Locations[0].PhysicalLocation.Region.StartLine-5)" ><code style="display:block; white-space:pre-wrap">
 @GetContextFromLine(result.Locations[0].PhysicalLocation.Region.StartLine, result.Locations[0].PhysicalLocation.Region.EndLine, 5)
             </code></pre>
 
