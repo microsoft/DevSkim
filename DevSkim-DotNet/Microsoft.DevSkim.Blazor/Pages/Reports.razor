@@ -51,7 +51,7 @@
     @foreach (var finding in Findings)
     {
         <div>
-            <span>@finding.Key</span> <a href="/viewcode/@finding.Value.Item1">@finding.Value.Item2 issues found. </a>
+            <i>@finding.Value.Item4:</i> <span>@finding.Key</span> <a href="/viewcode/@finding.Value.Item1">@finding.Value.Item2 @finding.Value.Item3 found.</a>
         </div>
     }
 </div>
@@ -69,7 +69,7 @@
     private HashSet<string> FindingLocations = new HashSet<string>();
     public string Status { get; set; } = "Idle";
     public IList<string> RunList = new List<string> { };
-    public IDictionary<string, (string,int)> Findings = new Dictionary<string, (string, int)>();
+    public IDictionary<string, (string,int,string, FailureLevel)> Findings = new Dictionary<string, (string, int,string, FailureLevel)>();
     private Results results;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -181,9 +181,14 @@
             // Enumerate findings
             foreach (var loc in res.FileLocations[runId])
             {
-                if (loadedSarif.Runs[0].Results.Count(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName == loc.Key)) is int count && count > 0)
+                var rulesWhichApply = loadedSarif.Runs[0].Results.Where(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName == loc.Key));
+                var severities = loadedSarif.Runs[0].Tool.Driver.Rules.Where(y => rulesWhichApply.Any(x => x.RuleId == y.Id));
+                var severity = FailureLevel.Note;
+                if (severities.Any())
+                    severity = severities.Max(x => x.DefaultConfiguration.Level);
+                if (rulesWhichApply.Count() is int count && count > 0)
                 {
-                    Findings.Add(loc.Key, (loc.Value, count));
+                    Findings.Add(loc.Key, (loc.Value, count, count == 1 ? "finding" : "findings", severity));
                 }
             }
             Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";

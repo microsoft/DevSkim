@@ -1,8 +1,6 @@
 @page "/viewcode/{Guid}"
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text;
-@using Newtonsoft.Json;
-@using Skclusive.Script.Prism
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 @inject IJSRuntime JSRuntime;
 
@@ -14,7 +12,7 @@
             @foreach (var result in filteredResults)
             {
     <div style="border-radius: 25px; border: 2px solid #808080; padding: 20px;">
-        <p><i>@result.RuleId : @result.Message.Text</i></p>
+        <p><i>@result.RuleId: @result.Message.Text - @GetSeverityForRule(result.RuleId)</i></p>
         <h3>Description</h3>
         <p>@loadedSarif?.Runs[0].Tool.Driver.Rules.Where(x => x.Id == result.RuleId).FirstOrDefault()?.FullDescription.Text</p>
         <pre class="match-braces rainbow-braces line-numbers lang-@Language" data-line="@result.Locations[0].PhysicalLocation.Region.StartLine-@result.Locations[0].PhysicalLocation.Region.EndLine" data-start="@Math.Max(0,result.Locations[0].PhysicalLocation.Region.StartLine-5)"><code style="display:block; white-space:pre-wrap">
@@ -32,6 +30,15 @@
 
 
 @code {
+
+    private FailureLevel GetSeverityForRule(string ruleId)
+    {
+        var severities = loadedSarif.Runs[0].Tool.Driver.Rules.Where(y => y.Id == ruleId);
+        var severity = FailureLevel.Note;
+        if (severities.Any())
+            severity = severities.Max(x => x.DefaultConfiguration.Level);
+        return severity;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

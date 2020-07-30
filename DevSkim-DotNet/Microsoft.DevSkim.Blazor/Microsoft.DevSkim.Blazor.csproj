@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="0.1.230" />
     <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="Skclusive.Script.Prism" Version="2.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="2.0.0.20200" />
     <PackageReference Include="Tewr.Blazor.FileReader.Wasm" Version="0.11.19128" />
