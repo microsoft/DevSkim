@@ -49,7 +49,6 @@ namespace Microsoft.DevSkim
                         break;
                 }
                 writer.WriteValue(svrstr);
-                writer.WriteValue(svr.ToString().ToLower());
             }
         }
     }

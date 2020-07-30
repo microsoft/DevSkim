@@ -2,7 +2,7 @@
   {
 
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
-        "id": "DS440071",
+        "id": "DS440075",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],
@@ -34,7 +34,7 @@
     {
 
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
-        "id": "DS440072",
+        "id": "DS440074",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],
@@ -64,7 +64,7 @@
     {
 
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
-        "id": "DS440073",
+        "id": "DS440076",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],
@@ -158,7 +158,7 @@
     {
 
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
-        "id": "DS440074",
+        "id": "DS440077",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": ["DS440000"],

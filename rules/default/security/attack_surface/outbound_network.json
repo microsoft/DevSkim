@@ -58,7 +58,8 @@
                     "_comment": ""
                 },
                 "negate_finding": true,
-                "_comment": "" 
+                "_comment": "" ,
+                "search_in": "finding-region(-3, 0)"
             }
         ],
         "fix_its": [

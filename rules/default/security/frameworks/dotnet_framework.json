@@ -5,7 +5,7 @@
         "description": "Do not target .NET Framework versions less than 4.7.2.",
         "recommendation": "",
         "applies_to": [
-            ".csproj"
+            "CSharp Project"
         ],
         "tags": [
             "Framework.NET.Outdated"
