@@ -1,6 +1,7 @@
 ﻿@page "/reports"
 @page "/reports/{CurrentRunId}"
 @using Microsoft.CodeAnalysis.Sarif;
+@using System.Text;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <h1>Report Viewer</h1>
@@ -119,10 +120,16 @@
             var sarif = await localStorage.GetItemAsync<string>(location);
             Findings.Add(sarif, "");
 
+            using var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(sarif));
+            var log = SarifLog.Load(stream);
+
             // Lists run files and GUID links
             foreach (var loc in res.FileLocations[runId])
             {
-                Findings.Add(loc.Key, loc.Value);
+                if (log.Runs[0].Results.Any(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName == loc.Key)))
+                {
+                    Findings.Add(loc.Key, loc.Value);
+                }
             }
             Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";
             this.StateHasChanged();
