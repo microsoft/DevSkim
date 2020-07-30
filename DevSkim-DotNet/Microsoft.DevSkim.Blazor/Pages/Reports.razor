@@ -1,5 +1,6 @@
 ﻿@page "/reports"
 @using Microsoft.CodeAnalysis.Sarif;
+@using System.Text; 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <h1>Report Viewer</h1>
@@ -21,19 +22,55 @@
 
 <br />
 
-<div style="width:800px; height:300px; border-style:solid; border-color:black;">@Status</div>
+<pre style="width:800px; height:50px; border-style:solid; border-color:black;">@Status</pre>
 <div style="width:800px; height:1200px; border-style:solid; border-color:black;">
+    <div style="font-weight: bold;">Summary for Run ID: @runId</div>
+    <div class="row">
+        <div class="column" style="width:50%;">
+            <div style="font-weight: bold;"># Files Scanned: </div> <div>@FileCount</div>
+            <div style="font-weight: bold;"># Rules Triggered: </div> <div>@RuleList.Count</div>
+        </div>
+        <div class="column" style="width:50%;">
+            <div style="font-weight: bold;"># Findings: </div> <div>@Occurrences</div>
+            <div style="font-weight: bold;"># Tags Identified: </div> <div>@TagList.Count</div>
+        </div>
+    </div>
+
+    <div style="font-weight: bold;">Tag List</div>
+    <ul>
+        @foreach (var tag in TagList)
+        {
+            <li>@tag</li>
+        }
+    </ul>
+
+    <div style="font-weight: bold;">Files Scanned</div>
     @foreach (var finding in Findings)
     {
-        <div>
-           <span>@finding.Key</span> <a href="/viewcode/@finding.Value">@finding.Value</a>
-        </div>
+        if (String.IsNullOrWhiteSpace(finding.Value))
+        {
+            <div>
+                <span>@finding.Key</span>
+            </div>
+        }
+        else
+        {
+            <div>
+                <span>@finding.Key</span> <a href="/viewcode/@finding.Value">@finding.Value</a>
+            </div>
+        }
     }
 </div>
 
 @code {
     private static string nl = Environment.NewLine;
+    private string runId = "";
     private string SelectedRun { get; set; } = "";
+    private int Occurrences = 0;
+    private int FileCount = 0;
+    private HashSet<string> TagList = new HashSet<string>();
+    private HashSet<string> RuleList = new HashSet<string>();
+    private HashSet<string> FindingLocations = new HashSet<string>();
     public string Status { get; set; } = "Idle";
     public IList<string> RunList = new List<string> {};
     public IDictionary<string, string> Findings = new Dictionary<string, string>();
@@ -73,7 +110,7 @@
                 res = new Results();
             RunList = res.RunIds;
 
-            Status += $"Found {RunList.Count} runs.{nl}";
+            Status = $"Found {RunList.Count} runs.{nl}";
             this.StateHasChanged();
         }
         catch (Exception e)
@@ -90,7 +127,15 @@
     {
         try
         {
-            var runId = SelectedRun;
+            Occurrences = 0;
+            FileCount = 0;
+            TagList.Clear();
+            RuleList.Clear();
+            FindingLocations.Clear();
+            Findings.Clear();
+
+            runId = SelectedRun;
+
             if (String.IsNullOrWhiteSpace(runId))
             {
                 Status = $"No run selected.{nl}";
@@ -98,17 +143,36 @@
                 return;
             }
 
-            Status += $"Reading results of Run ID: {runId}{nl}";
+            Status = $"Reading results of Run ID: {runId}{nl}";
             this.StateHasChanged();
 
             var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
 
-            // Displays run summary parsed from sarif
+            // Load sarif results
             var location = res.ResultLocations[runId];
             var sarif = await localStorage.GetItemAsync<string>(location);
-            Findings.Add(sarif, "");
+            using var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(sarif));
+            var loadedSarif = SarifLog.Load(stream);
+            var sarifResults = loadedSarif.Runs[0].Results;
 
-            // Lists run files and GUID links
+
+            // Read results for summary
+            if (sarifResults != null)
+            {
+                foreach (var result in sarifResults)
+                {
+                    foreach (var tag in result.Tags)
+                    {
+                        TagList.Add(tag);
+                    }
+                    Occurrences += result.OccurrenceCount;
+                    RuleList.Add(result.RuleId);
+                }
+            }
+            FileCount = res.FileLocations.Count;
+
+
+            // Enumerate findings
             foreach (var loc in res.FileLocations[runId])
             {
                 Findings.Add(loc.Key, loc.Value);
