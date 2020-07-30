@@ -25,8 +25,8 @@ namespace Microsoft.DevSkim
                 var matchList = new List<Boundary>();
                 if (Analyzer != null)
                 {
-                    var res = regexEngine.OperationDelegate.Invoke(src, state1, null, null);
-                    if (res.Result && res.Capture is TypedClauseCapture<MatchCollection> mc)
+                    var res = regexEngine.OperationDelegate.Invoke(src, tc.Line, null, null);
+                    if (res.Result && res.Capture is TypedClauseCapture<List<Match>> mc)
                     {
                         List<Boundary> boundaries = new List<Boundary>();
                         foreach (var match in mc.Result)

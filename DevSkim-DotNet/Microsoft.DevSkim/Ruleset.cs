@@ -63,12 +63,13 @@ namespace Microsoft.DevSkim
             }
             foreach(var condition in rule.Conditions ?? Array.Empty<SearchCondition>())
             {
-                if (condition.Pattern != null)
+                if (condition.Pattern?.Pattern != null)
                 {
                     if (condition.SearchIn is null)
                     {
                         clauses.Add(new WithinClause()
                         {
+                            Data = new List<string>() { condition.Pattern.Pattern },
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
                             SameLineOnly = true,
@@ -297,7 +298,7 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            return _oatRules.Where(x => x.DevSkimRule.AppliesTo is null || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y))));
+            return _oatRules.Where(x => x.DevSkimRule.AppliesTo is null || x.DevSkimRule.AppliesTo.Length == 0 || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y))));
         }
 
         /// <summary>
