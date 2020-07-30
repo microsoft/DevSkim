@@ -5,9 +5,12 @@ using Microsoft.DevSkim.CLI.Writers;
 using Microsoft.Extensions.CommandLineUtils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -22,7 +25,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                               bool ignoreDefault,
                               bool suppressError,
                               bool disableSuppression,
-                              bool crawlArchives)
+                              bool crawlArchives,
+                              bool disableParallel)
         {
             _path = path;
             _outputFile = output;
@@ -34,6 +38,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _suppressError = suppressError;
             _disableSuppression = disableSuppression;
             _crawlArchives = crawlArchives;
+            _disableParallel = disableParallel;
         }
 
         public static void Configure(CommandLineApplication command)
@@ -62,6 +67,10 @@ namespace Microsoft.DevSkim.CLI.Commands
             var disableSuppressionOption = command.Option("-d|--disable-suppression",
                                                    "Disable suppression of findings with ignore comments",
                                                    CommandOptionType.NoValue);
+
+            var disableParallel = command.Option("--disable-parallel",
+                                       "Disable parallel processing.",
+                                       CommandOptionType.NoValue);
 
             var rulesOption = command.Option("-r|--rules",
                                              "Rules to use",
@@ -94,7 +103,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                  ignoreOption.HasValue(),
                                  errorOption.HasValue(),
                                  disableSuppressionOption.HasValue(),
-                                 crawlArchives.HasValue())).Run();
+                                 crawlArchives.HasValue(),
+                                 disableParallel.HasValue())).Run();
             });
         }
 
@@ -107,7 +117,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             if (!Directory.Exists(_path) && !File.Exists(_path))
             {
-                Console.Error.WriteLine("Error: Not a valid file or directory {0}", _path);
+                Debug.WriteLine("Error: Not a valid file or directory {0}", _path);
 
                 return (int)ExitCode.CriticalError;
             }
@@ -139,7 +149,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 if (verifier.CompiledRuleset.Count() == 0 && _ignoreDefaultRules)
                 {
-                    Console.Error.WriteLine("Error: No rules were loaded. ");
+                    Debug.WriteLine("Error: No rules were loaded. ");
                     return (int)ExitCode.CriticalError;
                 }
             }
@@ -179,7 +189,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                     else
                     {
-                        Console.Error.WriteLine("Invalid severity: {0}", severityText);
+                        Debug.WriteLine("Invalid severity: {0}", severityText);
                         return (int)ExitCode.CriticalError;
                     }
                 }
@@ -195,79 +205,90 @@ namespace Microsoft.DevSkim.CLI.Commands
             int filesAffected = 0;
             int issuesCount = 0;
 
-            // Iterate through all files
-            foreach (FileEntry fileEntry in fileListing)
+            void parseFileEntry(FileEntry fileEntry)
             {
                 string language = Language.FromFileName(fileEntry.FullPath);
 
                 // Skip files written in unknown language
                 if (string.IsNullOrEmpty(language))
                 {
-                    filesSkipped++;
-                    continue;
+                    Interlocked.Increment(ref filesSkipped);
                 }
-
-                string fileText = string.Empty;
-
-                try
+                else
                 {
-                    using (StreamReader reader = new StreamReader(fileEntry.Content))
+                    string fileText = string.Empty;
+
+                    try
                     {
-                        fileText = reader.ReadToEnd();
-                    }
-                    filesAnalyzed++;
-                }
-                catch (Exception)
-                {
-                    // Skip files we can't parse
-                    filesSkipped++;
-                    continue;
-                }
-
-                Issue[] issues = processor.Analyze(fileText, language);
-
-                bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || _disableSuppression && issues.Any();
-
-                if (issuesFound)
-                {
-                    filesAffected++;
-                    Console.Error.WriteLine("file:{0}", fileEntry.FullPath);
-
-                    // Iterate through each issue
-                    foreach (Issue issue in issues)
-                    {
-                        if (!issue.IsSuppressionInfo || _disableSuppression)
+                        using (StreamReader reader = new StreamReader(fileEntry.Content))
                         {
-                            issuesCount++;
-                            Console.Error.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",
-                                                    issue.StartLocation.Line,
-                                                    issue.StartLocation.Column,
-                                                    issue.EndLocation.Line,
-                                                    issue.EndLocation.Column,
-                                                    issue.Rule.Id,
-                                                    issue.Rule.Severity,
-                                                    issue.Rule.Name);
+                            fileText = reader.ReadToEnd();
+                        }
+                        Interlocked.Increment(ref filesAnalyzed);
+                    }
+                    catch (Exception)
+                    {
+                        // Skip files we can't parse
+                        Interlocked.Increment(ref filesSkipped);
+                        return;
+                    }
 
-                            IssueRecord record = new IssueRecord(
-                                Filename: fileEntry.FullPath,
-                                Filesize: fileText.Length,
-                                TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
-                                Issue: issue,
-                                Language: language);
+                    Issue[] issues = processor.Analyze(fileText, language);
 
-                            outputWriter.WriteIssue(record);
+                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || _disableSuppression && issues.Any();
+
+                    if (issuesFound)
+                    {
+                        Interlocked.Increment(ref filesAffected);
+                        Debug.WriteLine("file:{0}", fileEntry.FullPath);
+
+                        // Iterate through each issue
+                        foreach (Issue issue in issues)
+                        {
+                            if (!issue.IsSuppressionInfo || _disableSuppression)
+                            {
+                                Interlocked.Increment(ref issuesCount);
+                                Debug.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",
+                                                        issue.StartLocation.Line,
+                                                        issue.StartLocation.Column,
+                                                        issue.EndLocation.Line,
+                                                        issue.EndLocation.Column,
+                                                        issue.Rule.Id,
+                                                        issue.Rule.Severity,
+                                                        issue.Rule.Name);
+
+                                IssueRecord record = new IssueRecord(
+                                    Filename: fileEntry.FullPath,
+                                    Filesize: fileText.Length,
+                                    TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
+                                    Issue: issue,
+                                    Language: language);
+
+                                outputWriter.WriteIssue(record);
+                            }
                         }
                     }
-
-                    Console.Error.WriteLine();
                 }
+            }
+
+            //Iterate through all files
+            if (_disableParallel)
+            {
+                foreach (var fileEntry in fileListing)
+                {
+                    parseFileEntry(fileEntry);
+                }
+            }
+            else
+            {
+                Parallel.ForEach(fileListing, parseFileEntry);
             }
 
             outputWriter.FlushAndClose();
 
-            Console.Error.WriteLine("Issues found: {0} in {1} files", issuesCount, filesAffected);
-            Console.Error.WriteLine("Files analyzed: {0}", filesAnalyzed);
-            Console.Error.WriteLine("Files skipped: {0}", filesSkipped);
+            Debug.WriteLine("Issues found: {0} in {1} files", issuesCount, filesAffected);
+            Debug.WriteLine("Files analyzed: {0}", filesAnalyzed);
+            Debug.WriteLine("Files skipped: {0}", filesSkipped);
 
             return (int)ExitCode.NoIssues;
         }
@@ -284,7 +305,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         }
 
         private readonly bool _crawlArchives;
-
+        private readonly bool _disableParallel;
         private bool _disableSuppression;
 
         private string _fileFormat;

@@ -131,13 +131,13 @@
             }
 
             var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>() { "manual", "critical", "important", "moderate" }, rules: new List<string>(),
-                ignoreDefault: false, suppressError: true, disableSuppression: true, crawlArchives: true);
+                ignoreDefault: false, suppressError: true, disableSuppression: true, crawlArchives: true, disableParallel: false);
             var filename = Path.GetTempFileName();
             using var ms = new FileStream(filename, FileMode.Open);
             using var writer = new StreamWriter(ms);
 
             Output += "Beginning DevSkim run."+nl;
-            this.StateHasChanged();
+            await InvokeAsync(StateHasChanged);
 
             try
             {
@@ -152,7 +152,7 @@
                 Console.WriteLine(e.Message);
             }
             Output += "Completing DevSkim run. Beginning save."+nl;
-            this.StateHasChanged();
+            await InvokeAsync(StateHasChanged);
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
@@ -168,7 +168,7 @@
 
             value = max;
             Output += $"Done reading file {fileInfo.Name} - {fileInfo.Size} bytes in {stopwatch.ElapsedMilliseconds}ms.{nl}.";
-            this.StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
