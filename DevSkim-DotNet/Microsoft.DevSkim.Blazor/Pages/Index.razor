@@ -130,8 +130,9 @@
                 results.FileLocations[runId][entry.FullPath] = key;
             }
 
+            // Blazor WASM doesn't support parallelization
             var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>() { "manual", "critical", "important", "moderate" }, rules: new List<string>(),
-                ignoreDefault: false, suppressError: true, disableSuppression: true, crawlArchives: true, disableParallel: false);
+                ignoreDefault: false, suppressError: true, disableSuppression: true, crawlArchives: true, disableParallel: true);
             var filename = Path.GetTempFileName();
             using var ms = new FileStream(filename, FileMode.Open);
             using var writer = new StreamWriter(ms);
