@@ -1,4 +1,5 @@
 ﻿@page "/reports"
+@page "/reports/{CurrentRunId}"
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text; 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
@@ -18,7 +19,8 @@
 
 <br />
 
-<button @onclick="GetResults">Get Results</button> <button @onclick="ClearLocalStorage">Clear Storage</button>
+<button @onclick="GetResults">Get Results</button>
+<button @onclick="ClearLocalStorage">Clear Storage</button>
 
 <br />
 
@@ -47,22 +49,15 @@
     <div style="font-weight: bold;">Files Scanned</div>
     @foreach (var finding in Findings)
     {
-        if (String.IsNullOrWhiteSpace(finding.Value))
-        {
-            <div>
-                <span>@finding.Key</span>
-            </div>
-        }
-        else
-        {
-            <div>
-                <span>@finding.Key</span> <a href="/viewcode/@finding.Value">@finding.Value</a>
-            </div>
-        }
+        <div>
+            <span>@finding.Key</span> <a href="/viewcode/@finding.Value.Item1">@finding.Value.Item2 issues found. </a>
+        </div>
     }
 </div>
 
 @code {
+    [Parameter]
+    public string CurrentRunId { get; set; } = string.Empty;
     private static string nl = Environment.NewLine;
     private string runId = "";
     private string SelectedRun { get; set; } = "";
@@ -72,15 +67,20 @@
     private HashSet<string> RuleList = new HashSet<string>();
     private HashSet<string> FindingLocations = new HashSet<string>();
     public string Status { get; set; } = "Idle";
-    public IList<string> RunList = new List<string> {};
-    public IDictionary<string, string> Findings = new Dictionary<string, string>();
-
+    public IList<string> RunList = new List<string> { };
+    public IDictionary<string, (string,int)> Findings = new Dictionary<string, (string, int)>();
+    private Results results;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await ReadStorage();
+            if (!string.IsNullOrEmpty(CurrentRunId))
+            {
+                SelectedRun = results.RunIdMap[CurrentRunId];
+                await GetResults();
+            }
         }
     }
 
@@ -97,6 +97,7 @@
     private void OnSelected(string selection)
     {
         SelectedRun = selection;
+        GetResults();
     }
 
     public async Task ReadStorage()
@@ -108,7 +109,8 @@
             var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
             if (res == null)
                 res = new Results();
-            RunList = res.RunIds;
+            results = res;
+            RunList = res.RunIdMap.Values.ToList();
 
             Status = $"Found {RunList.Count} runs.{nl}";
             this.StateHasChanged();
@@ -170,12 +172,14 @@
                 }
             }
             FileCount = res.FileLocations.Count;
-
-
+            
             // Enumerate findings
             foreach (var loc in res.FileLocations[runId])
             {
-                Findings.Add(loc.Key, loc.Value);
+                if (loadedSarif.Runs[0].Results.Count(x => x.Locations.Any(y => y.PhysicalLocation.Address.FullyQualifiedName == loc.Key)) is int count && count > 0)
+                {
+                    Findings.Add(loc.Key, (loc.Value, count));
+                }
             }
             Status += $"Finished reading results of Run ID: {SelectedRun}{nl}";
             this.StateHasChanged();

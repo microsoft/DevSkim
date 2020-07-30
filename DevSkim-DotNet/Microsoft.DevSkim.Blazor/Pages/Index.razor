@@ -54,16 +54,7 @@
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Name)}: {fileInfo.Name}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Size)}: {fileInfo.Size}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.Type)}: {fileInfo.Type}{nl}";
-            Output += $"{nameof(IFileInfo)}.{nameof(fileInfo.LastModifiedDate)}: {fileInfo.LastModifiedDate?.ToString() ?? "(N/A)"}{nl}";
-            foreach (var property in fileInfo.NonStandardProperties.Keys)
-            {
-                Output += $"{nameof(IFileInfo)}.{property} (nonstandard): {fileInfo.NonStandardProperties[property]}{nl}";
-            }
-            Output += $"Reading file...";
+            Output += $"Reading file..."+nl;
             this.StateHasChanged();
             Console.WriteLine(Output);
             cancellationTokenSource?.Dispose();
@@ -75,8 +66,8 @@
             // Subscribe to progress (change of position)
             fileInfo.PositionInfo.PositionChanged += (s, e) =>
             {
-            // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
-            if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
+                // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
+                if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
                 {
                     stopwatch.Stop();
                     Output += $"Read {(e.PositionDeltaSinceAcknowledge)} bytes ({e.Percentage:00}%). {e.Position} / {fileInfo.Size}{nl}";
@@ -120,12 +111,10 @@
             {
                 results = new Results();
             }
-            var runId = DateTime.Now.ToLongTimeString();
-            var key = $"DevSkim-{runId}-Results";
-            results.RunIds.Add(runId);
+            var runId = DateTime.Now.ToString();
+            var key = Guid.NewGuid().ToString();
+            results.RunIdMap.Add(key,runId);
             results.FileLocations.Add(runId, new Dictionary<string, string>());
-
-            results.ResultLocations[runId] = key;
 
             foreach (var entry in fileEntries)
             {
@@ -146,8 +135,12 @@
             using var ms = new FileStream(filename, FileMode.Open);
             using var writer = new StreamWriter(ms);
 
+            Output += "Beginning DevSkim run."+nl;
+            this.StateHasChanged();
+
             try
             {
+
                 cmd.RunFileEntries(fileEntries, writer);
             }
             catch (Exception e)
@@ -158,13 +151,16 @@
                 var name = type.Name;
                 Console.WriteLine(e.Message);
             }
+            Output += "Completing DevSkim run. Beginning save."+nl;
+            this.StateHasChanged();
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
-            key = Guid.NewGuid().ToString();
             var sarifString = reader.ReadToEnd();
             var sarifStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(sarifString));
             var sarifLog = SarifLog.Load(sarifStream);
+
+            key = Guid.NewGuid().ToString();
             await localStorage.SetItemAsync(key, sarifString);
             results.ResultLocations[runId] = key;
 

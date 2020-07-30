@@ -2,37 +2,46 @@
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text;
 @using Newtonsoft.Json;
+@using Skclusive.Script.Prism
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+@inject IJSRuntime JSRuntime;
 
-<div>
-    @if (FileName != null)
-    {
-        <p>Viewing Results for <b>@FileName</b> during run "<b>@RunId</b>"</p>
-        @foreach (var result in filteredResults)
+    <div>
+        @if (FileName != null)
         {
-            <p>Rule: @result.RuleId</p>
-            <p>Message: @result.Message.Text</p>
-            <p>Found on line @result.Locations[0].PhysicalLocation.Region.StartLine</p>
-            <p>Code Snippet:</p>
-            <code style="display:block; white-space:pre-wrap" class="lang-@Language">
-@GetContextFromLine(result.Locations[0].PhysicalLocation.Region.StartLine, result.Locations[0].PhysicalLocation.Region.EndLine, 3)
-            </code>
+            <h1>@FileName</h1>
+            <p>Run: <a href="/Reports/@Results.RunIdMap.Where(x => x.Value == RunId).FirstOrDefault().Key">@RunId</a></p>
+            @foreach (var result in filteredResults)
+            {
+    <div style="border-radius: 25px; border: 2px solid #808080; padding: 20px;">
+        <p><i>@result.RuleId : @result.Message.Text</i></p>
+        <h3>Description</h3>
+        <p>@loadedSarif?.Runs[0].Tool.Driver.Rules.Where(x => x.Id == result.RuleId).FirstOrDefault()?.FullDescription.Text</p>
+        <pre class="match-braces rainbow-braces line-numbers lang-@Language" data-line="@result.Locations[0].PhysicalLocation.Region.StartLine-@result.Locations[0].PhysicalLocation.Region.EndLine" data-start="@Math.Max(0,result.Locations[0].PhysicalLocation.Region.StartLine-5)"><code style="display:block; white-space:pre-wrap">
+@GetContextFromLine(result.Locations[0].PhysicalLocation.Region.StartLine, result.Locations[0].PhysicalLocation.Region.EndLine, 5)
+            </code></pre>
+    </div>
 
+            }
         }
-    }
-    else
-    {
-        <p>Could not fetch file information given @Guid</p>
-    }
-</div>
+        else
+        {
+            <p>Could not fetch file information given @Guid</p>
+        }
+    </div>
 
 
 @code {
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("highlightCode");
+    }
+
     public string GetContextFromLine(int startLine, int endLine, int numLinesContext)
     {
         var start = Math.Max(0, startLine - numLinesContext);
-        var end = Math.Min(CodeLines.Length, endLine + numLinesContext);
+        var end = Math.Min(CodeLines.Length, endLine + numLinesContext - 1);
         return string.Join(Environment.NewLine, CodeLines[start..end]);
     }
 
@@ -51,9 +60,13 @@
 
     private List<Result> filteredResults = new List<Result>();
 
+    private Results Results;
+
+    private SarifLog loadedSarif;
+
     protected override async Task OnInitializedAsync()
     {
-        var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
+        Results = await localStorage.GetItemAsync<Results>("DevSkimResults");
         var theGuid = Guid;
         var codeFile = await localStorage.GetItemAsync<CodeFile>(Guid);
 
@@ -65,9 +78,9 @@
 
         if (RunId != null)
         {
-            var sarif = await localStorage.GetItemAsStringAsync(res.ResultLocations[RunId]);
+            var sarif = await localStorage.GetItemAsStringAsync(Results.ResultLocations[RunId]);
             using var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(sarif));
-            var loadedSarif = SarifLog.Load(stream);
+            loadedSarif = SarifLog.Load(stream);
             var results = loadedSarif.Runs[0].Results;
             var preparedFileName = System.IO.Path.GetFullPath(FileName ?? string.Empty);
 
