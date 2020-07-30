@@ -41,7 +41,7 @@
     public string Status { get; set; } = "Idle";
     public IList<string> RunList = new List<string> { };
     public IDictionary<string, string> Findings = new Dictionary<string, string>();
-
+    private Results results;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -50,7 +50,7 @@
             await ReadStorage();
             if (!string.IsNullOrEmpty(CurrentRunId))
             {
-                SelectedRun = CurrentRunId;
+                SelectedRun = results.RunIdMap[CurrentRunId];
                 await GetResults();
             }
         }
@@ -81,7 +81,8 @@
             var res = await localStorage.GetItemAsync<Results>("DevSkimResults");
             if (res == null)
                 res = new Results();
-            RunList = res.RunIds;
+            results = res;
+            RunList = res.RunIdMap.Values.ToList();
 
             Status += $"Found {RunList.Count} runs.{nl}";
             this.StateHasChanged();

@@ -75,8 +75,8 @@
             // Subscribe to progress (change of position)
             fileInfo.PositionInfo.PositionChanged += (s, e) =>
             {
-            // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
-            if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
+                // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
+                if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
                 {
                     stopwatch.Stop();
                     Output += $"Read {(e.PositionDeltaSinceAcknowledge)} bytes ({e.Percentage:00}%). {e.Position} / {fileInfo.Size}{nl}";
@@ -120,12 +120,10 @@
             {
                 results = new Results();
             }
-            var runId = DateTime.Now.ToLongDateString();
-            var key = $"DevSkim-{runId}-Results";
-            results.RunIds.Add(runId);
+            var runId = DateTime.Now.ToString();
+            var key = Guid.NewGuid().ToString();
+            results.RunIdMap.Add(key,runId);
             results.FileLocations.Add(runId, new Dictionary<string, string>());
-
-            results.ResultLocations[runId] = key;
 
             foreach (var entry in fileEntries)
             {
@@ -161,10 +159,11 @@
 
             using var fs = new FileStream(filename, FileMode.Open);
             using var reader = new StreamReader(fs);
-            key = Guid.NewGuid().ToString();
             var sarifString = reader.ReadToEnd();
             var sarifStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(sarifString));
             var sarifLog = SarifLog.Load(sarifStream);
+
+            key = Guid.NewGuid().ToString();
             await localStorage.SetItemAsync(key, sarifString);
             results.ResultLocations[runId] = key;
 

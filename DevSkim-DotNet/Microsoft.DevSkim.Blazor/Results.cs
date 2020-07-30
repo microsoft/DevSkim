@@ -9,20 +9,20 @@ namespace Microsoft.DevSkim.Blazor
     {
         public Results() {
             ResultLocations = new Dictionary<string, string>();
-            RunIds = new List<string>();
             FileLocations = new Dictionary<string, Dictionary<string, string>>();
+            RunIdMap = new Dictionary<string, string>();
         }
 
-        public Results(Dictionary<string, string> ResultLocations, List<string> RunIds, Dictionary<string, Dictionary<string, string>> FileLocations)
+        public Results(Dictionary<string, string> ResultLocations, Dictionary<string, Dictionary<string, string>> FileLocations, Dictionary<string, string> RunIdMap)
         {
             this.ResultLocations = ResultLocations;
-            this.RunIds = RunIds;
             this.FileLocations = FileLocations;
+            this.RunIdMap = RunIdMap;
         }
         // Maps RunId to Location
         public Dictionary<string, string> ResultLocations { get; set; }
-        public List<string> RunIds { get; set; }
         // Maps RunId to Dictionary of FileName to Location
         public Dictionary<string, Dictionary<string, string>> FileLocations { get; set; }
+        public Dictionary<string, string> RunIdMap { get; set; }
     }
 }
