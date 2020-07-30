@@ -2,7 +2,9 @@
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text;
 @using Newtonsoft.Json;
+@using Skclusive.Script.Prism
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+@inject IJSRuntime JSRuntime;
 
 <div>
     @if (FileName != null)
@@ -14,9 +16,9 @@
             <p>Message: @result.Message.Text</p>
             <p>Found on line @result.Locations[0].PhysicalLocation.Region.StartLine</p>
             <p>Code Snippet:</p>
-            <code style="display:block; white-space:pre-wrap" class="lang-@Language">
-@GetContextFromLine(result.Locations[0].PhysicalLocation.Region.StartLine, result.Locations[0].PhysicalLocation.Region.EndLine, 3)
-            </code>
+            <pre class="rainbow-braces line-numbers lang-@Language" data-line="@result.Locations[0].PhysicalLocation.Region.StartLine" data-start="@Math.Max(0,result.Locations[0].PhysicalLocation.Region.StartLine-5)" ><code style="display:block; white-space:pre-wrap">
+@GetContextFromLine(result.Locations[0].PhysicalLocation.Region.StartLine, result.Locations[0].PhysicalLocation.Region.EndLine, 5)
+            </code></pre>
 
         }
     }
@@ -28,6 +30,11 @@
 
 
 @code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("highlightCode");
+    }
 
     public string GetContextFromLine(int startLine, int endLine, int numLinesContext)
     {
