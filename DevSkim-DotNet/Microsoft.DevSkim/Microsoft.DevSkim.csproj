@@ -23,6 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.CST.OAT" Version="1.0.41-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
@@ -40,10 +41,6 @@
   <ItemGroup>
     <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath="" />
     <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\OAT\OAT.csproj" />
   </ItemGroup>
   
   <ItemGroup>
