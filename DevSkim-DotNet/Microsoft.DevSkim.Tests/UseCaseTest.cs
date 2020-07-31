@@ -237,9 +237,9 @@ namespace Microsoft.DevSkim.Tests
 
             Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "MD5CryptoServiceProvider should be flagged");
-            Assert.AreEqual(0, issues[1].Boundary.Index, "MD5CryptoServiceProvider invalid index");
-            Assert.AreEqual(3, issues[1].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
-            Assert.AreEqual("DS126858", issues[1].Rule.Id, "MD5CryptoServiceProvider invalid rule");
+            Assert.AreEqual(0, issues[0].Boundary.Index, "MD5CryptoServiceProvider invalid index");
+            Assert.AreEqual(3, issues[0].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
+            Assert.AreEqual("DS126858", issues[0].Rule.Id, "MD5CryptoServiceProvider invalid rule");
         }
 
         [TestMethod]
