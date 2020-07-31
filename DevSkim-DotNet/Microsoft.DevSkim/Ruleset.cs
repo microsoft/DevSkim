@@ -43,7 +43,8 @@ namespace Microsoft.DevSkim
                     {
                         Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                         Data = new List<string>() { pattern.Pattern },
-                        Capture = true
+                        Capture = true,
+                        Arguments = pattern.Modifiers.ToList()
                     });
                     if (clauseNumber > 0)
                     {
@@ -73,6 +74,7 @@ namespace Microsoft.DevSkim
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
                             SameLineOnly = true,
+                            Arguments = pattern.Modifiers.ToList()
                         });
                         expression.Append(" AND ");
                         expression.Append(clauseNumber);

@@ -19,6 +19,15 @@ namespace Microsoft.DevSkim
             {
                 if (c is WithinClause wc && state1 is TextContainer tc)
                 {
+                    var regexOpts = RegexOptions.Compiled;
+                    if (wc.Arguments.Contains("i"))
+                    {
+                        regexOpts |= RegexOptions.IgnoreCase;
+                    }
+                    if (wc.Arguments.Contains("m"))
+                    {
+                        regexOpts |= RegexOptions.Multiline;
+                    }
                     if (wc.FindingOnly)
                     {
                         foreach (var capture in captures ?? Array.Empty<ClauseCapture>())
@@ -45,7 +54,7 @@ namespace Microsoft.DevSkim
 
                     OperationResult ProcessLambda(string target)
                     {
-                        foreach (var pattern in c.Data.Select(x => regexEngine.StringToRegex(x)))
+                        foreach (var pattern in c.Data.Select(x => regexEngine.StringToRegex(x, regexOpts)))
                         {
                             if (pattern?.IsMatch(target) is true)
                             {
