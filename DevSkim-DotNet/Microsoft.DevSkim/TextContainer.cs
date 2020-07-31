@@ -30,7 +30,7 @@ namespace Microsoft.DevSkim
             {
                 if (++pos < FullContent.Length)
                 {
-                    pos = FullContent.IndexOf(Environment.NewLine, pos, StringComparison.InvariantCultureIgnoreCase);
+                    pos = FullContent.IndexOf("\n", pos, StringComparison.InvariantCultureIgnoreCase);
                     LineEnds.Add(pos);
                 }
             }

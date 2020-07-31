@@ -33,13 +33,13 @@ namespace Microsoft.DevSkim
                     {
                         var start = tc.LineEnds[Math.Max(tc.LineNumber - 1,0)];
                         var end = tc.LineEnds[tc.LineNumber == -1 ? tc.LineEnds.Count - 1 : tc.LineNumber];
-                        var process = ProcessLambda(tc.FullContent[start..end]);
+                        return ProcessLambda(tc.FullContent[start..end]);
                     }
                     else
                     {
-                        var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (wc.Before + 1))];
-                        var end = tc.LineEnds[Math.Min(tc.LineEnds.Count - 1, tc.LineNumber + wc.After)];
-                        var process = ProcessLambda(tc.FullContent[start..end]);
+                        var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (-wc.Before + 1))];
+                        var end = tc.LineEnds[tc.LineNumber < 0 ? tc.LineEnds.Count -1 : Math.Min(tc.LineEnds.Count - 1, tc.LineNumber + wc.After)];
+                        return ProcessLambda(tc.FullContent[start..end]);
                     }
                     // Subtracting before would give us the end of the line N before but we want the start so go back 1 more
 
@@ -54,7 +54,6 @@ namespace Microsoft.DevSkim
                         }
                         return new OperationResult(wc.Invert, null);
                     }
-
                 }
                 return new OperationResult(false, null);
             };

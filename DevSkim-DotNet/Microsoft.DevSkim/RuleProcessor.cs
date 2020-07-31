@@ -110,10 +110,12 @@ namespace Microsoft.DevSkim
         public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
         {
             // Get rules for the given content type
-            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages);
+            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
             // Skip rules that are disabled or don't have the right severity
             //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
             //        continue;
+
+            var filtered = rules.Where(x => x.Name == "DS126186");
 
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
