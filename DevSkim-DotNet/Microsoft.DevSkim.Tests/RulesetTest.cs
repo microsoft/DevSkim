@@ -26,11 +26,6 @@ namespace Microsoft.DevSkim.Tests
             // From File
             testRules.AddFile(Path.Combine("rules", "custom", "quickfix.json"), null);
             Assert.AreEqual(2, testRules.Count(), "FromFile Count should be 2");
-
-            foreach (Rule r in testRules)
-            {
-                Assert.IsNotNull(r.Id);
-            }
         }
 
         //[TestMethod]

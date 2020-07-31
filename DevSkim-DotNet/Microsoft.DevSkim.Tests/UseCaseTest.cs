@@ -182,14 +182,14 @@ namespace Microsoft.DevSkim.Tests
 
             Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(2, issues.Length, "MD5CryptoServiceProvider should be flagged");
-            Assert.AreEqual(27, issues[0].Boundary.Index, "MD5CryptoServiceProvider invalid index");
-            Assert.AreEqual(24, issues[0].Boundary.Length, "MD5CryptoServiceProvider invalid length ");
-            Assert.AreEqual(2, issues[0].StartLocation.Line, "MD5CryptoServiceProvider invalid start location line");
-            Assert.AreEqual(16, issues[0].StartLocation.Column, "MD5CryptoServiceProvider invalid start location column");
-            Assert.AreEqual(2, issues[0].EndLocation.Line, "MD5CryptoServiceProvider invalid end location line");
-            Assert.AreEqual(40, issues[0].EndLocation.Column, "MD5CryptoServiceProvider invalid end location column");
-            Assert.AreEqual("DS168931", issues[0].Rule.Id, "MD5CryptoServiceProvider invalid rule");
-            Assert.AreEqual(true, issues[1].IsSuppressionInfo, "MD5CryptoServiceProvider second issue should be info");
+            Assert.IsTrue(issues.Any(x => x.Boundary.Index == 27), "MD5CryptoServiceProvider invalid index");
+            Assert.IsTrue(issues.Any(x => x.Boundary.Length == 24), "MD5CryptoServiceProvider invalid length ");
+            Assert.IsTrue(issues.Any(x => x.StartLocation.Line == 2), "MD5CryptoServiceProvider invalid start location line");
+            Assert.IsTrue(issues.Any(x => x.StartLocation.Column == 16), "MD5CryptoServiceProvider invalid start location column");
+            Assert.IsTrue(issues.Any(x => x.EndLocation.Line == 2), "MD5CryptoServiceProvider invalid end location line");
+            Assert.IsTrue(issues.Any(x => x.EndLocation.Column == 40), "MD5CryptoServiceProvider invalid end location column");
+            Assert.IsTrue(issues.Any(x => x.Rule.Id == "DS168931"), "MD5CryptoServiceProvider invalid rule");
+            Assert.IsTrue(issues.Count(x => x.IsSuppressionInfo) == 1, "MD5CryptoServiceProvider second issue should be info");
         }
 
         [TestMethod]

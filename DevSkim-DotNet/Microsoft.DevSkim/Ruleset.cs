@@ -30,7 +30,7 @@ namespace Microsoft.DevSkim
         private Regex searchInRegex = new Regex(".*\\((.*),(.*)\\)",RegexOptions.Compiled);
 
 
-        internal ConvertedOatRule? DevSkimRuleToConvertedOatRule(Rule rule)
+        public ConvertedOatRule? DevSkimRuleToConvertedOatRule(Rule rule)
         {
             var clauses = new List<Clause>();
             int clauseNumber = 0;
@@ -60,7 +60,7 @@ namespace Microsoft.DevSkim
             }
             else
             {
-                return null;
+                return new ConvertedOatRule(rule.Id,rule);
             }
             foreach(var condition in rule.Conditions ?? Array.Empty<SearchCondition>())
             {
@@ -261,6 +261,11 @@ namespace Microsoft.DevSkim
         /// <param name="tag"> Tag for the rules </param>
         public void AddString(string jsonstring, string sourcename, string? tag = null)
         {
+            AddRange(StringToRules(jsonstring, sourcename, tag));
+        }
+
+        internal IEnumerable<Rule> StringToRules(string jsonstring, string sourcename, string? tag = null)
+        {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 Error = HandleDeserializationError
@@ -275,7 +280,7 @@ namespace Microsoft.DevSkim
                     r.RuntimeTag = tag;
 
                     if (r.Patterns == null)
-                        r.Patterns = new SearchPattern[] { };
+                        r.Patterns = Array.Empty<SearchPattern>();
 
                     foreach (SearchPattern pattern in r.Patterns)
                     {
@@ -283,7 +288,7 @@ namespace Microsoft.DevSkim
                     }
 
                     if (r.Conditions == null)
-                        r.Conditions = new SearchCondition[] { };
+                        r.Conditions = Array.Empty<SearchCondition>();
 
                     foreach (SearchCondition condition in r.Conditions)
                     {
@@ -292,9 +297,9 @@ namespace Microsoft.DevSkim
                             SanitizePatternRegex(condition.Pattern);
                         }
                     }
-                }
 
-                AddRange(ruleList);
+                    yield return r;
+                }
             }
         }
 
@@ -341,23 +346,6 @@ namespace Microsoft.DevSkim
 
         private List<Rule> _rules;
         private List<ConvertedOatRule> _oatRules;
-
-        /// <summary>
-        ///     Tests if array contains given elements
-        /// </summary>
-        /// <param name="source"> Source array </param>
-        /// <param name="comps"> List of elements to look for </param>
-        /// <returns> True if source array contains element from comps array </returns>
-        private bool ArrayContains(string[] source, string[] comps)
-        {
-            foreach (string c in comps)
-            {
-                if (source.Contains(c))
-                    return true;
-            }
-
-            return false;
-        }
 
         /// <summary>
         ///     Handler for deserialization error
