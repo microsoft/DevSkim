@@ -236,7 +236,11 @@ namespace Microsoft.DevSkim
         public void AddRange(IEnumerable<Rule> collection)
         {
             _rules.AddRange(collection);
-            _oatRules.AddRange(collection.Select(x => DevSkimRuleToConvertedOatRule(x)));
+            foreach(var rule in collection.Select(DevSkimRuleToConvertedOatRule))
+            {
+                if (rule != null)
+                    _oatRules.Add(rule);
+            }
         }
 
         /// <summary>
@@ -290,8 +294,7 @@ namespace Microsoft.DevSkim
                     }
                 }
 
-                _rules.AddRange(ruleList);
-                _oatRules.AddRange(ruleList.Select(x => DevSkimRuleToConvertedOatRule(x)));
+                AddRange(ruleList);
             }
         }
 
@@ -303,6 +306,11 @@ namespace Microsoft.DevSkim
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
             return _oatRules.Where(x => x.DevSkimRule.AppliesTo is null || x.DevSkimRule.AppliesTo.Length == 0 || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y))));
+        }
+
+        public IEnumerable<ConvertedOatRule> GetAllOatRules()
+        {
+            return _oatRules;
         }
 
         /// <summary>
