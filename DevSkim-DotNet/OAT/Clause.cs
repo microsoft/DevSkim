@@ -58,6 +58,11 @@ namespace Microsoft.CST.OAT
         /// </summary>
         public bool Capture { get; set; }
 
+        /// <summary>
+        /// Some Operations also take arguments
+        /// </summary>
+        public List<string> Arguments { get; set; } = new List<string>();
+
         internal string Key
         {
             get

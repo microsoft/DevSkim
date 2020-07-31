@@ -6,6 +6,10 @@
     public enum Operation
     {
         /// <summary>
+        ///     Specifies that a custom operation has been specified
+        /// </summary>
+        Custom,
+        /// <summary>
         ///     Generates regular expressions from the Data list provided and tests them against the specified
         ///     field. If any match it is a success.
         /// </summary>
@@ -86,11 +90,6 @@
         /// <summary>
         ///     Checks if the field, if a dictionary, contains the specified key
         /// </summary>
-        ContainsKey,
-
-        /// <summary>
-        ///     Specifies that a custom operation has been specified
-        /// </summary>
-        Custom
+        ContainsKey
     }
 }

@@ -14,7 +14,7 @@ namespace Microsoft.CST.OAT.Operations
     /// </summary>
     public class RegexOperation : OatOperation
     {
-        private readonly ConcurrentDictionary<string, Regex?> RegexCache = new ConcurrentDictionary<string, Regex?>();
+        private readonly ConcurrentDictionary<(string, RegexOptions), Regex?> RegexCache = new ConcurrentDictionary<(string, RegexOptions), Regex?>();
 
         /// <summary>
         /// Create an OatOperation given an analyzer
@@ -54,9 +54,20 @@ namespace Microsoft.CST.OAT.Operations
             (var stateTwoList, _) = Analyzer?.ObjectToValues(state2) ?? (new List<string>(), new List<KeyValuePair<string, string>>());
             if (clause.Data is List<string> RegexList && RegexList.Any())
             {
+                var options = RegexOptions.Compiled;
+
+                if (clause.Arguments.Contains("i"))
+                {
+                    options |= RegexOptions.IgnoreCase;
+                }
+                if (clause.Arguments.Contains("m"))
+                {
+                    options |= RegexOptions.Multiline;
+                }
+
                 var built = string.Join("|", RegexList);
 
-                var regex = StringToRegex(built);
+                var regex = StringToRegex(built, options);
 
                 if (regex != null)
                 {
@@ -103,22 +114,23 @@ namespace Microsoft.CST.OAT.Operations
         /// Uses an internal cache.
         /// </summary>
         /// <param name="built">The regex to build</param>
+        /// <param name="regexOptions">The options to use.</param>
         /// <returns>The built Regex</returns>
-        public Regex? StringToRegex(string built)
+        public Regex? StringToRegex(string built, RegexOptions regexOptions)
         {
-            if (!RegexCache.ContainsKey(built))
+            if (!RegexCache.ContainsKey((built, regexOptions)))
             {
                 try
                 {
-                    RegexCache.TryAdd(built, new Regex(built, RegexOptions.Compiled));
+                    RegexCache.TryAdd((built, regexOptions), new Regex(built, regexOptions));
                 }
                 catch (ArgumentException)
                 {
                     Log.Warning("InvalidArgumentException when creating regex. Regex {0} is invalid and will be skipped.", built);
-                    RegexCache.TryAdd(built, null);
+                    RegexCache.TryAdd((built, regexOptions), null);
                 }
             }
-            return RegexCache[built];
+            return RegexCache[(built, regexOptions)];
         }
     }
 }
