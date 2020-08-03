@@ -31,7 +31,7 @@ namespace Microsoft.DevSkim
             // Look for whole filename first
             foreach (LanguageInfo item in Instance.Languages)
             {
-                if (Array.Exists(item.Extensions ?? Array.Empty<string>(), x => x.EndsWith(file)))
+                if (Array.Exists(item.Extensions ?? Array.Empty<string>(), x => x.EndsWith(file, StringComparison.InvariantCultureIgnoreCase)))
                     return item?.Name ?? string.Empty;
             }
 
@@ -40,7 +40,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (LanguageInfo item in Instance.Languages)
                 {
-                    if (Array.Exists(item.Extensions ?? Array.Empty<string>(), x => x.EndsWith(ext)))
+                    if (Array.Exists(item.Extensions ?? Array.Empty<string>(), x => x.EndsWith(ext, StringComparison.InvariantCultureIgnoreCase)))
                         return item.Name ?? string.Empty;
                 }
             }
@@ -61,7 +61,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower(CultureInfo.InvariantCulture)) && comment.Inline is { })
+                    if (Array.Exists(comment.Languages, x => x.Equals(language, StringComparison.InvariantCultureIgnoreCase)) && comment.Inline is { })
                         return comment.Inline;
                 }
             }
@@ -103,7 +103,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower(CultureInfo.InvariantCulture)) && comment.Suffix is { })
+                    if (Array.Exists(comment.Languages, x => x.Equals(language, StringComparison.InvariantCultureIgnoreCase)) && comment.Suffix is { })
                         return comment.Suffix;
                 }
             }

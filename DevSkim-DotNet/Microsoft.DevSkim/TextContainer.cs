@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Microsoft.DevSkim
 {
@@ -44,13 +45,12 @@ namespace Microsoft.DevSkim
             inline = DevSkim.Language.GetCommentInline(Language);
         }
 
-        public string Language { get; set; }
-        public int LineNumber { get; }
         public string FullContent { get; }
+        public string Language { get; set; }
         public string Line { get; }
-        string prefix;
-        string suffix;
-        string inline;
+        public List<int> LineEnds { get; }
+        public int LineNumber { get; }
+
         /// <summary>
         ///     Returns the Boundary of a specified line number
         /// </summary>
@@ -157,31 +157,9 @@ namespace Microsoft.DevSkim
             return !(isInComment && !patterns.Contains(PatternScope.Comment));
         }
 
-        public List<int> LineEnds;
-
-        public List<int> LineStarts { get; }
-
-        /// <summary>
-        ///     Return boundary defined by line and its offset
-        /// </summary>
-        /// <param name="line"> Line number </param>
-        /// <param name="offset"> Offset from line number </param>
-        /// <returns> Boundary </returns>
-        private int BoundaryByLine(int line, int offset)
-        {
-            int index = line + offset;
-
-            // We need the begining of the line when going up
-            if (offset < 0)
-                index--;
-
-            if (index < 0)
-                index = 0;
-            if (index >= LineEnds.Count)
-                index = LineEnds.Count - 1;
-
-            return LineEnds[index];
-        }
+        private string inline;
+        private string prefix;
+        private string suffix;
 
         /// <summary>
         ///     Checks if the index in the string lies between preffix and suffix
@@ -191,9 +169,8 @@ namespace Microsoft.DevSkim
         /// <param name="prefix"> Prefix </param>
         /// <param name="suffix"> Suffix </param>
         /// <returns> True if the index is between prefix and suffix </returns>
-        private bool IsBetween(string text, int index, string prefix, string suffix, string inline = "")
+        private static bool IsBetween(string text, int index, string prefix, string suffix, string inline = "")
         {
-            bool result = false;
             string preText = string.Concat(text.Substring(0, index));
             int lastPrefix = preText.LastIndexOf(prefix, StringComparison.InvariantCulture);
             if (lastPrefix >= 0)
@@ -205,8 +182,8 @@ namespace Microsoft.DevSkim
                     var commentedText = text.Substring(lastPrefix);
                     int nextSuffix = commentedText.IndexOf(suffix, StringComparison.Ordinal);
 
-                    // If the index is in between the last prefix before the index and the next suffix after that
-                    // prefix Then it is commented out
+                    // If the index is in between the last prefix before the index and the next suffix after
+                    // that prefix Then it is commented out
                     if (lastPrefix + nextSuffix > index)
                         return true;
                 }
@@ -230,6 +207,28 @@ namespace Microsoft.DevSkim
             }
 
             return false;
+        }
+
+        /// <summary>
+        ///     Return boundary defined by line and its offset
+        /// </summary>
+        /// <param name="line"> Line number </param>
+        /// <param name="offset"> Offset from line number </param>
+        /// <returns> Boundary </returns>
+        private int BoundaryByLine(int line, int offset)
+        {
+            int index = line + offset;
+
+            // We need the begining of the line when going up
+            if (offset < 0)
+                index--;
+
+            if (index < 0)
+                index = 0;
+            if (index >= LineEnds.Count)
+                index = LineEnds.Count - 1;
+
+            return LineEnds[index];
         }
     }
 }
