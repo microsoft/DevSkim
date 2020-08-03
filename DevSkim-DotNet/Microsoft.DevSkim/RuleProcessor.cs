@@ -104,8 +104,11 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="text"> Source code </param>
         /// <param name="languages"> List of languages </param>
+        /// <param name="lineNumber">
+        ///     Specific line to analyze. If lineNumber is 0 the entire text is used.
+        /// </param>
         /// <returns> Array of matches </returns>
-        public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
+        public Issue[] Analyze(string text, string[] languages, int lineNumber = 0)
         {
             // Get rules for the given content type
             IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
@@ -115,7 +118,7 @@ namespace Microsoft.DevSkim
             var filtered = rules.Where(x => x.Name == "DS126186");
 
             List<Issue> resultsList = new List<Issue>();
-            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
+            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber < 0 ? 0 : lineNumber);
 
             foreach (var capture in analyzer.GetCaptures(rules, textContainer))
             {

@@ -86,22 +86,25 @@ namespace Microsoft.DevSkim
                 OperationResult ProcessLambda(string target, Boundary targetBoundary)
                 {
                     var boundaries = new List<Boundary>();
-                    foreach (var pattern in c.Data.Select(x => regexEngine.StringToRegex(x, regexOpts)))
+                    foreach (var pattern in wc.Data.Select(x => regexEngine.StringToRegex(x, regexOpts)))
                     {
-                        var matches = pattern.Matches(target);
-                        foreach (var match in matches)
+                        if (pattern is Regex r)
                         {
-                            if (match is Match m)
+                            var matches = r.Matches(target);
+                            foreach (var match in matches)
                             {
-                                Boundary translatedBoundary = new Boundary()
+                                if (match is Match m)
                                 {
-                                    Length = m.Length,
-                                    Index = targetBoundary.Index + m.Index
-                                };
-                                // Should return only scoped matches
-                                if (tc.ScopeMatch(wc.Scopes, translatedBoundary))
-                                {
-                                    boundaries.Add(translatedBoundary);
+                                    Boundary translatedBoundary = new Boundary()
+                                    {
+                                        Length = m.Length,
+                                        Index = targetBoundary.Index + m.Index
+                                    };
+                                    // Should return only scoped matches
+                                    if (tc.ScopeMatch(wc.Scopes, translatedBoundary))
+                                    {
+                                        boundaries.Add(translatedBoundary);
+                                    }
                                 }
                             }
                         }

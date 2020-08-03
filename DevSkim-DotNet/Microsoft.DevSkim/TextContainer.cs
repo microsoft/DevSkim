@@ -26,7 +26,7 @@ namespace Microsoft.DevSkim
             Language = language;
             LineNumber = lineNumber;
             FullContent = content;
-            Line = LineNumber == -1 ? FullContent : GetLineContent(lineNumber);
+            Target = LineNumber == 0 ? FullContent : GetLineContent(lineNumber);
             LineEnds = new List<int>() { 0 };
             LineStarts = new List<int>() { 0, 0 };
 
@@ -54,20 +54,13 @@ namespace Microsoft.DevSkim
             inline = DevSkim.Language.GetCommentInline(Language);
         }
 
-        public string GetBoundaryText(Boundary capture)
-        {
-            if (capture is null)
-            {
-                return string.Empty;
-            }
-            return FullContent[(Math.Min(FullContent.Length, capture.Index))..(Math.Min(FullContent.Length, capture.Index + capture.Length))];
-        }
-
         public string FullContent { get; }
-        public string Language { get; set; }
-        public string Line { get; }
+
+        public string Language { get; }
+
         public int LineNumber { get; }
         public List<int> LineStarts { get; }
+        public string Target { get; }
 
         /// <summary>
         ///     Returns the Boundary of a specified line number
@@ -93,6 +86,15 @@ namespace Microsoft.DevSkim
             result.Length = LineEnds[lineNumber] - result.Index + 1;
 
             return result;
+        }
+
+        public string GetBoundaryText(Boundary capture)
+        {
+            if (capture is null)
+            {
+                return string.Empty;
+            }
+            return FullContent[(Math.Min(FullContent.Length, capture.Index))..(Math.Min(FullContent.Length, capture.Index + capture.Length))];
         }
 
         /// <summary>

@@ -151,7 +151,7 @@ namespace Microsoft.DevSkim.Tests
             DateTime expirationDate = DateTime.Now.AddDays(5);
             string testString = "encryption=false; MD5 hash  = MD5.Create(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
             Issue[] issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
-            Assert.AreEqual(3, issues.Length, "Ignore all should flag two infos");
+            Assert.AreEqual(2, issues.Length, "Ignore all should flag two infos");
         }
 
         [TestMethod]
