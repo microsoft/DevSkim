@@ -1,0 +1,184 @@
+﻿@page "/"
+@using System.IO;
+@using System.Diagnostics;
+@using Tewr.Blazor.FileReader;
+@using Microsoft.CST.OpenSource.RecursiveExtractor;
+@using Microsoft.DevSkim.CLI.Commands;
+@using Microsoft.CodeAnalysis.Sarif;
+@inject IFileReaderService fileReaderService;
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
+
+<h2>Scan</h2>
+<p>Choose the file or archive that contains the code you want to scan.</p>
+<input type="file" @ref=inputElement />
+<button @onclick=ReadFile class="btn btn-primary">Read file</button>
+<button @onclick=ClearFile class="btn btn-primary">Clear</button>
+<button @onclick=CancelFile disabled=@IsCancelDisabled class="btn btn-primary">Cancel</button>
+<br />
+<br />
+<progress max="@max" value="@value" />
+<br />
+<textarea style="max-width: 100%;" cols="50" rows="20">@Output</textarea>
+@code
+{
+    private static string nl = Environment.NewLine;
+    [Parameter]
+    public int BufferSize { get; set; } = 20480;
+    public long max;
+    public long value;
+    ElementReference inputElement;
+    public System.Threading.CancellationTokenSource? cancellationTokenSource;
+    string Output { get; set; } = string.Empty;
+
+    public bool CanCancel { get; set; }
+    public bool IsCancelDisabled => !CanCancel;
+    Extractor extractor = new Extractor(new ExtractorOptions() { EnableTiming = false, ExtractSelfOnFail = false });
+
+    public async Task ClearFile()
+    {
+        await fileReaderService.CreateReference(inputElement).ClearValue();
+    }
+
+    public async Task ReadFile()
+    {
+        var fileEntries = new List<FileEntry>();
+
+        max = 0;
+        value = 0;
+        Output = string.Empty;
+        this.StateHasChanged();
+        var files = await fileReaderService.CreateReference(inputElement).EnumerateFilesAsync();
+        foreach (var file in files)
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            max = fileInfo.Size;
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Output += $"Reading file..."+nl;
+            this.StateHasChanged();
+            Console.WriteLine(Output);
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = new System.Threading.CancellationTokenSource();
+            CanCancel = true;
+
+            const int onlyReportProgressAfterThisPercentDelta = 10;
+
+            // Subscribe to progress (change of position)
+            fileInfo.PositionInfo.PositionChanged += (s, e) =>
+            {
+                // (optional) Only report progress in console / progress bar if percentage has moved over 10% since last call to Acknowledge()
+                if (e.PercentageDeltaSinceAcknowledge > onlyReportProgressAfterThisPercentDelta)
+                {
+                    stopwatch.Stop();
+                    Output += $"Read {(e.PositionDeltaSinceAcknowledge)} bytes ({e.Percentage:00}%). {e.Position} / {fileInfo.Size}{nl}";
+                    this.InvokeAsync(this.StateHasChanged);
+                    e.Acknowledge();
+                    value = e.Position;
+                    stopwatch.Start();
+                }
+            };
+
+            try
+            {
+                using var stream = await file.OpenReadAsync();
+                using var fileStream = new FileStream(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.DeleteOnClose);
+                await stream.CopyToAsync(fileStream);
+                var streamEntries = extractor.ExtractStream(fileInfo.Name, fileStream, false);
+                var length = streamEntries.First().Content.Length;
+                fileEntries.AddRange(streamEntries);
+            }
+            catch (OperationCanceledException)
+            {
+                Output += $"Operation was cancelled";
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(1);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                var stackTrace = e.StackTrace;
+                var type = e.GetType();
+                var name = type.Name;
+                type = e.GetType();
+            }
+            finally
+            {
+                CanCancel = false;
+            }
+
+            var results = await localStorage.GetItemAsync<Results>("DevSkimResults");
+            if (results == null)
+            {
+                results = new Results();
+            }
+            var runId = DateTime.Now.ToString();
+            var key = Guid.NewGuid().ToString();
+            results.RunIdMap.Add(key,runId);
+            results.FileLocations.Add(runId, new Dictionary<string, string>());
+
+            foreach (var entry in fileEntries)
+            {
+                var pos = entry.Content.Position;
+                var sr = new StreamReader(entry.Content);
+                key = Guid.NewGuid().ToString();
+                var code = sr.ReadToEnd();
+                sr.BaseStream.Position = 0;
+
+                var codeFile = new CodeFile(code, entry.FullPath, runId);
+                await localStorage.SetItemAsync(key, codeFile);
+                results.FileLocations[runId][entry.FullPath] = key;
+            }
+
+            // Blazor WASM doesn't support parallelization
+            // https://github.com/dotnet/aspnetcore/issues/14253
+            var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>() { "manual", "critical", "important", "moderate" }, rules: new List<string>(),
+                ignoreDefault: false, suppressError: true, disableSuppression: true, crawlArchives: true, disableParallel: true);
+            var filename = Path.GetTempFileName();
+            using var ms = new FileStream(filename, FileMode.Open);
+            using var writer = new StreamWriter(ms);
+
+            Output += "Beginning DevSkim run."+nl;
+            await InvokeAsync(StateHasChanged);
+
+            try
+            {
+                cmd.RunFileEntries(fileEntries, writer);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                var stackTrace = e.StackTrace;
+                var type = e.GetType();
+                var name = type.Name;
+                Console.WriteLine(e.Message);
+            }
+            Output += "Completing DevSkim run. Beginning save."+nl;
+            await InvokeAsync(StateHasChanged);
+
+            using var fs = new FileStream(filename, FileMode.Open);
+            using var reader = new StreamReader(fs);
+            var sarifString = reader.ReadToEnd();
+            var sarifStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(sarifString));
+            var sarifLog = SarifLog.Load(sarifStream);
+
+            key = Guid.NewGuid().ToString();
+            await localStorage.SetItemAsync(key, sarifString);
+            results.ResultLocations[runId] = key;
+
+            await localStorage.SetItemAsync("DevSkimResults", results);
+
+            value = max;
+            Output += $"Done reading file {fileInfo.Name} - {fileInfo.Size} bytes in {stopwatch.ElapsedMilliseconds}ms.{nl}.";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public async Task CancelFile()
+    {
+        Output += $"Cancel requested.{nl}";
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(1);
+        cancellationTokenSource.Cancel();
+    }
+}

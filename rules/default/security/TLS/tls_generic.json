@@ -1,13 +1,16 @@
 [
     {
         "name": "Generic: Hard-coded SSL/TLS Protocol",
-        "id": "DS440000",
+        "id": "DS440001",
         "description": "Generic: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "applies_to": [
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "overrides": [
+            "DS440000"
         ],
         "severity": "manual-review",
         "_comment": "",
@@ -26,7 +29,7 @@
     },
     {
         "name": "OpenSSL: Hard-coded SSL/TLS Protocol",
-        "id": "DS440010",
+        "id": "DS440011",
         "description": "OpenSSL: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
@@ -93,7 +96,7 @@
     },
     {
         "name": "BoringSSL: Hard-coded SSL/TLS Protocol",
-        "id": "DS440011",
+        "id": "DS440012",
         "description": "BoringSSL: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
@@ -120,7 +123,7 @@
     },    
     {
         "name": "GnuTLS: Hard-coded SSL/TLS Protocol",
-        "id": "DS440012",
+        "id": "DS440013",
         "description": "GnuTLS: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
@@ -147,7 +150,7 @@
     },        
     {
         "name": "LibreSSL: Hard-coded SSL/TLS Protocol",
-        "id": "DS440013",
+        "id": "DS440014",
         "description": "LibreSSL: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
@@ -174,7 +177,7 @@
     },         
     {
         "name": "mbedTLS: Hard-coded SSL/TLS Protocol",
-        "id": "DS440014",
+        "id": "DS440015",
         "description": "mbedTLS: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
@@ -209,7 +212,7 @@
     },          
     {
         "name": "Generic: Hard-coded SSL/TLS Protocol",
-        "id": "DS440015",
+        "id": "DS440016",
         "description": "Generic: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [

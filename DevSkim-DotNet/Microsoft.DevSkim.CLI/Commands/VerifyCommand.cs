@@ -31,10 +31,13 @@ namespace Microsoft.DevSkim.CLI.Commands
             Verifier verifier = new Verifier(_path);
             if (verifier.Verify())
             {
-                Console.Error.WriteLine("No errors found.");
+                Console.WriteLine("No errors found.");
                 return (int)ExitCode.NoIssues;
             }
-
+            else
+            {
+                Console.Error.WriteLine("Errors found.");
+            }
             return (int)ExitCode.IssuesExists;
         }
 

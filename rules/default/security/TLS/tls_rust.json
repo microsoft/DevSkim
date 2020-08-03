@@ -1,7 +1,7 @@
 [
     {
         "name": "Rust - Hard-coded SSL/TLS Protocol",
-        "id": "DS440070",
+        "id": "DS440073",
         "description": "Rust - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [

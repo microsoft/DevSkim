@@ -11,4 +11,8 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.2.31" />
+  </ItemGroup>
+
 </Project>

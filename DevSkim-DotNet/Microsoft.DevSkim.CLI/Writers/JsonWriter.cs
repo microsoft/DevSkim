@@ -2,6 +2,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 
@@ -57,12 +58,12 @@ namespace Microsoft.DevSkim.CLI.Writers
                 item.Add("tags", issue.Issue.Rule.Tags ?? Array.Empty<string>());
 
             // Store the result in the result list
-            jsonResult.Add(item);
+            jsonResult.Push(item);
         }
 
         private string _formatString;
 
         // Store the results here (JSON only)
-        private List<Dictionary<string, object>> jsonResult = new List<Dictionary<string, object>>();
+        private ConcurrentStack<Dictionary<string, object>> jsonResult = new ConcurrentStack<Dictionary<string, object>>();
     }
 }
