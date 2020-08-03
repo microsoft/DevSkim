@@ -388,15 +388,5 @@ namespace Microsoft.DevSkim
                 pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"{0}", Regex.Escape(pattern.Pattern));
             }
         }
-
-        /// <summary>
-        ///     Handler for deserialization error
-        /// </summary>
-        /// <param name="sender"> Sender object </param>
-        /// <param name="errorArgs"> Error arguments </param>
-        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
-        {
-            OnDeserializationError?.Invoke(sender, errorArgs);
-        }
     }
 }

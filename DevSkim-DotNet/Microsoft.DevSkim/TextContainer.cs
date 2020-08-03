@@ -59,7 +59,6 @@ namespace Microsoft.DevSkim
         public string Line { get; }
         public int LineNumber { get; }
         public List<int> LineStarts { get; }
-        public List<int> LineEnds { get; }
         public string Target { get; }
 
         /// <summary>
@@ -253,28 +252,6 @@ namespace Microsoft.DevSkim
             }
 
             return false;
-        }
-
-        /// <summary>
-        ///     Return boundary defined by line and its offset
-        /// </summary>
-        /// <param name="line"> Line number </param>
-        /// <param name="offset"> Offset from line number </param>
-        /// <returns> Boundary </returns>
-        private int BoundaryByLine(int line, int offset)
-        {
-            int index = line + offset;
-
-            // We need the begining of the line when going up
-            if (offset < 0)
-                index--;
-
-            if (index < 0)
-                index = 0;
-            if (index >= LineEnds.Count)
-                index = LineEnds.Count - 1;
-
-            return LineEnds[index];
         }
     }
 }
