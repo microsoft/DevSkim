@@ -63,7 +63,7 @@ jobs:
     inputs:
       command: 'custom'
       custom: 'pack'
-      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -f ${{ parameters.publishFramework }} -o Packages'
+      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -p:TargetFrameworks=${{ parameters.publishFramework }} -o Packages'
   - task: AntiMalware@3
     displayName: Anti-Malware Scan
     inputs:
