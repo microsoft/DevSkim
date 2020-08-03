@@ -1,0 +1,3 @@
+steps:
+- script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+  displayName: 'Pack DevSkim Rules'

@@ -2,6 +2,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Globalization;
 
 namespace Microsoft.DevSkim
 {
@@ -40,7 +41,7 @@ namespace Microsoft.DevSkim
         {
             if (value is PatternType svr)
             {
-                string svrstr = svr.ToString().ToLower();
+                string svrstr = svr.ToString().ToLower(CultureInfo.InvariantCulture);
 
                 switch (svr)
                 {
