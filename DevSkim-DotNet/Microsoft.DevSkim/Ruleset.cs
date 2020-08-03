@@ -1,11 +1,14 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.CST.OAT;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim
@@ -21,6 +24,116 @@ namespace Microsoft.DevSkim
         public RuleSet()
         {
             _rules = new List<Rule>();
+            _oatRules = new List<ConvertedOatRule>();
+        }
+
+        private Regex searchInRegex = new Regex(".*\\((.*),(.*)\\)",RegexOptions.Compiled);
+
+
+        public ConvertedOatRule? DevSkimRuleToConvertedOatRule(Rule rule)
+        {
+            var clauses = new List<Clause>();
+            int clauseNumber = 0;
+            var expression = new StringBuilder("(");
+            foreach(var pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
+            {
+                if (pattern.Pattern != null)
+                {
+                    clauses.Add(new ScopedRegexClause(pattern.Scopes ?? new PatternScope[] { PatternScope.All })
+                    {
+                        Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                        Data = new List<string>() { pattern.Pattern },
+                        Capture = true,
+                        Arguments = pattern.Modifiers?.ToList() ?? new List<string>()
+                    });
+                    if (clauseNumber > 0)
+                    {
+                        expression.Append(" OR ");
+                    }
+                    expression.Append(clauseNumber);
+                    clauseNumber++;
+                }
+            }
+            if (clauses.Any())
+            {
+                expression.Append(")");
+            }
+            else
+            {
+                return new ConvertedOatRule(rule.Id,rule);
+            }
+            foreach(var condition in rule.Conditions ?? Array.Empty<SearchCondition>())
+            {
+                if (condition.Pattern?.Pattern != null)
+                {
+                    if (condition.SearchIn is null)
+                    {
+                        clauses.Add(new WithinClause()
+                        {
+                            Data = new List<string>() { condition.Pattern.Pattern },
+                            Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                            Invert = condition.NegateFinding,
+                            SameLineOnly = true,
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                        });
+                        expression.Append(" AND ");
+                        expression.Append(clauseNumber);
+                        clauseNumber++;
+                    }
+                    else if (condition.SearchIn.StartsWith("finding-region", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var argList = new List<int>();
+                        Match m = searchInRegex.Match(condition.SearchIn);
+                        if (m.Success)
+                        {
+                            for (int i = 1; i < m.Groups.Count; i++)
+                            {
+                                if (int.TryParse(m.Groups[i].Value, out int value))
+                                {
+                                    argList.Add(value);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                        if (argList.Count == 2)
+                        {
+                            clauses.Add(new WithinClause()
+                            {
+                                Data = new List<string>() { condition.Pattern.Pattern },
+                                Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                                Invert = condition.NegateFinding,
+                                FindingOnly = false,
+                                Before = argList[0],
+                                After = argList[1]
+                            });
+                            expression.Append(" AND ");
+                            expression.Append(clauseNumber);
+                            clauseNumber++;
+                        }
+                    }
+                    else if (condition.SearchIn.Equals("finding-only", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        clauses.Add(new WithinClause()
+                        {
+                            Data = new List<string>() { condition.Pattern.Pattern },
+                            Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                            Invert = condition.NegateFinding,
+                            FindingOnly = true,
+                        });
+                        expression.Append(" AND ");
+                        expression.Append(clauseNumber);
+                        clauseNumber++;
+                    }
+                }
+            }
+            return new ConvertedOatRule(rule.Id, rule)
+            {
+                Clauses = clauses,
+                Expression = expression.ToString()
+            };
         }
 
         /// <summary>
@@ -86,7 +199,7 @@ namespace Microsoft.DevSkim
         public void AddDirectory(string path, string? tag = null)
         {
             if (path == null)
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
 
             if (!Directory.Exists(path))
                 throw new DirectoryNotFoundException();
@@ -123,6 +236,11 @@ namespace Microsoft.DevSkim
         public void AddRange(IEnumerable<Rule> collection)
         {
             _rules.AddRange(collection);
+            foreach(var rule in collection.Select(DevSkimRuleToConvertedOatRule))
+            {
+                if (rule != null)
+                    _oatRules.Add(rule);
+            }
         }
 
         /// <summary>
@@ -132,6 +250,7 @@ namespace Microsoft.DevSkim
         public void AddRule(Rule rule)
         {
             _rules.Add(rule);
+            _oatRules.Add(DevSkimRuleToConvertedOatRule(rule));
         }
 
         /// <summary>
@@ -141,6 +260,11 @@ namespace Microsoft.DevSkim
         /// <param name="sourcename"> Name of the source (file, stream, etc..) </param>
         /// <param name="tag"> Tag for the rules </param>
         public void AddString(string jsonstring, string sourcename, string? tag = null)
+        {
+            AddRange(StringToRules(jsonstring, sourcename, tag));
+        }
+
+        internal IEnumerable<Rule> StringToRules(string jsonstring, string sourcename, string? tag = null)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
@@ -156,7 +280,7 @@ namespace Microsoft.DevSkim
                     r.RuntimeTag = tag;
 
                     if (r.Patterns == null)
-                        r.Patterns = new SearchPattern[] { };
+                        r.Patterns = Array.Empty<SearchPattern>();
 
                     foreach (SearchPattern pattern in r.Patterns)
                     {
@@ -164,7 +288,7 @@ namespace Microsoft.DevSkim
                     }
 
                     if (r.Conditions == null)
-                        r.Conditions = new SearchCondition[] { };
+                        r.Conditions = Array.Empty<SearchCondition>();
 
                     foreach (SearchCondition condition in r.Conditions)
                     {
@@ -173,9 +297,9 @@ namespace Microsoft.DevSkim
                             SanitizePatternRegex(condition.Pattern);
                         }
                     }
-                }
 
-                _rules.AddRange(ruleList);
+                    yield return r;
+                }
             }
         }
 
@@ -184,26 +308,14 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="languages"> Languages </param>
         /// <returns> Filtered rules </returns>
-        public IEnumerable<Rule> ByLanguages(string[] languages)
+        public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            // Otherwise preprare the rules for the content type and store it in cache.
-            List<Rule> filteredRules = new List<Rule>();
+            return _oatRules.Where(x => x.DevSkimRule.AppliesTo is null || x.DevSkimRule.AppliesTo.Length == 0 || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y))));
+        }
 
-            foreach (Rule r in _rules)
-            {
-                if (r.AppliesTo != null && ArrayContains(r.AppliesTo, languages))
-                {
-                    // Put rules with defined language (applies_to) on top
-                    filteredRules.Insert(0, r);
-                }
-                else if (r.AppliesTo == null || r.AppliesTo.Length == 0)
-                {
-                    // Put rules without applies_to on the bottom
-                    filteredRules.Add(r);
-                }
-            }
-
-            return filteredRules;
+        public IEnumerable<ConvertedOatRule> GetAllOatRules()
+        {
+            return _oatRules;
         }
 
         /// <summary>
@@ -211,7 +323,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         public int Count()
         {
-            return _rules.Count();
+            return _rules.Count;
         }
 
         /// <summary>
@@ -233,23 +345,7 @@ namespace Microsoft.DevSkim
         }
 
         private List<Rule> _rules;
-
-        /// <summary>
-        ///     Tests if array contains given elements
-        /// </summary>
-        /// <param name="source"> Source array </param>
-        /// <param name="comps"> List of elements to look for </param>
-        /// <returns> True if source array contains element from comps array </returns>
-        private bool ArrayContains(string[] source, string[] comps)
-        {
-            foreach (string c in comps)
-            {
-                if (source.Contains(c))
-                    return true;
-            }
-
-            return false;
-        }
+        private List<ConvertedOatRule> _oatRules;
 
         /// <summary>
         ///     Handler for deserialization error

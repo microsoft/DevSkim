@@ -61,7 +61,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower()) && comment.Inline is { })
+                    if (comment.Languages.Contains(language.ToLower(CultureInfo.InvariantCulture)) && comment.Inline is { })
                         return comment.Inline;
                 }
             }
@@ -82,7 +82,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower()) && comment.Prefix is { })
+                    if (comment.Languages.Contains(language.ToLower(CultureInfo.InvariantCulture)) && comment.Prefix is { })
                         return comment.Prefix;
                 }
             }
@@ -103,7 +103,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower()) && comment.Suffix is { })
+                    if (comment.Languages.Contains(language.ToLower(CultureInfo.InvariantCulture)) && comment.Suffix is { })
                         return comment.Suffix;
                 }
             }

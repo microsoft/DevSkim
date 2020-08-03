@@ -28,7 +28,7 @@ namespace Microsoft.DevSkim.VSExtension.Utils
             if (GitAvailable)
             {
                 ExternalCommandRunner.RunExternalCommand(pathToGit, out string stdOut, out string _, "check-ignore", path);
-                if (stdOut.Contains(path.Split(Path.DirectorySeparatorChar).Last()))
+                if (path != null && stdOut.Contains(path.Split(Path.DirectorySeparatorChar).Last()))
                 {
                     return true;
                 }

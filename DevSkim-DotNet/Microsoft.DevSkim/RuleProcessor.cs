@@ -1,11 +1,11 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.CST.OAT;
+using Microsoft.CST.OAT.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-
-[assembly: CLSCompliant(true)]
 
 namespace Microsoft.DevSkim
 {
@@ -20,11 +20,15 @@ namespace Microsoft.DevSkim
         public RuleProcessor(RuleSet rules)
         {
             _ruleset = rules;
-            _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
+            _rulesCache = new Dictionary<string, IEnumerable<ConvertedOatRule>>();
             EnableSuppressions = false;
             EnableCache = true;
 
             SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
+
+            analyzer = new Analyzer();
+            analyzer.SetOperation(new WithinOperation(analyzer));
+            analyzer.SetOperation(new ScopedRegexOperation(analyzer));
         }
 
         /// <summary>
@@ -46,7 +50,7 @@ namespace Microsoft.DevSkim
             set
             {
                 _ruleset = value;
-                _rulesCache = new Dictionary<string, IEnumerable<Rule>>();
+                _rulesCache = new Dictionary<string, IEnumerable<ConvertedOatRule>>();
             }
         }
 
@@ -54,6 +58,8 @@ namespace Microsoft.DevSkim
         ///     Sets severity levels for analysis
         /// </summary>
         public Severity SeverityLevel { get; set; }
+
+        private Analyzer analyzer;
 
         /// <summary>
         ///     Applies given fix on the provided source code line
@@ -94,6 +100,7 @@ namespace Microsoft.DevSkim
             return Analyze(text, new string[] { language }, lineNumber);
         }
 
+
         /// <summary>
         ///     Analyzes given line of code
         /// </summary>
@@ -103,108 +110,54 @@ namespace Microsoft.DevSkim
         public Issue[] Analyze(string text, string[] languages, int lineNumber = -1)
         {
             // Get rules for the given content type
-            IEnumerable<Rule> rules = GetRulesForLanguages(languages);
+            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
+            // Skip rules that are disabled or don't have the right severity
+            //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
+            //        continue;
+
+            var filtered = rules.Where(x => x.Name == "DS126186");
+
             List<Issue> resultsList = new List<Issue>();
-            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty);
-            TextContainer line = (lineNumber > 0) ? new TextContainer(textContainer.GetLineContent(lineNumber), (languages.Length > 0) ? languages[0] : string.Empty) : textContainer;
+            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
 
-            // Go through each rule
-            foreach (Rule rule in rules)
+            foreach(var capture in analyzer.GetCaptures(rules, textContainer))
             {
-                List<Issue> matchList = new List<Issue>();
-
-                // Skip rules that don't apply based on settings
-                if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
-                    continue;
-
-                // Go through each matching pattern of the rule
-                foreach (SearchPattern pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
+                // Turn matches into boundaries.
+                var matches = capture.Captures;
+                foreach (var cap in capture.Captures)
                 {
-                    // Get all matches for the pattern
-                    List<Boundary> matches = line.MatchPattern(pattern);
-
-                    if (matches.Count > 0)
+                    if (cap is TypedClauseCapture<List<Boundary>> tcc)
                     {
-                        foreach (Boundary match in matches)
+                        if (capture.Rule is ConvertedOatRule orh)
                         {
-                            bool passedConditions = true;
-                            var translatedBoundary = match;
-                            if (lineNumber >= 0)
+                            foreach (var boundary in tcc.Result)
                             {
-                                translatedBoundary = new Boundary()
+                                var issue = new Issue(Boundary: boundary, StartLocation: textContainer.GetLocation(boundary.Index), EndLocation: textContainer.GetLocation(boundary.Index + boundary.Length), Rule: orh.DevSkimRule);
+                                if (EnableSuppressions)
                                 {
-                                    Length = match.Length,
-                                    Index = textContainer.GetBoundaryFromLine(lineNumber).Index + match.Index
-                                };
-                            }
-
-                            if (!textContainer.ScopeMatch(pattern, translatedBoundary))
-                            {
-                                passedConditions = false;
-                            }
-                            else
-                            {
-                                foreach (SearchCondition condition in rule.Conditions.Where(x => x is SearchCondition))
-                                {
-                                    if (condition.Pattern is { })
+                                    var supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : issue.StartLocation.Line);
+                                    var supissue = supp.GetSuppressedIssue(issue.Rule.Id);
+                                    if (supissue is null)
                                     {
-                                        bool res = textContainer.MatchPattern(condition.Pattern, translatedBoundary, condition);
-                                        if (res && condition.NegateFinding)
-                                        {
-                                            passedConditions = false;
-                                            break;
-                                        }
-                                        if (!res && condition.NegateFinding)
-                                        {
-                                            passedConditions = true;
-                                            break;
-                                        }
-                                        if (!res)
-                                        {
-                                            passedConditions = false;
-                                            break;
-                                        }
+                                        resultsList.Add(issue);
                                     }
+                                    //Otherwise add the suppression info instead
+                                    else
+                                    {
+                                        issue.IsSuppressionInfo = true;
+
+                                        if (!resultsList.Any(x => x.Rule.Id == issue.Rule.Id && x.Boundary.Index == issue.Boundary.Index))
+                                            resultsList.Add(issue);
+                                    }
+                                }
+                                else
+                                {
+                                    resultsList.Add(issue);
                                 }
                             }
 
-                            if (passedConditions)
-                            {
-                                Issue issue = new Issue(Boundary: match, StartLocation: line.GetLocation(match.Index), EndLocation: line.GetLocation(match.Index + match.Length), Rule: rule);
-
-                                matchList.Add(issue);
-                            }
                         }
                     }
-                }
-
-                // We got matching rule and suppression are enabled, let's see if we have a supression on the line
-                if (EnableSuppressions && matchList.Count > 0)
-                {
-                    Suppression supp;
-                    foreach (Issue result in matchList)
-                    {
-                        supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : result.StartLocation.Line);
-                        // If rule is NOT being suppressed then report it
-                        var supissue = supp.GetSuppressedIssue(result.Rule.Id);
-                        if (supissue is null)
-                        {
-                            resultsList.Add(result);
-                        }
-                        // Otherwise add the suppression info instead
-                        else
-                        {
-                            result.IsSuppressionInfo = true;
-
-                            if (!resultsList.Any(x => x.Rule.Id == result.Rule.Id && x.Boundary.Index == result.Boundary.Index))
-                                resultsList.Add(result);
-                        }
-                    }
-                }
-                // Otherwise put matchlist to resultlist
-                else
-                {
-                    resultsList.AddRange(matchList);
                 }
             }
 
@@ -233,10 +186,15 @@ namespace Microsoft.DevSkim
             return resultsList.ToArray();
         }
 
+        private IEnumerable<ConvertedOatRule> GetOatRulesForLanguages(string[] languages)
+        {
+            return GetRulesForLanguages(languages);
+        }
+
         /// <summary>
         ///     Cache for rules filtered by content type
         /// </summary>
-        private Dictionary<string, IEnumerable<Rule>> _rulesCache;
+        private Dictionary<string, IEnumerable<ConvertedOatRule>> _rulesCache;
 
         private RuleSet _ruleset;
 
@@ -245,7 +203,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         /// <param name="languages"> Languages to filter rules for </param>
         /// <returns> List of rules </returns>
-        private IEnumerable<Rule> GetRulesForLanguages(string[] languages)
+        private IEnumerable<ConvertedOatRule> GetRulesForLanguages(string[] languages)
         {
             string langid = string.Empty;
 
@@ -259,10 +217,10 @@ namespace Microsoft.DevSkim
                     return _rulesCache[langid];
             }
 
-            IEnumerable<Rule> filteredRules = _ruleset.ByLanguages(languages);
+            IEnumerable<ConvertedOatRule> filteredRules = _ruleset.ByLanguages(languages);
 
             // Add the list to the cache so we save time on the next call
-            if (EnableCache && filteredRules.Count() > 0)
+            if (EnableCache && filteredRules.Any())
             {
                 _rulesCache.Add(langid, filteredRules);
             }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net48;</TargetFrameworks>    
+    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>    
     <PackageId>Microsoft.CST.DevSkim</PackageId>
     <PackageVersion>0.0.0</PackageVersion>
     <Authors>Microsoft</Authors>
@@ -19,6 +19,11 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CST.OAT" Version="1.0.41-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
@@ -34,12 +39,12 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath=""/>
-    <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath=""/>
+    <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath="" />
   </ItemGroup>
   
-  <Target Name="PreBuild" BeforeTargets="BeforeCompile">
-    <Exec Command="dotnet ../../RulePacker/devskim.dll pack ../../rules Resources/devskim-rules.json" />
-  </Target>
+  <ItemGroup>
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.2.31" />
+  </ItemGroup>
   
 </Project>

@@ -3,6 +3,10 @@ parameters:
 - name: jobName
   type: string
   default: 'nuget_pack'
+# Optional Pre-Build Steps
+- name: 'preBuild'
+  type: stepList
+  default: []
 # Version of Dotnet SDK to use
 - name: dotnetVersion
   type: string
@@ -43,6 +47,7 @@ jobs:
     displayName: Install Nuget Tool
     inputs:
       versionSpec: ${{ parameters.nugetVersion }}
+  - ${{ parameters.preBuild }}
   - task: DotNetCoreCLI@2
     displayName: Dotnet Restore
     inputs:
