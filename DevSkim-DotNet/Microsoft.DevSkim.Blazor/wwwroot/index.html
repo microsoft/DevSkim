@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Microsoft.DevSkim.Blazor</title>
+    <base href="/DevSkimBlazor/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link href="css/prism.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="js/prism.js"></script>
+    <script src="js/prism-bridge.js"></script>
+
+    <app>
+    <div style="margin:auto;text-align:center">Loading Devskim Blazor...</div>
+    </app>
+
+    <div id="blazor-error-ui">
+        An error occured while loading DevSkim.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+</body>
+
+</html>

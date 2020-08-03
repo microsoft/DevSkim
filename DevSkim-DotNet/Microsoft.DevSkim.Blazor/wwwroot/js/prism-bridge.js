@@ -1,0 +1,1 @@
+﻿window.highlightCode = () => window.Prism.highlightAll();

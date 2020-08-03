@@ -793,7 +793,7 @@
             "code"
           ]
         },
-        "search_in": null,
+        "search_in": "finding-region(-3,0)",
         "negate_finding": true
       }
     ],

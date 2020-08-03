@@ -55,11 +55,11 @@ namespace Microsoft.DevSkim
         }
 
         public string FullContent { get; }
-
         public string Language { get; }
-
+        public string Line { get; }
         public int LineNumber { get; }
         public List<int> LineStarts { get; }
+        public List<int> LineEnds { get; }
         public string Target { get; }
 
         /// <summary>
@@ -176,7 +176,6 @@ namespace Microsoft.DevSkim
             }
             if (patterns.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
-
             bool isInComment = IsBetween(FullContent, boundary.Index, prefix, suffix, inline);
 
             return !(isInComment && !patterns.Contains(PatternScope.Comment));
@@ -216,9 +215,8 @@ namespace Microsoft.DevSkim
         /// <param name="prefix"> Prefix </param>
         /// <param name="suffix"> Suffix </param>
         /// <returns> True if the index is between prefix and suffix </returns>
-        private bool IsBetween(string text, int index, string prefix, string suffix, string inline = "")
+        private static bool IsBetween(string text, int index, string prefix, string suffix, string inline = "")
         {
-            bool result = false;
             string preText = string.Concat(text.Substring(0, index));
             int lastPrefix = preText.LastIndexOf(prefix, StringComparison.InvariantCulture);
             if (lastPrefix >= 0)
@@ -255,6 +253,28 @@ namespace Microsoft.DevSkim
             }
 
             return false;
+        }
+
+        /// <summary>
+        ///     Return boundary defined by line and its offset
+        /// </summary>
+        /// <param name="line"> Line number </param>
+        /// <param name="offset"> Offset from line number </param>
+        /// <returns> Boundary </returns>
+        private int BoundaryByLine(int line, int offset)
+        {
+            int index = line + offset;
+
+            // We need the begining of the line when going up
+            if (offset < 0)
+                index--;
+
+            if (index < 0)
+                index = 0;
+            if (index >= LineEnds.Count)
+                index = LineEnds.Count - 1;
+
+            return LineEnds[index];
         }
     }
 }

@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.CommandLineUtils;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Microsoft.DevSkim.CLI.Commands

@@ -181,7 +181,7 @@
     },
     {
         "name": "Win32- Do not hardcode TLS protocol versions.",
-        "id": "DS440070",
+        "id": "DS440071",
         "description": "Win32- Do not hardcode TLS protocol versions.",
         "recommendation": "",
         "overrides": ["DS440000"],

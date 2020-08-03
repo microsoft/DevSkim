@@ -2,6 +2,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Globalization;
 
 namespace Microsoft.DevSkim
 {
@@ -39,10 +40,10 @@ namespace Microsoft.DevSkim
         {
             if (value is PatternScope svr)
             {
-                string svrstr = svr.ToString().ToLower();
+                string svrstr = svr.ToString().ToLower(CultureInfo.InvariantCulture);
 
                 writer.WriteValue(svrstr);
-                writer.WriteValue(svr.ToString().ToLower());
+                writer.WriteValue(svr.ToString().ToLower(CultureInfo.InvariantCulture));
             }
         }
     }

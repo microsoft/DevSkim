@@ -1,40 +1,44 @@
 parameters:
-# Job Name
-- name: jobName
-  type: string
-  default: 'publish_linux_mac'
-# Optional Pre-Build Steps
-- name: 'preBuild'
-  type: stepList
-  default: []
-# Version of Dotnet SDK to use
-- name: dotnetVersion
-  type: string
-  default: '3.1.x'
-# Version of NuGet Tool to use
-- name: nugetVersion
-  type: string
-  default: '5.x'
-# Path to .csproj or .sln
-- name: projectPath
-  type: string
-  default: ''
-# Build Configuration
-- name: buildConfiguration
-  type: string
-  default: 'Release'
-# Project Name
-- name: projectName
-  type: string
-  default: ''
-# Release Version
-- name: releaseVersion
-  type: string
-  default: ''
-# Pipeline Artifact Name
-- name: artifactName
-  type: string
-  default: 'Unsigned_Binaries'
+  # Job Name
+  - name: jobName
+    type: string
+    default: 'publish_linux_mac'
+  # Optional Pre-Build Steps
+  - name: 'preBuild'
+    type: stepList
+    default: []
+  # Version of Dotnet SDK to use
+  - name: dotnetVersion
+    type: string
+    default: '3.1.x'
+  # Framework version to Publish
+  - name: publishFramework
+    type: string
+    default: 'netcoreapp3.1'
+  # Version of NuGet Tool to use
+  - name: nugetVersion
+    type: string
+    default: '5.x'
+  # Path to .csproj or .sln
+  - name: projectPath
+    type: string
+    default: ''
+  # Build Configuration
+  - name: buildConfiguration
+    type: string
+    default: 'Release'
+  # Project Name
+  - name: projectName
+    type: string
+    default: ''
+  # Release Version
+  - name: releaseVersion
+    type: string
+    default: ''
+  # Pipeline Artifact Name
+  - name: artifactName
+    type: string
+    default: 'Unsigned_Binaries'
 
 jobs:
 - job: ${{ parameters.jobName }}
@@ -62,14 +66,14 @@ jobs:
     displayName: Publish Linux x64
     inputs:
       command: 'publish'
-      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/linux/${{ parameters.projectName }}_linux_$(ReleaseVersion) -r linux-x64'
+      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/linux/${{ parameters.projectName }}_linux_$(ReleaseVersion) -r linux-x64 -f ${{ parameters.publishFramework }}'
       publishWebProjects: false
       zipAfterPublish: false
   - task: DotNetCoreCLI@2
     displayName: Publish MacOS x64
     inputs:
       command: 'publish'
-      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/macos/${{ parameters.projectName }}_macos_$(ReleaseVersion) -r osx-x64'
+      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/macos/${{ parameters.projectName }}_macos_$(ReleaseVersion) -f ${{ parameters.publishFramework }} -r osx-x64'
       publishWebProjects: false
       zipAfterPublish: false
   - task: ArchiveFiles@2

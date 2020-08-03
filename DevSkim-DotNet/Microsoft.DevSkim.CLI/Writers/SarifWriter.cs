@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.Sarif.Readers;
 using Newtonsoft.Json;
 using NLog.LayoutRenderers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,9 +26,10 @@ namespace Microsoft.DevSkim.CLI.Writers
             Run runItem = new Run();
             runItem.Tool = new Tool();
 
+
+            runItem.Tool.Driver = new ToolComponent();
             if (Assembly.GetEntryAssembly() is Assembly entryAssembly)
             {
-                runItem.Tool.Driver = new ToolComponent();
                 runItem.Tool.Driver.Name = entryAssembly.GetName().Name;
 
                 runItem.Tool.Driver.FullName = entryAssembly.GetCustomAttribute<AssemblyProductAttribute>()?
@@ -35,9 +37,10 @@ namespace Microsoft.DevSkim.CLI.Writers
 
                 runItem.Tool.Driver.Version = entryAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                                                     .InformationalVersion;
-                runItem.Tool.Driver.Rules = _rules.Select(x => x.Value).ToList();
-                runItem.Results = _results;
             }
+
+            runItem.Tool.Driver.Rules = _rules.Select(x => x.Value).ToList();
+            runItem.Results = _results.ToList();
 
             sarifLog.Runs = new List<Run>();
             sarifLog.Runs.Add(runItem);
@@ -97,10 +100,10 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             resultItem.Locations = new List<CodeAnalysis.Sarif.Location>();
             resultItem.Locations.Add(loc);
-            _results.Add(resultItem);
+            _results.Push(resultItem);
         }
 
-        private List<Result> _results = new List<Result>();
+        private ConcurrentStack<Result> _results = new ConcurrentStack<Result>();
 
         private Dictionary<string, ReportingDescriptor> _rules = new Dictionary<string, ReportingDescriptor>();
 
@@ -151,11 +154,12 @@ namespace Microsoft.DevSkim.CLI.Writers
                         CharLength = issue.Issue.Boundary.Length,
                     }, new ArtifactContent() { Text = RuleProcessor.Fix(issue.TextSample, fix) }, null));
 
+                    var path = Path.GetFullPath(issue.Filename);
                     var changes = new ArtifactChange[] 
                     {
                         new ArtifactChange(
                             new ArtifactLocation() {
-                                Uri = new Uri(Path.GetFullPath(issue.Filename))
+                                Uri = new Uri(path)
                             },
                             replacements,
                             null)

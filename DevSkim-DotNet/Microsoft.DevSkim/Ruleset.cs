@@ -109,7 +109,7 @@ namespace Microsoft.DevSkim
         public void AddFile(string filename, string? tag = null)
         {
             if (string.IsNullOrEmpty(filename))
-                throw new ArgumentException("filename");
+                throw new ArgumentException(nameof(filename));
 
             if (!File.Exists(filename))
                 throw new FileNotFoundException();
@@ -370,23 +370,33 @@ namespace Microsoft.DevSkim
         ///     Method santizes pattern to be a valid regex
         /// </summary>
         /// <param name="pattern"> </param>
-        private void SanitizePatternRegex(SearchPattern pattern)
+        private static void SanitizePatternRegex(SearchPattern pattern)
         {
             if (pattern.PatternType == PatternType.RegexWord)
             {
                 pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(@"\b{0}\b", pattern.Pattern);
+                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", pattern.Pattern);
             }
             else if (pattern.PatternType == PatternType.String)
             {
                 pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(@"\b{0}\b", Regex.Escape(pattern.Pattern));
+                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", Regex.Escape(pattern.Pattern));
             }
             else if (pattern.PatternType == PatternType.Substring)
             {
                 pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(@"{0}", Regex.Escape(pattern.Pattern));
+                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"{0}", Regex.Escape(pattern.Pattern));
             }
+        }
+
+        /// <summary>
+        ///     Handler for deserialization error
+        /// </summary>
+        /// <param name="sender"> Sender object </param>
+        /// <param name="errorArgs"> Error arguments </param>
+        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
+        {
+            OnDeserializationError?.Invoke(sender, errorArgs);
         }
     }
 }
