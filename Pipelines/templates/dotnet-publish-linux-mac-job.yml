@@ -66,7 +66,7 @@ jobs:
     displayName: Publish Linux x64
     inputs:
       command: 'publish'
-      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/linux/${{ parameters.projectName }}_linux_$(ReleaseVersion) -r linux-x64 -f ${{ parameters.publishFramework }} }}'
+      arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/linux/${{ parameters.projectName }}_linux_$(ReleaseVersion) -r linux-x64 -f ${{ parameters.publishFramework }}'
       publishWebProjects: false
       zipAfterPublish: false
   - task: DotNetCoreCLI@2
