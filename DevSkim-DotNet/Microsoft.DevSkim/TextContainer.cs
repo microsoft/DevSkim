@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Microsoft.DevSkim
 {
@@ -12,17 +13,22 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class TextContainer
     {
+        public List<int> LineEnds;
+
         /// <summary>
         ///     Creates new instance
         /// </summary>
         /// <param name="content"> Text to work with </param>
-        public TextContainer(string content, string language, int lineNumber = -1)
+        /// <param name="language"> The language of the test </param>
+        /// <param name="lineNumber"> The line number to specify. Leave empty for full file as target. </param>
+        public TextContainer(string content, string language, int lineNumber = 0)
         {
             Language = language;
             LineNumber = lineNumber;
             FullContent = content;
             Line = LineNumber == -1 ? FullContent : GetLineContent(lineNumber);
             LineEnds = new List<int>() { 0 };
+            LineStarts = new List<int>() { 0, 0 };
 
             // Find line end in the text
             int pos = 0;
@@ -32,6 +38,10 @@ namespace Microsoft.DevSkim
                 {
                     pos = FullContent.IndexOf("\n", pos, StringComparison.InvariantCultureIgnoreCase);
                     LineEnds.Add(pos);
+                    if (pos > 0 && pos + 1 < FullContent.Length)
+                    {
+                        LineStarts.Add(pos + 1);
+                    }
                 }
             }
 
@@ -44,13 +54,21 @@ namespace Microsoft.DevSkim
             inline = DevSkim.Language.GetCommentInline(Language);
         }
 
-        public string Language { get; set; }
-        public int LineNumber { get; }
+        public string GetBoundaryText(Boundary capture)
+        {
+            if (capture is null)
+            {
+                return string.Empty;
+            }
+            return FullContent[(Math.Min(FullContent.Length, capture.Index))..(Math.Min(FullContent.Length, capture.Index + capture.Length))];
+        }
+
         public string FullContent { get; }
+        public string Language { get; set; }
         public string Line { get; }
-        string prefix;
-        string suffix;
-        string inline;
+        public int LineNumber { get; }
+        public List<int> LineStarts { get; }
+
         /// <summary>
         ///     Returns the Boundary of a specified line number
         /// </summary>
@@ -150,6 +168,10 @@ namespace Microsoft.DevSkim
         /// <returns> True if boundary is matching the pattern scope </returns>
         public bool ScopeMatch(IEnumerable<PatternScope> patterns, Boundary boundary)
         {
+            if (patterns is null)
+            {
+                return true;
+            }
             if (patterns.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
 
@@ -158,9 +180,9 @@ namespace Microsoft.DevSkim
             return !(isInComment && !patterns.Contains(PatternScope.Comment));
         }
 
-        public List<int> LineEnds;
-
-        public List<int> LineStarts { get; }
+        private string inline;
+        private string prefix;
+        private string suffix;
 
         /// <summary>
         ///     Return boundary defined by line and its offset
@@ -206,8 +228,8 @@ namespace Microsoft.DevSkim
                     var commentedText = text.Substring(lastPrefix);
                     int nextSuffix = commentedText.IndexOf(suffix, StringComparison.Ordinal);
 
-                    // If the index is in between the last prefix before the index and the next suffix after that
-                    // prefix Then it is commented out
+                    // If the index is in between the last prefix before the index and the next suffix after
+                    // that prefix Then it is commented out
                     if (lastPrefix + nextSuffix > index)
                         return true;
                 }

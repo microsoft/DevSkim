@@ -11,7 +11,6 @@ namespace Microsoft.DevSkim
 {
     public class WithinOperation : OatOperation
     {
-        private RegexOperation regexEngine;
         public WithinOperation(Analyzer analyzer) : base(Operation.Custom, analyzer)
         {
             regexEngine = new RegexOperation(analyzer);
@@ -33,40 +32,81 @@ namespace Microsoft.DevSkim
                 {
                     regexOpts |= RegexOptions.Multiline;
                 }
-                if (wc.FindingOnly)
+                var passed = new List<Boundary>();
+                foreach (var captureHolder in captures ?? Array.Empty<ClauseCapture>())
                 {
-                    foreach (var capture in captures ?? Array.Empty<ClauseCapture>())
+                    if (captureHolder is TypedClauseCapture<List<Boundary>> tcc)
                     {
-                        if (capture is TypedClauseCapture<List<Match>> tcc)
+                        foreach (var capture in tcc.Result)
                         {
-                            return ProcessLambda(tcc.Result[0].Groups[0].Value);
+                            if (wc.FindingOnly)
+                            {
+                                var res = ProcessLambda(tc.GetBoundaryText(capture), capture);
+                                if (res.Result)
+                                {
+                                    if (res.Capture is TypedClauseCapture<List<Boundary>> boundaryList)
+                                    {
+                                        passed.AddRange(boundaryList.Result);
+                                    }
+                                }
+                            }
+                            else if (wc.SameLineOnly)
+                            {
+                                var start = tc.LineStarts[tc.GetLocation(capture.Index).Line];
+                                var end = tc.LineEnds[tc.GetLocation(start + capture.Length).Line];
+                                var res = ProcessLambda(tc.FullContent[start..end], capture);
+                                if (res.Result)
+                                {
+                                    if (res.Capture is TypedClauseCapture<List<Boundary>> boundaryList)
+                                    {
+                                        passed.AddRange(boundaryList.Result);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var startLine = tc.GetLocation(capture.Index).Line;
+                                // Before is already a negative number
+                                var start = tc.LineEnds[Math.Max(0, startLine + wc.Before)];
+                                var end = tc.LineEnds[Math.Min(tc.LineEnds.Count - 1, startLine + wc.After)];
+                                var res = ProcessLambda(tc.FullContent[start..end], capture);
+                                if (res.Result)
+                                {
+                                    if (res.Capture is TypedClauseCapture<List<Boundary>> boundaryList)
+                                    {
+                                        passed.AddRange(boundaryList.Result);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                else if (wc.SameLineOnly)
-                {
-                    var start = tc.LineEnds[Math.Max(tc.LineNumber - 1, 0)];
-                    var end = tc.LineEnds[tc.LineNumber == -1 ? tc.LineEnds.Count - 1 : tc.LineNumber];
-                    return ProcessLambda(tc.FullContent[start..end]);
-                }
-                else
-                {
-                    var start = tc.LineEnds[Math.Max(0, tc.LineNumber - (-wc.Before + 1))];
-                    var end = tc.LineEnds[tc.LineNumber < 0 ? tc.LineEnds.Count - 1 : Math.Min(tc.LineEnds.Count - 1, tc.LineNumber + wc.After)];
-                    return ProcessLambda(tc.FullContent[start..end]);
-                }
-                // Subtracting before would give us the end of the line N before but we want the start so go back 1 more
+                return new OperationResult(passed.Any() ^ wc.Invert, passed.Any() ? new TypedClauseCapture<List<Boundary>>(wc, passed) : null);
 
-                OperationResult ProcessLambda(string target)
+                OperationResult ProcessLambda(string target, Boundary targetBoundary)
                 {
+                    var boundaries = new List<Boundary>();
                     foreach (var pattern in c.Data.Select(x => regexEngine.StringToRegex(x, regexOpts)))
                     {
-                        if (pattern?.IsMatch(target) is true)
+                        var matches = pattern.Matches(target);
+                        foreach (var match in matches)
                         {
-                            return new OperationResult(!wc.Invert, null);
+                            if (match is Match m)
+                            {
+                                Boundary translatedBoundary = new Boundary()
+                                {
+                                    Length = m.Length,
+                                    Index = targetBoundary.Index + m.Index
+                                };
+                                // Should return only scoped matches
+                                if (tc.ScopeMatch(wc.Scopes, translatedBoundary))
+                                {
+                                    boundaries.Add(translatedBoundary);
+                                }
+                            }
                         }
                     }
-                    return new OperationResult(wc.Invert, null);
+                    return new OperationResult(boundaries.Any(), boundaries.Any() ? new TypedClauseCapture<List<Boundary>>(wc, boundaries) : null);
                 }
             }
             return new OperationResult(false, null);
@@ -81,7 +121,7 @@ namespace Microsoft.DevSkim
             }
             if (clause is null)
             {
-                yield return new Violation($"Rule {rule.Name} has a null clause",rule);
+                yield return new Violation($"Rule {rule.Name} has a null clause", rule);
                 yield break;
             }
             if (clause is WithinClause wc)
@@ -95,7 +135,7 @@ namespace Microsoft.DevSkim
                     yield return new Violation($"Must provide some regexes as data.", rule, clause);
                     yield break;
                 }
-                foreach(var datum in wc.Data ?? new List<string>())
+                foreach (var datum in wc.Data ?? new List<string>())
                 {
                     if (regexEngine.StringToRegex(datum, RegexOptions.None) is null)
                     {
@@ -108,5 +148,7 @@ namespace Microsoft.DevSkim
                 yield return new Violation($"Rule {rule.Name ?? "Null Rule Name"} clause {clause.Label ?? rule.Clauses.IndexOf(clause).ToString(CultureInfo.InvariantCulture)} is not a WithinClause", rule, clause);
             }
         }
+
+        private RegexOperation regexEngine;
     }
 }

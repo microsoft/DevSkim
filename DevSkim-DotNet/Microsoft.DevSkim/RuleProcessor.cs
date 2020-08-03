@@ -4,6 +4,7 @@ using Microsoft.CST.OAT;
 using Microsoft.CST.OAT.Operations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -59,8 +60,6 @@ namespace Microsoft.DevSkim
         /// </summary>
         public Severity SeverityLevel { get; set; }
 
-        private Analyzer analyzer;
-
         /// <summary>
         ///     Applies given fix on the provided source code line
         /// </summary>
@@ -100,7 +99,6 @@ namespace Microsoft.DevSkim
             return Analyze(text, new string[] { language }, lineNumber);
         }
 
-
         /// <summary>
         ///     Analyzes given line of code
         /// </summary>
@@ -111,20 +109,35 @@ namespace Microsoft.DevSkim
         {
             // Get rules for the given content type
             IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
-            // Skip rules that are disabled or don't have the right severity
-            //    if (rule.Disabled || !SeverityLevel.HasFlag(rule.Severity))
-            //        continue;
+            // Skip rules that are disabled or don't have the right severity if (rule.Disabled ||
+            // !SeverityLevel.HasFlag(rule.Severity)) continue;
 
             var filtered = rules.Where(x => x.Name == "DS126186");
 
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber);
 
-            foreach(var capture in analyzer.GetCaptures(rules, textContainer))
+            foreach (var capture in analyzer.GetCaptures(rules, textContainer))
             {
-                // Turn matches into boundaries.
-                var matches = capture.Captures;
-                foreach (var cap in capture.Captures)
+                // If we have within captures it means we had conditions, and we only want the conditioned captures
+                var withinCaptures = capture.Captures.Where(x => x.Clause is WithinClause);
+                if (withinCaptures.Any())
+                {
+                    foreach (var cap in withinCaptures)
+                    {
+                        ProcessBoundary(cap);
+                    }
+                }
+                // Otherwise we can use all the captures
+                else
+                {
+                    foreach (var cap in capture.Captures)
+                    {
+                        ProcessBoundary(cap);
+                    }
+                }
+
+                void ProcessBoundary(ClauseCapture cap)
                 {
                     if (cap is TypedClauseCapture<List<Boundary>> tcc)
                     {
@@ -155,7 +168,6 @@ namespace Microsoft.DevSkim
                                     resultsList.Add(issue);
                                 }
                             }
-
                         }
                     }
                 }
@@ -186,17 +198,18 @@ namespace Microsoft.DevSkim
             return resultsList.ToArray();
         }
 
-        private IEnumerable<ConvertedOatRule> GetOatRulesForLanguages(string[] languages)
-        {
-            return GetRulesForLanguages(languages);
-        }
-
         /// <summary>
         ///     Cache for rules filtered by content type
         /// </summary>
         private Dictionary<string, IEnumerable<ConvertedOatRule>> _rulesCache;
 
         private RuleSet _ruleset;
+        private Analyzer analyzer;
+
+        private IEnumerable<ConvertedOatRule> GetOatRulesForLanguages(string[] languages)
+        {
+            return GetRulesForLanguages(languages);
+        }
 
         /// <summary>
         ///     Filters the rules for those matching the content type. Resolves all the overrides
