@@ -175,30 +175,37 @@ namespace Microsoft.DevSkim
 
         public ConvertedOatRule? DevSkimRuleToConvertedOatRule(Rule rule)
         {
-            if (rule is null)
-            {
-                return null;
-            }
             var clauses = new List<Clause>();
             int clauseNumber = 0;
             var expression = new StringBuilder("(");
-            foreach (var pattern in rule?.Patterns ?? Array.Empty<SearchPattern>())
+            foreach (var pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
             {
                 if (pattern.Pattern != null)
                 {
-                    clauses.Add(new ScopedRegexClause(pattern.Scopes ?? new PatternScope[] { PatternScope.All })
+                    var scopes = pattern.Scopes ?? new PatternScope[] { PatternScope.All };
+                    var modifiers = pattern.Modifiers ?? Array.Empty<string>();
+                    if (clauses.Where(x => x is ScopedRegexClause src &&
+                        src.Arguments.SequenceEqual(modifiers) && src.Scopes.SequenceEqual(scopes)) is IEnumerable<Clause> filteredClauses &&
+                        filteredClauses.Any() && filteredClauses.First().Data is List<string> found)
                     {
-                        Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
-                        Data = new List<string>() { pattern.Pattern },
-                        Capture = true,
-                        Arguments = pattern.Modifiers?.ToList() ?? new List<string>()
-                    });
-                    if (clauseNumber > 0)
-                    {
-                        expression.Append(" OR ");
+                        found.Add(pattern.Pattern);
                     }
-                    expression.Append(clauseNumber);
-                    clauseNumber++;
+                    else
+                    {
+                        clauses.Add(new ScopedRegexClause(scopes)
+                        {
+                            Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                            Data = new List<string>() { pattern.Pattern },
+                            Capture = true,
+                            Arguments = pattern.Modifiers?.ToList() ?? new List<string>()
+                        });
+                        if (clauseNumber > 0)
+                        {
+                            expression.Append(" OR ");
+                        }
+                        expression.Append(clauseNumber);
+                        clauseNumber++;
+                    }
                 }
             }
             if (clauses.Any())
@@ -350,6 +357,16 @@ namespace Microsoft.DevSkim
         private Regex searchInRegex = new Regex(".*\\((.*),(.*)\\)", RegexOptions.Compiled);
 
         /// <summary>
+        ///     Handler for deserialization error
+        /// </summary>
+        /// <param name="sender"> Sender object </param>
+        /// <param name="errorArgs"> Error arguments </param>
+        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
+        {
+            OnDeserializationError?.Invoke(sender, errorArgs);
+        }
+
+        /// <summary>
         ///     Method santizes pattern to be a valid regex
         /// </summary>
         /// <param name="pattern"> </param>
@@ -370,16 +387,6 @@ namespace Microsoft.DevSkim
                 pattern.PatternType = PatternType.Regex;
                 pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"{0}", Regex.Escape(pattern.Pattern));
             }
-        }
-
-        /// <summary>
-        ///     Handler for deserialization error
-        /// </summary>
-        /// <param name="sender"> Sender object </param>
-        /// <param name="errorArgs"> Error arguments </param>
-        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
-        {
-            OnDeserializationError?.Invoke(sender, errorArgs);
         }
     }
 }

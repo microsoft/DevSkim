@@ -32,6 +32,7 @@ jobs:
 
     - name: Build DevSkim VS Extension
       run: |
+         dotnet ../RulePacker/devskim.dll pack ../rules Microsoft.DevSkim/Resources/devskim-rules.json
          dotnet restore Microsoft.DevSkim.VSExtension
          msbuild Microsoft.DevSkim.VSExtension /p:Configuration=Release /p:Platform=AnyCPU
       working-directory: ./DevSkim-DotNet
