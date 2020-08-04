@@ -29,6 +29,7 @@ jobs:
 
     - name: Build DevSkim CLI
       run: |
+         dotnet ../RulePacker/devskim.dll pack ../rules Microsoft.DevSkim/Resources/devskim-rules.json
          dotnet restore Microsoft.DevSkim.CLI
          dotnet build Microsoft.DevSkim.CLI -c Release
       working-directory: ./DevSkim-DotNet
