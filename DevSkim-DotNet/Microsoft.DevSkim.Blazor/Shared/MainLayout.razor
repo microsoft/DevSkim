@@ -6,10 +6,19 @@
 
 <div class="main">
     <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+        @Version <a href="http://github.com/Microsoft/DevSkim" target="_blank" class="ml-md-auto">About DevSkim</a>
     </div>
 
     <div class="content px-4">
         @Body
     </div>
 </div>
+
+@code{
+    private string Version = string.Empty;
+
+    protected override void OnInitialized(){
+
+        Version = $"v.{Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
+    }
+}
