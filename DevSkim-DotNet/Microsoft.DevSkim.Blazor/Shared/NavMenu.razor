@@ -1,4 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@using System.Reflection;
+@using System.Diagnostics;
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Microsoft.DevSkim.Blazor v.@Version</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -27,7 +30,7 @@
 
 @code {
 
-    public override void OnInitialized(){
+    protected override void OnInitialized(){
         Assembly assembly = Assembly.GetExecutingAssembly();
         FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
         Version = fileVersionInfo.ProductVersion;
