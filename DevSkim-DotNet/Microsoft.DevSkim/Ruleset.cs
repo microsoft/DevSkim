@@ -23,7 +23,6 @@ namespace Microsoft.DevSkim
         /// </summary>
         public RuleSet()
         {
-            _rules = new List<Rule>();
             _oatRules = new List<ConvertedOatRule>();
         }
 
@@ -126,7 +125,6 @@ namespace Microsoft.DevSkim
         /// <param name="collection"> Collection of rules </param>
         public void AddRange(IEnumerable<Rule> collection)
         {
-            _rules.AddRange(collection);
             foreach (var rule in collection.Select(DevSkimRuleToConvertedOatRule))
             {
                 if (rule != null)
@@ -140,8 +138,8 @@ namespace Microsoft.DevSkim
         /// <param name="rule"> </param>
         public void AddRule(Rule rule)
         {
-            _rules.Add(rule);
-            _oatRules.Add(DevSkimRuleToConvertedOatRule(rule));
+            if (DevSkimRuleToConvertedOatRule(rule) is ConvertedOatRule cor)
+                _oatRules.Add(cor);
         }
 
         /// <summary>
@@ -220,15 +218,15 @@ namespace Microsoft.DevSkim
             {
                 if (condition.Pattern?.Pattern != null)
                 {
-                    if (condition.SearchIn is null)
+                    if (condition.SearchIn is null || condition.SearchIn.Equals("finding-only", StringComparison.InvariantCultureIgnoreCase))
                     {
                         clauses.Add(new WithinClause()
                         {
                             Data = new List<string>() { condition.Pattern.Pattern },
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
-                            SameLineOnly = true,
-                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
+                            FindingOnly = true,
                         });
                         expression.Append(" AND ");
                         expression.Append(clauseNumber);
@@ -259,6 +257,7 @@ namespace Microsoft.DevSkim
                                 Data = new List<string>() { condition.Pattern.Pattern },
                                 Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                                 Invert = condition.NegateFinding,
+                                Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                                 FindingOnly = false,
                                 Before = argList[0],
                                 After = argList[1]
@@ -267,19 +266,6 @@ namespace Microsoft.DevSkim
                             expression.Append(clauseNumber);
                             clauseNumber++;
                         }
-                    }
-                    else if (condition.SearchIn.Equals("finding-only", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        clauses.Add(new WithinClause()
-                        {
-                            Data = new List<string>() { condition.Pattern.Pattern },
-                            Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
-                            Invert = condition.NegateFinding,
-                            FindingOnly = true,
-                        });
-                        expression.Append(" AND ");
-                        expression.Append(clauseNumber);
-                        clauseNumber++;
                     }
                 }
             }
@@ -354,7 +340,7 @@ namespace Microsoft.DevSkim
 
         private List<ConvertedOatRule> _oatRules;
         private List<Rule> _rules;
-        private Regex searchInRegex = new Regex(".*\\((.*),(.*)\\)", RegexOptions.Compiled);
+        private Regex searchInRegex = new Regex("\\((.*),(.*)\\)", RegexOptions.Compiled);
 
         /// <summary>
         ///     Handler for deserialization error

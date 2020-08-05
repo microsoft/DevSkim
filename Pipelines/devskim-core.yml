@@ -56,10 +56,11 @@ stages:
       projectName: 'DevSkim_Lib'
       preBuild:
       - template: templates/devskim-pack-rules-steps.yml
-  - template: templates/nuget-build-job.yml
+  - template: templates/nuget-build-job-framework.yml
     parameters:
       jobName: 'pack_cli'
       dotnetVersion: '3.1.x'
+      publishFramework: 'netcoreapp3.1'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
