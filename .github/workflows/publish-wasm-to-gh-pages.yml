@@ -19,7 +19,7 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Pack Rules
-      run: dotnet ../RulePacker/devskim.dll pack ../rules Microsoft.DevSkim/Resources/devskim-rules.json
+      run: dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
 
     - name: Install dependencies
       run: dotnet restore DevSkim-DotNet/Microsoft.DevSkim.Blazor
