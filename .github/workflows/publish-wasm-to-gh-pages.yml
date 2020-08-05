@@ -19,7 +19,7 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore DevSkim-DotNet/Microsoft.DevSkim.Blazor
     - name: Build
       run: dotnet publish DevSkim-DotNet/Microsoft.DevSkim.Blazor --configuration Release --no-restore 
     - name: GitHub Pages action
