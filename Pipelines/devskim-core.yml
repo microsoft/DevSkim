@@ -60,6 +60,7 @@ stages:
     parameters:
       jobName: 'pack_cli'
       dotnetVersion: '3.1.x'
+      publishFramework: 'netcoreapp3.1'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
