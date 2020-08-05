@@ -115,8 +115,6 @@ namespace Microsoft.DevSkim
             // Skip rules that are disabled or don't have the right severity if (rule.Disabled ||
             // !SeverityLevel.HasFlag(rule.Severity)) continue;
 
-            var filtered = rules.Where(x => x.Name == "DS126186");
-
             List<Issue> resultsList = new List<Issue>();
             TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber < 0 ? 0 : lineNumber);
 
