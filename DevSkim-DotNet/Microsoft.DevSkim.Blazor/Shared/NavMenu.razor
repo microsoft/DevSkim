@@ -1,5 +1,5 @@
 ﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Microsoft.DevSkim.Blazor</a>
+    <a class="navbar-brand" href="">Microsoft.DevSkim.Blazor v.@Version</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -26,6 +26,14 @@
 </div>
 
 @code {
+
+    public override void OnInitialized(){
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+        Version = fileVersionInfo.ProductVersion;
+    }
+
+    private string Version = string.Empty;
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
