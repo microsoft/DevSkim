@@ -225,6 +225,7 @@ namespace Microsoft.DevSkim
                             Data = new List<string>() { condition.Pattern.Pattern },
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                             FindingOnly = true,
                         });
                         expression.Append(" AND ");
@@ -256,6 +257,7 @@ namespace Microsoft.DevSkim
                                 Data = new List<string>() { condition.Pattern.Pattern },
                                 Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                                 Invert = condition.NegateFinding,
+                                Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                                 FindingOnly = false,
                                 Before = argList[0],
                                 After = argList[1]
