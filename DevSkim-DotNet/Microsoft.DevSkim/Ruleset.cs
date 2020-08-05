@@ -338,7 +338,7 @@ namespace Microsoft.DevSkim
 
         private List<ConvertedOatRule> _oatRules;
         private List<Rule> _rules;
-        private Regex searchInRegex = new Regex(".*\\((.*),(.*)\\)", RegexOptions.Compiled);
+        private Regex searchInRegex = new Regex("\\((.*),(.*)\\)", RegexOptions.Compiled);
 
         /// <summary>
         ///     Handler for deserialization error
