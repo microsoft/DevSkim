@@ -28,12 +28,16 @@ This repository contains DevSkim and its official supported plugins. Issues and 
   * Location: `./DevSkim-DotNet/Microsoft.DevSkim.CLI/`
 * DevSkim Visual Studio Extension
   * Location: `./DevSkim-DotNet/Microsoft.DevSkim.VSExtension/`
+* DevSkim Blazor
+  * Location: `./DevSkim-DotNet/Microsoft.DevSkim.Blazor/`
 * DevSkim Visual Studio Code Plugin
   * Location: `./DevSkim-VSCode-Plugin/`
 * Common Rules and Guidance
   * Location: `./rules/default/`
 
 ## Official Releases
+
+[DevSkim.Blazor](https://microsoft.github.io/DevSkim/) is available to run in your browser as a Blazor WebAssembly application.
 
 Platform specific binaries of the DevSkim CLI are available on our GitHub [releases page](https://github.com/microsoft/DevSkim/releases).
 
