@@ -3,7 +3,7 @@ name: "Code Scanning - DevSkim"
 on:
   push:
     paths:
-    - *
+    - '**'
   schedule:
     - cron: '0 3 * * 3'
 
