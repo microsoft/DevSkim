@@ -3,6 +3,7 @@
 using Microsoft.CST.OAT;
 using Microsoft.CST.OAT.Operations;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Microsoft.DevSkim
         public RuleProcessor(RuleSet rules)
         {
             _ruleset = rules;
-            _rulesCache = new Dictionary<string, IEnumerable<ConvertedOatRule>>();
+            _rulesCache = new ConcurrentDictionary<string, IEnumerable<ConvertedOatRule>>();
             EnableSuppressions = false;
             EnableCache = true;
 
@@ -51,7 +52,7 @@ namespace Microsoft.DevSkim
             set
             {
                 _ruleset = value;
-                _rulesCache = new Dictionary<string, IEnumerable<ConvertedOatRule>>();
+                _rulesCache = new ConcurrentDictionary<string, IEnumerable<ConvertedOatRule>>();
             }
         }
 
@@ -202,7 +203,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         ///     Cache for rules filtered by content type
         /// </summary>
-        private Dictionary<string, IEnumerable<ConvertedOatRule>> _rulesCache;
+        private ConcurrentDictionary<string, IEnumerable<ConvertedOatRule>> _rulesCache;
 
         private RuleSet _ruleset;
         private Analyzer analyzer;
@@ -236,7 +237,7 @@ namespace Microsoft.DevSkim
             // Add the list to the cache so we save time on the next call
             if (EnableCache && filteredRules.Any())
             {
-                _rulesCache.Add(langid, filteredRules);
+                _rulesCache.TryAdd(langid, filteredRules);
             }
 
             return filteredRules;

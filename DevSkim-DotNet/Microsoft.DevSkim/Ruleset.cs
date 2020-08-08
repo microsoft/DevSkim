@@ -173,6 +173,8 @@ namespace Microsoft.DevSkim
 
         public ConvertedOatRule? DevSkimRuleToConvertedOatRule(Rule rule)
         {
+            if (rule == null)
+                return null;
             var clauses = new List<Clause>();
             int clauseNumber = 0;
             var expression = new StringBuilder("(");

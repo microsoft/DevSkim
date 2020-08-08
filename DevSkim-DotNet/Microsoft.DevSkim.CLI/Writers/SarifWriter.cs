@@ -105,7 +105,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         private ConcurrentStack<Result> _results = new ConcurrentStack<Result>();
 
-        private Dictionary<string, ReportingDescriptor> _rules = new Dictionary<string, ReportingDescriptor>();
+        private ConcurrentDictionary<string, ReportingDescriptor> _rules = new ConcurrentDictionary<string, ReportingDescriptor>();
 
         public string? OutputPath { get; }
 
@@ -136,7 +136,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                         break;
                 }
 
-                _rules.Add(devskimRule.Id, sarifRule);
+                _rules.TryAdd(devskimRule.Id, sarifRule);
             }
         }
 
