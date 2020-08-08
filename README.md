@@ -1,4 +1,5 @@
 # DevSkim
+![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.Devskim) ![Nuget](https://img.shields.io/nuget/dt/Microsoft.CST.Devskim)
 
 DevSkim is a framework of IDE extensions and language analyzers that provide inline security analysis 
 in the dev environment as the developer writes code. It has a flexible rule model that supports multiple programming
