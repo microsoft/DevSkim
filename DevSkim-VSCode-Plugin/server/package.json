@@ -25,6 +25,7 @@
     "clean": "npx --ignore-existing --quiet rimraf node_modules dist out data/rules"
   },
   "dependencies": {
+    "@babel/types": "^7.11.0",
     "@schemastore/sarif-2.1.0-rtm.4": "0.0.2",
     "commander": "^2.20.3",
     "git-repo-info": "^2.1.1",
