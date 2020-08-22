@@ -18,6 +18,7 @@ jobs:
     inputs:
       verboseOutput: true
   - task: notice@0
+    enabled: false
     inputs:
       outputformat: 'text'
   - task: SdtReport@2
