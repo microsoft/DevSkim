@@ -58,10 +58,10 @@ namespace Microsoft.DevSkim
                                 }
                             }
                         }
-
-                        var result = src.Invert ? boundaries.Count == 0 : boundaries.Count > 0;
-                        return new OperationResult(result, result && src.Capture ? new TypedClauseCapture<List<Boundary>>(c, boundaries, state1) : null);
                     }
+                    
+                    var result = src.Invert ? boundaries.Count == 0 : boundaries.Count > 0;
+                    return new OperationResult(result, result && src.Capture ? new TypedClauseCapture<List<Boundary>>(c, boundaries, state1) : null);
                 }
             }
             return new OperationResult(false, null);
