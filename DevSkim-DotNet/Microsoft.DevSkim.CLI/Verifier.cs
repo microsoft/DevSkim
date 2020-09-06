@@ -93,8 +93,8 @@ namespace Microsoft.DevSkim.CLI
                 else
                 {
                     // Check for same ID
-                    Rule sameRule = _rules.FirstOrDefault(x => x.Id == rule.Id);
-                    if (_rules.Count(x => x.Id == rule.Id) > 1)
+                    Rule sameRule = _rules.Select(x => x.DevSkimRule).FirstOrDefault(x => x.Id == rule.Id);
+                    if (_rules.Count(x => x.DevSkimRule.Id == rule.Id) > 1)
                     {
                         _messages.Add(new ErrorMessage(Message: "Two or more rules have a same ID", RuleID: sameRule.Id, File: sameRule.Source, Warning: true));
 
@@ -158,7 +158,7 @@ namespace Microsoft.DevSkim.CLI
             rules.AddFile(file, null);
 
             if (noProblem)
-                _rules.AddRange(rules.AsEnumerable());
+                _rules.AddRange(rules.AsEnumerable().Select(x => x.DevSkimRule));
 
             return noProblem;
         }

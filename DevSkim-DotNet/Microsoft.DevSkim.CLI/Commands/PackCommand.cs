@@ -47,7 +47,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             if (!verifier.Verify())
                 return (int)ExitCode.IssuesExists;
 
-            List<Rule> list = new List<Rule>(verifier.CompiledRuleset.AsEnumerable());
+            List<Rule> list = new List<Rule>(verifier.CompiledRuleset.AsEnumerable().Select(x => x.DevSkimRule));
 
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.Formatting = (_indent) ? Formatting.Indented : Formatting.None;

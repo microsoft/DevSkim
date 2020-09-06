@@ -31,12 +31,12 @@ namespace Microsoft.DevSkim.CLI
                 }
                 sw.WriteLine(string.Join(",", lineItems));
 
-                foreach (Rule rule in _rules.AsEnumerable())
+                foreach (ConvertedOatRule rule in _rules.AsEnumerable())
                 {
                     lineItems.Clear();
                     foreach (string col in columnList)
                     {
-                        lineItems.Add(string.Format("\"{0}\"", GetProperty(rule, col)));
+                        lineItems.Add(string.Format("\"{0}\"", GetProperty(rule.DevSkimRule, col)));
                     }
 
                     sw.WriteLine(string.Join(",", lineItems));
