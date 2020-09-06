@@ -16,7 +16,7 @@ namespace Microsoft.DevSkim
     /// <summary>
     ///     Storage for rules
     /// </summary>
-    public class RuleSet : IEnumerable<Rule>
+    public class RuleSet : IEnumerable<ConvertedOatRule>
     {
         /// <summary>
         ///     Creates instance of Ruleset
@@ -168,7 +168,7 @@ namespace Microsoft.DevSkim
         /// </summary>
         public int Count()
         {
-            return _rules.Count;
+            return _oatRules.Count;
         }
 
         public ConvertedOatRule? DevSkimRuleToConvertedOatRule(Rule rule)
@@ -289,16 +289,16 @@ namespace Microsoft.DevSkim
         /// <returns> Enumerator </returns>
         public IEnumerator GetEnumerator()
         {
-            return this._rules.GetEnumerator();
+            return this._oatRules.GetEnumerator();
         }
 
         /// <summary>
         ///     Returns an enumerator that iterates through the Ruleset
         /// </summary>
         /// <returns> Enumerator </returns>
-        IEnumerator<Rule> IEnumerable<Rule>.GetEnumerator()
+        IEnumerator<ConvertedOatRule> IEnumerable<ConvertedOatRule>.GetEnumerator()
         {
-            return this._rules.GetEnumerator();
+            return this._oatRules.GetEnumerator();
         }
 
         internal IEnumerable<Rule> StringToRules(string jsonstring, string sourcename, string? tag = null)
@@ -341,7 +341,6 @@ namespace Microsoft.DevSkim
         }
 
         private List<ConvertedOatRule> _oatRules;
-        private List<Rule> _rules;
         private Regex searchInRegex = new Regex("\\((.*),(.*)\\)", RegexOptions.Compiled);
 
         /// <summary>
