@@ -83,7 +83,7 @@ namespace Microsoft.DevSkim.CLI
         {
             string[] languages = Language.GetNames();
 
-            foreach (Rule rule in _rules.AsEnumerable())
+            foreach (Rule rule in _rules.AsEnumerable().Select(x => x.DevSkimRule))
             {
                 // Check for null Id
                 if (rule.Id == null)

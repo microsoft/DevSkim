@@ -195,7 +195,7 @@ namespace Microsoft.DevSkim.CLI
                         foreach (string id in expecations[line])
                         {
                             string exists = string.Empty;
-                            if (_rules.FirstOrDefault(x => x.Id == id) == null)
+                            if (_rules.Select(x => x.DevSkimRule).FirstOrDefault(x => x.Id == id) == null)
                                 exists = " (no such rule) ";
 
                             Console.Error.WriteLine("\tline:{0} expecting {1}{2}", line, id, exists);
