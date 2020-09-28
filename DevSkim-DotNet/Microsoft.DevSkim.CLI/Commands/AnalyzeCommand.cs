@@ -195,7 +195,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
             }
 
-            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? string.IsNullOrEmpty(_outputFile) ? "_dummy" : "text" : _fileFormat,
+            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? "text" : _fileFormat,
                                                            _outputFormat,
                                                            (outputStreamWriter is null)?(string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile)):outputStreamWriter,
                                                            (outputStreamWriter is null)?_outputFile:null);
