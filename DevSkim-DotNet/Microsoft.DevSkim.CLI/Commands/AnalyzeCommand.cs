@@ -290,7 +290,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Debug.WriteLine("Files analyzed: {0}", filesAnalyzed);
             Debug.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return (int)ExitCode.NoIssues;
+            return issuesCount == 0 ? (int)ExitCode.NoIssues : (int)ExitCode.IssuesExists;
         }
 
         private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
