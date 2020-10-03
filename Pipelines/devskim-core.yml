@@ -34,7 +34,6 @@ stages:
   jobs:
   - template: templates/dotnet-publish-linux-mac-job.yml
     parameters:
-      dotnetVersion: '3.1.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim'
       preBuild:
@@ -42,7 +41,6 @@ stages:
       - template: templates/devskim-pack-rules-steps.yml
   - template: templates/dotnet-publish-win-netcore-job.yml
     parameters:
-      dotnetVersion: '3.1.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim'
       preBuild:
@@ -51,7 +49,6 @@ stages:
   - template: templates/nuget-build-job.yml
     parameters:
       jobName: 'pack_lib'
-      dotnetVersion: '3.1.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
       preBuild:
@@ -59,8 +56,7 @@ stages:
   - template: templates/nuget-build-job-framework.yml
     parameters:
       jobName: 'pack_cli'
-      dotnetVersion: '3.1.x'
-      publishFramework: 'netcoreapp3.1'
+      publishFramework: 'net5.0'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
@@ -80,7 +76,8 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '3.1.x'
+        version: '5.0.x'
+        includePreviewVersions: true
     - script: 'dotnet tool install -g nbgv'
       displayName: 'Install GitVersioning'
     - task: PowerShell@2

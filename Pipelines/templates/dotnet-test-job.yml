@@ -6,7 +6,11 @@ parameters:
 # Version of Dotnet SDK to use
 - name: dotnetVersion
   type: string
-  default: '3.1.x'
+  default: '5.0.x'
+# Should Dotnet SDK install preview versions?
+- name: includePreviewVersions
+  type: boolean
+  default: true
 # Version of NuGet Tool to use
 - name: nugetVersion
   type: string
@@ -27,6 +31,7 @@ jobs:
     inputs:
       packageType: 'sdk'
       version: ${{ parameters.dotnetVersion }}
+      includePreviewVersions: ${{ parameters.includePreviewVersions }}
   - task: NuGetToolInstaller@1
     displayName: Install Nuget Tool
     inputs:

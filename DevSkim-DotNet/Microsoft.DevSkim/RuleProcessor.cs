@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Transactions;
 
 namespace Microsoft.DevSkim
 {
@@ -69,11 +70,15 @@ namespace Microsoft.DevSkim
         /// <returns> Fixed source code line </returns>
         public static string Fix(string text, CodeFix fixRecord)
         {
+            if (fixRecord == null)
+            {
+                return text;
+            }
             string result = string.Empty;
 
             if (fixRecord.FixType == FixType.RegexReplace)
             {
-                if (fixRecord.Pattern is { })
+                if (fixRecord.Pattern is { } && fixRecord.Pattern.Pattern is { } && fixRecord.Replacement is { })
                 {
                     //TODO: Better pattern search and modifiers
                     Regex regex = new Regex(fixRecord.Pattern.Pattern);
@@ -111,6 +116,10 @@ namespace Microsoft.DevSkim
         /// <returns> Array of matches </returns>
         public Issue[] Analyze(string text, string[] languages, int lineNumber = 0)
         {
+            if (languages is null)
+            {
+                return Array.Empty<Issue>();
+            }
             // Get rules for the given content type
             IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
             // Skip rules that are disabled or don't have the right severity if (rule.Disabled ||
