@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Nullable>Enable</Nullable>
   </PropertyGroup>
   
