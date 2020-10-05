@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.TestPlatform">
-      <Version>16.6.1</Version>
+      <Version>16.8.0-preview-20200921-01</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.CoreUtility">
       <Version>16.6.255</Version>

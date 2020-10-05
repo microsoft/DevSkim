@@ -36,7 +36,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         ///     Event raised if deserialization error is encoutered while loading JSON rules
         /// </summary>
-        public event DeserializationError? OnDeserializationError;
+        public event DeserializationError? OnDeserializationErrorEventHandler;
 
         /// <summary>
         ///     Parse a directory with rule files and loads the rules
@@ -108,7 +108,7 @@ namespace Microsoft.DevSkim
         public void AddFile(string filename, string? tag = null)
         {
             if (string.IsNullOrEmpty(filename))
-                throw new ArgumentException(nameof(filename));
+                throw new ArgumentException("Could not add null or empty file.",filename);
 
             if (!File.Exists(filename))
                 throw new FileNotFoundException();
@@ -210,7 +210,7 @@ namespace Microsoft.DevSkim
             }
             if (clauses.Any())
             {
-                expression.Append(")");
+                expression.Append(')');
             }
             else
             {
@@ -350,7 +350,7 @@ namespace Microsoft.DevSkim
         /// <param name="errorArgs"> Error arguments </param>
         private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
         {
-            OnDeserializationError?.Invoke(sender, errorArgs);
+            OnDeserializationErrorEventHandler?.Invoke(sender, errorArgs);
         }
 
         /// <summary>
@@ -359,20 +359,23 @@ namespace Microsoft.DevSkim
         /// <param name="pattern"> </param>
         private static void SanitizePatternRegex(SearchPattern pattern)
         {
-            if (pattern.PatternType == PatternType.RegexWord)
+            if (pattern.Pattern is { })
             {
-                pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", pattern.Pattern);
-            }
-            else if (pattern.PatternType == PatternType.String)
-            {
-                pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", Regex.Escape(pattern.Pattern));
-            }
-            else if (pattern.PatternType == PatternType.Substring)
-            {
-                pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"{0}", Regex.Escape(pattern.Pattern));
+                if (pattern.PatternType == PatternType.RegexWord)
+                {
+                    pattern.PatternType = PatternType.Regex;
+                    pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", pattern.Pattern);
+                }
+                else if (pattern.PatternType == PatternType.String)
+                {
+                    pattern.PatternType = PatternType.Regex;
+                    pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", Regex.Escape(pattern.Pattern));
+                }
+                else if (pattern.PatternType == PatternType.Substring)
+                {
+                    pattern.PatternType = PatternType.Regex;
+                    pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"{0}", Regex.Escape(pattern.Pattern));
+                }
             }
         }
     }

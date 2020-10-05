@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Microsoft.CST.OpenSource.RecursiveExtractor;
+using Microsoft.CST.RecursiveExtractor;
 using Microsoft.DevSkim.CLI.Writers;
 using Microsoft.Extensions.CommandLineUtils;
 using System;
@@ -124,15 +124,15 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
             IEnumerable<FileEntry> fileListing;
-            var extractor = new Extractor(new ExtractorOptions() { ExtractSelfOnFail = false });
+            var extractor = new Extractor();
 
             if (!Directory.Exists(_path))
             {
-                fileListing = extractor.ExtractFile(_path);
+                fileListing = extractor.Extract(_path);
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.ExtractFile(x) : FilenameToFileEntryArray(x));
+                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.Extract(x) : FilenameToFileEntryArray(x));
             }
             return RunFileEntries(fileListing);
         }
