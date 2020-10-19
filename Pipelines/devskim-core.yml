@@ -357,4 +357,3 @@ stages:
         publishFeedCredentials: 'CST-E Nuget CI'
         verbosityPush: 'Normal'
 
-
