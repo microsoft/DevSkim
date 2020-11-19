@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net5.0;netstandard2.1;</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp3.1;netstandard2.1;</TargetFrameworks>
     <AssemblyName>devskim</AssemblyName>
     <StartupObject>Microsoft.DevSkim.CLI.Program</StartupObject>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
