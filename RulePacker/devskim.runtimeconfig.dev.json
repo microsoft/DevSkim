@@ -1,8 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\Gstoc\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Gstoc\\.nuget\\packages"
+      "/Users/gabe/.dotnet/store/|arch|/|tfm|",
+      "/Users/gabe/.nuget/packages"
     ]
   }
 }
