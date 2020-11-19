@@ -1,20 +1,20 @@
 ﻿@inherits LayoutComponentBase
 @using System.Reflection;
-
-<div class="sidebar">
-    <NavMenu />
-</div>
-
-<div class="main">
-    <div class="top-row px-4">
-        @Version <a href="http://github.com/Microsoft/DevSkim" target="_blank" class="ml-md-auto">About DevSkim</a>
+<div class = "page">
+    <div class="sidebar">
+        <NavMenu />
     </div>
 
-    <div class="content px-4">
-        @Body
+    <div class="main">
+        <div class="top-row px-4">
+            @Version <a href="http://github.com/Microsoft/DevSkim" target="_blank" class="ml-md-auto">About DevSkim</a>
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
     </div>
 </div>
-
 @code{
     private string Version = string.Empty;
 

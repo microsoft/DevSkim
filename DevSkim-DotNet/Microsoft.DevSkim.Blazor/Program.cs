@@ -17,7 +17,7 @@ namespace Microsoft.DevSkim.Blazor
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("app");
+            builder.RootComponents.Add<App>("#app");
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
