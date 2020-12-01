@@ -2,7 +2,7 @@
 @using System.IO;
 @using System.Diagnostics;
 @using Tewr.Blazor.FileReader;
-@using Microsoft.CST.OpenSource.RecursiveExtractor;
+@using Microsoft.CST.RecursiveExtractor;
 @using Microsoft.DevSkim.CLI.Commands;
 @using Microsoft.CodeAnalysis.Sarif;
 @inject IFileReaderService fileReaderService;
@@ -32,7 +32,7 @@
 
     public bool CanCancel { get; set; }
     public bool IsCancelDisabled => !CanCancel;
-    Extractor extractor = new Extractor(new ExtractorOptions() { EnableTiming = false, ExtractSelfOnFail = false });
+    Extractor extractor = new Extractor();
 
     public async Task ClearFile()
     {
@@ -84,7 +84,7 @@
                 using var stream = await file.OpenReadAsync();
                 using var fileStream = new FileStream(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.DeleteOnClose);
                 await stream.CopyToAsync(fileStream);
-                var streamEntries = extractor.ExtractStream(fileInfo.Name, fileStream, false);
+                var streamEntries = extractor.Extract(fileInfo.Name, fileStream, new ExtractorOptions() { EnableTiming = false, ExtractSelfOnFail = false });
                 var length = streamEntries.First().Content.Length;
                 fileEntries.AddRange(streamEntries);
             }
