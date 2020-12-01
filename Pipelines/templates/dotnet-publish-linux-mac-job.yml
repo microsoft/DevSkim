@@ -14,7 +14,7 @@ parameters:
   # Framework version to Publish
   - name: publishFramework
     type: string
-    default: 'netcoreapp3.1'
+    default: 'net5.0'
   # Version of NuGet Tool to use
   - name: nugetVersion
     type: string
