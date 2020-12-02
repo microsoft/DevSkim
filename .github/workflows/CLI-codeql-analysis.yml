@@ -1,4 +1,4 @@
-name: "Code Scanning - CLI"
+name: "CodeQL (CLI)"
 
 on:
   push:

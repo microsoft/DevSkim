@@ -1,4 +1,4 @@
-name: "Code Scanning - VSCode Plugin"
+name: "CodeQL (VSCode)"
 
 on:
   push:
