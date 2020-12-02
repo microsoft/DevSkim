@@ -41,6 +41,14 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '5.0.x'
+    - task: NuGetToolInstaller@1
+      inputs:
+        versionSpec: '5.x'
+    - task: NuGetCommand@2
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
+        feedsToUse: 'select'
     - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
       displayName: 'Pack DevSkim Rules'
     - task: MSBuild@1
@@ -48,7 +56,7 @@ stages:
       inputs:
         solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
         msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
-        restoreNugetPackages: true
+        restoreNugetPackages: false
         msbuildVersion: 'latest'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
