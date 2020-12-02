@@ -39,18 +39,18 @@ stages:
       displayName: npm install
       inputs:
         command: 'install'
-        workingDir: '$(SolutionDirectory)'
+        workingDir: 'DevSkim-VSCode-Plugin/'
     - task: Npm@1
       inputs:
         command: 'custom'
-        workingDir: '$(SolutionDirectory)'
+        workingDir: 'DevSkim-VSCode-Plugin/'
         customCommand: 'run pack-ext'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
         InputType: 'Basic'
         ScanType: 'CustomScan'
-        FileDirPath: '$(SolutionDirectory)'
+        FileDirPath: 'DevSkim-VSCode-Plugin/'
         EnableServices: true
         SupportLogOnError: false
         TreatSignatureUpdateFailureAs: 'Warning'
@@ -60,7 +60,7 @@ stages:
       displayName: Move Plugin File
       inputs:
         targetType: 'inline'
-        script: 'mv $(SolutionDirectory)/*.vsix $env:BUILD_STAGINGDIRECTORY'
+        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY'
     - task: PublishBuildArtifacts@1
       displayName: Publish Unsigned Artifact
       inputs:
