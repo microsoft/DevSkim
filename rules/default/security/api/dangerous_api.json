@@ -30,7 +30,7 @@
         "name": "Banned C function detected (strcpy)",
         "id": "DS185832",
         "description": "strcpy is frequently dangerous, as it will cause a buffer overflow if the source is larger than the destination.",
-        "recommendation": "Use strcpy_s or strlcpy if possible. If no safe function is viable, strcpy/strncpy should be proceeded by conditional checks to verify tha that the source string will fit in the destination with a null termnator.",
+        "recommendation": "Use strcpy_s or strlcpy if possible. If no safe function is viable, strcpy/strncpy should be proceeded by conditional checks to verify that the source string will fit in the destination with a null termnator.",
         "overrides": [
             "DS154189"
         ],
