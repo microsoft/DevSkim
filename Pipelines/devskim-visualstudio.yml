@@ -48,7 +48,6 @@ stages:
       inputs:
         solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
         msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
-        restoreNugetPackages: false
         msbuildVersion: 'latest'
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
