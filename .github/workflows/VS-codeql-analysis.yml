@@ -1,10 +1,11 @@
-name: "Code Scanning - VS Extension"
+name: "CodeQL (VS)"
 
 on:
   push:
     paths:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+    - .github/workflows/VS-codeql-analysis.yml
   schedule:
     - cron: '0 3 * * 3'
 
@@ -23,7 +24,7 @@ jobs:
         fetch-depth: 0
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.0
+      uses: microsoft/setup-msbuild@v1
       
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1

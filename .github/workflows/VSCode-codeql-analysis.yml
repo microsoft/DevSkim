@@ -1,9 +1,10 @@
-name: "Code Scanning - VSCode Plugin"
+name: "CodeQL (VSCode)"
 
 on:
   push:
     paths:
     - DevSkim-VSCode-Plugin/*
+    - .github/workflows/VSCode-codeql-analysis.yml
   schedule:
     - cron: '0 3 * * 3'
 
