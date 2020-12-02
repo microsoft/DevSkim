@@ -19,6 +19,7 @@ pr:
     include:
     - Pipelines
     - DevSkim-VSCode-Plugin/*
+    - rules/*
 
 stages:
 - stage: SDL

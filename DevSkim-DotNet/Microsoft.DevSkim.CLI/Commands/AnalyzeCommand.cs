@@ -122,7 +122,6 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return (int)ExitCode.CriticalError;
             }
 
-            // We can pass either a file or a directory; if it's a file, make an IEnumerable out of it.
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
 
