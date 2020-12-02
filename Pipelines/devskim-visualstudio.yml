@@ -47,15 +47,15 @@ stages:
     - task: NuGetCommand@2
       inputs:
         command: 'restore'
-        restoreSolution: '$(SolutionDirectory)/Microsoft.DevSkim.sln'
+        restoreSolution: 'DevSkim-DotNet/Microsoft.DevSkim.sln'
         feedsToUse: 'select'
     - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
       displayName: 'Pack DevSkim Rules'
     - task: MSBuild@1
       displayName: MSBuild VSExtension
       inputs:
-        solution: '$(SolutionDirectory)/Microsoft.DevSkim.VSExtension'
-        msbuildArguments: '/p:Configuration=$(BuildConfiguration) /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
+        solution: 'DevSkim-DotNet/Microsoft.DevSkim.VSExtension'
+        msbuildArguments: '/p:Configuration=Release /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
         restoreNugetPackages: false
         msbuildVersion: 'latest'
     - task: AntiMalware@3
