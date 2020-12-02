@@ -58,7 +58,7 @@
 
     public string? Code { get; set; }
 
-    public string[] CodeLines { get; set; }
+    public string[] CodeLines { get; set; } = Array.Empty<string>();
 
     public string? Language { get; set; }
 
@@ -77,7 +77,7 @@
         var codeFile = await localStorage.GetItemAsync<CodeFile>(Guid);
 
         Code = codeFile.Content;
-        CodeLines = Code.Split(Environment.NewLine);
+        CodeLines = Code?.Split(Environment.NewLine) ?? Array.Empty<string>();
         FileName = codeFile.FileName;
         Language = Microsoft.DevSkim.Language.FromFileName(FileName ?? string.Empty);
         RunId = codeFile.RunId;
