@@ -5,6 +5,7 @@ on:
     paths:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+    - .github/workflows/VS-codeql-analysis.yml
   schedule:
     - cron: '0 3 * * 3'
 
