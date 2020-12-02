@@ -4,7 +4,7 @@ on:
   push:
     paths:
     - DevSkim-VSCode-Plugin/*
-    - .github/workflows/VSCode-codeql-analysis.yml
+  pull_request:
   schedule:
     - cron: '0 3 * * 3'
 

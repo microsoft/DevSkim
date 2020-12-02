@@ -5,7 +5,7 @@ on:
     paths:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
-    - .github/workflows/CLI-codeql-analysis.yml
+  pull_request:
   schedule:
     - cron: '0 3 * * 3'
 
