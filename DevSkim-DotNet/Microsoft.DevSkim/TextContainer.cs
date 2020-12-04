@@ -239,7 +239,7 @@ namespace Microsoft.DevSkim
                 if (lastInline >= 0)
                 {
                     var commentedText = text.Substring(lastInline);
-                    int endOfLine = commentedText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                    int endOfLine = commentedText.IndexOf("\n", StringComparison.Ordinal);
                     if (endOfLine < 0)
                     {
                         endOfLine = commentedText.Length - 1;
