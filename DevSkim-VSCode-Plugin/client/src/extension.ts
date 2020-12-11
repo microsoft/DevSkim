@@ -99,12 +99,18 @@ export function activate(context: vscode.ExtensionContext) {
 		// @todo  This has a code smell and should be looked at - Dave
 		setTimeout(function () {
 			const textDocuments: TextDocumentIdentifier[] = [];
+
 			for (let x = 0; x < vscode.workspace.textDocuments.length; x++) {
-				textDocuments[x] = Object.create(null);
-				textDocuments[x].uri = vscode.workspace.textDocuments[x].uri.toString();
+				if ('uri' in vscode.workspace.textDocuments[x])
+				{
+					const document: TextDocumentIdentifier = Object.create(null);
+					document.uri = vscode.workspace.textDocuments[x].uri.toString();
+					textDocuments.push(document);
+				}
 			}
+
 			client.sendRequest(ValidateDocsRequest.type, {textDocuments});
-		}, 30000);
+		}, 10000);
 
 	} catch (err) {
 		handleError(err);
