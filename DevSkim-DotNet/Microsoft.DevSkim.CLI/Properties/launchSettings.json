@@ -2,7 +2,7 @@
   "profiles": {
     "Microsoft.DevSkim.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "pack ..\\..\\..\\..\\..\\rules out.rules.json"
+      "commandLineArgs": "analyze . -f sarif -d"
     }
   }
 }

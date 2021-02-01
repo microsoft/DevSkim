@@ -29,7 +29,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="1.0.51" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="Sarif.Sdk" Version="2.3.8" />
+    <PackageReference Include="Sarif.Sdk" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
