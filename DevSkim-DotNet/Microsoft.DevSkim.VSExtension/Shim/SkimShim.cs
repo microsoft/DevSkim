@@ -3,6 +3,7 @@
 using Microsoft.DevSkim.VSExtension.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -95,20 +96,32 @@ namespace Microsoft.DevSkim.VSExtension
         {
             Settings set = Settings.GetSettings();
 
-            Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
-            string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
-            Stream resource = assembly.GetManifestResourceStream(filePath);
-
-            if (set.UseDefaultRules)
+            try
             {
-                using (StreamReader file = new StreamReader(resource))
+
+                Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
+                string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
+                Stream resource = assembly.GetManifestResourceStream(filePath);
+
+                if (set.UseDefaultRules)
                 {
-                    ruleset.AddString(file.ReadToEnd(), filePath);
+                    using (StreamReader file = new StreamReader(resource))
+                    {
+                        ruleset.AddString(file.ReadToEnd(), filePath);
+                    }
                 }
             }
-
-            if (set.UseCustomRules)
-                ruleset.AddDirectory(set.CustomRulesPath, "custom");
+            catch(Exception e){
+                Debug.WriteLine("Failed to load Default rules. {0}:{1}\n{2}",e.GetType(), e.Message, e.StackTrace);
+            }
+            
+            try {
+                if (set.UseCustomRules && Directory.Exists(set.CustomRulesPath))
+                    ruleset.AddDirectory(set.CustomRulesPath, "custom");
+            }
+            catch(Exception e){
+                Debug.WriteLine("Failed to load custom rules. {0}:{1}\n{2}",e.GetType(), e.Message, e.StackTrace);
+            }
 
             processor.Rules = ruleset;
 
