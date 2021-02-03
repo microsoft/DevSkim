@@ -3,6 +3,7 @@
 using Microsoft.DevSkim.VSExtension.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -93,8 +94,10 @@ namespace Microsoft.DevSkim.VSExtension
         /// </summary>
         private void LoadRules()
         {
-            try{
-                Settings set = Settings.GetSettings();
+            Settings set = Settings.GetSettings();
+
+            try
+            {
 
                 Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
                 string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
