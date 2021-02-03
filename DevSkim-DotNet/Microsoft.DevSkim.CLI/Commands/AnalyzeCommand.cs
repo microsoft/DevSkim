@@ -124,14 +124,14 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
-
-            if (!Directory.Exists(_path))
+            var fp = Path.GetFullPath(_path);
+            if (!Directory.Exists(fp))
             {
-                fileListing = extractor.Extract(_path, new ExtractorOptions() { ExtractSelfOnFail = false });
+                fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false });
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false }) : FilenameToFileEntryArray(x));
+                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false }) : FilenameToFileEntryArray(x));
             }
             return RunFileEntries(fileListing);
         }
