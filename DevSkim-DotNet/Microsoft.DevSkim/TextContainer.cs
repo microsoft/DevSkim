@@ -46,8 +46,8 @@ namespace Microsoft.DevSkim
             }
 
             // Text can end with \n or not
-            if (LineEnds[LineEnds.Count - 1] == -1)
-                LineEnds[LineEnds.Count - 1] = (FullContent.Length > 0) ? FullContent.Length - 1 : 0;
+            if (LineEnds[^1] == -1)
+                LineEnds[^1] = (FullContent.Length > 0) ? FullContent.Length - 1 : 0;
 
             prefix = DevSkim.Language.GetCommentPrefix(Language);
             suffix = DevSkim.Language.GetCommentSuffix(Language);
@@ -56,7 +56,6 @@ namespace Microsoft.DevSkim
 
         public string FullContent { get; }
         public string Language { get; }
-        public string Line { get; }
         public int LineNumber { get; }
         public List<int> LineStarts { get; }
         public string Target { get; }

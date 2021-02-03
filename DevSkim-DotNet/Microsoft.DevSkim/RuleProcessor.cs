@@ -71,13 +71,13 @@ namespace Microsoft.DevSkim
         {
             string result = string.Empty;
 
-            if (fixRecord.FixType == FixType.RegexReplace)
+            if (fixRecord?.FixType is { } fr && fr == FixType.RegexReplace)
             {
                 if (fixRecord.Pattern is { })
                 {
                     //TODO: Better pattern search and modifiers
-                    Regex regex = new Regex(fixRecord.Pattern.Pattern);
-                    result = regex.Replace(text, fixRecord.Replacement);
+                    Regex regex = new Regex(fixRecord.Pattern.Pattern ?? string.Empty);
+                    result = regex.Replace(text, fixRecord.Replacement ?? string.Empty);
                 }
             }
 
@@ -111,13 +111,14 @@ namespace Microsoft.DevSkim
         /// <returns> Array of matches </returns>
         public Issue[] Analyze(string text, string[] languages, int lineNumber = 0)
         {
+            var lng = languages ?? Array.Empty<string>();
             // Get rules for the given content type
-            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(languages).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
+            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(lng).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
             // Skip rules that are disabled or don't have the right severity if (rule.Disabled ||
             // !SeverityLevel.HasFlag(rule.Severity)) continue;
 
             List<Issue> resultsList = new List<Issue>();
-            TextContainer textContainer = new TextContainer(text, (languages.Length > 0) ? languages[0] : string.Empty, lineNumber < 0 ? 0 : lineNumber);
+            TextContainer textContainer = new TextContainer(text, (lng.Length > 0) ? lng[0] : string.Empty, lineNumber < 0 ? 0 : lineNumber);
 
             foreach (var capture in analyzer.GetCaptures(rules, textContainer))
             {

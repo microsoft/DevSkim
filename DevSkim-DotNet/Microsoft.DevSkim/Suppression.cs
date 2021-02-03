@@ -90,7 +90,7 @@ namespace Microsoft.DevSkim
         /// <returns> True if rule is suppressed </returns>
         public SuppressedIssue? GetSuppressedIssue(string issueId)
         {
-            SuppressedIssue issue = _issues.FirstOrDefault(x => x.ID == issueId || x.ID == KeywordAll);
+            SuppressedIssue? issue = _issues.FirstOrDefault(x => x.ID == issueId || x.ID == KeywordAll);
             if (DateTime.Now < _expirationDate && issue != null)
                 return issue;
             else
