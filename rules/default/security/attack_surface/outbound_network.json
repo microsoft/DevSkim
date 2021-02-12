@@ -37,7 +37,7 @@
         "rule_info": "DS137138.md",
         "patterns": [
             {
-                "pattern": "http:\/",
+                "pattern": "http:\/\/",
                 "type": "substring",
                 "scopes": [
                     "code"
@@ -69,7 +69,7 @@
                 "_comment": "",
                 "replacement": "https://",
                 "pattern": {
-                    "pattern": "http://",
+                    "pattern": "http:\/\/",
                     "type": "regex",
                     "scopes": [
                         "code"
