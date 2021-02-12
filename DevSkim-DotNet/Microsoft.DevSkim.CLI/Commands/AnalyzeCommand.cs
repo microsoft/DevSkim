@@ -26,7 +26,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                               bool suppressError,
                               bool disableSuppression,
                               bool crawlArchives,
-                              bool disableParallel)
+                              bool disableParallel,
+                              bool exitCodeIsNumIssues)
         {
             _path = path;
             _outputFile = output;
@@ -39,6 +40,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _disableSuppression = disableSuppression;
             _crawlArchives = crawlArchives;
             _disableParallel = disableParallel;
+            _exitCodeIsNumIssues = exitCodeIsNumIssues;
         }
 
         public static void Configure(CommandLineApplication command)
@@ -88,6 +90,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                                        "Enable crawling into archives when processing directories.",
                                        CommandOptionType.NoValue);
 
+            var exitCodeIsNumIssues = command.Option("-E",
+                                        "Use the exit code to indicate number of issues identified.",
+                                        CommandOptionType.NoValue);
+
             command.ExtendedHelpText = "\nOutput format options:\n%F\tfile path\n%L\tstart line number\n" +
                 "%C\tstart column\n%l\tend line number\n%c\tend column\n%I\tlocation inside file\n" +
                 "%i\tmatch length\n%m\tmatch\n%R\trule id\n%N\trule name\n%S\tseverity\n%D\tissue description\n%T\ttags(comma-separated)";
@@ -104,7 +110,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                  errorOption.HasValue(),
                                  disableSuppressionOption.HasValue(),
                                  crawlArchives.HasValue(),
-                                 disableParallel.HasValue())).Run();
+                                 disableParallel.HasValue(),
+                                 exitCodeIsNumIssues.HasValue())).Run();
             });
         }
 
@@ -289,7 +296,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             Debug.WriteLine("Files analyzed: {0}", filesAnalyzed);
             Debug.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return (int)ExitCode.NoIssues;
+            return _exitCodeIsNumIssues ? (issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
         }
 
         private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
@@ -305,6 +312,9 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         private readonly bool _crawlArchives;
         private readonly bool _disableParallel;
+
+        public bool _exitCodeIsNumIssues { get; }
+
         private bool _disableSuppression;
 
         private string _fileFormat;
