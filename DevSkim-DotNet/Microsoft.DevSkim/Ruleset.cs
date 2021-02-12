@@ -362,17 +362,17 @@ namespace Microsoft.DevSkim
             if (pattern.PatternType == PatternType.RegexWord)
             {
                 pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", pattern.Pattern);
+                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", pattern.Pattern ?? string.Empty);
             }
             else if (pattern.PatternType == PatternType.String)
             {
                 pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", Regex.Escape(pattern.Pattern));
+                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", Regex.Escape(pattern.Pattern ?? string.Empty));
             }
             else if (pattern.PatternType == PatternType.Substring)
             {
                 pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"{0}", Regex.Escape(pattern.Pattern));
+                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"{0}", Regex.Escape(pattern.Pattern ?? string.Empty));
             }
         }
     }

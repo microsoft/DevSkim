@@ -39,7 +39,7 @@ namespace Microsoft.DevSkim
         {
             if (!_compiled.ContainsKey(opts))
             {
-                _compiled[opts] = new Regex(Pattern, opts | RegexOptions.Compiled);
+                _compiled[opts] = new Regex(Pattern ?? string.Empty, opts | RegexOptions.Compiled);
             }
             return _compiled[opts];
         }

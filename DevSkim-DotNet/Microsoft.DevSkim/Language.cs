@@ -61,7 +61,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (Array.Exists(comment.Languages, x => x.Equals(language, StringComparison.InvariantCultureIgnoreCase)) && comment.Inline is { })
+                    if (Array.Exists(comment.Languages ?? Array.Empty<string>(), x => x.Equals(language, StringComparison.InvariantCultureIgnoreCase)) && comment.Inline is { })
                         return comment.Inline;
                 }
             }
@@ -82,8 +82,11 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (comment.Languages.Contains(language.ToLower(CultureInfo.InvariantCulture)) && comment.Prefix is { })
-                        return comment.Prefix;
+                    if (comment.Languages?.Contains(language.ToLower(CultureInfo.InvariantCulture)) ?? false)
+                        if (comment.Prefix is { } pre)
+                        {
+                            return pre;
+                        }
                 }
             }
 
@@ -103,7 +106,7 @@ namespace Microsoft.DevSkim
             {
                 foreach (Comment comment in Instance.Comments)
                 {
-                    if (Array.Exists(comment.Languages, x => x.Equals(language, StringComparison.InvariantCultureIgnoreCase)) && comment.Suffix is { })
+                    if (Array.Exists(comment.Languages ?? Array.Empty<string>(), x => x.Equals(language, StringComparison.InvariantCultureIgnoreCase)) && comment.Suffix is { })
                         return comment.Suffix;
                 }
             }
