@@ -13,7 +13,7 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class TextContainer
     {
-        public List<int> LineEnds;
+        public List<int> LineEnds { get; private set; } = new List<int>();
 
         /// <summary>
         ///     Creates new instance
@@ -36,7 +36,7 @@ namespace Microsoft.DevSkim
             {
                 if (++pos < FullContent.Length)
                 {
-                    pos = FullContent.IndexOf("\n", pos, StringComparison.InvariantCultureIgnoreCase);
+                    pos = FullContent.IndexOf('\n', pos);
                     LineEnds.Add(pos);
                     if (pos > 0 && pos + 1 < FullContent.Length)
                     {
@@ -152,9 +152,11 @@ namespace Microsoft.DevSkim
                         result.Line = i;
                         result.Column = index - LineEnds[i - 1];
 
-                        break;
+                        return result;
                     }
                 }
+                result.Line = LineEnds.Count - 1;
+                result.Column = index - LineEnds[LineEnds.Count - 2];
             }
             return result;
         }
