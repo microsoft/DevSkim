@@ -24,8 +24,8 @@ jobs:
     - name: Build
       run: dotnet publish DevSkim-DotNet/Microsoft.DevSkim.Blazor --configuration Release --no-restore 
     - name: GitHub Pages action
-      uses: peaceiris/actions-gh-pages@v3.6.4
+      uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
-        publish_dir: DevSkim-DotNet/Microsoft.DevSkim.Blazor/bin/Release/netstandard2.1/publish/wwwroot
+        publish_dir: DevSkim-DotNet/Microsoft.DevSkim.Blazor/bin/Release/net5.0/publish/wwwroot
