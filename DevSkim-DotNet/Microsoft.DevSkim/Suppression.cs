@@ -108,7 +108,7 @@ namespace Microsoft.DevSkim
         protected int _suppressLength { get; set; } = -1;
         protected int _suppressStart { get; set; } = -1;
         protected TextContainer? _text { get; set; }
-        protected Regex reg { get; set; } = new Regex(pattern);
+        protected Regex reg { get; set; } = new Regex(pattern, RegexOptions.IgnoreCase);
 
         protected void ParseLine()
         {
