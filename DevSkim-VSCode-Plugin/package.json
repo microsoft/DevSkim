@@ -253,7 +253,7 @@
     "ts-loader": "^6.2.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7",
-    "vsce": "^1.80.0",
+    "vsce": "^1.88.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   }
