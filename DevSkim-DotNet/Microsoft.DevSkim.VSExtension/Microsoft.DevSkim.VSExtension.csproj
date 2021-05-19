@@ -261,7 +261,7 @@
       <Version>2.7.74</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
+      <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="StreamJsonRpc">
       <Version>2.7.76</Version>
