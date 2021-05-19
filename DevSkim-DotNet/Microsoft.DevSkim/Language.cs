@@ -139,14 +139,14 @@ namespace Microsoft.DevSkim
             Stream? resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.comments.json");
             using (StreamReader file = new StreamReader(resource ?? new MemoryStream()))
             {
-                Comments = JsonConvert.DeserializeObject<List<Comment>>(file.ReadToEnd());
+                Comments = JsonConvert.DeserializeObject<List<Comment>>(file.ReadToEnd()) ?? new List<Comment>();
             }
 
             // Load languages
             resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.languages.json");
             using (StreamReader file = new StreamReader(resource ?? new MemoryStream()))
             {
-                Languages = JsonConvert.DeserializeObject<List<LanguageInfo>>(file.ReadToEnd());
+                Languages = JsonConvert.DeserializeObject<List<LanguageInfo>>(file.ReadToEnd()) ?? new List<LanguageInfo>();
             }
         }
 
