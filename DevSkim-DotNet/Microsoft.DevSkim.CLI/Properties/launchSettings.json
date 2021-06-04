@@ -2,7 +2,7 @@
   "profiles": {
     "Microsoft.DevSkim.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "analyze . -f sarif -d"
+      "commandLineArgs": "analyze -f sarif -d C:\\Users\\gstocco\\Documents\\GitHub\\DevSkim\\DevSkim-DotNet\\Microsoft.DevSkim.CLI\\Test.json"
     }
   }
 }

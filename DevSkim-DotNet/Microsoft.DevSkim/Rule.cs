@@ -16,6 +16,9 @@ namespace Microsoft.DevSkim
 
         [JsonProperty(PropertyName = "applies_to")]
         public string[]? AppliesTo { get; set; }
+        
+        [JsonProperty(PropertyName = "does_not_apply_to")]
+        public string[]? DoesNotApplyTo { get; set; }
 
         [JsonProperty(PropertyName = "conditions")]
         public SearchCondition[]? Conditions { get; set; }

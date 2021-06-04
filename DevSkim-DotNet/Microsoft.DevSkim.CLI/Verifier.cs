@@ -117,6 +117,18 @@ namespace Microsoft.DevSkim.CLI
                         }
                     }
                 }
+                if (rule.DoesNotApplyTo != null)
+                {
+                    foreach(string lang in rule.DoesNotApplyTo){
+                        if (!languages.Contains(lang)){
+                            _messages.Add(new ErrorMessage(Message: string.Format("Unknown language '{0}'", lang),
+                                RuleID: rule.Id ?? string.Empty,
+                                Path: "does_not_apply_to",
+                                File: rule.Source,
+                                Warning: true));
+                        }
+                    }
+                }
             }
         }
 

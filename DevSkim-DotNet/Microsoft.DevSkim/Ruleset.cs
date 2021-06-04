@@ -160,7 +160,13 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            return _oatRules.Where(x => x.DevSkimRule.AppliesTo is null || x.DevSkimRule.AppliesTo.Length == 0 || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y))));
+            return _oatRules.Where(x => 
+                (
+                    x.DevSkimRule.AppliesTo is null
+                    || x.DevSkimRule.AppliesTo.Length == 0
+                    || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y)))
+                ) 
+                && !(x.DevSkimRule.DoesNotApplyTo?.Any(x => languages.Contains(x)) ?? false));
         }
 
         /// <summary>

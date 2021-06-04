@@ -4,7 +4,9 @@
         "id": "DS440001",
         "description": "Generic: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -35,7 +37,9 @@
         "overrides": [
             "DS440000"
         ],
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -102,7 +106,9 @@
         "overrides": [
             "DS440000"
         ],
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -129,7 +135,9 @@
         "overrides": [
             "DS440000"
         ],
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -156,7 +164,9 @@
         "overrides": [
             "DS440000"
         ],
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -183,7 +193,9 @@
         "overrides": [
             "DS440000"
         ],
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -218,7 +230,9 @@
         "overrides": [
             "DS440000"
         ],        
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
@@ -298,7 +312,9 @@
         "id": "DS440100",
         "description": "Generic: Hard-coded Elliptic Curve",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Elliptic-Curve.Hard-Coded"
