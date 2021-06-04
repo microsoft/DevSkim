@@ -12,17 +12,18 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+
     - name: Pack Rules
       run: dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
 
-    - name: Install dependencies
-      run: dotnet restore DevSkim-DotNet/Microsoft.DevSkim.Blazor
     - name: Build
-      run: dotnet publish DevSkim-DotNet/Microsoft.DevSkim.Blazor --configuration Release --no-restore 
+      run: dotnet publish DevSkim-DotNet/Microsoft.DevSkim.Blazor --configuration Release --self-contained -r browser-wasm 
+
     - name: GitHub Pages action
       uses: peaceiris/actions-gh-pages@v3
       with:
