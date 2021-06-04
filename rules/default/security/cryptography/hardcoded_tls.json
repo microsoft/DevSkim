@@ -4,7 +4,9 @@
         "id": "DS440000",
         "description": "SSL/TLS version usage should be based on an OS or external configuration.",
         "recommendation": "",
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
@@ -29,7 +31,9 @@
         "id": "DS440010",
         "description": "SSL/TLS version usage should be based on an OS or external configuration.",
         "recommendation": "",
-        "applies_to": [
+        "does_not_apply_to": [
+            "json",
+            "yaml"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"

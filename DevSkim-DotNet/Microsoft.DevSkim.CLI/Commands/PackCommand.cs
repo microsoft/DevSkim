@@ -49,7 +49,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             List<Rule> list = new List<Rule>(verifier.CompiledRuleset.AsEnumerable().Select(x => x.DevSkimRule));
 
-            JsonSerializerSettings settings = new JsonSerializerSettings();
+            JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore };
             settings.Formatting = (_indent) ? Formatting.Indented : Formatting.None;
             settings.Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {

@@ -134,5 +134,9 @@
   {
     "name": "cobol",
     "extensions": [ ".cbl", ".cob", ".cpy" ]
+  },
+  {
+    "name": "json",
+    "extensions": [ ".json" ]
   }
 ]
