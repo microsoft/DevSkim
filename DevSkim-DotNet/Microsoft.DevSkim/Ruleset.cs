@@ -215,7 +215,7 @@ namespace Microsoft.DevSkim
             }
             if (clauses.Any())
             {
-                expression.Append(")");
+                expression.Append(')');
             }
             else
             {

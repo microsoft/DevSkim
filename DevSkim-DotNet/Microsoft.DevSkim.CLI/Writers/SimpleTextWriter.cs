@@ -51,7 +51,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             output = output.Replace("%S", issue.Issue.Rule.Severity.ToString());
             output = output.Replace("%D", issue.Issue.Rule.Description);
             output = output.Replace("%m", issue.TextSample);
-            output = output.Replace("%T", string.Join(",", issue.Issue.Rule.Tags ?? Array.Empty<string>()));
+            output = output.Replace("%T", string.Join(",", issue.Issue.Rule.Tags));
 
             TextWriter.WriteLine(output);
         }

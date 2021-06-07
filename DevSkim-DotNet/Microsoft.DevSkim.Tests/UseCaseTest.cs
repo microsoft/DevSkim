@@ -265,7 +265,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(2, issues[0].Boundary.Index, "QUICKFIX invalid index");
             Assert.AreEqual(8, issues[0].Boundary.Length, "QUICKFIX invalid length ");
             Assert.AreEqual("DS276209", issues[0].Rule.Id, "QUICKFIX invalid rule");
-            Assert.AreEqual(0, issues[0].Rule.Fixes.Length, "QUICKFIX invalid Fixes");
+            Assert.AreEqual(0, issues[0].Rule.Fixes.Count, "QUICKFIX invalid Fixes");
             Assert.AreEqual("my rules", issues[0].Rule.RuntimeTag, "QUICKFIX invalid tag");
         }
 
@@ -289,7 +289,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual("DS185832", issues[0].Rule.Id, "strcpy invalid rule");
 
             // Fix it test
-            Assert.AreNotEqual(issues[0].Rule.Fixes.Length, 0, "strcpy invalid Fixes");
+            Assert.AreNotEqual(issues[0].Rule.Fixes.Count, 0, "strcpy invalid Fixes");
             CodeFix fix = issues[0].Rule.Fixes[0];
             string fixedCode = RuleProcessor.Fix(testString, fix);
             Assert.AreEqual("strcpy_s(dest, <size of dest>, src);", fixedCode, "strcpy invalid code fix");
