@@ -302,7 +302,7 @@ namespace Microsoft.DevSkim.Tests
             bool error = false;
 
             RuleSet rules = new RuleSet();
-            rules.OnDeserializationError += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+            rules.OnDeserializationErrorEventHandler += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
             {
                 error = true;
                 args.ErrorContext.Handled = true;

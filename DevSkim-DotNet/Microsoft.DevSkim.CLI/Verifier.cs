@@ -148,7 +148,7 @@ namespace Microsoft.DevSkim.CLI
         {
             RuleSet rules = new RuleSet();
             bool noProblem = true;
-            rules.OnDeserializationError += delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+            rules.OnDeserializationErrorEventHandler += delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
                 ErrorMessage message = new ErrorMessage(File: file,
                     Message: e.ErrorContext.Error.Message,

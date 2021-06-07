@@ -36,7 +36,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         ///     Event raised if deserialization error is encoutered while loading JSON rules
         /// </summary>
-        public event DeserializationError? OnDeserializationError;
+        public event DeserializationError? OnDeserializationErrorEventHandler;
 
         /// <summary>
         ///     Parse a directory with rule files and loads the rules
@@ -349,7 +349,7 @@ namespace Microsoft.DevSkim
         /// <param name="errorArgs"> Error arguments </param>
         private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
         {
-            OnDeserializationError?.Invoke(sender, errorArgs);
+            OnDeserializationErrorEventHandler?.Invoke(sender, errorArgs);
         }
 
         /// <summary>
