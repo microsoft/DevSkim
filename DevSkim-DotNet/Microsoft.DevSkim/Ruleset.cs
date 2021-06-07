@@ -48,7 +48,6 @@ namespace Microsoft.DevSkim
         {
             RuleSet result = new RuleSet();
             result.AddDirectory(path, tag);
-
             return result;
         }
 
