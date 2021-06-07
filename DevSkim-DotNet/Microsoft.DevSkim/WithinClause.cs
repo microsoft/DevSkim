@@ -1,6 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.CST.OAT;
+using System;
 
 namespace Microsoft.DevSkim
 {
@@ -15,6 +16,6 @@ namespace Microsoft.DevSkim
         public int Before { get; set; }
         public bool FindingOnly { get; set; }
         public bool SameLineOnly { get; internal set; }
-        public PatternScope[] Scopes { get; }
+        public PatternScope[] Scopes { get; } = Array.Empty<PatternScope>();
     }
 }

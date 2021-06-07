@@ -162,11 +162,10 @@ namespace Microsoft.DevSkim
         {
             return _oatRules.Where(x => 
                 (
-                    x.DevSkimRule.AppliesTo is null
-                    || x.DevSkimRule.AppliesTo.Length == 0
-                    || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y)))
+                    x.DevSkimRule.AppliesTo.Count == 0
+                    && x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))
                 ) 
-                && !(x.DevSkimRule.DoesNotApplyTo?.Any(x => languages.Contains(x)) ?? false));
+                && !(x.DevSkimRule.DoesNotApplyTo.Count > 0 && x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x))));
         }
 
         /// <summary>
@@ -184,7 +183,7 @@ namespace Microsoft.DevSkim
             var clauses = new List<Clause>();
             int clauseNumber = 0;
             var expression = new StringBuilder("(");
-            foreach (var pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
+            foreach (var pattern in rule.Patterns)
             {
                 if (pattern.Pattern != null)
                 {
@@ -222,7 +221,7 @@ namespace Microsoft.DevSkim
             {
                 return new ConvertedOatRule(rule.Id, rule);
             }
-            foreach (var condition in rule.Conditions ?? Array.Empty<SearchCondition>())
+            foreach (var condition in rule.Conditions)
             {
                 if (condition.Pattern?.Pattern != null)
                 {
@@ -322,16 +321,10 @@ namespace Microsoft.DevSkim
                     r.Source = sourcename;
                     r.RuntimeTag = tag;
 
-                    if (r.Patterns == null)
-                        r.Patterns = Array.Empty<SearchPattern>();
-
                     foreach (SearchPattern pattern in r.Patterns)
                     {
                         SanitizePatternRegex(pattern);
                     }
-
-                    if (r.Conditions == null)
-                        r.Conditions = Array.Empty<SearchCondition>();
 
                     foreach (SearchCondition condition in r.Conditions)
                     {
