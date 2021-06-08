@@ -192,7 +192,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             resultItem.RuleId = rule.Id;
             resultItem.Message = new Message() { Text = rule.Name };
-            foreach (string tag in rule.Tags ?? Array.Empty<string>())
+            foreach (string tag in rule.Tags)
             {
                 resultItem.Tags.Add(tag);
             }

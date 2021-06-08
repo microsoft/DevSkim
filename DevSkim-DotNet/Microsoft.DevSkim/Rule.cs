@@ -1,6 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Microsoft.DevSkim
 {
@@ -15,13 +16,13 @@ namespace Microsoft.DevSkim
         }
 
         [JsonProperty(PropertyName = "applies_to")]
-        public string[]? AppliesTo { get; set; }
+        public List<string> AppliesTo { get; set; } = new List<string>();
         
         [JsonProperty(PropertyName = "does_not_apply_to")]
-        public string[]? DoesNotApplyTo { get; set; }
+        public List<string> DoesNotApplyTo { get; set; } = new List<string>();
 
         [JsonProperty(PropertyName = "conditions")]
-        public SearchCondition[]? Conditions { get; set; }
+        public List<SearchCondition> Conditions { get; set; } = new List<SearchCondition>();
 
         [JsonProperty(PropertyName = "confidence")]
         public Confidence Confidence { get; set; }
@@ -36,7 +37,7 @@ namespace Microsoft.DevSkim
         public bool Disabled { get; set; }
 
         [JsonProperty(PropertyName = "fix_its")]
-        public CodeFix[]? Fixes { get; set; }
+        public List<CodeFix> Fixes { get; set; } = new List<CodeFix>();
 
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
@@ -45,10 +46,10 @@ namespace Microsoft.DevSkim
         public string? Name { get; set; }
 
         [JsonProperty(PropertyName = "overrides")]
-        public string[]? Overrides { get; set; }
+        public List<string> Overrides { get; set; } = new List<string>();
 
         [JsonProperty(PropertyName = "patterns")]
-        public SearchPattern[]? Patterns { get; set; }
+        public List<SearchPattern> Patterns { get; set; } = new List<SearchPattern>();
 
         [JsonProperty(PropertyName = "recommendation")]
         public string? Recommendation { get; set; }
@@ -76,6 +77,6 @@ namespace Microsoft.DevSkim
         public string? Source { get; set; }
 
         [JsonProperty(PropertyName = "tags")]
-        public string[]? Tags { get; set; }
+        public List<string> Tags { get; set; } = new List<string>();
     }
 }

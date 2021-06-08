@@ -174,6 +174,10 @@ namespace Microsoft.DevSkim
             {
                 return true;
             }
+            if (boundary is null)
+            {
+                return false;
+            }
             if (patterns.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
                 return true;
             bool isInComment = IsBetween(FullContent, boundary.Index, prefix, suffix, inline);

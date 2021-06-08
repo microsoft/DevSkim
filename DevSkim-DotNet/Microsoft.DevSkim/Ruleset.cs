@@ -36,7 +36,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         ///     Event raised if deserialization error is encoutered while loading JSON rules
         /// </summary>
-        public event DeserializationError? OnDeserializationError;
+        public event DeserializationError? OnDeserializationErrorEventHandler;
 
         /// <summary>
         ///     Parse a directory with rule files and loads the rules
@@ -48,7 +48,6 @@ namespace Microsoft.DevSkim
         {
             RuleSet result = new RuleSet();
             result.AddDirectory(path, tag);
-
             return result;
         }
 
@@ -160,13 +159,9 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            return _oatRules.Where(x => 
-                (
-                    x.DevSkimRule.AppliesTo is null
-                    || x.DevSkimRule.AppliesTo.Length == 0
-                    || (x.DevSkimRule.AppliesTo is string[] appliesList && appliesList.Any(y => languages.Contains(y)))
-                ) 
-                && !(x.DevSkimRule.DoesNotApplyTo?.Any(x => languages.Contains(x)) ?? false));
+            var rulesOut = _oatRules.Where(x => x != null && (x.DevSkimRule.AppliesTo.Count == 0 || x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))));
+            rulesOut = rulesOut.Where(x => x != null && !x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x)));
+            return rulesOut;
         }
 
         /// <summary>
@@ -184,7 +179,7 @@ namespace Microsoft.DevSkim
             var clauses = new List<Clause>();
             int clauseNumber = 0;
             var expression = new StringBuilder("(");
-            foreach (var pattern in rule.Patterns ?? Array.Empty<SearchPattern>())
+            foreach (var pattern in rule.Patterns)
             {
                 if (pattern.Pattern != null)
                 {
@@ -216,13 +211,13 @@ namespace Microsoft.DevSkim
             }
             if (clauses.Any())
             {
-                expression.Append(")");
+                expression.Append(')');
             }
             else
             {
                 return new ConvertedOatRule(rule.Id, rule);
             }
-            foreach (var condition in rule.Conditions ?? Array.Empty<SearchCondition>())
+            foreach (var condition in rule.Conditions)
             {
                 if (condition.Pattern?.Pattern != null)
                 {
@@ -311,7 +306,9 @@ namespace Microsoft.DevSkim
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
-                Error = HandleDeserializationError
+                Error = HandleDeserializationError,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
             };
 
             List<Rule>? ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring, settings);
@@ -322,16 +319,10 @@ namespace Microsoft.DevSkim
                     r.Source = sourcename;
                     r.RuntimeTag = tag;
 
-                    if (r.Patterns == null)
-                        r.Patterns = Array.Empty<SearchPattern>();
-
                     foreach (SearchPattern pattern in r.Patterns)
                     {
                         SanitizePatternRegex(pattern);
                     }
-
-                    if (r.Conditions == null)
-                        r.Conditions = Array.Empty<SearchCondition>();
 
                     foreach (SearchCondition condition in r.Conditions)
                     {
@@ -356,7 +347,7 @@ namespace Microsoft.DevSkim
         /// <param name="errorArgs"> Error arguments </param>
         private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
         {
-            OnDeserializationError?.Invoke(sender, errorArgs);
+            OnDeserializationErrorEventHandler?.Invoke(sender, errorArgs);
         }
 
         /// <summary>

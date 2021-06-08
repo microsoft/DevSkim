@@ -4,7 +4,7 @@ namespace Microsoft.DevSkim
 {
     public class Location
     {
-        public int Column { get; set; } = 0;
-        public int Line { get; set; } = 0;
+        public int Column { get; set; }
+        public int Line { get; set; }
     }
 }

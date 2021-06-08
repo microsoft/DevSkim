@@ -180,7 +180,7 @@ namespace Microsoft.DevSkim
             List<Issue> removes = new List<Issue>();
             foreach (Issue m in resultsList)
             {
-                if (m.Rule.Overrides != null && m.Rule.Overrides.Length > 0)
+                if (m.Rule.Overrides.Count > 0)
                 {
                     foreach (string ovrd in m.Rule.Overrides)
                     {
@@ -236,7 +236,7 @@ namespace Microsoft.DevSkim
             IEnumerable<ConvertedOatRule> filteredRules = _ruleset.ByLanguages(languages);
 
             // Add the list to the cache so we save time on the next call
-            if (EnableCache && filteredRules.Any())
+            if (EnableCache)
             {
                 _rulesCache.TryAdd(langid, filteredRules);
             }

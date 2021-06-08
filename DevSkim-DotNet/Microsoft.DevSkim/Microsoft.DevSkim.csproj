@@ -19,12 +19,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CST.OAT" Version="1.0.84" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.CST.OAT" Version="1.0.88" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,7 +44,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.4.194" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.4.205" />
   </ItemGroup>
   
 </Project>

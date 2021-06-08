@@ -15,6 +15,22 @@ namespace Microsoft.DevSkim.Tests
     public class RuleProcessorTest
     {
         [TestMethod]
+        public void BasicPass()
+        {
+            var rules = RuleSet.FromFile(Path.Combine("rules", "valid", "devskim-rules.json"));
+            RuleProcessor processor = new RuleProcessor(rules);
+            string testString = " sprintf(";
+
+            // Normal functionality test
+            Issue[] issues = processor.Analyze(testString, "c");
+            Assert.AreEqual(1, issues.Length);
+
+            // Non existent langugage
+            issues = processor.Analyze(testString, "");
+            Assert.AreEqual(0, issues.Length, "Match.Success should be false, when no language is passed");
+        }
+        
+        [TestMethod]
         public void IsMatch_FalseTest()
         {
             RuleSet ruleset = RuleSet.FromDirectory(Path.Combine("rules", "valid"), null);

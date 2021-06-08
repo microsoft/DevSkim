@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace Microsoft.DevSkim.VSExtension
@@ -62,7 +63,7 @@ namespace Microsoft.DevSkim.VSExtension
 
                 _provider.AddSkimChecker(this);
 
-                this.KickUpdate();
+                KickUpdate();
             }
         }
 
@@ -181,7 +182,7 @@ namespace Microsoft.DevSkim.VSExtension
             {
                 _isUpdating = true;
                 // TODO: Improve this
-                _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
+               _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
             }
         }
 
@@ -226,7 +227,7 @@ namespace Microsoft.DevSkim.VSExtension
             // Start processing the dirty spans (which no-ops if we're already doing it).
             if (_dirtySpans.Count != 0)
             {
-                this.KickUpdate();
+                KickUpdate();
             }
         }
 

@@ -314,7 +314,7 @@ export class DevSkimWorker
             //if the rule doesn't apply to whatever language we are analyzing (C++, Java, etc.) or we aren't processing
             //that particular severity skip the rest
             if (this.dswSettings.getSettings().ignoreRulesList.indexOf(rule.id) == -1 &&  /*check to see if this is a rule the user asked to ignore */
-                DevSkimWorker.appliesToLangOrFile(langID, rule.applies_to, documentURI) &&
+                DevSkimWorker.appliesToLangOrFile(langID, rule.applies_to, rule.does_not_apply_to, documentURI) &&
                 this.RuleSeverityEnabled(ruleSeverity)) 
             {
                 for (let patternIndex = 0; patternIndex < rule.patterns.length; patternIndex++) 
@@ -676,8 +676,9 @@ export class DevSkimWorker
      * @param {string} documentURI the current document URI
      * @returns {boolean} true if it applies, false if it doesn't
      */
-    public static appliesToLangOrFile(languageID: string, applies_to: string[], documentURI: string): boolean
+    public static appliesToLangOrFile(languageID: string, applies_to: string[], does_not_apply_to: string[], documentURI: string): boolean
     {
+        var pass = false;
         //if the parameters are empty, assume it applies.  Also, apply all the rules to plaintext documents	
         if (applies_to != undefined && applies_to && applies_to.length > 0) 
         {
@@ -686,20 +687,45 @@ export class DevSkimWorker
                 //if the list of languages this rule applies to matches the current lang ID
                 if (languageID !== undefined && languageID != null && languageID.toLowerCase() == applies.toLowerCase()) 
                 {
-                    return true;
+                    pass = true;
                 }
                 else if (applies.indexOf(".") != -1 /*applies to is probably a specific file name instead of a langID*/
                     && documentURI.toLowerCase().indexOf(applies.toLowerCase()) != -1) /*and its in the current doc URI*/
                 {
-                    return true;
+                    pass = true;
                 }
-            }
-            return false;
+                if (pass){
+                    break;
+                }
+            }   
         }
         else 
         {
-            return true;
+            pass = true;
         }
+        if (pass = true)
+        {
+            if (does_not_apply_to != undefined && does_not_apply_to && does_not_apply_to.length > 0) 
+            {
+                for (let does_not_apply of does_not_apply_to) 
+                {
+                    //if the list of languages this rule applies to matches the current lang ID
+                    if (languageID !== undefined && languageID != null && languageID.toLowerCase() == does_not_apply.toLowerCase()) 
+                    {
+                        pass = false;
+                    }
+                    else if (does_not_apply.indexOf(".") != -1 /*applies to is probably a specific file name instead of a langID*/
+                        && documentURI.toLowerCase().indexOf(does_not_apply.toLowerCase()) != -1) /*and its in the current doc URI*/
+                    {
+                        pass = false;
+                    }
+                    if (!pass){
+                        break;
+                    }
+                }   
+            }
+        }
+        return pass;
     }
 
 }

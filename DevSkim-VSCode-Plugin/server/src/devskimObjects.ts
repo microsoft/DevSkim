@@ -330,6 +330,7 @@ export interface Rule
 	active: boolean;
 	tags: string[];
 	applies_to?: string[];
+	does_not_apply_to?: string[];
 	severity: string;
 	description: string;
 	recommendation: string;
