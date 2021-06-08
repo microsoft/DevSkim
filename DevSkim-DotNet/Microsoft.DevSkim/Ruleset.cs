@@ -159,12 +159,9 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            return _oatRules.Where(x => 
-                (
-                    x.DevSkimRule.AppliesTo.Count == 0
-                    || x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))
-                ) 
-                && !(x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x))));
+            var rulesOut = _oatRules.Where(x => x != null && (x.DevSkimRule.AppliesTo.Count == 0 || x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))));
+            rulesOut = rulesOut.Where(x => x != null && !x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x)));
+            return rulesOut;
         }
 
         /// <summary>
@@ -309,7 +306,9 @@ namespace Microsoft.DevSkim
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
-                Error = HandleDeserializationError
+                Error = HandleDeserializationError,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
             };
 
             List<Rule>? ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring, settings);
