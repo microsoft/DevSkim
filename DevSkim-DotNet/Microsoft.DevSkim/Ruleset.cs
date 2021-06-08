@@ -162,9 +162,9 @@ namespace Microsoft.DevSkim
             return _oatRules.Where(x => 
                 (
                     x.DevSkimRule.AppliesTo.Count == 0
-                    && x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))
+                    || x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))
                 ) 
-                && !(x.DevSkimRule.DoesNotApplyTo.Count > 0 && x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x))));
+                && !(x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x))));
         }
 
         /// <summary>

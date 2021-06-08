@@ -236,7 +236,7 @@ namespace Microsoft.DevSkim
             IEnumerable<ConvertedOatRule> filteredRules = _ruleset.ByLanguages(languages);
 
             // Add the list to the cache so we save time on the next call
-            if (EnableCache && filteredRules.Any())
+            if (EnableCache)
             {
                 _rulesCache.TryAdd(langid, filteredRules);
             }
