@@ -1,5 +1,6 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using GlobExpressions;
 using Microsoft.CST.RecursiveExtractor;
 using Microsoft.DevSkim.CLI.Writers;
 using Microsoft.Extensions.CommandLineUtils;
@@ -20,27 +21,29 @@ namespace Microsoft.DevSkim.CLI.Commands
                               string output,
                               string outputFileFormat,
                               string outputTextFormat,
-                              List<string> severities,
-                              List<string> rules,
+                              string severities,
+                              string rules,
                               bool ignoreDefault,
                               bool suppressError,
                               bool disableSuppression,
                               bool crawlArchives,
                               bool disableParallel,
-                              bool exitCodeIsNumIssues)
+                              bool exitCodeIsNumIssues,
+                              string globOptions)
         {
             _path = path;
             _outputFile = output;
             _fileFormat = outputFileFormat;
             _outputFormat = outputTextFormat;
-            _severities = severities.ToArray();
-            _rulespath = rules.ToArray();
+            _severities = severities?.Split(',') ?? Array.Empty<string>();
+            _rulespath = rules?.Split(',') ?? Array.Empty<string>();
             _ignoreDefaultRules = ignoreDefault;
             _suppressError = suppressError;
             _disableSuppression = disableSuppression;
             _crawlArchives = crawlArchives;
             _disableParallel = disableParallel;
             _exitCodeIsNumIssues = exitCodeIsNumIssues;
+            _globs = globOptions.Split(',').Select(x => new Glob(x));
         }
 
         public static void Configure(CommandLineApplication command)
@@ -64,7 +67,11 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             var severityOption = command.Option("-s|--severity",
                                                 "Severity: [critical,important,moderate,practice,manual]",
-                                                CommandOptionType.MultipleValue);
+                                                CommandOptionType.SingleValue);
+
+            var globOptions = command.Option("-g|--ignore-globs",
+                                    "**/.git/**,**/bin/**",
+                                    CommandOptionType.SingleValue);
 
             var disableSuppressionOption = command.Option("-d|--disable-suppression",
                                                    "Disable suppression of findings with ignore comments",
@@ -75,8 +82,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                        CommandOptionType.NoValue);
 
             var rulesOption = command.Option("-r|--rules",
-                                             "Rules to use",
-                                             CommandOptionType.MultipleValue);
+                                             "Rules to use. Comma delimited.",
+                                             CommandOptionType.SingleValue);
 
             var ignoreOption = command.Option("-i|--ignore-default-rules",
                                               "Ignore rules bundled with DevSkim",
@@ -104,14 +111,15 @@ namespace Microsoft.DevSkim.CLI.Commands
                                  outputArgument.Value,
                                  outputFileFormat.Value(),
                                  outputTextFormat.Value(),
-                                 severityOption.Values,
-                                 rulesOption.Values,
+                                 severityOption.Value(),
+                                 rulesOption.Value(),
                                  ignoreOption.HasValue(),
                                  errorOption.HasValue(),
                                  disableSuppressionOption.HasValue(),
                                  crawlArchives.HasValue(),
                                  disableParallel.HasValue(),
-                                 exitCodeIsNumIssues.HasValue())).Run();
+                                 exitCodeIsNumIssues.HasValue(),
+                                 globOptions.Value())).Run();
             });
         }
 
@@ -138,7 +146,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false }) : FilenameToFileEntryArray(x));
+                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !_globs.Any(y => y.IsMatch(x))).SelectMany(x => _crawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = _globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
             }
             return RunFileEntries(fileListing);
         }
@@ -303,7 +311,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             try
             {
-                var fs = new FileStream(x, FileMode.Open, FileAccess.ReadWrite);
+                var fs = new FileStream(x, FileMode.Open, FileAccess.Read);
                 return new FileEntry[] { new FileEntry(x, fs, null, true) };
             }
             catch (Exception) { }
@@ -315,6 +323,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public bool _exitCodeIsNumIssues { get; }
 
+        private IEnumerable<Glob> _globs;
         private bool _disableSuppression;
 
         private string _fileFormat;
