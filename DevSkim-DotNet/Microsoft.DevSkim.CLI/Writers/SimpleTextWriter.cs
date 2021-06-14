@@ -21,6 +21,7 @@ namespace Microsoft.DevSkim.CLI.Writers
     /// </summary>
     public class SimpleTextWriter : Writer
     {
+        private bool anyIssues = false;
         public SimpleTextWriter(string formatString, TextWriter writer)
         {
             if (string.IsNullOrEmpty(formatString))
@@ -28,17 +29,20 @@ namespace Microsoft.DevSkim.CLI.Writers
             else
                 _formatString = formatString;
 
-            this.TextWriter = writer;
+            TextWriter = writer;
         }
 
         public override void FlushAndClose()
         {
+            if (anyIssues)
+                TextWriter.WriteLine("For guidance on reported issues visit the relevant page here: https://github.com/microsoft/DevSkim/tree/main/guidance.");
             TextWriter.Flush();
             TextWriter.Close();
         }
 
         public override void WriteIssue(IssueRecord issue)
         {
+            anyIssues = true;
             string output = _formatString.Replace("%F", issue.Filename);
             output = output.Replace("%L", issue.Issue.StartLocation.Line.ToString());
             output = output.Replace("%C", issue.Issue.StartLocation.Column.ToString());
