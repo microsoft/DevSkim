@@ -146,9 +146,8 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).SelectMany(x => _crawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false }) : FilenameToFileEntryArray(x));
+                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !_globs.Any(y => y.IsMatch(x))).SelectMany(x => _crawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = _globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
             }
-            fileListing = fileListing.Where(x => !_globs.Any(y => y.IsMatch(x.FullPath)));
             return RunFileEntries(fileListing);
         }
 
