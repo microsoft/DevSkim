@@ -93,7 +93,7 @@
   },
   {
     "name": "yaml",
-    "extensions": [ ".yaml" ]
+    "extensions": [ ".yaml", ".yml" ]
   },
   {
     "name": "fsharp",
