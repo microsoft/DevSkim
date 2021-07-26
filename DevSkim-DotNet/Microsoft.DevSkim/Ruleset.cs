@@ -359,7 +359,7 @@ namespace Microsoft.DevSkim
             if (pattern.PatternType == PatternType.RegexWord)
             {
                 pattern.PatternType = PatternType.Regex;
-                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b{0}\b", pattern.Pattern ?? string.Empty);
+                pattern.Pattern = string.Format(CultureInfo.InvariantCulture, @"\b({0})\b", pattern.Pattern ?? string.Empty);
             }
             else if (pattern.PatternType == PatternType.String)
             {
