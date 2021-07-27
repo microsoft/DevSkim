@@ -62,6 +62,11 @@
     "onLanguage:plaintext",
     "onLanguage:python"
   ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
   "main": "./client/dist/extension.js",
   "contributes": {
     "commands": [
