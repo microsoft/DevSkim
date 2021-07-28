@@ -43,7 +43,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _crawlArchives = crawlArchives;
             _disableParallel = disableParallel;
             _exitCodeIsNumIssues = exitCodeIsNumIssues;
-            _globs = globOptions.Split(',').Select(x => new Glob(x));
+            _globs = globOptions?.Split(',').Select(x => new Glob(x)) ?? Array.Empty<Glob>();
         }
 
         public static void Configure(CommandLineApplication command)
