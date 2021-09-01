@@ -80,6 +80,10 @@ namespace Microsoft.DevSkim.CLI.Writers
                 Address = new Address() { FullyQualifiedName = Path.GetFullPath(issue.Filename) },
                 Region = new Region()
                 {
+                    StartColumn = issue.Issue.StartLocation.Column,
+                    StartLine = issue.Issue.StartLocation.Line,
+                    EndColumn = issue.Issue.EndLocation.Column,
+                    EndLine = issue.Issue.EndLocation.Line,
                     CharOffset = issue.Issue.Boundary.Index,
                     CharLength = issue.Issue.Boundary.Length,
                     Snippet = new ArtifactContent()
