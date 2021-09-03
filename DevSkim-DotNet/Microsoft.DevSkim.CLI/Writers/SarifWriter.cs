@@ -99,12 +99,14 @@ namespace Microsoft.DevSkim.CLI.Writers
                 resultItem.Fixes = GetFixits(issue);
 
             resultItem.Level = DevSkimLevelToSarifLevel(issue.Issue.Rule.Severity);
-            resultItem.Locations = new List<CodeAnalysis.Sarif.Location>();
-            resultItem.Locations.Add(loc);
+            resultItem.Locations = new List<CodeAnalysis.Sarif.Location>
+            {
+                loc
+            };
             _results.Push(resultItem);
         }
 
-        FailureLevel DevSkimLevelToSarifLevel(Severity severity) => severity switch
+        static FailureLevel DevSkimLevelToSarifLevel(Severity severity) => severity switch
         {
             var s when s.HasFlag(Severity.Critical) => FailureLevel.Error,
             var s when s.HasFlag(Severity.Important) => FailureLevel.Warning,
