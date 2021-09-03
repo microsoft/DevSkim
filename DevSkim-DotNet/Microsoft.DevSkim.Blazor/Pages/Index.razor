@@ -132,7 +132,7 @@
 
             // Blazor WASM doesn't support parallelization
             // https://github.com/dotnet/aspnetcore/issues/14253
-            var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: new List<string>() { "manual", "critical", "important", "moderate" }, rules: new List<string>(),
+            var cmd = new AnalyzeCommand(".", ".", "sarif", "", severities: "manual,critical,important,moderate", rules: "",
                 ignoreDefault: false, suppressError: true, disableSuppression: true, crawlArchives: true, disableParallel: true, exitCodeIsNumIssues: false, globOptions: string.Empty);
             var filename = Path.GetTempFileName();
             using var ms = new FileStream(filename, FileMode.Open);
