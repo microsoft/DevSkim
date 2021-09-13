@@ -103,6 +103,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             {
                 loc
             };
+            resultItem.SetProperty<Severity>("DevSkimSeverity", issue.Issue.Rule.Severity);
             _results.Push(resultItem);
         }
 

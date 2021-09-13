@@ -12,7 +12,7 @@ for the developer.
 ### Features
 
 * Built-in rules, and support for writing custom rules
-* Cross-platform CLI built on .NET Core 3.1 for file analysis
+* Cross-platform CLI built on .NET 5.0 for file analysis
 * IDE plugins for Visual Studio and Visual Studio Code
 * IntelliSense error "squiggly lines" for identified security issues
 * Information and guidance provided for identified security issues
@@ -71,7 +71,7 @@ Download the platform specific binary archive for your system (Windows, Mac OS, 
 
 ### .NET Core Global Tool
 
-If you already have .NET Core 3.1 installed, you can install the DevSkim CLI dotnet global tool by running the following from a command line:
+If you already have .NET Core 5.0 installed, you can install the DevSkim CLI dotnet global tool by running the following from a command line:
 
 `dotnet tool install --global Microsoft.CST.DevSkim.CLI`
 
@@ -79,7 +79,7 @@ This will add DevSkim to your PATH. You can then invoke the `devskim` command fr
 
 ### .NET Core Runtime Dependent App
 
-First download and install the [.NET Core 3.1 runtime](https://dotnet.microsoft.com/).
+First download and install the [.NET Core 5.0 runtime](https://dotnet.microsoft.com/).
 Then download the DevSkim netcoreapp archive from the [releases page](https://github.com/microsoft/DevSkim/releases). Extract the archive, navigate to the DevSkim folder from a command line, and invoke `dotnet devskim.dll`.
 
 ## Build from Source
