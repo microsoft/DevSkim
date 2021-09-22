@@ -7,14 +7,18 @@ import * as path from 'path';
 
 import * as vscode from 'vscode';
 import {
-	LanguageClient,
 	LanguageClientOptions,
 	RequestType,
-	ServerOptions,
 	TextDocumentIdentifier,
 	TextEdit,
+} from 'vscode-languageclient/node';
+
+import {
+	LanguageClient,
+	ServerOptions,
 	TransportKind,
-} from 'vscode-languageclient';
+} from 'vscode-languageclient/node';
+
 import {DevSkimSettings, DevSkimSettingsObject} from "./devskim.settings";
 import {getDocumentSelectors} from "./document-selectors";
 
@@ -25,12 +29,12 @@ interface ValidateDocsParams {
 }
 
 export class ValidateDocsRequest {
-	public static type: RequestType<ValidateDocsParams,void,void,void>
-		= new RequestType<ValidateDocsParams, void, void, void>('textDocument/devskim/validatedocuments');
+	public static type: RequestType<ValidateDocsParams,void,void>
+		= new RequestType<ValidateDocsParams, void, void>('textDocument/devskim/validatedocuments');
 }
 
 export class ReloadRulesRequest {
-	public static type: RequestType<{},void,void,void> = new RequestType<{}, void, void, void>('devskim/validaterules')
+	public static type: RequestType<{},void,void> = new RequestType<{}, void, void>('devskim/validaterules')
 }
 
 export function activate(context: vscode.ExtensionContext) {

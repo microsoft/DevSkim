@@ -338,7 +338,7 @@ export default class DevSkimServer
 
 export class ReloadRulesRequest
 {
-    public static type = new RequestType<{}, void, void, void>('devskim/validaterules')
+    public static type = new RequestType<{}, void, void>('devskim/validaterules')
 }
 
 interface ValidateDocsParams
@@ -348,7 +348,7 @@ interface ValidateDocsParams
 
 export class ValidateDocsRequest
 {
-    public static type: RequestType<ValidateDocsParams, void, void, void> = new RequestType<ValidateDocsParams, void, void, void>(
+    public static type: RequestType<ValidateDocsParams, void, void> = new RequestType<ValidateDocsParams, void, void>(
         'textDocument/devskim/validatedocuments')
 }
 

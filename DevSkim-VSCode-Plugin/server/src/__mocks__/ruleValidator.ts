@@ -7,7 +7,7 @@
  */
 
 import {Rule} from "../devskimObjects";
-import {IConnection} from "vscode-languageserver";
+import {Connection} from "vscode-languageserver";
 import {IRuleValidator} from "../utility_classes/ruleValidator";
 
 
@@ -22,7 +22,7 @@ export class RuleValidator implements IRuleValidator
      * @param rd
      * @param ed
      */
-    constructor(private connection: IConnection, rd: string, ed: string)
+    constructor(private connection: Connection, rd: string, ed: string)
     {
     }
 
