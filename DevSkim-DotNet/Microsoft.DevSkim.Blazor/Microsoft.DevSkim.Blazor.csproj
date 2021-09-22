@@ -10,7 +10,6 @@
     <PackageReference Include="Blazored.LocalStorage" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.6" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="1.1.1" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="3.0.0.20340" />

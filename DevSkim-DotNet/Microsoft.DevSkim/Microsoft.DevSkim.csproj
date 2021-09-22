@@ -19,7 +19,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.CST.OAT" Version="1.0.88" />
+    <PackageReference Include="Microsoft.CST.OAT" Version="1.1.13" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
@@ -41,10 +41,6 @@
   <ItemGroup>
     <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath="" />
     <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="3.4.205" />
   </ItemGroup>
   
 </Project>
