@@ -56,7 +56,8 @@ namespace Microsoft.DevSkim.CLI.Writers
                 item.Add("match", issue.TextSample);
             if (_formatString.Contains("%T"))
                 item.Add("tags", issue.Issue.Rule.Tags);
-
+            if (_formatString.Contains("%f"))
+                item.Add("fixes", issue.Issue.Rule.Fixes);
             // Store the result in the result list
             jsonResult.Push(item);
         }

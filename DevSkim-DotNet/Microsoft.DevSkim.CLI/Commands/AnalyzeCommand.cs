@@ -62,7 +62,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                   CommandOptionType.SingleValue);
 
             var outputTextFormat = command.Option("-o|--output-format",
-                                                  "Output text format",
+                                                  "Output format for text writer or elements to include for json writer.",
                                                   CommandOptionType.SingleValue);
 
             var severityOption = command.Option("-s|--severity",
@@ -101,9 +101,23 @@ namespace Microsoft.DevSkim.CLI.Commands
                                         "Use the exit code to indicate number of issues identified.",
                                         CommandOptionType.NoValue);
 
-            command.ExtendedHelpText = "\nOutput format options:\n%F\tfile path\n%L\tstart line number\n" +
-                "%C\tstart column\n%l\tend line number\n%c\tend column\n%I\tlocation inside file\n" +
-                "%i\tmatch length\n%m\tmatch\n%R\trule id\n%N\trule name\n%S\tseverity\n%D\tissue description\n%T\ttags(comma-separated)";
+            command.ExtendedHelpText = 
+@"
+Output format options:
+%F  file path
+%L  start line number
+%C  start column
+%l  end line number
+%c  end column
+%I  location inside file
+%i  match length
+%m  match
+%R  rule id
+%N  rule name
+%S  severity
+%D  issue description
+%T  tags (comma-separated in text writer)
+%f  fixes (json only)";
 
             command.OnExecute(() =>
             {
