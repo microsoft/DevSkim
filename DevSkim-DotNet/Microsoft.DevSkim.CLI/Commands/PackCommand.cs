@@ -1,7 +1,8 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,16 +50,15 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             List<Rule> list = new List<Rule>(verifier.CompiledRuleset.AsEnumerable().Select(x => x.DevSkimRule));
 
-            JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore };
-            settings.Formatting = (_indent) ? Formatting.Indented : Formatting.None;
-            settings.Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
-            {
-                e.ErrorContext.Handled = true;
-            };
+            var netOptions = new JsonSerializerOptions();
+            netOptions.WriteIndented = _indent;
+            netOptions.Converters.Add(new JsonStringEnumConverter());
+            netOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
 
             using FileStream fs = File.Open(_outputfile, FileMode.Create, FileAccess.Write);
             using StreamWriter sw = new StreamWriter(fs);
-            sw.Write(JsonConvert.SerializeObject(list, settings));
+            var serialized = JsonSerializer.Serialize(list, netOptions);
+            sw.Write(serialized);
             sw.Close();
             fs.Close();
 
