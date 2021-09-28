@@ -16,7 +16,7 @@ const {promisify} = require('util');
 const {glob} = require('glob-promise');
 const readFile = promisify(fs.readFile);
 
-import {IConnection, Range} from 'vscode-languageserver';
+import {Connection, Range} from 'vscode-languageserver/node';
 import {DevSkimWorkerSettings} from "../devskimWorkerSettings";
 import * as Path from "path";
 import {DevskimRuleSeverity, IDevSkimSettings, Rule} from "../devskimObjects";
@@ -32,7 +32,7 @@ export class DevSkimRules {
     private dir = require('node-dir');
 
 
-    constructor(private connection: IConnection, private settings: IDevSkimSettings, private ruleValidator: IRuleValidator) {
+    constructor(private connection: Connection, private settings: IDevSkimSettings, private ruleValidator: IRuleValidator) {
         // this.rulesDirectory = DevSkimWorkerSettings.getRulesDirectory();
         // this.loadRules();
     }
@@ -49,7 +49,7 @@ export class DevSkimRules {
         // this.loadRules();
     }
 
-    public fromRoot(connection: IConnection, rootPath: string|null) {
+    public fromRoot(connection: Connection, rootPath: string|null) {
         /*
         */
     }

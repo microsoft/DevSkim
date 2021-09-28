@@ -7,7 +7,7 @@
  */
 
 
-import { IConnection } from "vscode-languageserver";
+import { Connection } from "vscode-languageserver";
 import 
 {
      IDevSkimSettings,
@@ -20,7 +20,7 @@ export class DebugLogger
 {
     private debugConsole;
 
-    constructor(private settings: IDevSkimSettings, private connection?: IConnection)
+    constructor(private settings: IDevSkimSettings, private connection?: Connection)
     {
         this.debugConsole = (connection) ? connection.console : console;
     }

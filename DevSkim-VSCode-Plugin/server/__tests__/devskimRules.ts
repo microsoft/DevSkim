@@ -16,7 +16,7 @@ const { promisify } = require('util');
 const { glob } = require('glob-promise');
 const readFile = promisify(fs.readFile);
 
-import { IConnection } from 'vscode-languageserver';
+import { Connection } from 'vscode-languageserver/node';
 import
 {
     DevskimRuleSeverity, Rule, IDevSkimSettings,
@@ -36,7 +36,7 @@ export class DevSkimRules
     private analysisRules: Rule[];
 
 
-    constructor(private connection: IConnection, private settings: IDevSkimSettings, private ruleValidator: IRuleValidator)
+    constructor(private connection: Connection, private settings: IDevSkimSettings, private ruleValidator: IRuleValidator)
     {
         this.rulesDirectory = DevSkimWorkerSettings.getRulesDirectory(connection);
         this.loadRules();

@@ -4,7 +4,7 @@
 import {DevSkimRules} from "./devskimRules";
 import {DevSkimWorkerSettings} from "../src/devskimWorkerSettings";
 import {RuleValidator} from "../src/utility_classes/ruleValidator";
-import {Connection, IConnection} from "vscode-languageserver";
+import {Connection, Connection} from "vscode-languageserver";
 import {IDevSkimSettings} from "../src/devskimObjects";
 
 jest.mock("../src/utility_classes/ruleValidator");
