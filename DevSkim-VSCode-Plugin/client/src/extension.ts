@@ -11,9 +11,6 @@ import {
 	RequestType,
 	TextDocumentIdentifier,
 	TextEdit,
-} from 'vscode-languageclient/node';
-
-import {
 	LanguageClient,
 	ServerOptions,
 	TransportKind,
@@ -40,7 +37,7 @@ export class ReloadRulesRequest {
 export function activate(context: vscode.ExtensionContext) {
 
 	try {
-		const serverModule = context.asAbsolutePath(path.join("server", "dist", 'index.js'));
+		const serverModule = context.asAbsolutePath(path.join("server", "out", 'index.js'));
 		console.log(`Server module: ${serverModule}`);
 		const devSkimProperties = getDevSkimConfiguration();
 		const env: any = {

@@ -67,7 +67,7 @@
       "supported": false
     }
   },
-  "main": "./client/dist/extension.js",
+  "main": "./client/out/extension",
   "contributes": {
     "commands": [
       {
