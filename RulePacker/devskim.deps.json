@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "devskim/0.4.255-g027baffb14": {
+      "devskim/0.5.1-g2ac18006d8": {
         "dependencies": {
           "Glob": "1.1.8",
           "Microsoft.CST.DevSkim": "0.0.0",
@@ -1152,6 +1152,14 @@
           "System.Text.Encoding": "4.3.0"
         }
       },
+      "System.Text.Json/5.0.2": {
+        "runtime": {
+          "lib/netcoreapp3.0/System.Text.Json.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.521.16609"
+          }
+        }
+      },
       "System.Text.RegularExpressions/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.0"
@@ -1216,7 +1224,7 @@
       "Microsoft.CST.DevSkim/0.0.0": {
         "dependencies": {
           "Microsoft.CST.OAT": "1.1.13",
-          "Newtonsoft.Json": "12.0.3"
+          "System.Text.Json": "5.0.2"
         },
         "runtime": {
           "Microsoft.DevSkim.dll": {}
@@ -1225,7 +1233,7 @@
     }
   },
   "libraries": {
-    "devskim/0.4.255-g027baffb14": {
+    "devskim/0.5.1-g2ac18006d8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1978,6 +1986,13 @@
       "sha512": "sha512-YVMK0Bt/A43RmwizJoZ22ei2nmrhobgeiYwFzC4YAN+nue8RF6djXDMog0UCn+brerQoYVyaS+ghy9P/MUVcmw==",
       "path": "system.text.encoding.extensions/4.3.0",
       "hashPath": "system.text.encoding.extensions.4.3.0.nupkg.sha512"
+    },
+    "System.Text.Json/5.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-I47dVIGiV6SfAyppphxqupertT/5oZkYLDCX6vC3HpOI4ZLjyoKAreUoem2ie6G0RbRuFrlqz/PcTQjfb2DOfQ==",
+      "path": "system.text.json/5.0.2",
+      "hashPath": "system.text.json.5.0.2.nupkg.sha512"
     },
     "System.Text.RegularExpressions/4.3.0": {
       "type": "package",
