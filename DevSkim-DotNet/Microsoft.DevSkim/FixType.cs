@@ -27,7 +27,7 @@ namespace Microsoft.DevSkim
         {
             if (reader.GetString() is string value)
             {
-                if (Enum.TryParse<FixType>(value.Replace("-", ""), out FixType result))
+                if (Enum.TryParse<FixType>(value.Replace("-", ""), true, out FixType result))
                 {
                     return result;
                 }

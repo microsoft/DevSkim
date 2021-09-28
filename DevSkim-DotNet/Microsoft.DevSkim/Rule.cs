@@ -1,6 +1,5 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using System.Text.Json;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -17,13 +16,13 @@ namespace Microsoft.DevSkim
         }
 
         [JsonPropertyName("applies_to")]
-        public List<string> AppliesTo { get; set; } = new List<string>();
+        public List<string>? AppliesTo { get; set; }
         
         [JsonPropertyName("does_not_apply_to")]
-        public List<string> DoesNotApplyTo { get; set; } = new List<string>();
+        public List<string>? DoesNotApplyTo { get; set; }
 
         [JsonPropertyName("conditions")]
-        public List<SearchCondition> Conditions { get; set; } = new List<SearchCondition>();
+        public List<SearchCondition>? Conditions { get; set; }
 
         [JsonPropertyName("confidence")]
         public Confidence Confidence { get; set; }
@@ -38,7 +37,7 @@ namespace Microsoft.DevSkim
         public bool Disabled { get; set; }
 
         [JsonPropertyName("fix_its")]
-        public List<CodeFix> Fixes { get; set; } = new List<CodeFix>();
+        public List<CodeFix>? Fixes { get; set; }
 
         [JsonPropertyName("id")]
         public string Id { get; set; }
@@ -47,10 +46,10 @@ namespace Microsoft.DevSkim
         public string? Name { get; set; }
 
         [JsonPropertyName("overrides")]
-        public List<string> Overrides { get; set; } = new List<string>();
+        public List<string>? Overrides { get; set; }
 
         [JsonPropertyName("patterns")]
-        public List<SearchPattern> Patterns { get; set; } = new List<SearchPattern>();
+        public List<SearchPattern>? Patterns { get; set; }
 
         [JsonPropertyName("recommendation")]
         public string? Recommendation { get; set; }
@@ -78,6 +77,6 @@ namespace Microsoft.DevSkim
         public string? Source { get; set; }
 
         [JsonPropertyName("tags")]
-        public List<string> Tags { get; set; } = new List<string>();
+        public List<string>? Tags { get; set; }
     }
 }

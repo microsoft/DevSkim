@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 
 namespace Microsoft.DevSkim.Tests
 {
@@ -149,9 +150,15 @@ namespace Microsoft.DevSkim.Tests
 
             // Ignore all until test
             DateTime expirationDate = DateTime.Now.AddDays(5);
-            string testString = "encryption=false; MD5 hash  = MD5.Create(); //DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
-            Issue[] issues = processor.Analyze(string.Format(testString, expirationDate), "csharp");
-            Assert.AreEqual(2, issues.Length, "Ignore all should flag two infos");
+            string testString = "encryption=false; MD5 hash  = MD5.Create();";
+            Issue[] issuesBefore = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(3, issuesBefore.Length, "Should first flag 3 infos");
+            Assert.IsFalse(issuesBefore.Any(x => x.IsSuppressionInfo), "None of the infos should be suppressions.");
+
+            string suppressedString = testString + "//DevSkim: ignore all until {0:yyyy}-{0:MM}-{0:dd}";
+            Issue[] issuesSuppressed = processor.Analyze(string.Format(testString, expirationDate), "csharp");
+            Assert.AreEqual(3, issuesSuppressed.Length, "Should still flag two infos.");
+            Assert.IsFalse(issuesSuppressed.All(x => x.IsSuppressionInfo), "All the infos should be suppressions.");
         }
 
         [TestMethod]
@@ -299,17 +306,8 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void UseCase_OnError_Test()
         {
-            bool error = false;
-
             RuleSet rules = new RuleSet();
-            rules.OnDeserializationErrorEventHandler += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
-            {
-                error = true;
-                args.ErrorContext.Handled = true;
-            };
-
-            rules.AddDirectory(Path.Combine("rules", "invalid"), null);
-            Assert.IsTrue(error, "Error should be raised");
+            Assert.ThrowsException<JsonException>(() => rules.AddDirectory(Path.Combine("rules", "invalid"), null));
         }
 
         [TestMethod]

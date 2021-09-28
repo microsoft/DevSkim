@@ -31,7 +31,7 @@ namespace Microsoft.DevSkim
         {
             if (reader.GetString() is string value)
             {
-                if (Enum.TryParse<PatternType>(value.Replace("-", ""), out PatternType result))
+                if (Enum.TryParse<PatternType>(value.Replace("-", ""), true, out PatternType result))
                 {
                     return result;
                 }

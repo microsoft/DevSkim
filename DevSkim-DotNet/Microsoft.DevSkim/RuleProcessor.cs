@@ -28,7 +28,7 @@ namespace Microsoft.DevSkim
 
             SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
 
-            analyzer = new Analyzer();
+            analyzer = new Analyzer(new AnalyzerOptions(false, false));
             analyzer.SetOperation(new WithinOperation(analyzer));
             analyzer.SetOperation(new ScopedRegexOperation(analyzer));
         }
@@ -180,7 +180,7 @@ namespace Microsoft.DevSkim
             List<Issue> removes = new List<Issue>();
             foreach (Issue m in resultsList)
             {
-                if (m.Rule.Overrides.Count > 0)
+                if (m.Rule.Overrides?.Count > 0)
                 {
                     foreach (string ovrd in m.Rule.Overrides)
                     {

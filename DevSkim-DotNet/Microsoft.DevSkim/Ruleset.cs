@@ -147,8 +147,11 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            var rulesOut = _oatRules.Where(x => x != null && (x.DevSkimRule.AppliesTo.Count == 0 || x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))));
-            rulesOut = rulesOut.Where(x => x != null && !x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x)));
+            var rulesOut = _oatRules.Where(x => x != null && 
+                (x.DevSkimRule.AppliesTo is null || 
+                x.DevSkimRule.AppliesTo.Count == 0 || 
+                x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))) &&
+                (!x.DevSkimRule.DoesNotApplyTo?.Any(x => languages.Contains(x)) ?? true));
             return rulesOut;
         }
 
@@ -167,7 +170,7 @@ namespace Microsoft.DevSkim
             var clauses = new List<Clause>();
             int clauseNumber = 0;
             var expression = new StringBuilder("(");
-            foreach (var pattern in rule.Patterns)
+            foreach (var pattern in rule.Patterns ?? new List<SearchPattern>())
             {
                 if (pattern.Pattern != null)
                 {
@@ -205,7 +208,7 @@ namespace Microsoft.DevSkim
             {
                 return new ConvertedOatRule(rule.Id, rule);
             }
-            foreach (var condition in rule.Conditions)
+            foreach (var condition in rule.Conditions ?? new List<SearchCondition>())
             {
                 if (condition.Pattern?.Pattern != null)
                 {
@@ -308,12 +311,12 @@ namespace Microsoft.DevSkim
                     r.Source = sourcename;
                     r.RuntimeTag = tag;
 
-                    foreach (SearchPattern pattern in r.Patterns)
+                    foreach (SearchPattern pattern in r.Patterns ?? new List<SearchPattern>())
                     {
                         SanitizePatternRegex(pattern);
                     }
 
-                    foreach (SearchCondition condition in r.Conditions)
+                    foreach (SearchCondition condition in r.Conditions ?? new List<SearchCondition>())
                     {
                         if (condition.Pattern is { })
                         {

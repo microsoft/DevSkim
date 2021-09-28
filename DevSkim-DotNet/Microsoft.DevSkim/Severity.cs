@@ -9,7 +9,6 @@ namespace Microsoft.DevSkim
     /// <summary>
     ///     Issue severity
     /// </summary>
-    [Flags]
     [JsonConverter(typeof(SeverityConverter))]
     public enum Severity
     {
@@ -51,7 +50,7 @@ namespace Microsoft.DevSkim
             {
                 if (reader.GetString() is string value)
                 {
-                    if (Enum.TryParse(value.Replace("-", ""), out Severity result))
+                    if (Enum.TryParse(value.Replace("-", ""), true, out Severity result))
                     {
                         return result;
                     }

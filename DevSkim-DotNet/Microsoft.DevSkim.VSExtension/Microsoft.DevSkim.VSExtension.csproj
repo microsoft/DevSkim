@@ -260,9 +260,6 @@
     <PackageReference Include="Nerdbank.Streams">
       <Version>2.8.46</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
-    </PackageReference>
     <PackageReference Include="StreamJsonRpc">
       <Version>2.8.21</Version>
     </PackageReference>
