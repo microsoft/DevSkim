@@ -1,7 +1,8 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim
 {
@@ -15,19 +16,19 @@ namespace Microsoft.DevSkim
             this.Id = Id;
         }
 
-        [JsonProperty(PropertyName = "applies_to")]
+        [JsonPropertyName("applies_to")]
         public List<string> AppliesTo { get; set; } = new List<string>();
         
-        [JsonProperty(PropertyName = "does_not_apply_to")]
+        [JsonPropertyName("does_not_apply_to")]
         public List<string> DoesNotApplyTo { get; set; } = new List<string>();
 
-        [JsonProperty(PropertyName = "conditions")]
+        [JsonPropertyName("conditions")]
         public List<SearchCondition> Conditions { get; set; } = new List<SearchCondition>();
 
-        [JsonProperty(PropertyName = "confidence")]
+        [JsonPropertyName("confidence")]
         public Confidence Confidence { get; set; }
 
-        [JsonProperty(PropertyName = "description")]
+        [JsonPropertyName("description")]
         public string? Description { get; set; }
 
         /// <summary>
@@ -36,25 +37,25 @@ namespace Microsoft.DevSkim
         [JsonIgnore]
         public bool Disabled { get; set; }
 
-        [JsonProperty(PropertyName = "fix_its")]
+        [JsonPropertyName("fix_its")]
         public List<CodeFix> Fixes { get; set; } = new List<CodeFix>();
 
-        [JsonProperty(PropertyName = "id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonProperty(PropertyName = "overrides")]
+        [JsonPropertyName("overrides")]
         public List<string> Overrides { get; set; } = new List<string>();
 
-        [JsonProperty(PropertyName = "patterns")]
+        [JsonPropertyName("patterns")]
         public List<SearchPattern> Patterns { get; set; } = new List<SearchPattern>();
 
-        [JsonProperty(PropertyName = "recommendation")]
+        [JsonPropertyName("recommendation")]
         public string? Recommendation { get; set; }
 
-        [JsonProperty(PropertyName = "rule_info")]
+        [JsonPropertyName("rule_info")]
         public string? RuleInfo { get; set; }
 
         /// <summary>
@@ -63,10 +64,10 @@ namespace Microsoft.DevSkim
         [JsonIgnore]
         public string? RuntimeTag { get; set; }
 
-        [JsonProperty(PropertyName = "schema_version")]
+        [JsonPropertyName("schema_version")]
         public int SchemaVersion { get; set; }
 
-        [JsonProperty(PropertyName = "severity")]
+        [JsonPropertyName("severity")]
         [JsonConverter(typeof(SeverityConverter))]
         public Severity Severity { get; set; }
 
@@ -76,7 +77,7 @@ namespace Microsoft.DevSkim
         [JsonIgnore]
         public string? Source { get; set; }
 
-        [JsonProperty(PropertyName = "tags")]
+        [JsonPropertyName("tags")]
         public List<string> Tags { get; set; } = new List<string>();
     }
 }

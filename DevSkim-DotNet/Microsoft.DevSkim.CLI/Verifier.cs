@@ -33,26 +33,18 @@ namespace Microsoft.DevSkim.CLI
 
         public bool Verify()
         {
-            bool isCompiled = true;
 
             foreach (string rulesPath in _paths)
             {
                 if (Directory.Exists(rulesPath))
-                    isCompiled = LoadDirectory(rulesPath);
+                    LoadDirectory(rulesPath);
                 else if (File.Exists(rulesPath))
-                    isCompiled = LoadFile(rulesPath);
+                    LoadFile(rulesPath);
                 else
-                {
                     Console.Error.WriteLine("Error: Not a valid file or directory {0}", rulesPath);
-                    isCompiled = false;
-                    break;
-                }
             }
 
-            if (isCompiled)
-            {
-                CheckIntegrity();
-            }
+            CheckIntegrity();
 
             foreach (ErrorMessage message in _messages)
             {
@@ -70,7 +62,7 @@ namespace Microsoft.DevSkim.CLI
                 Console.Error.WriteLine();
             }
 
-            return isCompiled;
+            return _messages.Any(x => x.Warning == false);
         }
 
         private List<ErrorMessage> _messages = new List<ErrorMessage>();
@@ -148,30 +140,17 @@ namespace Microsoft.DevSkim.CLI
         {
             RuleSet rules = new RuleSet();
             bool noProblem = true;
-            rules.OnDeserializationErrorEventHandler += delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+
+            try
             {
-                ErrorMessage message = new ErrorMessage(File: file,
-                    Message: e.ErrorContext.Error.Message,
-                    Path: e.ErrorContext.Path);
-
-                if (e.ErrorContext.OriginalObject is Rule r && !string.IsNullOrEmpty(r.Id))
-                {
-                    message.RuleID = r.Id;
-                }
-
-                // Newtonsoft json throws some errors twice
-                if (_messages.FirstOrDefault(x => (x.Message == message.Message && x.File == file)) == null)
-                    _messages.Add(message);
-
-                noProblem = false;
-                e.ErrorContext.Handled = true;
-            };
-
-            rules.AddFile(file, null);
-
-            if (noProblem)
+                rules.AddFile(file, null);
                 _rules.AddRange(rules.AsEnumerable().Select(x => x.DevSkimRule));
-
+            }
+            catch(Exception e)
+            {
+                noProblem = false;
+                ErrorMessage message = new ErrorMessage(File: file, Message: e.Message);
+            }
             return noProblem;
         }
     }

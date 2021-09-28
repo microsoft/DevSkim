@@ -1,11 +1,12 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim.CLI
 {
@@ -57,7 +58,7 @@ namespace Microsoft.DevSkim.CLI
             {
                 foreach (Attribute attr in property.GetCustomAttributes(true))
                 {
-                    if (attr is JsonPropertyAttribute jsonAttr && jsonAttr.PropertyName == propName)
+                    if (attr is JsonPropertyNameAttribute jsonAttr && jsonAttr.Name == propName)
                     {
                         return GetPropertyValue(property, rule);
                     }

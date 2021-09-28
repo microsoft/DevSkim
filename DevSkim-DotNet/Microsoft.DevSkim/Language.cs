@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -139,14 +139,14 @@ namespace Microsoft.DevSkim
             Stream? resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.comments.json");
             using (StreamReader file = new StreamReader(resource ?? new MemoryStream()))
             {
-                Comments = JsonConvert.DeserializeObject<List<Comment>>(file.ReadToEnd()) ?? new List<Comment>();
+                Comments = JsonSerializer.Deserialize<List<Comment>>(file.ReadToEnd()) ?? new List<Comment>();
             }
 
             // Load languages
             resource = assembly.GetManifestResourceStream("Microsoft.DevSkim.Resources.languages.json");
             using (StreamReader file = new StreamReader(resource ?? new MemoryStream()))
             {
-                Languages = JsonConvert.DeserializeObject<List<LanguageInfo>>(file.ReadToEnd()) ?? new List<LanguageInfo>();
+                Languages = JsonSerializer.Deserialize<List<LanguageInfo>>(file.ReadToEnd()) ?? new List<LanguageInfo>();
             }
         }
 

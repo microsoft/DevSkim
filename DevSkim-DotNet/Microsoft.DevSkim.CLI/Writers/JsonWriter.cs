@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -21,7 +21,9 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         public override void FlushAndClose()
         {
-            TextWriter.Write(JsonConvert.SerializeObject(jsonResult, Formatting.Indented));
+            var options = new JsonSerializerOptions();
+            options.WriteIndented = true;
+            TextWriter.Write(JsonSerializer.Serialize(jsonResult, options));
             TextWriter.Flush();
             TextWriter.Close();
         }

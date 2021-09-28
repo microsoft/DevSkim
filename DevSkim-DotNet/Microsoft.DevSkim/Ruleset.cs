@@ -1,7 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.CST.OAT;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,18 +25,6 @@ namespace Microsoft.DevSkim
         {
             _oatRules = new List<ConvertedOatRule>();
         }
-
-        /// <summary>
-        ///     Delegate for deserialization error handler
-        /// </summary>
-        /// <param name="sender"> Sender object </param>
-        /// <param name="e"> Error arguments </param>
-        public delegate void DeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
-
-        /// <summary>
-        ///     Event raised if deserialization error is encoutered while loading JSON rules
-        /// </summary>
-        public event DeserializationError? OnDeserializationErrorEventHandler;
 
         /// <summary>
         ///     Parse a directory with rule files and loads the rules
@@ -302,16 +290,17 @@ namespace Microsoft.DevSkim
             return this._oatRules.GetEnumerator();
         }
 
+        /// <summary>
+        /// Throws exceptions on malformed JSON.
+        /// </summary>
+        /// <param name="jsonstring"></param>
+        /// <param name="sourcename"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
         internal IEnumerable<Rule> StringToRules(string jsonstring, string sourcename, string? tag = null)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                Error = HandleDeserializationError,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore
-            };
+            List<Rule>? ruleList = JsonSerializer.Deserialize<List<Rule>>(jsonstring);
 
-            List<Rule>? ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring, settings);
             if (ruleList is List<Rule>)
             {
                 foreach (Rule r in ruleList)
@@ -335,20 +324,11 @@ namespace Microsoft.DevSkim
                     yield return r;
                 }
             }
+
         }
 
         private List<ConvertedOatRule> _oatRules;
         private Regex searchInRegex = new Regex("\\((.*),(.*)\\)", RegexOptions.Compiled);
-
-        /// <summary>
-        ///     Handler for deserialization error
-        /// </summary>
-        /// <param name="sender"> Sender object </param>
-        /// <param name="errorArgs"> Error arguments </param>
-        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
-        {
-            OnDeserializationErrorEventHandler?.Invoke(sender, errorArgs);
-        }
 
         /// <summary>
         ///     Method santizes pattern to be a valid regex

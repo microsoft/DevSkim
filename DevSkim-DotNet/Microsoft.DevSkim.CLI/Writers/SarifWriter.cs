@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.CodeAnalysis.Sarif.Readers;
-using Newtonsoft.Json;
+using System.Text.Json;
 using NLog.LayoutRenderers;
 using System;
 using System.Collections.Concurrent;

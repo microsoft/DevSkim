@@ -293,6 +293,9 @@
     <PackageReference Include="System.Security.Cryptography.X509Certificates">
       <Version>4.3.2</Version>
     </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>5.0.2</Version>
+    </PackageReference>
     <PackageReference Include="System.Threading.Tasks.Dataflow">
       <Version>5.0.0</Version>
     </PackageReference>

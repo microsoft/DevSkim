@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 
@@ -39,7 +39,7 @@ namespace Microsoft.DevSkim.VSExtension
             string fileName = Path.Combine(Path.Combine(dir, "Content"), "ContentTypes.json");
             using (StreamReader file = File.OpenText(fileName))
             {
-                ContentTypes = JsonConvert.DeserializeObject<List<ContentTypeRecord>>(file.ReadToEnd());
+                ContentTypes = JsonSerializer.Deserialize<List<ContentTypeRecord>>(file.ReadToEnd());
             }
         }
     }

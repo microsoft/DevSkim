@@ -1,13 +1,15 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
+using System.Text.Json;
 
 namespace Microsoft.DevSkim
 {
     /// <summary>
     ///     Code Fix Type
     /// </summary>
+    [JsonConverter(typeof(FixTypeConverter))]
     public enum FixType
     {
         RegexReplace
@@ -16,37 +18,27 @@ namespace Microsoft.DevSkim
     /// <summary>
     ///     Json Converter for FixType
     /// </summary>
-    internal class FixTypeConverter : JsonConverter
+    internal class FixTypeConverter : JsonConverter<FixType>
     {
-        public override bool CanConvert(Type objectType)
+        public override FixType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options)
         {
-            return objectType == typeof(string);
-        }
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            if (reader.Value is string enumString)
+            if (reader.GetString() is string value)
             {
-                enumString = enumString.Replace("-", "");
-                return Enum.Parse(typeof(FixType), enumString, true);
-            }
-            return null;
-        }
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            if (value is FixType svr)
-            {
-                string svrstr = svr.ToString().ToLower();
-
-                switch (svr)
+                if (Enum.TryParse<FixType>(value.Replace("-", ""), out FixType result))
                 {
-                    case FixType.RegexReplace:
-                        svrstr = "regex-replace";
-                        break;
+                    return result;
                 }
-                writer.WriteValue(svrstr);
             }
+            return 0;
         }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            FixType fixTypeValue,
+            JsonSerializerOptions options) =>
+                writer.WriteStringValue(fixTypeValue.ToString());
     }
 }

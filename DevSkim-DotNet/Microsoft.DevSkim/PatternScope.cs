@@ -1,8 +1,8 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
-using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim
 {
@@ -18,33 +18,27 @@ namespace Microsoft.DevSkim
     /// <summary>
     ///     Json converter for Pattern Type
     /// </summary>
-    internal class PatternScopeConverter : JsonConverter
+    internal class PatternScopeConverter : JsonConverter<PatternScope>
     {
-        public override bool CanConvert(Type objectType)
+        public override PatternScope Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options)
         {
-            return objectType == typeof(string);
-        }
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            if (reader.Value is string enumString)
+            if (reader.GetString() is string value)
             {
-                enumString = enumString.Replace("-", "");
-                return Enum.Parse(typeof(PatternScope), enumString, true);
+                if (Enum.TryParse<PatternScope>(value.Replace("-", ""), out PatternScope result))
+                {
+                    return result;
+                }
             }
-            // TODO: Should there be a separate enum value for finding a null here?
-            return null;
+            return 0;
         }
 
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            if (value is PatternScope svr)
-            {
-                string svrstr = svr.ToString().ToLower(CultureInfo.InvariantCulture);
-
-                writer.WriteValue(svrstr);
-                writer.WriteValue(svr.ToString().ToLower(CultureInfo.InvariantCulture));
-            }
-        }
+        public override void Write(
+            Utf8JsonWriter writer,
+            PatternScope patternScopeValue,
+            JsonSerializerOptions options) =>
+                writer.WriteStringValue(patternScopeValue.ToString());
     }
 }

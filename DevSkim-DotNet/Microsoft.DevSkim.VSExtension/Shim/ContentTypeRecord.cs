@@ -1,6 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim.VSExtension
 {
@@ -9,10 +10,10 @@ namespace Microsoft.DevSkim.VSExtension
     /// </summary>
     internal class ContentTypeRecord
     {
-        [JsonProperty(PropertyName = "languages")]
+        [JsonPropertyName("languages")]
         public string[] DSTypes { get; set; }
 
-        [JsonProperty(PropertyName = "vs_type")]
+        [JsonPropertyName("vs_type")]
         public string VSType { get; set; }
     }
 }
