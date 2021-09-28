@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -46,7 +47,13 @@ namespace Microsoft.DevSkim.CLI.Commands
             Verifier verifier = new Verifier(_path);
 
             if (!verifier.Verify())
+            {
+                foreach(var message in verifier.Messages)
+                {
+                    Console.WriteLine($"{message.File} - {message.Message}");
+                }
                 return (int)ExitCode.IssuesExists;
+            }
 
             List<Rule> list = new List<Rule>(verifier.CompiledRuleset.AsEnumerable().Select(x => x.DevSkimRule));
 
