@@ -62,7 +62,7 @@ namespace Microsoft.DevSkim.CLI
                 Console.Error.WriteLine();
             }
 
-            return _messages.Any(x => x.Warning == false);
+            return !_messages.Any(x => x.Warning == false);
         }
 
         private List<ErrorMessage> _messages = new List<ErrorMessage>();

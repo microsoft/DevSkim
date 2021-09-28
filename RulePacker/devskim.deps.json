@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "devskim/0.5.4-g822466601f": {
+      "devskim/0.5.8-g551d0e8be6": {
         "dependencies": {
           "Glob": "1.1.8",
           "Microsoft.CST.DevSkim": "0.0.0",
@@ -1233,7 +1233,7 @@
     }
   },
   "libraries": {
-    "devskim/0.5.4-g822466601f": {
+    "devskim/0.5.8-g551d0e8be6": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
