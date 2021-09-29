@@ -154,7 +154,7 @@ namespace Microsoft.DevSkim.CLI
 
             RuleProcessor processor = new RuleProcessor(_rules);
             processor.EnableSuppressions = false;
-            processor.SeverityLevels = new HashSet<Severity>() { Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice };
+            processor.SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice | Severity.ManualReview;
 
             Issue[] issues = processor.Analyze(fileContent, languages);
 

@@ -125,7 +125,7 @@ namespace Microsoft.DevSkim.Tests
 
             // TODO test
             testString = "//TODO: fix it later";
-            processor.SeverityLevels.Add(Severity.ManualReview);
+            processor.SeverityLevel |= Severity.ManualReview;
             issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "TODO should be flagged");
         }
@@ -265,7 +265,7 @@ namespace Microsoft.DevSkim.Tests
         {
             RuleProcessor processor = new RuleProcessor(LoadRules(true));
             // QUICKFIX test
-            processor.SeverityLevels.Add(Severity.ManualReview);
+            processor.SeverityLevel |= Severity.ManualReview;
             string testString = "//QUICKFIX: fix this later";
             Issue[] issues = processor.Analyze(testString, "csharp");
             Assert.AreEqual(1, issues.Length, "QUICKFIX should be flagged");
@@ -338,7 +338,7 @@ namespace Microsoft.DevSkim.Tests
             Issue[] issues = processor.Analyze(testString, "javascript");
             Assert.AreEqual(0, issues.Length, "Manual Review should not be flagged");
 
-            processor.SeverityLevels.Add(Severity.ManualReview);
+            processor.SeverityLevel |= Severity.ManualReview;
             issues = processor.Analyze(testString, "javascript");
             Assert.AreEqual(1, issues.Length, "Manual Review should be flagged");
         }

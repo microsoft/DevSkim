@@ -13,11 +13,7 @@ namespace Microsoft.DevSkim
     public enum Severity
     {
         /// <summary>
-        /// Unspecified severity
-        /// </summary>
-        None = 0,
-        /// <summary>
-        ///     Critical issues
+        ///     Critial issues
         /// </summary>
         Critical = 1,
 
@@ -59,7 +55,7 @@ namespace Microsoft.DevSkim
                         return result;
                     }
                 }
-                return Severity.None;
+                return 0;
             }
 
         public override void Write(

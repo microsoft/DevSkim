@@ -207,12 +207,13 @@ Output format options:
 
             if (_severities.Count() > 0)
             {
-                processor.SeverityLevels.Clear();
+                processor.SeverityLevel = 0;
                 foreach (string severityText in _severities)
                 {
-                    if (ParseSeverity(severityText, out Severity severity))
+                    Severity severity;
+                    if (ParseSeverity(severityText, out severity))
                     {
-                        processor.SeverityLevels.Add(severity);
+                        processor.SeverityLevel |= severity;
                     }
                     else
                     {
