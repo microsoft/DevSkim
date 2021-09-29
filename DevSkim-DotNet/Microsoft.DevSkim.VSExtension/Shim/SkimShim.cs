@@ -125,12 +125,12 @@ namespace Microsoft.DevSkim.VSExtension
 
             processor.Rules = ruleset;
 
-            processor.SeverityLevel = Severity.Critical;
+            processor.SeverityLevels.Add(Severity.Critical);
 
-            if (set.EnableImportantRules) processor.SeverityLevel |= Severity.Important;
-            if (set.EnableModerateRules) processor.SeverityLevel |= Severity.Moderate;
-            if (set.EnableBestPracticeRules) processor.SeverityLevel |= Severity.BestPractice;
-            if (set.EnableManualReviewRules) processor.SeverityLevel |= Severity.ManualReview;
+            if (set.EnableImportantRules) processor.SeverityLevels.Add(Severity.Critical);
+            if (set.EnableModerateRules) processor.SeverityLevels.Add(Severity.Moderate);
+            if (set.EnableBestPracticeRules) processor.SeverityLevels.Add(Severity.BestPractice);
+            if (set.EnableManualReviewRules) processor.SeverityLevels.Add(Severity.ManualReview);
         }
     }
 }

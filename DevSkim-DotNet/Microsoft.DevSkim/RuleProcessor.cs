@@ -26,7 +26,7 @@ namespace Microsoft.DevSkim
             EnableSuppressions = false;
             EnableCache = true;
 
-            SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
+            SeverityLevels = new HashSet<Severity>() { Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice };
 
             analyzer = new Analyzer(new AnalyzerOptions(false, false));
             analyzer.SetOperation(new WithinOperation(analyzer));
@@ -59,7 +59,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         ///     Sets severity levels for analysis
         /// </summary>
-        public Severity SeverityLevel { get; set; }
+        public HashSet<Severity> SeverityLevels { get; set; } = new HashSet<Severity>();
 
         /// <summary>
         ///     Applies given fix on the provided source code line
@@ -113,7 +113,7 @@ namespace Microsoft.DevSkim
         {
             var lng = languages ?? Array.Empty<string>();
             // Get rules for the given content type
-            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(lng).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
+            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(lng).Where(x => !x.DevSkimRule.Disabled && SeverityLevels.Contains(x.DevSkimRule.Severity));
             // Skip rules that are disabled or don't have the right severity if (rule.Disabled ||
             // !SeverityLevel.HasFlag(rule.Severity)) continue;
 
