@@ -13,7 +13,6 @@
             "C.DangerousFunctionCall"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS179924.md",
         "patterns": [
             {
@@ -21,8 +20,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -38,7 +36,6 @@
             "PHP.Injection"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS181731.md",
         "patterns": [
             {
@@ -46,8 +43,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

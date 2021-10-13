@@ -12,7 +12,6 @@
             "cert:FIO30-C"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS113286.md",
         "patterns": [
             {
@@ -20,23 +19,20 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }        
         ],
         "fix_its": [
             {
                 "name": "Use a predefined format string",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "[NSString stringWithFormat:@\"%@\", $1",
                 "pattern": {
                     "pattern": "\\[NSString stringWithFormat:\\s*([^@\\\"\\]]+\\])",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
