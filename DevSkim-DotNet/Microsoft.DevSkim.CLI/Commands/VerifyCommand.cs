@@ -37,6 +37,10 @@ namespace Microsoft.DevSkim.CLI.Commands
             else
             {
                 Console.Error.WriteLine("Errors found.");
+                foreach(var message in verifier.Messages)
+                {
+                    Console.WriteLine(message.Message);
+                }
             }
             return (int)ExitCode.IssuesExists;
         }

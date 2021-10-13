@@ -135,8 +135,8 @@ namespace Microsoft.DevSkim.CLI
 
             // See if file name is a valid rule ID and preload default values
             string defaultId = Path.GetFileNameWithoutExtension(fileName);
-            Rule ?fileRule = _rules.Select(x => x.DevSkimRule).FirstOrDefault(x => x.Id == defaultId);
-            var languages = fileRule?.AppliesTo.ToArray() ?? Array.Empty<string>(); ;
+            Rule? fileRule = _rules.Select(x => x.DevSkimRule).FirstOrDefault(x => x.Id == defaultId);
+            var languages = fileRule?.AppliesTo?.ToArray() ?? Array.Empty<string>(); ;
 
             // Load file header and content
             string fileHeader = string.Empty;

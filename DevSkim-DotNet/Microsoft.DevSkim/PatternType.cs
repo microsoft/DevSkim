@@ -1,14 +1,16 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
-using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim
 {
     /// <summary>
     ///     Pattern Type for search pattern
     /// </summary>
+    [JsonConverter(typeof(PatternTypeConverter))]
+
     public enum PatternType
     {
         Regex,
@@ -20,37 +22,27 @@ namespace Microsoft.DevSkim
     /// <summary>
     ///     Json converter for Pattern Type
     /// </summary>
-    internal class PatternTypeConverter : JsonConverter
+    internal class PatternTypeConverter : JsonConverter<PatternType>
     {
-        public override bool CanConvert(Type objectType)
+        public override PatternType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options)
         {
-            return objectType == typeof(string);
-        }
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            if (reader.Value is string enumString)
+            if (reader.GetString() is string value)
             {
-                enumString = enumString.Replace("-", "");
-                return Enum.Parse(typeof(PatternType), enumString, true);
-            }
-            return null;
-        }
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            if (value is PatternType svr)
-            {
-                string svrstr = svr.ToString().ToLower(CultureInfo.InvariantCulture);
-
-                switch (svr)
+                if (Enum.TryParse<PatternType>(value.Replace("-", ""), true, out PatternType result))
                 {
-                    case PatternType.RegexWord:
-                        svrstr = "regex-word";
-                        break;
+                    return result;
                 }
-                writer.WriteValue(svrstr);
             }
+            return 0;
         }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            PatternType patternTypeValue,
+            JsonSerializerOptions options) =>
+                writer.WriteStringValue(patternTypeValue.ToString());
     }
 }

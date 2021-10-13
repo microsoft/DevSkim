@@ -1,6 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim
 {
@@ -9,17 +10,17 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class CodeFix
     {
-        [JsonProperty(PropertyName = "type")]
+        [JsonPropertyName("type")]
         [JsonConverter(typeof(FixTypeConverter))]
         public FixType? FixType { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonProperty(PropertyName = "pattern")]
+        [JsonPropertyName("pattern")]
         public SearchPattern? Pattern { get; set; }
 
-        [JsonProperty(PropertyName = "replacement")]
+        [JsonPropertyName("replacement")]
         public string? Replacement { get; set; }
     }
 }

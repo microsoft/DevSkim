@@ -1,7 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.CST.OAT;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,18 +25,6 @@ namespace Microsoft.DevSkim
         {
             _oatRules = new List<ConvertedOatRule>();
         }
-
-        /// <summary>
-        ///     Delegate for deserialization error handler
-        /// </summary>
-        /// <param name="sender"> Sender object </param>
-        /// <param name="e"> Error arguments </param>
-        public delegate void DeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e);
-
-        /// <summary>
-        ///     Event raised if deserialization error is encoutered while loading JSON rules
-        /// </summary>
-        public event DeserializationError? OnDeserializationErrorEventHandler;
 
         /// <summary>
         ///     Parse a directory with rule files and loads the rules
@@ -159,8 +147,11 @@ namespace Microsoft.DevSkim
         /// <returns> Filtered rules </returns>
         public IEnumerable<ConvertedOatRule> ByLanguages(string[] languages)
         {
-            var rulesOut = _oatRules.Where(x => x != null && (x.DevSkimRule.AppliesTo.Count == 0 || x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))));
-            rulesOut = rulesOut.Where(x => x != null && !x.DevSkimRule.DoesNotApplyTo.Any(x => languages.Contains(x)));
+            var rulesOut = _oatRules.Where(x => x != null && 
+                (x.DevSkimRule.AppliesTo is null || 
+                x.DevSkimRule.AppliesTo.Count == 0 || 
+                x.DevSkimRule.AppliesTo.Any(y => languages.Contains(y))) &&
+                (!x.DevSkimRule.DoesNotApplyTo?.Any(x => languages.Contains(x)) ?? true));
             return rulesOut;
         }
 
@@ -179,7 +170,7 @@ namespace Microsoft.DevSkim
             var clauses = new List<Clause>();
             int clauseNumber = 0;
             var expression = new StringBuilder("(");
-            foreach (var pattern in rule.Patterns)
+            foreach (var pattern in rule.Patterns ?? new List<SearchPattern>())
             {
                 if (pattern.Pattern != null)
                 {
@@ -217,7 +208,7 @@ namespace Microsoft.DevSkim
             {
                 return new ConvertedOatRule(rule.Id, rule);
             }
-            foreach (var condition in rule.Conditions)
+            foreach (var condition in rule.Conditions ?? new List<SearchCondition>())
             {
                 if (condition.Pattern?.Pattern != null)
                 {
@@ -357,16 +348,17 @@ namespace Microsoft.DevSkim
             return this._oatRules.GetEnumerator();
         }
 
+        /// <summary>
+        /// Throws exceptions on malformed JSON.
+        /// </summary>
+        /// <param name="jsonstring"></param>
+        /// <param name="sourcename"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
         internal IEnumerable<Rule> StringToRules(string jsonstring, string sourcename, string? tag = null)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                Error = HandleDeserializationError,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore
-            };
+            List<Rule>? ruleList = JsonSerializer.Deserialize<List<Rule>>(jsonstring);
 
-            List<Rule>? ruleList = JsonConvert.DeserializeObject<List<Rule>>(jsonstring, settings);
             if (ruleList is List<Rule>)
             {
                 foreach (Rule r in ruleList)
@@ -374,12 +366,12 @@ namespace Microsoft.DevSkim
                     r.Source = sourcename;
                     r.RuntimeTag = tag;
 
-                    foreach (SearchPattern pattern in r.Patterns)
+                    foreach (SearchPattern pattern in r.Patterns ?? new List<SearchPattern>())
                     {
                         SanitizePatternRegex(pattern);
                     }
 
-                    foreach (SearchCondition condition in r.Conditions)
+                    foreach (SearchCondition condition in r.Conditions ?? new List<SearchCondition>())
                     {
                         if (condition.Pattern is { })
                         {
@@ -390,20 +382,11 @@ namespace Microsoft.DevSkim
                     yield return r;
                 }
             }
+
         }
 
         private List<ConvertedOatRule> _oatRules;
         private Regex searchInRegex = new Regex("\\((.*),(.*)\\)", RegexOptions.Compiled);
-
-        /// <summary>
-        ///     Handler for deserialization error
-        /// </summary>
-        /// <param name="sender"> Sender object </param>
-        /// <param name="errorArgs"> Error arguments </param>
-        private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
-        {
-            OnDeserializationErrorEventHandler?.Invoke(sender, errorArgs);
-        }
 
         /// <summary>
         ///     Method santizes pattern to be a valid regex

@@ -1,18 +1,23 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim
 {
     /// <summary>
     ///     Issue severity
     /// </summary>
-    [Flags]
+    [JsonConverter(typeof(SeverityConverter))]
     public enum Severity
     {
         /// <summary>
-        ///     Critial issues
+        ///     No assigned severity
+        /// </summary>
+        None = 0,
+        /// <summary>
+        ///     Critical issues
         /// </summary>
         Critical = 1,
 
@@ -40,42 +45,27 @@ namespace Microsoft.DevSkim
     /// <summary>
     ///     Json Converter for Severity
     /// </summary>
-    internal class SeverityConverter : JsonConverter
+    internal class SeverityConverter : JsonConverter<Severity>
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(string);
-        }
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            if (reader.Value is string enumString)
+        public override Severity Read(
+                ref Utf8JsonReader reader,
+                Type typeToConvert,
+                JsonSerializerOptions options)
             {
-                enumString = enumString.Replace("-", "");
-                return Enum.Parse(typeof(Severity), enumString, true);
-            }
-            return null;
-        }
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            if (value is Severity svr)
-            {
-                string svrstr = svr.ToString().ToLower();
-
-                switch (svr)
+                if (reader.GetString() is string value)
                 {
-                    case Severity.BestPractice:
-                        svrstr = "best-practice";
-                        break;
-
-                    case Severity.ManualReview:
-                        svrstr = "manual-review";
-                        break;
+                    if (Enum.TryParse(value.Replace("-", ""), true, out Severity result))
+                    {
+                        return result;
+                    }
                 }
-
-                writer.WriteValue(svrstr);
+                return Severity.None;
             }
-        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            Severity severityValue,
+            JsonSerializerOptions options) =>
+                writer.WriteStringValue(severityValue.ToString());
     }
 }

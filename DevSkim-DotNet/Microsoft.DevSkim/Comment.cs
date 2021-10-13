@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.DevSkim
 {
@@ -9,16 +9,16 @@ namespace Microsoft.DevSkim
     /// </summary>
     internal class Comment
     {
-        [JsonProperty(PropertyName = "inline")]
+        [JsonPropertyName("inline")]
         public string? Inline { get; set; }
 
-        [JsonProperty(PropertyName = "language")]
+        [JsonPropertyName("language")]
         public string[]? Languages { get; set; }
 
-        [JsonProperty(PropertyName = "preffix")]
+        [JsonPropertyName("preffix")]
         public string? Prefix { get; set; }
 
-        [JsonProperty(PropertyName = "suffix")]
+        [JsonPropertyName("suffix")]
         public string? Suffix { get; set; }
     }
 }

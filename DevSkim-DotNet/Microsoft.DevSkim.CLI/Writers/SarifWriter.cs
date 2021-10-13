@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.CodeAnalysis.Sarif.Readers;
-using Newtonsoft.Json;
+using System.Text.Json;
 using NLog.LayoutRenderers;
 using System;
 using System.Collections.Concurrent;
@@ -210,7 +210,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             resultItem.RuleId = rule.Id;
             resultItem.Message = new Message() { Text = rule.Name };
-            foreach (string tag in rule.Tags)
+            foreach (string tag in rule.Tags ?? new List<string>())
             {
                 resultItem.Tags.Add(tag);
             }
