@@ -46,9 +46,6 @@ export class RulesLoader
             {
                 this.logger.log(`loadRules exception: ${e.message}`);
             });
-        if (filesFound == null || !(typeof filesFound[Symbol.iterator] === 'function')) {
-            return tempRules;
-        }
         for (let filePath of filesFound)
         {
             await readFile(filePath).then(content =>
