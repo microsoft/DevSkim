@@ -15,7 +15,6 @@
             "DS440000"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -238,7 +237,6 @@
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -278,16 +276,14 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "DISABLE_SSL_([^\\b]+)",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },            
             {
                 "pattern": "SSLProtocol\\s.+",
@@ -320,7 +316,6 @@
             "Cryptography.Protocol.TLS.Elliptic-Curve.Hard-Coded"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS440100.md",
         "patterns": [
             {

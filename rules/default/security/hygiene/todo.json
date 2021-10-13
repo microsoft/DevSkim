@@ -8,7 +8,6 @@
             "Hygiene.Comment.Suspicious"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS176209.md",
         "patterns": [
             {
@@ -16,8 +15,7 @@
                 "type": "regex-word",
                 "scopes": [
                     "code", "comment"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

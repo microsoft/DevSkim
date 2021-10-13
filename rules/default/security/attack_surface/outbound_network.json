@@ -11,7 +11,6 @@
             "ThreatModel.Integration.HTTP"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS137038.md",
         "patterns": [
             {
@@ -19,8 +18,7 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -33,7 +31,6 @@
             "ThreatModel.Integration.HTTP"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS137138.md",
         "patterns": [
             {
@@ -42,8 +39,7 @@
                 "scopes": [
                     "code"
                 ],
-                "modifiers": ["i"],
-                "_comment": ""
+                "modifiers": ["i"]
             }
         ],
         "conditions" : [
@@ -54,11 +50,9 @@
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 },
                 "negate_finding": true,
-                "_comment": "" ,
                 "search_in": "finding-region(-3, 0)"
             }
         ],
@@ -66,7 +60,6 @@
             {
                 "name": "Change to HTTPS ",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "https://",
                 "pattern": {
                     "pattern": "http:\/\/",
@@ -74,8 +67,7 @@
                     "scopes": [
                         "code"
                     ],
-                    "modifiers": ["i"],
-                    "_comment": ""
+                    "modifiers": ["i"]
                 }
             }
         ]

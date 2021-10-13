@@ -12,7 +12,6 @@
             "DotNet.DangerousFunctionCall"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS113854.md",
         "patterns": [
             {
@@ -20,8 +19,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "conditions" : [

@@ -14,7 +14,6 @@
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -22,16 +21,14 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

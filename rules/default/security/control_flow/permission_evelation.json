@@ -11,7 +11,6 @@
             "ControlFlow.Permission.Evalation"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS113853.md",
         "patterns": [
             {
@@ -19,8 +18,7 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -36,7 +34,6 @@
             "Implementation.Scripting.PowerShell.DangeousFunction"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS104456.md",
         "patterns": [
             {
@@ -44,56 +41,49 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "System.Runtime.InteropServices.Marshal",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "WriteByte",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "Microsoft.Win32.UnsafeNativeMethods",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "PtrToStructure",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "StructureToPtr",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "(NtCreateThreadEx|CreateRemoteThread)",
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "Invoke-Command",
@@ -116,32 +106,28 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "iex",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "&\"",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "& $",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

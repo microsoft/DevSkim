@@ -8,7 +8,6 @@
             "Hygiene.Network.AccessingLocalhost"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS162092.md",
         "patterns": [
             {
@@ -16,16 +15,14 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "127.0.0.1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

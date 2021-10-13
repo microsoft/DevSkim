@@ -11,7 +11,6 @@
             "API.T-SQL.Dangerous"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS224000.md",
         "patterns": [
             {
@@ -19,8 +18,7 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

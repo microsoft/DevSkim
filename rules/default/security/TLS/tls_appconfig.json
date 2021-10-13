@@ -11,7 +11,6 @@
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS112838.md",
         "patterns": [
             {
@@ -19,32 +18,28 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "Switch.System.ServiceModel.DisableUsingServicePointManagerSecurityProtocol",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "Switch.System.Net.DontEnableSystemDefaultTlsVersions",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "Switch.System.ServiceModel.DontEnableSystemDefaultTlsVersions",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

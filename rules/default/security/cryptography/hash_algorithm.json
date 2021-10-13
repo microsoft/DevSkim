@@ -8,7 +8,6 @@
             "Cryptography.BannedHashAlgorithm"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS126858.md",
         "patterns": [
             {
@@ -16,15 +15,13 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to \"SHA256\"",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "SHA256",
                 "pattern": {
                     "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
@@ -38,7 +35,6 @@
             {
                 "name": "Change to \"SHA512\"",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "SHA512",
                 "pattern": {
                     "pattern": "(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
@@ -66,7 +62,6 @@
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS197800.md",
         "patterns": [
             {
@@ -74,15 +69,13 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to SHA-256",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "CC_SHA256",
                 "pattern": {
                     "pattern": "CC_(MD2|MD4|MD5|SHA1)",
@@ -96,7 +89,6 @@
             {
                 "name": "Change to SHA-512",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "CC_SHA512",
                 "pattern": {
                     "pattern": "CC_(MD2|MD4|MD5|SHA1)",
@@ -124,7 +116,6 @@
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS128420.md",
         "patterns": [
             {
@@ -132,15 +123,13 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to SHA-256",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "hash('sha256'$2);",
                 "pattern": {
                     "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)",
@@ -154,7 +143,6 @@
             {
                 "name": "Change to SHA-512",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "hash('sha512'$2);",
                 "pattern": {
                     "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)\\s*;",
@@ -182,7 +170,6 @@
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS108647.md",
         "patterns": [
             {
@@ -190,15 +177,13 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to SHA-256",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "Digest::SHA256",
                 "pattern": {
                     "pattern": "Digest::(MD5|RMD160|SHA1)",
@@ -212,7 +197,6 @@
             {
                 "name": "Change to SHA-512",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "Digest::SHA512",
                 "pattern": {
                     "pattern": "Digest::(MD5|RMD160|SHA1)",
@@ -240,7 +224,6 @@
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS196098.md",
         "patterns": [
             {
@@ -248,15 +231,13 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to hashlib.sha256",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "hashlib.sha256(",
                 "pattern": {
                     "pattern": "(md5|sha)\\.new\\(",
@@ -270,7 +251,6 @@
             {
                 "name": "Change to hashlib.sha512",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "hashlib.sha512(",
                 "pattern": {
                     "pattern": "(md5|sha)\\.new\\(",
@@ -299,7 +279,6 @@
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS168931.md",
         "patterns": [
             {
@@ -307,15 +286,13 @@
                 "type": "substring",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to SHA-256",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "SHA256CryptoServiceProvider",
                 "pattern": {
                     "pattern": "MD5CryptoServiceProvider",
@@ -329,7 +306,6 @@
             {
                 "name": "Change to SHA-512",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "SHA512CryptoServiceProvider",
                 "pattern": {
                     "pattern": "MD5CryptoServiceProvider",
@@ -351,7 +327,6 @@
             "Cryptography.HashAlgorithm.InsufficientEntropy"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS197836.md",
         "patterns": [
             {
@@ -360,8 +335,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

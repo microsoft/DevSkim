@@ -13,7 +13,6 @@
             "API.DangerousAPI.ProblematicFunction"
         ],
         "severity": "best-practice",
-        "_comment": "",
         "rule_info": "DS161085.md",
         "patterns": [
             {
@@ -21,23 +20,20 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to calloc ",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "calloc(<number of elements>, <size of each element>)",
                 "pattern": {
                     "pattern": "\\bmalloc\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
@@ -56,7 +52,6 @@
             "API.DangerousAPI.ProblematicFunction"
         ],
         "severity": "best-practice",
-        "_comment": "",
         "rule_info": "DS121708.md",
         "patterns": [
             {
@@ -64,23 +59,20 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to memcpy_s (Recommended for VC++)",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "memcpy_s($1, <size of $1>, $2, $3)",
                 "pattern": {
                     "pattern": "\\bmemcpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
@@ -102,7 +94,6 @@
             "API.DangerousAPI.ProblematicFunction"
         ],
         "severity": "best-practice",
-        "_comment": "",
         "rule_info": "DS140021.md",
         "patterns": [
             {
@@ -110,37 +101,32 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to strlen_s (Recommended for VC++)",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strlen_s($1, <size of $1>)",
                 "pattern": {
                     "pattern": "\\bstrlen\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             },
             {
                 "name": "Change to strnlen",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strnlen($1, <size of $1>)",
                 "pattern": {
                     "pattern": "\\bstrlen\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]

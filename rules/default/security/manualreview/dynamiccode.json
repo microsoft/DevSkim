@@ -17,7 +17,6 @@
             "PHP.DangerousFunctionCall"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS189424.md",
         "patterns": [
             {
@@ -25,8 +24,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -44,7 +42,6 @@
             "TypeScript.DangerousFunctionCall"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS172411.md",
         "patterns": [
             {
@@ -52,8 +49,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -70,7 +66,6 @@
             "Dotnet.Unsafecode"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS172412.md",
         "patterns": [
             {
@@ -78,8 +73,7 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

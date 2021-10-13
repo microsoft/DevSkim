@@ -13,7 +13,6 @@
             "API.DangerousAPI.BannedFunction"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS154189.md",
         "patterns": [
             {
@@ -21,8 +20,7 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -43,7 +41,6 @@
             "API.DangerousAPI.BannedFunction"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS185832.md",
         "patterns": [
             {
@@ -51,37 +48,32 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to strcpy_s (Recommended for VC++)",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strcpy_s($1, <size of $1>, $2)",
                 "pattern": {
                     "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             },
             {
                 "name": "Change to strlcpy",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strlcpy($1, $2, <size of $1>)",
                 "pattern": {
                     "pattern": "\\bstrcpy\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
@@ -103,7 +95,6 @@
             "API.DangerousAPI.BannedFunction"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS111237.md",
         "patterns": [
             {
@@ -111,37 +102,32 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to strcpy_s (Recommended for VC++)",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strcpy_s($1, $3, $2)",
                 "pattern": {
                     "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             },
             {
                 "name": "Change to strlcpy",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strlcpy($1, $2, $3)",
                 "pattern": {
                     "pattern": "\\bstrncpy\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
@@ -163,7 +149,6 @@
             "API.DangerousAPI.BannedFunction"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS141863.md",
         "patterns": [
             {
@@ -171,37 +156,32 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to strcat_s (Recommended for VC++)",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strcat_s($1, <size of $1>, $2)",
                 "pattern": {
                     "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             },
             {
                 "name": "Change to strlcat",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strlcat($1, $2, <size of $1>)",
                 "pattern": {
                     "pattern": "\\bstrcat\\s*\\(([^,]+),([^,]+?)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
@@ -223,7 +203,6 @@
             "API.DangerousAPI.BannedFunction"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS108330.md",
         "patterns": [
             {
@@ -231,37 +210,32 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to strcat_s (Recommended for VC++)",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strcat_s($1, $3, $2)",
                 "pattern": {
                     "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             },
             {
                 "name": "Change to strlcat",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "strlcat($1, $2, $3)",
                 "pattern": {
                     "pattern": "\\bstrncat\\s*\\(([^,]+),([^,]+),([^,]+?)\\)+",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
@@ -283,7 +257,6 @@
             "API.DangerousAPI.BannedFunction"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS181021.md",
         "patterns": [
             {
@@ -291,37 +264,32 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to gets_s (Recommended for VC++)",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "gets_s($1, <size of $1>)",
                 "pattern": {
                     "pattern": "\\bgets\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             },
             {
                 "name": "Change to fgets",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "fgets($1, <size of $1>, stdin)",
                 "pattern": {
                     "pattern": "\\bgets\\s*\\(([^,\\)]+)\\)",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]

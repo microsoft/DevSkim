@@ -11,7 +11,6 @@
             "Implementation.Web.ASPNET.ControllerWithoutExtendingController"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS184626.md",
         "patterns": [
             {
@@ -19,31 +18,43 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "class [^\\s]+Controller[\\s{]*$",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
+            }
+        ],
+        "conditions" : [
+            {
+                "pattern" : 
+                {
+                    "pattern": "using System.Web",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "We only want to mark web controllers."
+                },
+                "negate_finding": false,
+                "search_in": "only-before"
             }
         ],
         "fix_its": [
             {
                 "name": "Change to inherit from Controller",
                 "type": "regex-replace",
-                "_comment": "",
+
                 "replacement": "$1 : Controller",
                 "pattern": {
                     "pattern": "(class [^\\s]+Controller)(([\\s{]*$)|(\\s*:\\s*(?!.*?(Controller)).*))",
                     "type": "regex",
                     "scopes": [
                         "code"
-                    ],
-                    "_comment": ""
+                    ]
                 }
             }
         ]
