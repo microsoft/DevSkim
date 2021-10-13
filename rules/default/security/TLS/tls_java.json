@@ -14,7 +14,6 @@
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -38,8 +37,7 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -58,7 +56,6 @@
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {

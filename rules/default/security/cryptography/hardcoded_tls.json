@@ -12,7 +12,6 @@
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -63,8 +62,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SSL_EXT_TLS_ONLY|SSL_EXT_DTLS_ONLY|SSL_EXT_TLS_IMPLEMENTATION_ONLY|SSL_EXT_SSL3_ALLOWED|SSL_EXT_TLS1_2_AND_BELOW_ONLY|SSL_EXT|TLS1_3_ONLY|SSL_EXT_TLS1_2_SERVER_HELLO|SSL_EXT_TLS1_3_SERVER_HELLO",
@@ -115,7 +113,6 @@
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -123,8 +120,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -160,7 +156,6 @@
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -168,16 +163,14 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "ssl_version",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
@@ -199,7 +192,6 @@
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -207,8 +199,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [

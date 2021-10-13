@@ -8,7 +8,6 @@
             "Cryptography.HashAlgorithm.WeakOrBrokenImplementation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS109733.md",
         "patterns": [
             {

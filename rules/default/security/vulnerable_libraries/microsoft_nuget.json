@@ -11,7 +11,6 @@
             "Vulerable-Dependency.Library.NuGet"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "4021279",
         "patterns": [
             {
@@ -19,152 +18,133 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"System.Net.Http\" version=\"(4\\.1\\.1|4\\.3\\.1)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"System.Net.Http.WinHttpHandler\" version=\"(4\\.0\\.1|4\\.3\\.0)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"System.Net.Security\" version=\"(4\\.0\\.0|4\\.3\\.0)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"System.Net.WebSockets.Client\" version=\"(4\\.0\\.0|4\\.3\\.0)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Core\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Abstractions\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.ApiExplorer\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Cors\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.DataAnnotations\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Formatters.Json\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Formatters.Xml\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Localization\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Razor.Host\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.Razor\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.TagHelpers\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.ViewFeatures\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "<package id=\"Microsoft.AspNetCore.Mvc.WebApiCompatShim\" version=\"(1\\.0\\.0|1\\.0\\.1|1\\.0\\.2|1\\.0\\.3|1\\.1\\.0|1\\.1\\.1|1\\.1\\.2)\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -180,7 +160,6 @@
             "Vulerable-Dependency.Library.NuGet"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "3214296",
         "patterns": [
             {
@@ -188,8 +167,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

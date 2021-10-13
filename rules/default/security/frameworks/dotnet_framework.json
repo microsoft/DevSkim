@@ -11,7 +11,6 @@
             "Framework.NET.Outdated"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS450000.md",
         "patterns": [
             {
@@ -20,8 +19,7 @@
                 "scopes": [
                     "code"
                 ],
-                "modifiers" : ["i"],
-                "_comment": ""
+                "modifiers" : ["i"]
             }
         ]
     }   

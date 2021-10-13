@@ -17,7 +17,6 @@
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS112835.md",
         "patterns": [
             {
@@ -25,104 +24,91 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "(SecurityProtocolType)48",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SecurityProtocolType.SystemDefault",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "(SecurityProtocolType)0",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "(SecurityProtocolType)192",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "(SecurityProtocolType)768",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SecurityProtocolType\\.Tls[123]?",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "(SecurityProtocolType)3072",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },            
             {
                 "pattern": "SecurityProtocolType.Tls13",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },            
             {
                 "pattern": "(SecurityProtocolType)12288",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SecurityProtocolTypeExtensions.Tls11",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SecurityProtocolTypeExtensions.Tls12",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SecurityProtocolTypeExtensions.SystemDefault",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
 
         ]

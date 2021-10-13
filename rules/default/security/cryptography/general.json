@@ -8,7 +8,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS101155.md",
         "patterns": [
             {
@@ -16,32 +15,28 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "encryption\\s*=\\s*false",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "unencrypted.*password",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "TODO.*crypt",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -57,7 +52,6 @@
             "Cryptography.SecurityContext.Initialization"
         ],
         "severity": "manual-review",
-        "_comment": "",
         "rule_info": "DS101159.md",
         "patterns": [
             {
@@ -65,8 +59,7 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

@@ -12,7 +12,6 @@
             "Cryptography.Protocol.TLS"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS144436.md",
         "patterns": [
             {
@@ -20,15 +19,13 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to SecurityProtocolType.Tls12",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "SecurityProtocolType.Tls12",
                 "pattern": {
                     "pattern": "\\bSecurityProtocolType\\.(Ssl3|Tls|Tls11)\\b",
@@ -53,7 +50,6 @@
             "Cryptography.Protocol.TLS"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS127101.md",
         "patterns": [
             {
@@ -61,8 +57,7 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -75,7 +70,6 @@
             "Cryptography.Protocol.TLS"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS169125.md",
         "patterns": [
             {
@@ -83,8 +77,7 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -97,7 +90,6 @@
             "Cryptography.Protocol.Banned"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS169126.md",
         "patterns": [
             {
@@ -105,40 +97,35 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SSLv2",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SSLv3",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "TLSv1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "TLSv10",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -155,7 +142,6 @@
             "Cryptography.Protocol.Banned"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS169126.md",
         "patterns": [
             {
@@ -163,264 +149,231 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_56BIT",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_NORMALBITNESS",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_PCT",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_PCT4",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_SSL",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_SSL3",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_STRENGTH_MEDIUM",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_STRENGTH_WEAK",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_UNKNOWNBIT",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_SSL2",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_SSL3",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_TLS1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "WINHTTP_FLAG_SECURE_PROTOCOL_ALL",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_STRENGTH_MEDIUM",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_STRENGTH_WEAK",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SP_PROT_(PCT1|SSL2|SSL3|TLS1|TLS1_0)_(CLIENT|SERVER)",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "NSStreamSocketSecurityLevelNone",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "NSStreamSocketSecurityLevelSSLv2",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "NSStreamSocketSecurityLevelSSLv3",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "NSStreamSocketSecurityLevelTLSv1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kCFStreamSocketSecurityLevelNone",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kCFStreamSocketSecurityLevelSSLv2",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kCFStreamSocketSecurityLevelSSLv3",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kCFStreamSocketSecurityLevelTLSv1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kSSLProtocolUnknown ",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kSSLProtocol3",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kTLSProtocol1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kDTLSProtocol1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kSSLProtocol2",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kSSLProtocol3Only",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kTLSProtocol1Only",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kSSLProtocolAll",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -436,7 +389,6 @@
             "Cryptography.Protocol.Banned"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS169126.md",
         "patterns": [
             {
@@ -444,32 +396,28 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "PROTOCOL_SSLv23",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "PROTOCOL_SSLv3",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "PROTOCOL_TLSv1",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

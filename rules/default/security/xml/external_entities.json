@@ -11,7 +11,6 @@
             "Implementation.iOS.XML.DTDEntityResolution"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS132779.md",
         "patterns": [
             {
@@ -19,15 +18,13 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Disable external entity resolution",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "$1NO",
                 "pattern": {
                     "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(YES)",
@@ -52,7 +49,6 @@
             "Implementation.iOS.XML.DTDEntityResolution"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS132780.md",
         "patterns": [
             {
@@ -60,15 +56,13 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Disable external entity resolution",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "$1FALSE",
                 "pattern": {
                     "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(TRUE)",
@@ -93,7 +87,6 @@
             "Implementation.iOS.XML.DTDEntityResolution"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS132790.md",
         "patterns": [
             {
@@ -101,15 +94,13 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Disable external entity resolution",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "$1NO",
                 "pattern": {
                     "pattern": "(setShouldResolveExternalEntities:\\s*)(YES)",

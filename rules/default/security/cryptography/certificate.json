@@ -8,7 +8,6 @@
             "Cryptography.Optional"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -16,16 +15,14 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "Encryption.*optional",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -41,7 +38,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS181865.md",
         "patterns": [
             {
@@ -49,56 +45,49 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "setAllowsAnyHTTPSCertificate:\\s*YES",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "allowsAnyHTTPSCertificate\\s*=\\s*YES",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "validatesSecureCertificate\\s*=\\s*NO",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "continueWithoutCredentialForAuthenticationChallenge",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kCFStreamSSL(Level|AllowsExpiredCertificates|AllowsExpiredRoots|AllowsAnyRoot|ValidatesCertificateChain|PeerName)",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "kCFStreamPropertySSLSettings",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -114,7 +103,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -122,8 +110,7 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -139,7 +126,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS130822.md",
         "patterns": [
             {
@@ -147,16 +133,14 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "disable_ssl_certificate_validation\\s*=\\s*True",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -172,7 +156,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -180,48 +163,42 @@
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_CERT_DATE_INVALID",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_REVOCATION",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_UNKNOWN_CA",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_WRONG_USAGE",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -237,7 +214,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -245,32 +221,28 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "checkCertificateName\\s*=\\s*\"false\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "checkCertificateRevocationList\\s*=\\s*\"false\"",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "encryptionPolicy\\s*=\\s*\"(AllowNoEncryption|NoEncryption)",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -286,7 +258,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -294,8 +265,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -311,7 +281,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -319,8 +288,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -336,7 +304,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -344,8 +311,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -361,7 +327,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -369,8 +334,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "conditions": [
@@ -385,8 +349,7 @@
                     "_comment": ""
                 },
                 "search_in": "finding-region(-3, 0)",
-                "negate_finding": false,
-                "_comment": ""
+                "negate_finding": false
             }
         ]
     },
@@ -403,7 +366,6 @@
             "Cryptography.Certificate.Validation"
         ],
         "severity": "critical",
-        "_comment": "",
         "rule_info": "DS114352.md",
         "patterns": [
             {
@@ -411,48 +373,42 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "RemoteCertificateValidationCallback\\(delegate\\s*{\\s*return true;\\s*}\\);",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "\\.CertificatePolicy\\s*=\\s*delegate\\s*{\\s*return true;\\s*};",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             },
             {
                 "pattern": "X509CertificateValidationMode.None",
                 "type": "string",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     }

@@ -11,7 +11,6 @@
             "Implementation.PHP"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS144886.md",
         "patterns": [
             {
@@ -19,15 +18,13 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change to $_GET",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "$_GET",
                 "pattern": {
                     "pattern": "\\$_REQUEST",
@@ -41,7 +38,6 @@
             {
                 "name": "Change to $_POST",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "$_POST",
                 "pattern": {
                     "pattern": "\\$_REQUEST",
@@ -55,7 +51,6 @@
             {
                 "name": "Change to $_COOKIE",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "$_COOKIE",
                 "pattern": {
                     "pattern": "\\$_REQUEST",
@@ -80,7 +75,6 @@
             "Implementation.PHP"
         ],
         "severity": "moderate",
-        "_comment": "",
         "rule_info": "DS163877.md",
         "patterns": [
             {
@@ -88,8 +82,7 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "conditions" : [
@@ -104,15 +97,13 @@
                     "_comment": ""
                 },
                 "search_in":"finding-only",
-                "negate_finding": true,
-                "_comment": "" 
+                "negate_finding": true 
             }          
         ],
         "fix_its": [
             {
                 "name": "HTML Entity encode the data",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "htmlentities($1)",
                 "pattern": {
                     "pattern": "(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",
@@ -126,7 +117,6 @@
             {
                 "name": "URL encode the data",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "rawurlencode($1)",
                 "pattern": {
                     "pattern": "(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",

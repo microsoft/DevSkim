@@ -8,7 +8,6 @@
             "Cryptography.Symmetric.CipherMode.Weak"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS187371.md",
         "patterns": [
             {
@@ -16,8 +15,7 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ]
     },
@@ -33,7 +31,6 @@
             "Cryptography.Symmetric.CipherMode.Weak"
         ],
         "severity": "important",
-        "_comment": "",
         "rule_info": "DS182720.md",
         "patterns": [
             {
@@ -41,15 +38,13 @@
                 "type": "regex-word",
                 "scopes": [
                     "code"
-                ],
-                "_comment": ""
+                ]
             }
         ],
         "fix_its": [
             {
                 "name": "Change cipher mode to CBC",
                 "type": "regex-replace",
-                "_comment": "",
                 "replacement": "MCRYPT_MODE_CBC",
                 "pattern": {
                     "pattern": "MCRYPT_MODE_(ECB|CFB|OFB|NOFB|STREAM)",
