@@ -41,27 +41,31 @@ namespace Microsoft.DevSkim
                         {
                             if (wc.FindingOnly)
                             {
-                                var res = ProcessLambda(tc.GetBoundaryText(capture), capture);
-                                if (res.Result)
-                                {
-                                    if (res.Capture is TypedClauseCapture<List<Boundary>> boundaryList)
-                                    {
-                                        passed.AddRange(boundaryList.Result);
-                                    }
-                                }
+                                passed.AddRange(ProcessLambda(tc.GetBoundaryText(capture), capture));
                             }
                             else if (wc.SameLineOnly)
                             {
                                 var start = tc.LineStarts[tc.GetLocation(capture.Index).Line];
                                 var end = tc.LineEnds[tc.GetLocation(start + capture.Length).Line];
-                                var res = ProcessLambda(tc.FullContent[start..end], capture);
-                                if (res.Result)
-                                {
-                                    if (res.Capture is TypedClauseCapture<List<Boundary>> boundaryList)
-                                    {
-                                        passed.AddRange(boundaryList.Result);
-                                    }
-                                }
+                                passed.AddRange(ProcessLambda(tc.FullContent[start..end], capture));
+                            }
+                            else if (wc.SameFile)
+                            {
+                                var start = tc.LineStarts[0];
+                                var end = tc.LineEnds[^1];
+                                passed.AddRange(ProcessLambda(tc.FullContent[start..end], capture));
+                            }
+                            else if (wc.OnlyBefore)
+                            {
+                                var start = tc.LineStarts[0];
+                                var end = capture.Index;
+                                passed.AddRange(ProcessLambda(tc.FullContent[start..end], capture));
+                            }
+                            else if (wc.OnlyAfter)
+                            {
+                                var start = capture.Index + capture.Length;
+                                var end = tc.LineEnds[^1];
+                                passed.AddRange(ProcessLambda(tc.FullContent[start..end], capture));
                             }
                             else
                             {
@@ -69,23 +73,15 @@ namespace Microsoft.DevSkim
                                 // Before is already a negative number
                                 var start = tc.LineEnds[Math.Max(0, startLine + wc.Before)];
                                 var end = tc.LineEnds[Math.Min(tc.LineEnds.Count - 1, startLine + wc.After)];
-                                var res = ProcessLambda(tc.FullContent[start..end], capture);
-                                if (res.Result)
-                                {
-                                    if (res.Capture is TypedClauseCapture<List<Boundary>> boundaryList)
-                                    {
-                                        passed.AddRange(boundaryList.Result);
-                                    }
-                                }
+                                passed.AddRange(ProcessLambda(tc.FullContent[start..end], capture));
                             }
                         }
                     }
                 }
                 return new OperationResult(passed.Any() ^ wc.Invert, passed.Any() ? new TypedClauseCapture<List<Boundary>>(wc, passed) : null);
 
-                OperationResult ProcessLambda(string target, Boundary targetBoundary)
+                IEnumerable<Boundary> ProcessLambda(string target, Boundary targetBoundary)
                 {
-                    var boundaries = new List<Boundary>();
                     foreach (var pattern in wc.Data.Select(x => regexEngine.StringToRegex(x, regexOpts)))
                     {
                         if (pattern is Regex r)
@@ -103,13 +99,12 @@ namespace Microsoft.DevSkim
                                     // Should return only scoped matches
                                     if (tc.ScopeMatch(wc.Scopes, translatedBoundary))
                                     {
-                                        boundaries.Add(translatedBoundary);
+                                        yield return translatedBoundary;
                                     }
                                 }
                             }
                         }
                     }
-                    return new OperationResult(boundaries.Any(), boundaries.Any() ? new TypedClauseCapture<List<Boundary>>(wc, boundaries) : null);
                 }
             }
             return new OperationResult(false, null);
