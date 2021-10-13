@@ -6,9 +6,9 @@ import DevSkimServer from './devskimServer'
 import
 {
     Connection,createConnection, InitializeParams, InitializeResult, ProposedFeatures, TextDocuments,
-} from "vscode-languageserver/node";
+} from "vscode-languageserver";
 
-import { StreamMessageReader, StreamMessageWriter } from "vscode-jsonrpc/node";
+import { StreamMessageReader, StreamMessageWriter } from "vscode-jsonrpc";
 import ReadableStream = NodeJS.ReadableStream;
 import WritableStream = NodeJS.WritableStream;
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -50,6 +50,7 @@ export class DevSkimMain
             this.connection = bToPipe
                 ? this.createConnectionToPipes(pipeName)
                 : createConnection(ProposedFeatures.all);
+                
 
             const documents = new TextDocuments(TextDocument);
 
