@@ -78,7 +78,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
             else
             {
-                var newVal = new ArtifactLocation() { Uri = new Uri(path) };
+                var newVal = new ArtifactLocation() { Uri = new Uri(path,UriKind.Relative) };
                 locationCache[path] = newVal;
                 return newVal;
             }
@@ -186,13 +186,10 @@ namespace Microsoft.DevSkim.CLI.Writers
                         CharLength = issue.Issue.Boundary.Length,
                     }, new ArtifactContent() { Text = RuleProcessor.Fix(issue.TextSample, fix) }, null));
 
-                    var path = Path.GetFullPath(issue.Filename);
                     var changes = new ArtifactChange[] 
                     {
                         new ArtifactChange(
-                            new ArtifactLocation() {
-                                Uri = new Uri(path)
-                            },
+                            GetOrSetLocationCache(issue.Filename),
                             replacements,
                             null)
                     };
