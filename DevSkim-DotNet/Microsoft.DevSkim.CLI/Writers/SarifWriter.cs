@@ -68,30 +68,43 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
         }
 
+        private Dictionary<string, ArtifactLocation> locationCache = new Dictionary<string, ArtifactLocation>();
+        
+        private ArtifactLocation GetOrSetLocationCache(string path)
+        {
+            if (!locationCache.ContainsKey(path))
+            {
+                locationCache[path] = new ArtifactLocation() { Uri = new Uri(path) };
+            }
+            return locationCache[path];
+        }
+
         public override void WriteIssue(IssueRecord issue)
         {
             Result resultItem = new Result();
             MapRuleToResult(issue.Issue.Rule, ref resultItem);
             AddRuleToSarifRule(issue.Issue.Rule);
 
-            CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location();
-            loc.PhysicalLocation = new PhysicalLocation()
+            CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location()
             {
-                Address = new Address() { FullyQualifiedName = Path.GetFullPath(issue.Filename) },
-                Region = new Region()
+                PhysicalLocation = new PhysicalLocation()
                 {
-                    StartColumn = issue.Issue.StartLocation.Column,
-                    StartLine = issue.Issue.StartLocation.Line,
-                    EndColumn = issue.Issue.EndLocation.Column,
-                    EndLine = issue.Issue.EndLocation.Line,
-                    CharOffset = issue.Issue.Boundary.Index,
-                    CharLength = issue.Issue.Boundary.Length,
-                    Snippet = new ArtifactContent()
+                    ArtifactLocation = GetOrSetLocationCache(issue.Filename),
+                    Region = new Region()
                     {
-                        Text = issue.TextSample,
-                        Rendered = new MultiformatMessageString(issue.TextSample, $"`{issue.TextSample}`", null),
-                    },
-                    SourceLanguage = issue.Language
+                        StartColumn = issue.Issue.StartLocation.Column,
+                        StartLine = issue.Issue.StartLocation.Line,
+                        EndColumn = issue.Issue.EndLocation.Column,
+                        EndLine = issue.Issue.EndLocation.Line,
+                        CharOffset = issue.Issue.Boundary.Index,
+                        CharLength = issue.Issue.Boundary.Length,
+                        Snippet = new ArtifactContent()
+                        {
+                            Text = issue.TextSample,
+                            Rendered = new MultiformatMessageString(issue.TextSample, $"`{issue.TextSample}`", null),
+                        },
+                        SourceLanguage = issue.Language
+                    }
                 }
             };
 

@@ -286,7 +286,7 @@ Output format options:
                                                         issue.Rule.Name);
 
                                 IssueRecord record = new IssueRecord(
-                                    Filename: fileEntry.FullPath,
+                                    Filename: string.IsNullOrEmpty(_path) ? fileEntry.FullPath : fileEntry.FullPath.StartsWith(_path) ? fileEntry.FullPath[_path.Length..] : fileEntry.FullPath,
                                     Filesize: fileText.Length,
                                     TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
