@@ -68,15 +68,20 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
         }
 
-        private Dictionary<string, ArtifactLocation> locationCache = new Dictionary<string, ArtifactLocation>();
+        private ConcurrentDictionary<string, ArtifactLocation> locationCache = new ConcurrentDictionary<string, ArtifactLocation>();
         
         private ArtifactLocation GetOrSetLocationCache(string path)
         {
-            if (!locationCache.ContainsKey(path))
+            if (locationCache.TryGetValue(path, out ArtifactLocation? value))
             {
-                locationCache[path] = new ArtifactLocation() { Uri = new Uri(path) };
+                return value;
             }
-            return locationCache[path];
+            else
+            {
+                var newVal = new ArtifactLocation() { Uri = new Uri(path) };
+                locationCache[path] = newVal;
+                return newVal;
+            }
         }
 
         public override void WriteIssue(IssueRecord issue)
