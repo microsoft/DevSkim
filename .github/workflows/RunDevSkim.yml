@@ -36,8 +36,8 @@ jobs:
         sarif_file: devskim-results.sarif
 
     - name: Archive artifacts
-          uses: actions/upload-artifact@v2
-          with:
-            name: devskim-results.sarif
-            path: |
-              devskim-results.sarif
+      uses: actions/upload-artifact@v2
+      with:
+        name: devskim-results.sarif
+        path: |
+          devskim-results.sarif
