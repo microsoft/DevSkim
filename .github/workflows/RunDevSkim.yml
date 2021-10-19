@@ -21,22 +21,14 @@ jobs:
       with:
         fetch-depth: 0
     
-    # - name: DevSkim
-    #   uses: microsoft/DevSkim-Action@v1
-    #   with:
-    #     # The sub directory of the repository root to scan. Repository root used by default.
-    #     # Optionally scan the contents of archives.
-    #     should-scan-archives: false
-    #     # The filename for the output.
-    #     output-filename: devskim-results.sarif
-    - name: Pack Rules
-      run: dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
-
-    - name: Build
-      run: dotnet build DevSkim-DotNet/Microsoft.DevSkim.CLI
-
-    - name: Run
-      run: dotnet DevSkim-DotNet/Microsoft.DevSkim.CLI/bin/Debug/net5.0/devskim.dll analyze rules devskim-results.sarif -f sarif
+    - name: DevSkim
+      uses: microsoft/DevSkim-Action@v1
+      with:
+        # The sub directory of the repository root to scan. Repository root used by default.
+        # Optionally scan the contents of archives.
+        should-scan-archives: false
+        # The filename for the output.
+        output-filename: devskim-results.sarif
 
     - name: Upload Sarif
       uses: github/codeql-action/upload-sarif@v1
