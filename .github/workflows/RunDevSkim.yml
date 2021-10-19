@@ -36,7 +36,7 @@ jobs:
       run: dotnet build DevSkim-DotNet/Microsoft.DevSkim.CLI
 
     - name: Run
-      run: dotnet DevSkim-DotNet/Microsoft.DevSkim.CLI/bin/Debug/net5.0/devskim.dll analyze /github/workspace devskim-results.sarif -f sarif
+      run: dotnet DevSkim-DotNet/Microsoft.DevSkim.CLI/bin/Debug/net5.0/devskim.dll analyze rules devskim-results.sarif -f sarif
 
     - name: Upload Sarif
       uses: github/codeql-action/upload-sarif@v1
