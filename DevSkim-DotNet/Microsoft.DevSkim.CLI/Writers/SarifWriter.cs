@@ -70,7 +70,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         private ConcurrentDictionary<string, ArtifactLocation> locationCache = new ConcurrentDictionary<string, ArtifactLocation>();
         
-        private ArtifactLocation GetOrSetLocationCache(string path)
+        private ArtifactLocation GetValueAndImplicitlyPopulateCache(string path)
         {
             if (locationCache.TryGetValue(path, out ArtifactLocation? value))
             {
@@ -94,7 +94,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             {
                 PhysicalLocation = new PhysicalLocation()
                 {
-                    ArtifactLocation = GetOrSetLocationCache(issue.Filename),
+                    ArtifactLocation = GetValueAndImplicitlyPopulateCache(issue.Filename),
                     Region = new Region()
                     {
                         StartColumn = issue.Issue.StartLocation.Column,
@@ -189,7 +189,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                     var changes = new ArtifactChange[] 
                     {
                         new ArtifactChange(
-                            GetOrSetLocationCache(issue.Filename),
+                            GetValueAndImplicitlyPopulateCache(issue.Filename),
                             replacements,
                             null)
                     };
