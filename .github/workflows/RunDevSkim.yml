@@ -29,7 +29,9 @@ jobs:
     #     should-scan-archives: false
     #     # The filename for the output.
     #     output-filename: devskim-results.sarif
-    
+    - name: Pack Rules
+      run: dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
+
     - name: Build
       run: dotnet build DevSkim-DotNet/Microsoft.DevSkim.CLI
 
