@@ -2,9 +2,13 @@ name: "CodeQL (VSCode)"
 
 on:
   push:
+    branches:
+    - main
     paths:
     - DevSkim-VSCode-Plugin/*
   pull_request:
+    branches:
+    - main
   schedule:
     - cron: '0 3 * * 3'
 

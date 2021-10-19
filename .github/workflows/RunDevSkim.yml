@@ -2,6 +2,8 @@ name: "Code Scanning - DevSkim"
 
 on:
   push:
+    branches:
+    - main
     paths:
     - '**'
   schedule:
@@ -24,13 +26,43 @@ jobs:
     - name: DevSkim
       uses: microsoft/DevSkim-Action@v1
       with:
+        directory-to-scan: DevSkim-DotNet
         # The sub directory of the repository root to scan. Repository root used by default.
         # Optionally scan the contents of archives.
         should-scan-archives: false
         # The filename for the output.
-        output-filename: devskim-results.sarif
-    
+        output-filename: devskim-results-dotnet.sarif
+
     - name: Upload Sarif
       uses: github/codeql-action/upload-sarif@v1
       with:
-        sarif_file: devskim-results.sarif
+        sarif_file: devskim-results-dotnet.sarif
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: devskim-results-dotnet.sarif
+        path: |
+          devskim-results-dotnet.sarif
+
+    - name: DevSkim
+      uses: microsoft/DevSkim-Action@v1
+      with:
+        directory-to-scan: DevSkim-VSCode-Plugin
+        # The sub directory of the repository root to scan. Repository root used by default.
+        # Optionally scan the contents of archives.
+        should-scan-archives: false
+        # The filename for the output.
+        output-filename: devskim-results-vscode.sarif
+
+    - name: Upload Sarif
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: devskim-results-vscode.sarif
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: devskim-results-vscode.sarif
+        path: |
+          devskim-results-vscode.sarif

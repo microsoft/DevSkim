@@ -12,7 +12,6 @@ namespace Microsoft.DevSkim
             this.Issue = Issue;
             this.Language = Language;
         }
-
         public string Filename { get; }
         public int Filesize { get; }
         public Issue Issue { get; }

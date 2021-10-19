@@ -235,6 +235,7 @@ Output format options:
 
             void parseFileEntry(FileEntry fileEntry)
             {
+                Uri baseUri = new Uri(Path.GetFullPath(_path));
                 string language = Language.FromFileName(fileEntry.FullPath);
 
                 // Skip files written in unknown language
@@ -286,7 +287,7 @@ Output format options:
                                                         issue.Rule.Name);
 
                                 IssueRecord record = new IssueRecord(
-                                    Filename: fileEntry.FullPath,
+                                    Filename: baseUri.MakeRelativeUri(new Uri(fileEntry.FullPath)).ToString(),
                                     Filesize: fileText.Length,
                                     TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,

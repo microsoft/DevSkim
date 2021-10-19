@@ -2,10 +2,14 @@ name: "CodeQL (CLI)"
 
 on:
   push:
+    branches:
+    - main
     paths:
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
   pull_request:
+    branches:
+    - main
   schedule:
     - cron: '0 3 * * 3'
 

@@ -68,30 +68,48 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
         }
 
+        private ConcurrentDictionary<string, ArtifactLocation> locationCache = new ConcurrentDictionary<string, ArtifactLocation>();
+        
+        private ArtifactLocation GetValueAndImplicitlyPopulateCache(string path)
+        {
+            if (locationCache.TryGetValue(path, out ArtifactLocation? value))
+            {
+                return value;
+            }
+            else
+            {
+                var newVal = new ArtifactLocation() { Uri = new Uri(path,UriKind.Relative) };
+                locationCache[path] = newVal;
+                return newVal;
+            }
+        }
+
         public override void WriteIssue(IssueRecord issue)
         {
             Result resultItem = new Result();
             MapRuleToResult(issue.Issue.Rule, ref resultItem);
             AddRuleToSarifRule(issue.Issue.Rule);
 
-            CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location();
-            loc.PhysicalLocation = new PhysicalLocation()
+            CodeAnalysis.Sarif.Location loc = new CodeAnalysis.Sarif.Location()
             {
-                Address = new Address() { FullyQualifiedName = Path.GetFullPath(issue.Filename) },
-                Region = new Region()
+                PhysicalLocation = new PhysicalLocation()
                 {
-                    StartColumn = issue.Issue.StartLocation.Column,
-                    StartLine = issue.Issue.StartLocation.Line,
-                    EndColumn = issue.Issue.EndLocation.Column,
-                    EndLine = issue.Issue.EndLocation.Line,
-                    CharOffset = issue.Issue.Boundary.Index,
-                    CharLength = issue.Issue.Boundary.Length,
-                    Snippet = new ArtifactContent()
+                    ArtifactLocation = GetValueAndImplicitlyPopulateCache(issue.Filename),
+                    Region = new Region()
                     {
-                        Text = issue.TextSample,
-                        Rendered = new MultiformatMessageString(issue.TextSample, $"`{issue.TextSample}`", null),
-                    },
-                    SourceLanguage = issue.Language
+                        StartColumn = issue.Issue.StartLocation.Column,
+                        StartLine = issue.Issue.StartLocation.Line,
+                        EndColumn = issue.Issue.EndLocation.Column,
+                        EndLine = issue.Issue.EndLocation.Line,
+                        CharOffset = issue.Issue.Boundary.Index,
+                        CharLength = issue.Issue.Boundary.Length,
+                        Snippet = new ArtifactContent()
+                        {
+                            Text = issue.TextSample,
+                            Rendered = new MultiformatMessageString(issue.TextSample, $"`{issue.TextSample}`", null),
+                        },
+                        SourceLanguage = issue.Language
+                    }
                 }
             };
 
@@ -168,13 +186,10 @@ namespace Microsoft.DevSkim.CLI.Writers
                         CharLength = issue.Issue.Boundary.Length,
                     }, new ArtifactContent() { Text = RuleProcessor.Fix(issue.TextSample, fix) }, null));
 
-                    var path = Path.GetFullPath(issue.Filename);
                     var changes = new ArtifactChange[] 
                     {
                         new ArtifactChange(
-                            new ArtifactLocation() {
-                                Uri = new Uri(path)
-                            },
+                            GetValueAndImplicitlyPopulateCache(issue.Filename),
                             replacements,
                             null)
                     };
