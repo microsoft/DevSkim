@@ -235,7 +235,7 @@ Output format options:
 
             void parseFileEntry(FileEntry fileEntry)
             {
-                Uri baseUri = new Uri(_path);
+                Uri baseUri = new Uri(Path.GetFullPath(_path));
                 string language = Language.FromFileName(fileEntry.FullPath);
 
                 // Skip files written in unknown language
