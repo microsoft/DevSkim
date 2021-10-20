@@ -5,7 +5,10 @@ on:
     branches:
     - main
     paths:
-    - '**'
+    - DevSkim-DotNet/*
+  pull_request:
+    branches:
+    - main
   schedule:
     - cron: '0 3 * * 3'
 
