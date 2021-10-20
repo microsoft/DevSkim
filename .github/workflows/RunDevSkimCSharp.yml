@@ -27,10 +27,7 @@ jobs:
       uses: microsoft/DevSkim-Action@v1
       with:
         directory-to-scan: DevSkim-DotNet
-        # The sub directory of the repository root to scan. Repository root used by default.
-        # Optionally scan the contents of archives.
         should-scan-archives: false
-        # The filename for the output.
         output-filename: devskim-results-dotnet.sarif
 
     - name: Upload Sarif
