@@ -165,6 +165,19 @@ Output format options:
             return RunFileEntries(fileListing);
         }
 
+        static string TryRelativizePath(string parentPath, string childPath)
+        {
+            try
+            {
+                return Path.GetRelativePath(parentPath, childPath) ?? childPath;
+            }
+            catch (Exception)
+            {
+                // Paths weren't relative.
+            }
+            return childPath;
+        }
+
         public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
         {
             Verifier? verifier = null;
@@ -285,14 +298,13 @@ Output format options:
                                                         issue.Rule.Id,
                                                         issue.Rule.Severity,
                                                         issue.Rule.Name);
-
+                                
                                 IssueRecord record = new IssueRecord(
-                                    Filename: baseUri.MakeRelativeUri(new Uri(fileEntry.FullPath)).ToString(),
+                                    Filename: TryRelativizePath(_path, fileEntry.FullPath),
                                     Filesize: fileText.Length,
                                     TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
                                     Language: language);
-
                                 outputWriter.WriteIssue(record);
                             }
                         }
