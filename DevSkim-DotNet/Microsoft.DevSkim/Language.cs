@@ -69,6 +69,11 @@ namespace Microsoft.DevSkim
             return result;
         }
 
+        public static bool IsAlwaysCommented(string language)
+        {
+            return Instance.Comments.Any(x => x.Always && x.Languages.Contains(language));
+        }
+
         /// <summary>
         ///     Gets comment preffix for given language
         /// </summary>

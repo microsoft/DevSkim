@@ -169,6 +169,13 @@ Output format options:
         {
             try
             {
+                if (parentPath == childPath)
+                {
+                    if (File.Exists(parentPath))
+                    {
+                        return Path.GetFileName(childPath);
+                    }
+                }
                 return Path.GetRelativePath(parentPath, childPath) ?? childPath;
             }
             catch (Exception)

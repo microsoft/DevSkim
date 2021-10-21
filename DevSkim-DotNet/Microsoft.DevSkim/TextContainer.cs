@@ -52,6 +52,7 @@ namespace Microsoft.DevSkim
             prefix = DevSkim.Language.GetCommentPrefix(Language);
             suffix = DevSkim.Language.GetCommentSuffix(Language);
             inline = DevSkim.Language.GetCommentInline(Language);
+            alwaysCommented = DevSkim.Language.IsAlwaysCommented(Language);
         }
 
         public string FullContent { get; }
@@ -178,14 +179,21 @@ namespace Microsoft.DevSkim
             {
                 return false;
             }
-            if (patterns.Contains(PatternScope.All) || string.IsNullOrEmpty(prefix))
+            if (patterns.Contains(PatternScope.All))
+            {
                 return true;
+            }
+            if (alwaysCommented)
+            {
+                return patterns.Contains(PatternScope.Comment);
+            }
             bool isInComment = IsBetween(FullContent, boundary.Index, prefix, suffix, inline);
 
             return !(isInComment && !patterns.Contains(PatternScope.Comment));
         }
 
         private string inline;
+        private bool alwaysCommented;
         private string prefix;
         private string suffix;
 

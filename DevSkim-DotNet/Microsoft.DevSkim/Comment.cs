@@ -20,5 +20,12 @@ namespace Microsoft.DevSkim
 
         [JsonPropertyName("suffix")]
         public string? Suffix { get; set; }
+
+
+        /// <summary>
+        /// Set if the language should always be considered comments
+        /// </summary>
+        [JsonPropertyName("always")]
+        public bool Always { get; set; }
     }
 }
