@@ -23,6 +23,12 @@
   },
   {
     "language": [
+      "plaintext"
+    ],
+    "always":  true
+  },
+  {
+    "language": [
       "perl",
       "perl6",
       "r",
