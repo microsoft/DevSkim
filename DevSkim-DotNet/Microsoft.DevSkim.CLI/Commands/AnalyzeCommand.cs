@@ -29,7 +29,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                               bool crawlArchives,
                               bool disableParallel,
                               bool exitCodeIsNumIssues,
-                              string globOptions)
+                              string globOptions,
+                              string basePath)
         {
             _path = path;
             _outputFile = output;
@@ -44,6 +45,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _disableParallel = disableParallel;
             _exitCodeIsNumIssues = exitCodeIsNumIssues;
             _globs = globOptions?.Split(',').Select(x => new Glob(x)) ?? Array.Empty<Glob>();
+            _basePath = !string.IsNullOrEmpty(basePath) ? basePath : path;
         }
 
         public static void Configure(CommandLineApplication command)
@@ -101,6 +103,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                                         "Use the exit code to indicate number of issues identified.",
                                         CommandOptionType.NoValue);
 
+            var basePath = command.Option("--base-path",
+                                        "Specify what path to root result URIs with. When not set will generate paths relative to the source directory (or directory containing the source file specified).",
+                                        CommandOptionType.SingleValue);
+
             command.ExtendedHelpText = 
 @"
 Output format options:
@@ -133,7 +139,8 @@ Output format options:
                                  crawlArchives.HasValue(),
                                  disableParallel.HasValue(),
                                  exitCodeIsNumIssues.HasValue(),
-                                 globOptions.Value())).Run();
+                                 globOptions.Value(),
+                                 basePath.Value())).Run();
             });
         }
 
@@ -307,7 +314,7 @@ Output format options:
                                                         issue.Rule.Name);
                                 
                                 IssueRecord record = new IssueRecord(
-                                    Filename: TryRelativizePath(_path, fileEntry.FullPath),
+                                    Filename: TryRelativizePath(_basePath, fileEntry.FullPath),
                                     Filesize: fileText.Length,
                                     TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
@@ -358,6 +365,7 @@ Output format options:
         public bool _exitCodeIsNumIssues { get; }
 
         private IEnumerable<Glob> _globs;
+        private string _basePath;
         private bool _disableSuppression;
 
         private string _fileFormat;
