@@ -50,6 +50,8 @@ The Visual Studio extension is available in the [Visual Studio Marketplace](http
 
 The Visual Studio Code plugin is available in the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim).
 
+DevSkim is also available as a [GitHub Action](https://github.com/microsoft/DevSkim-Action) to itegrate with the GitHub Security Issues pane.
+
 ## Installation
 
 ### Visual Studio Extension
@@ -71,7 +73,7 @@ Download the platform specific binary archive for your system (Windows, Mac OS, 
 
 ### .NET Core Global Tool
 
-If you already have .NET Core 5.0 installed, you can install the DevSkim CLI dotnet global tool by running the following from a command line:
+If you already have .NET 5.0 installed, you can install the DevSkim CLI dotnet global tool by running the following from a command line:
 
 `dotnet tool install --global Microsoft.CST.DevSkim.CLI`
 
