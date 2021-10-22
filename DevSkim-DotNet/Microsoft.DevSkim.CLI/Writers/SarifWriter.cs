@@ -145,11 +145,15 @@ namespace Microsoft.DevSkim.CLI.Writers
         {
             if (!_rules.ContainsKey(devskimRule.Id))
             {
+                var helpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo); ;
                 ReportingDescriptor sarifRule = new ReportingDescriptor();
                 sarifRule.Id = devskimRule.Id;
                 sarifRule.Name = devskimRule.Name;
+                sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = devskimRule.Description };
-                sarifRule.HelpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo);
+                sarifRule.Help.Text = devskimRule.Description;
+                sarifRule.Help.Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue.";
+                sarifRule.HelpUri = helpUri;
                 sarifRule.DefaultConfiguration = new ReportingConfiguration() { Enabled = true };
                 switch (devskimRule.Severity)
                 {
