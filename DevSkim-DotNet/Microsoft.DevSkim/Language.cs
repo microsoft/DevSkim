@@ -69,10 +69,12 @@ namespace Microsoft.DevSkim
             return result;
         }
 
-        public static bool IsAlwaysCommented(string language)
-        {
-            return Instance.Comments.Any(x => x.Always && x.Languages.Contains(language));
-        }
+        /// <summary>
+        /// Is the specified language considered to always be comments and not code
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns>True if the language is marked always comments.</returns>
+        public static bool IsAlwaysCommented(string language) => Instance.Comments.Where(x => x.Languages?.Contains(language) ?? false).Any(x => x.Always);
 
         /// <summary>
         ///     Gets comment preffix for given language
