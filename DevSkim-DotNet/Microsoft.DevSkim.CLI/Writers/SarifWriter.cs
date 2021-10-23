@@ -151,8 +151,11 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifRule.Name = devskimRule.Name;
                 sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = devskimRule.Description };
-                sarifRule.Help.Text = devskimRule.Description;
-                sarifRule.Help.Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue.";
+                sarifRule.Help = new MultiformatMessageString()
+                {
+                    Text = devskimRule.Description,
+                    Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue."
+                };
                 sarifRule.HelpUri = helpUri;
                 sarifRule.DefaultConfiguration = new ReportingConfiguration() { Enabled = true };
                 switch (devskimRule.Severity)

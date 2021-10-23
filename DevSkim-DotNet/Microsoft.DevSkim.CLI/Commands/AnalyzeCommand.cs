@@ -31,6 +31,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         public bool DisableParallel { get; set; }
         public bool ExitCodeIsNumIssues { get; set; }
         public string OutputTextFormat { get; set; } = string.Empty;
+        public bool AbsolutePaths { get; set; } = false;
     }
 
     public class AnalyzeCommand : ICommand
@@ -50,8 +51,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                              bool crawlArchives,
                              bool disableParallel,
                              bool exitCodeIsNumIssues,
-                             string globOptions,
-                             string basePath)
+                             string globOptions)
         {
             var optionsIn = new AnalyzeCommandOptions()
             {
@@ -67,7 +67,6 @@ namespace Microsoft.DevSkim.CLI.Commands
                 CrawlArchives = crawlArchives,
                 ExitCodeIsNumIssues = exitCodeIsNumIssues,
                 Globs = globOptions?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
-                BasePath = basePath,
                 DisableParallel = disableParallel
             };
             opts = optionsIn;
@@ -137,6 +136,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                                         "Specify what path to root result URIs with. When not set will generate paths relative to the source directory (or directory containing the source file specified).",
                                         CommandOptionType.SingleValue);
 
+            var absolutePaths = command.Option("--absolute-path",
+                           "Output absolute paths (overrides --base-path).",
+                           CommandOptionType.NoValue);
+
             command.ExtendedHelpText = 
 @"
 Output format options:
@@ -172,7 +175,8 @@ Output format options:
                     ExitCodeIsNumIssues = exitCodeIsNumIssues.HasValue(),
                     Globs = globOptions.Value()?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
                     BasePath = basePath.Value(),
-                    DisableParallel = disableParallel.HasValue()
+                    DisableParallel = disableParallel.HasValue(),
+                    AbsolutePaths = absolutePaths.HasValue()
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));
@@ -206,10 +210,14 @@ Output format options:
             return RunFileEntries(fileListing);
         }
 
-        static string TryRelativizePath(string parentPath, string childPath)
+        string TryRelativizePath(string parentPath, string childPath)
         {
             try
             {
+                if (opts.AbsolutePaths)
+                {
+                    return Path.GetFullPath(childPath);
+                }
                 if (parentPath == childPath)
                 {
                     if (File.Exists(parentPath))
