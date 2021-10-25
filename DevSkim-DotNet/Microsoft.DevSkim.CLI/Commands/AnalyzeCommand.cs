@@ -15,35 +15,66 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
+    public class AnalyzeCommandOptions
+    {
+        public IEnumerable<Glob> Globs { get; set; } = Array.Empty<Glob>();
+        public string BasePath { get; set; } = string.Empty;
+        public bool DisableSuppression { get; set; }
+        public bool IgnoreDefaultRules { get; set; }
+        public string OutputFile { get; set; } = string.Empty;
+        public string OutputFileFormat { get; set; } = string.Empty;
+        public string Path { get; set; } = string.Empty;
+        public string[] Rulespath { get; set; } = Array.Empty<string>();
+        public string[] Severities { get; set; } = Array.Empty<string>();
+        public bool SuppressError { get; set; }
+        public bool CrawlArchives { get; set; }
+        public bool DisableParallel { get; set; }
+        public bool ExitCodeIsNumIssues { get; set; }
+        public string OutputTextFormat { get; set; } = string.Empty;
+        public bool AbsolutePaths { get; set; } = false;
+    }
+
     public class AnalyzeCommand : ICommand
     {
+        private AnalyzeCommandOptions opts;
+
+        [Obsolete("Use AnalyzeCommand(AnalyzeCommandOptions) constructor instead.")]
         public AnalyzeCommand(string path,
-                              string output,
-                              string outputFileFormat,
-                              string outputTextFormat,
-                              string severities,
-                              string rules,
-                              bool ignoreDefault,
-                              bool suppressError,
-                              bool disableSuppression,
-                              bool crawlArchives,
-                              bool disableParallel,
-                              bool exitCodeIsNumIssues,
-                              string globOptions)
+                             string output,
+                             string outputFileFormat,
+                             string outputTextFormat,
+                             string severities,
+                             string rules,
+                             bool ignoreDefault,
+                             bool suppressError,
+                             bool disableSuppression,
+                             bool crawlArchives,
+                             bool disableParallel,
+                             bool exitCodeIsNumIssues,
+                             string globOptions)
         {
-            _path = path;
-            _outputFile = output;
-            _fileFormat = outputFileFormat;
-            _outputFormat = outputTextFormat;
-            _severities = severities?.Split(',') ?? Array.Empty<string>();
-            _rulespath = rules?.Split(',') ?? Array.Empty<string>();
-            _ignoreDefaultRules = ignoreDefault;
-            _suppressError = suppressError;
-            _disableSuppression = disableSuppression;
-            _crawlArchives = crawlArchives;
-            _disableParallel = disableParallel;
-            _exitCodeIsNumIssues = exitCodeIsNumIssues;
-            _globs = globOptions?.Split(',').Select(x => new Glob(x)) ?? Array.Empty<Glob>();
+            var optionsIn = new AnalyzeCommandOptions()
+            {
+                Path = path,
+                OutputFile = output,
+                OutputFileFormat = outputFileFormat,
+                OutputTextFormat = outputTextFormat,
+                Severities = severities?.Split(',') ?? Array.Empty<string>(),
+                Rulespath = rules?.Split(',') ?? Array.Empty<string>(),
+                IgnoreDefaultRules = ignoreDefault,
+                SuppressError = suppressError,
+                DisableSuppression = disableSuppression,
+                CrawlArchives = crawlArchives,
+                ExitCodeIsNumIssues = exitCodeIsNumIssues,
+                Globs = globOptions?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
+                DisableParallel = disableParallel
+            };
+            opts = optionsIn;
+        }
+
+        public AnalyzeCommand(AnalyzeCommandOptions options)
+        {
+            opts = options;
         }
 
         public static void Configure(CommandLineApplication command)
@@ -101,6 +132,14 @@ namespace Microsoft.DevSkim.CLI.Commands
                                         "Use the exit code to indicate number of issues identified.",
                                         CommandOptionType.NoValue);
 
+            var basePath = command.Option("--base-path",
+                                        "Specify what path to root result URIs with. When not set will generate paths relative to the source directory (or directory containing the source file specified).",
+                                        CommandOptionType.SingleValue);
+
+            var absolutePaths = command.Option("--absolute-path",
+                           "Output absolute paths (overrides --base-path).",
+                           CommandOptionType.NoValue);
+
             command.ExtendedHelpText = 
 @"
 Output format options:
@@ -119,56 +158,66 @@ Output format options:
 %T  tags (comma-separated in text writer)
 %f  fixes (json only)";
 
-            command.OnExecute(() =>
+            command.OnExecute((Func<int>)(() =>
             {
-                return (new AnalyzeCommand(locationArgument.Value,
-                                 outputArgument.Value,
-                                 outputFileFormat.Value(),
-                                 outputTextFormat.Value(),
-                                 severityOption.Value(),
-                                 rulesOption.Value(),
-                                 ignoreOption.HasValue(),
-                                 errorOption.HasValue(),
-                                 disableSuppressionOption.HasValue(),
-                                 crawlArchives.HasValue(),
-                                 disableParallel.HasValue(),
-                                 exitCodeIsNumIssues.HasValue(),
-                                 globOptions.Value())).Run();
-            });
+                var opts = new AnalyzeCommandOptions()
+                {
+                    Path = locationArgument.Value,
+                    OutputFile = outputArgument.Value,
+                    OutputFileFormat = outputFileFormat.Value(),
+                    OutputTextFormat = outputTextFormat.Value(),
+                    Severities = severityOption.Value()?.Split(',') ?? Array.Empty<string>(),
+                    Rulespath = rulesOption.Value()?.Split(',') ?? Array.Empty<string>(),
+                    IgnoreDefaultRules = ignoreOption.HasValue(),
+                    SuppressError = errorOption.HasValue(),
+                    DisableSuppression = disableSuppressionOption.HasValue(),
+                    CrawlArchives = crawlArchives.HasValue(),
+                    ExitCodeIsNumIssues = exitCodeIsNumIssues.HasValue(),
+                    Globs = globOptions.Value()?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
+                    BasePath = basePath.Value(),
+                    DisableParallel = disableParallel.HasValue(),
+                    AbsolutePaths = absolutePaths.HasValue()
+                };
+                return (new AnalyzeCommand(opts).Run());
+            }));
         }
 
         public int Run()
         {
-            if (_suppressError)
+            if (opts.SuppressError)
             {
                 Console.SetError(StreamWriter.Null);
             }
 
-            if (!Directory.Exists(_path) && !File.Exists(_path))
+            if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
             {
-                Debug.WriteLine("Error: Not a valid file or directory {0}", _path);
+                Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
 
                 return (int)ExitCode.CriticalError;
             }
 
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
-            var fp = Path.GetFullPath(_path);
+            var fp = Path.GetFullPath(opts.Path);
             if (!Directory.Exists(fp))
             {
                 fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false });
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !_globs.Any(y => y.IsMatch(x))).SelectMany(x => _crawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = _globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
+                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
             }
             return RunFileEntries(fileListing);
         }
 
-        static string TryRelativizePath(string parentPath, string childPath)
+        string TryRelativizePath(string parentPath, string childPath)
         {
             try
             {
+                if (opts.AbsolutePaths)
+                {
+                    return Path.GetFullPath(childPath);
+                }
                 if (parentPath == childPath)
                 {
                     if (File.Exists(parentPath))
@@ -188,14 +237,14 @@ Output format options:
         public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
         {
             Verifier? verifier = null;
-            if (_rulespath.Length > 0)
+            if (opts.Rulespath.Length > 0)
             {
                 // Setup the rules
-                verifier = new Verifier(_rulespath);
+                verifier = new Verifier(opts.Rulespath);
                 if (!verifier.Verify())
                     return (int)ExitCode.CriticalError;
 
-                if (verifier.CompiledRuleset.Count() == 0 && _ignoreDefaultRules)
+                if (verifier.CompiledRuleset.Count() == 0 && opts.IgnoreDefaultRules)
                 {
                     Debug.WriteLine("Error: No rules were loaded. ");
                     return (int)ExitCode.CriticalError;
@@ -206,7 +255,7 @@ Output format options:
             if (verifier != null)
                 rules = verifier.CompiledRuleset;
 
-            if (!_ignoreDefaultRules)
+            if (!opts.IgnoreDefaultRules)
             {
                 Assembly? assembly = Assembly.GetAssembly(typeof(Boundary));
                 string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
@@ -223,12 +272,12 @@ Output format options:
 
             // Initialize the processor
             RuleProcessor processor = new RuleProcessor(rules);
-            processor.EnableSuppressions = !_disableSuppression;
+            processor.EnableSuppressions = !opts.DisableSuppression;
 
-            if (_severities.Count() > 0)
+            if (opts.Severities.Count() > 0)
             {
                 processor.SeverityLevel = 0;
-                foreach (string severityText in _severities)
+                foreach (string severityText in opts.Severities)
                 {
                     Severity severity;
                     if (ParseSeverity(severityText, out severity))
@@ -243,10 +292,10 @@ Output format options:
                 }
             }
 
-            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_fileFormat) ? "text" : _fileFormat,
-                                                           _outputFormat,
-                                                           (outputStreamWriter is null)?(string.IsNullOrEmpty(_outputFile) ? Console.Out : File.CreateText(_outputFile)):outputStreamWriter,
-                                                           (outputStreamWriter is null)?_outputFile:null);
+            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
+                                                           opts.OutputTextFormat,
+                                                           (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile)):outputStreamWriter,
+                                                           (outputStreamWriter is null)?opts.OutputFile:null);
 
             int filesAnalyzed = 0;
             int filesSkipped = 0;
@@ -255,7 +304,7 @@ Output format options:
 
             void parseFileEntry(FileEntry fileEntry)
             {
-                Uri baseUri = new Uri(Path.GetFullPath(_path));
+                Uri baseUri = new Uri(Path.GetFullPath(opts.Path));
                 string language = Language.FromFileName(fileEntry.FullPath);
 
                 // Skip files written in unknown language
@@ -284,7 +333,7 @@ Output format options:
 
                     Issue[] issues = processor.Analyze(fileText, language);
 
-                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || _disableSuppression && issues.Any();
+                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || opts.DisableSuppression && issues.Any();
 
                     if (issuesFound)
                     {
@@ -294,7 +343,7 @@ Output format options:
                         // Iterate through each issue
                         foreach (Issue issue in issues)
                         {
-                            if (!issue.IsSuppressionInfo || _disableSuppression)
+                            if (!issue.IsSuppressionInfo || opts.DisableSuppression)
                             {
                                 Interlocked.Increment(ref issuesCount);
                                 Debug.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",
@@ -307,7 +356,7 @@ Output format options:
                                                         issue.Rule.Name);
                                 
                                 IssueRecord record = new IssueRecord(
-                                    Filename: TryRelativizePath(_path, fileEntry.FullPath),
+                                    Filename: TryRelativizePath(opts.BasePath, fileEntry.FullPath),
                                     Filesize: fileText.Length,
                                     TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
@@ -320,7 +369,7 @@ Output format options:
             }
 
             //Iterate through all files
-            if (_disableParallel)
+            if (opts.DisableParallel)
             {
                 foreach (var fileEntry in fileListing)
                 {
@@ -338,7 +387,7 @@ Output format options:
             Debug.WriteLine("Files analyzed: {0}", filesAnalyzed);
             Debug.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return _exitCodeIsNumIssues ? (issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
+            return opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
         }
 
         private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
@@ -351,30 +400,6 @@ Output format options:
             catch (Exception) { }
             return Array.Empty<FileEntry>();
         }
-
-        private readonly bool _crawlArchives;
-        private readonly bool _disableParallel;
-
-        public bool _exitCodeIsNumIssues { get; }
-
-        private IEnumerable<Glob> _globs;
-        private bool _disableSuppression;
-
-        private string _fileFormat;
-
-        private bool _ignoreDefaultRules;
-
-        private string _outputFile;
-
-        private string _outputFormat;
-
-        private string _path;
-
-        private string[] _rulespath;
-
-        private string[] _severities;
-
-        private bool _suppressError;
 
         private bool ParseSeverity(string severityText, out Severity severity)
         {

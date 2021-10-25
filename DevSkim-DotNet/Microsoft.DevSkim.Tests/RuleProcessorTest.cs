@@ -3,6 +3,7 @@
 using Microsoft.CST.OAT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -72,25 +73,6 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsTrue(r.Name.Contains("strcpy"), "Invalid name");
             Assert.IsTrue(r.Recommendation.Contains("strcpy_s"), "Invalid replacement");
             Assert.IsTrue(r.RuleInfo.Contains(r.Id), "Invalid ruleinfo");
-        }
-
-        [TestMethod]
-        public void VerifyDefaultRules()
-        {
-            var rules = new RuleSet();
-            Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
-            string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
-            Stream resource = assembly?.GetManifestResourceStream(filePath);
-            if (resource is Stream)
-            {
-                using StreamReader file = new StreamReader(resource);
-                rules.AddString(file.ReadToEnd(), filePath, null);
-            }
-
-            var analyzer = new Analyzer();
-            analyzer.SetOperation(new ScopedRegexOperation(analyzer));
-            analyzer.SetOperation(new WithinOperation(analyzer));
-            Assert.IsFalse(analyzer.EnumerateRuleIssues(rules.GetAllOatRules()).Any());
         }
     }
 }

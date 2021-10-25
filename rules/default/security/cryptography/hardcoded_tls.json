@@ -15,7 +15,7 @@
         "rule_info": "DS440000.md",
         "patterns": [
             {
-                "pattern": "(SSL|D?TLS)(v|[123_\\.])+",
+                "pattern": "(SSL|D?TLS)[_v]*[123]([123_\\.])*",
                 "type": "regex",
                 "scopes": [
                     "code"

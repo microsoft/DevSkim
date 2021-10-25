@@ -124,7 +124,7 @@ namespace Microsoft.DevSkim
             }
             if (clause is WithinClause wc)
             {
-                if (!wc.FindingOnly && !wc.SameLineOnly && (wc.Before == 0 && wc.After == 0))
+                if (!wc.OnlyAfter && !wc.OnlyBefore && !wc.FindingOnly && !wc.SameLineOnly && (wc.Before == 0 && wc.After == 0))
                 {
                     yield return new Violation($"Either FindingOnly, SameLineOnly or some Combination of Before and After is required", rule, clause);
                 }

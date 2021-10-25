@@ -10,4 +10,8 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.csproj" />
+  </ItemGroup>
 </Project>
