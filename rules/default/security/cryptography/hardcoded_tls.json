@@ -6,7 +6,8 @@
         "recommendation": "",
         "does_not_apply_to": [
             "json",
-            "yaml"
+            "yaml",
+            "shellscript"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
