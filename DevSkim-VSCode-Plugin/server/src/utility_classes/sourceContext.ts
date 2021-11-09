@@ -170,6 +170,24 @@
     //Language specific code below here
 
     /**
+     * Informs if the language should always be considered to be comments and not code.
+     * 
+     * @private
+     * @param {string} langID VSCode language identifier (should be lower case)
+     * @returns {boolean} if the language should always be considered commented
+     */
+    public static AlwaysCommented(langId: string): boolean
+    {
+        switch(langId)
+        {
+            case "plaintext":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Retrieve the characters to start a comment in the given language (ex. "//" for C/C++/C#/Etc. )
      * 
      * @private

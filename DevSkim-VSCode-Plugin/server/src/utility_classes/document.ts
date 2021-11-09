@@ -168,7 +168,7 @@ export class DocumentUtilities
         if (scopes.indexOf("all") > -1)
             return true;
 
-        let findingInComment: boolean = SourceContext.IsFindingInComment(langID, docContentsToFinding, newlineIndex);
+        let findingInComment: boolean = SourceContext.AlwaysCommented(langID) || SourceContext.IsFindingInComment(langID, docContentsToFinding, newlineIndex);
 
         for (let scope of scopes) 
         {
