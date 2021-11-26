@@ -387,7 +387,7 @@ Output format options:
             Debug.WriteLine("Files analyzed: {0}", filesAnalyzed);
             Debug.WriteLine("Files skipped: {0}", filesSkipped);
 
-            return opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? (int)ExitCode.IssuesExists : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
+            return opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? issuesCount : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
         }
 
         private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
