@@ -220,7 +220,7 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        ///     Checks if the index in the string lies between preffix and suffix
+        ///     Checks if the index in the string lies between prefix and suffix
         /// </summary>
         /// <param name="text"> Text </param>
         /// <param name="index"> Index to check </param>
@@ -229,13 +229,17 @@ namespace Microsoft.DevSkim
         /// <returns> True if the index is between prefix and suffix </returns>
         private static bool IsBetween(string text, int index, string prefix, string suffix, string inline = "")
         {
-            string preText = string.Concat(text.Substring(0, index));
+            if (index < 0 || index >= text.Length)
+            {
+                return false;
+            }
+            string preText = string.Concat(text[..index]);
             int lastPrefix = preText.LastIndexOf(prefix, StringComparison.InvariantCulture);
             if (lastPrefix >= 0)
             {
-                int lastInline = preText.Substring(0, lastPrefix).LastIndexOf(inline, StringComparison.InvariantCulture);
+                int lastInline = preText[..lastPrefix].LastIndexOf(inline, StringComparison.InvariantCulture);
                 // For example in C#, If this /* is actually commented out by a //
-                if (!(lastInline >= 0 && lastInline < lastPrefix && !preText.Substring(lastInline, lastPrefix - lastInline).Contains(Environment.NewLine)))
+                if (!(lastInline >= 0 && lastInline < lastPrefix && !preText[lastInline..lastPrefix].Contains(Environment.NewLine)))
                 {
                     var commentedText = text.Substring(lastPrefix);
                     int nextSuffix = commentedText.IndexOf(suffix, StringComparison.Ordinal);
@@ -251,7 +255,7 @@ namespace Microsoft.DevSkim
                 int lastInline = preText.LastIndexOf(inline, StringComparison.InvariantCulture);
                 if (lastInline >= 0)
                 {
-                    var commentedText = text.Substring(lastInline);
+                    var commentedText = text[lastInline..];
                     int endOfLine = commentedText.IndexOf("\n", StringComparison.Ordinal);
                     if (endOfLine < 0)
                     {
