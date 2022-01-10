@@ -7,16 +7,19 @@
         "tags": [
             "Cryptography.PRNG.Weak"
         ],
+        "language": [
+            "c",
+            "cpp",
+            "csharp",
+            "python",
+            "php",
+            "java",
+            "javascript",
+            "typescript"
+        ],
         "severity": "important",
         "rule_info": "DS148264.md",
         "patterns": [
-            {
-                "pattern": "DUAL_EC_DRBG",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ]
-            },
             {
                 "pattern": "pseudoRandomBytes",
                 "type": "string",
@@ -67,13 +70,6 @@
                 ]
             },
             {
-                "pattern": "(32969|18273)",
-                "type": "regex-word",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
                 "pattern": "System.Random",
                 "type": "string",
                 "scopes": [
@@ -90,6 +86,70 @@
             {
                 "pattern": "arc4random",
                 "type": "string",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Do not use weak/non-cryptographic random number generators",
+        "id": "DS148264",
+        "description": "Use cryptographic random numbers generators for anything even close to a security function.",
+        "recommendation": "Use the Rust Rand crate.",
+        "tags": [
+            "Cryptography.PRNG.Weak"
+        ],
+        "language": [
+            "rust"
+        ],
+        "severity": "important",
+        "rule_info": "DS148264.md",
+        "patterns": [
+            {
+                "pattern": "seed_from_u64",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ]
+            },
+            {
+                "pattern": "fastrand",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ]
+            },
+            {
+                "pattern": "oorandom",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Do not use weak/non-cryptographic random number generators",
+        "id": "DS148264",
+        "description": "Use cryptographic random numbers generators for anything even close to a security function.",
+        "recommendation": "Replacements depend on language.",
+        "tags": [
+            "Cryptography.PRNG.Weak"
+        ],
+        "severity": "important",
+        "rule_info": "DS148264.md",
+        "patterns": [
+            {
+                "pattern": "DUAL_EC_DRBG",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ]
+            },
+            {
+                "pattern": "(32969|18273)",
+                "type": "regex-word",
                 "scopes": [
                     "code"
                 ]
