@@ -72,6 +72,7 @@ jobs:
   - task: Bash@3
     displayName: Make Linux Executable
     inputs:
+      targetType: 'inline'
       script: chmod +x ${{ parameters.projectName }}_linux_$(ReleaseVersion)/devskim
       workingDirectory: 'bin/linux/'
   - task: DotNetCoreCLI@2
@@ -84,6 +85,7 @@ jobs:
   - task: Bash@3
     displayName: Make MacOS Executable
     inputs:
+      targetType: 'inline'
       script: chmod +x ${{ parameters.projectName }}_macos_$(ReleaseVersion)/devskim
       workingDirectory: 'bin/macos/'
   - task: ArchiveFiles@2
