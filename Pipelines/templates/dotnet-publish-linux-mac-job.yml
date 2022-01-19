@@ -69,6 +69,12 @@ jobs:
       arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/linux/${{ parameters.projectName }}_linux_$(ReleaseVersion) -r linux-x64 -f ${{ parameters.publishFramework }}'
       publishWebProjects: false
       zipAfterPublish: false
+  - task: Bash@3
+    displayName: Make Linux Executable
+    inputs:
+      targetType: 'inline'
+      script: chmod +x ${{ parameters.projectName }}_linux_$(ReleaseVersion)/devskim
+      workingDirectory: 'bin/linux/'
   - task: DotNetCoreCLI@2
     displayName: Publish MacOS x64
     inputs:
@@ -76,6 +82,12 @@ jobs:
       arguments: '${{ parameters.projectPath }} -c ${{ parameters.buildConfiguration }} -o bin/macos/${{ parameters.projectName }}_macos_$(ReleaseVersion) -f ${{ parameters.publishFramework }} -r osx-x64'
       publishWebProjects: false
       zipAfterPublish: false
+  - task: Bash@3
+    displayName: Make MacOS Executable
+    inputs:
+      targetType: 'inline'
+      script: chmod +x ${{ parameters.projectName }}_macos_$(ReleaseVersion)/devskim
+      workingDirectory: 'bin/macos/'
   - task: ArchiveFiles@2
     displayName: Archive Builds
     inputs:
