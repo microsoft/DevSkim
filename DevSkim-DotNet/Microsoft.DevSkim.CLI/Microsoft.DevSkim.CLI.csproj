@@ -27,10 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Glob" Version="1.1.9" />
-    <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="1.1.6" />
+    <PackageReference Include="Glob" Version="1.1.8" />
+    <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="1.1.4" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="Sarif.Sdk" Version="2.4.12" />
+    <PackageReference Include="Sarif.Sdk" Version="2.4.11" />
   </ItemGroup>
 
   <ItemGroup>
