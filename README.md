@@ -1,5 +1,5 @@
 # DevSkim
-![CodeQL](https://github.com/microsoft/DevSkim/workflows/CodeQL%20(CLI)/badge.svg) [![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.Devskim)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI/) ![Nuget](https://img.shields.io/nuget/dt/Microsoft.CST.Devskim)
+[![CodeQL (CLI)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml/badge.svg)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml) [![Nuget](https://img.shields.io/nuget/dt/Microsoft.CST.DevSkim.CLI)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) [![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.DevSkim.CLI)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI)
 
 DevSkim is a framework of IDE extensions and language analyzers that provide inline security analysis 
 in the dev environment as the developer writes code. It has a flexible rule model that supports multiple programming
