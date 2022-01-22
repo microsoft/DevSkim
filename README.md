@@ -1,5 +1,7 @@
 # DevSkim
-[![CodeQL (CLI)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml/badge.svg)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml) [![Nuget](https://img.shields.io/nuget/dt/Microsoft.CST.DevSkim.CLI)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) [![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.DevSkim.CLI)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI)
+[![CodeQL (CLI)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml/badge.svg)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml) [![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.DevSkim.CLI?label=CLI&logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) 
+
+[![Nuget](https://img.shields.io/nuget/dt/Microsoft.CST.DevSkim.CLI?logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/MS-CST-E.MicrosoftDevSkim?logo=Visual%20Studio)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.MicrosoftDevSkim) [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/MS-CST-E.vscode-devskim?logo=Visual%20Studio%20Code)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim)
 
 DevSkim is a framework of IDE extensions and language analyzers that provide inline security analysis 
 in the dev environment as the developer writes code. It has a flexible rule model that supports multiple programming
