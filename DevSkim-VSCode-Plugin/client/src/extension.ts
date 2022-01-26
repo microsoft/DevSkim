@@ -107,11 +107,11 @@ export function activate(context: ExtensionContext) {
 			client.start();
 			client.onReady().then(() => {
 				client.sendNotification("dotnetPath",dotNetPath);
-				const sampleExtension = vscode.extensions.getExtension('vscode-samples.lsp-sample');
-				if (!sampleExtension) {
-					throw new Error('Could not find sample extension.');
+				const devskimExtension = vscode.extensions.getExtension('MS-CST-E.vscode-devskim');
+				if (!devskimExtension) {
+					throw new Error('Could not find DevSkim extension.');
 				}
-				client.sendNotification("devskimPath",path.join(sampleExtension.extensionPath, 'devskimBinaries', 'devskim.dll'));
+				client.sendNotification("devskimPath",path.join(devskimExtension.extensionPath, 'devskimBinaries', 'devskim.dll'));
 			});
 		}
 	});
