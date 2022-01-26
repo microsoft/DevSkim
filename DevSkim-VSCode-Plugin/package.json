@@ -196,6 +196,7 @@
 		"gulp": "^4.0.2",
 		"mocha": "^8.3.2",
 		"nerdbank-gitversioning": "^3.4.255",
-		"typescript": "^4.4.3"
+		"typescript": "^4.4.3",
+		"vsce": "^2.6.4"
 	}
 }
