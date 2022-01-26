@@ -198,7 +198,7 @@ Output format options:
                     AbsolutePaths = absolutePaths.HasValue(),
                     Base64Text = base64.Value(),
                     UseStdIn = stdIn.HasValue(),
-                    IgnoreRuleIds = ignoreRulesOption.Value().Split(',')
+                    IgnoreRuleIds = ignoreRulesOption.Value()?.Split(',') ?? Enumerable.Empty<string>()
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));

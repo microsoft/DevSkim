@@ -14,6 +14,8 @@ import {
 } from 'vscode-languageclient/node';
 
 import * as vscode from 'vscode';
+import { DevSkimSettings, DevSkimSettingsObject } from '../../shared/src/devskimSettings';
+import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from '../../shared/src/notificationNames';
 
 let client: LanguageClient;
 
@@ -54,7 +56,7 @@ async function resolveDotNetPath(): Promise<string> {
 		"dotnet.acquire",
 		{
 			version: "6.0",
-			requestingExtensionId: "lsp-sample",
+			requestingExtensionId: "MS-CST-E.vscode-devskim",
 		}
 	);
 	return result?.dotnetPath;
@@ -70,7 +72,7 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		// for each diagnostic entry that has the matching `code`, create a code action command
 		const output : vscode.CodeAction[] = [];
 		context.diagnostics.filter(diagnostic => diagnostic.code === "MS-CST-E.vscode-devskim").forEach((filtered : vscode.Diagnostic) => 
-			fixMapping.get(createMapKeyForDiagnostic(filtered, document.uri.toString())).forEach(codeFix => {
+			fixMapping.get(createMapKeyForDiagnostic(filtered, document.uri.toString()))?.forEach(codeFix => {
 				output.push(this.createFix(document, range, codeFix));
 			})
 		);
@@ -83,6 +85,21 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		fix.edit.replace(document.uri, range, codeFix.replacement);
 		return fix;
 	}
+}
+
+function getDevSkimConfiguration(section='devskim' ): DevSkimSettings {
+	const settings: DevSkimSettings = new DevSkimSettingsObject();
+	settings.enableBestPracticeRules = vscode.workspace.getConfiguration(section).get('enableBestPracticeRules', false);
+	settings.enableManualReviewRules = vscode.workspace.getConfiguration(section).get('enableManualReviewRules', false);
+	settings.guidanceBaseURL = vscode.workspace.getConfiguration(section).get('guidanceBaseURL', "https://github.com/Microsoft/DevSkim/blob/main/guidance/");
+	settings.ignoreFiles = vscode.workspace.getConfiguration(section).get('ignoreFiles',
+		[ "out/.*", "bin/.*", "node_modules/.*", ".vscode/.*", "yarn.lock", "logs/.*", ".log", ".git" ]);
+	settings.ignoreRulesList = vscode.workspace.getConfiguration(section).get('ignoreRulesList', "");
+	settings.manualReviewerName = vscode.workspace.getConfiguration(section).get('manualReviewerName', '');
+	settings.removeFindingsOnClose = vscode.workspace.getConfiguration(section).get('removeFindingsOnClose', false);
+	settings.suppressionDurationInDays = vscode.workspace.getConfiguration(section).get('suppressionDurationInDays', 30);
+	return settings;
+
 }
 
 export function activate(context: ExtensionContext) {
@@ -135,15 +152,19 @@ export function activate(context: ExtensionContext) {
 				clientOptions
 			);
 			client.onReady().then(() => {
-				client.sendNotification("dotnetPath",dotNetPath);
+				client.sendNotification(getSetSettings(),getDevSkimConfiguration());
+				client.sendNotification(getDotNetPath(),dotNetPath);
 				const devskimExtension = vscode.extensions.getExtension('MS-CST-E.vscode-devskim');
 				if (!devskimExtension) {
 					throw new Error('Could not find DevSkim extension.');
 				}
-				client.sendNotification("devskimPath",path.join(devskimExtension.extensionPath, 'devskimBinaries', 'devskim.dll'));
-				client.onNotification("addCodeFixMapping", (mapping: CodeFixMapping) => 
+				client.sendNotification(getDevSkimPath(),path.join(devskimExtension.extensionPath, 'devskimBinaries', 'devskim.dll'));
+				client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
 				{
 					ensureMapHasMapping(mapping);
+				});
+				vscode.workspace.onDidChangeConfiguration(e => {
+					client.sendNotification(getSetSettings(),getDevSkimConfiguration());
 				});
 			});
 			// Start the client. This will also launch the server
@@ -154,17 +175,18 @@ export function activate(context: ExtensionContext) {
 
 function createMapKeyForDiagnostic(diagnostic: vscode.Diagnostic, fileName: string) : string
 {
-	return `${fileName}: ${diagnostic.message}, ${diagnostic.code.valueOf()}, ${diagnostic.range.start.line}, ${diagnostic.range.start.character}, ${diagnostic.range.end.line}, ${diagnostic.range.end.character}`;
+	return `${fileName}: ${diagnostic.message}, ${diagnostic.code?.valueOf()}, ${diagnostic.range.start.line}, ${diagnostic.range.start.character}, ${diagnostic.range.end.line}, ${diagnostic.range.end.character}`;
 }
 
 function ensureMapHasMapping(mapping: CodeFixMapping)
 {
 	const key = createMapKeyForDiagnostic(mapping.diagnostic, mapping.fileName);
-	if(fixMapping.has(key))
+	const keyVal = fixMapping.get(key);
+	if(keyVal != undefined)
 	{
-		if (!fixMapping.get(key).find(x => x.name == mapping.replacement.name && x.replacement == mapping.replacement.replacement && x.type == mapping.replacement.type))
+		if (!keyVal.find(x => x.name == mapping.replacement.name && x.replacement == mapping.replacement.replacement && x.type == mapping.replacement.type))
 		{
-			fixMapping.set(key, fixMapping.get(key).concat(mapping.replacement));
+			fixMapping.set(key, keyVal.concat(mapping.replacement));
 		}
 	}
 	else

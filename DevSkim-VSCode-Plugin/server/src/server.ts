@@ -22,10 +22,9 @@ import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
 import { Stream } from 'stream';
-import { stdin, stdout } from 'process';
-import { Console } from 'console';
-import { JsonIssueRecord, Severity } from './issue';
 import { CodeFixMapping } from './codeFixMapping';
+import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from '../../shared/src/notificationNames';
+import { DevSkimSettings, DevSkimSettingsObject } from '../../shared/src/devskimSettings';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -58,10 +57,7 @@ connection.onInitialize((params: InitializeParams) => {
 	const result: InitializeResult = {
 		capabilities: {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
-			// Tell the client that this server supports code completion.
-			completionProvider: {
-				resolveProvider: true
-			}
+			
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -94,56 +90,42 @@ interface ExampleSettings {
 // The global settings, used when the `workspace/configuration` request is not supported by the client.
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
-const defaultSettings: ExampleSettings = { maxNumberOfProblems: 1000 };
-let globalSettings: ExampleSettings = defaultSettings;
+const defaultSettings: DevSkimSettings = new DevSkimSettingsObject();
+let globalSettings: DevSkimSettings = defaultSettings;
 
-// Cache the settings of all open documents
-const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
 let dotnetPath = '';
 let devskimPath = '';
 
-connection.onNotification("dotnetPath", (path: string) => 
+connection.onNotification(getDotNetPath(), (path: string) => 
 {
 	dotnetPath = path;
 });
 
-connection.onNotification("devskimPath", (path: string) => 
+connection.onNotification(getDevSkimPath(), (path: string) => 
 {
 	devskimPath = path;
 });
 
-connection.onDidChangeConfiguration(change => {
-	if (hasConfigurationCapability) {
-		// Reset all cached document settings
-		documentSettings.clear();
-	} else {
-		globalSettings = <ExampleSettings>(
-			(change.settings.languageServerExample || defaultSettings)
-		);
-	}
+connection.onNotification(getSetSettings(), (settings: DevSkimSettings) => 
+{
+	globalSettings = settings;
+});
 
+connection.onDidChangeConfiguration(change => {
+	globalSettings = <DevSkimSettings>(
+		(change.settings.devskim || defaultSettings)
+	);
 	// Revalidate all open text documents
 	documents.all().forEach(validateTextDocument);
 });
 
-function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
-	if (!hasConfigurationCapability) {
-		return Promise.resolve(globalSettings);
-	}
-	let result = documentSettings.get(resource);
-	if (!result) {
-		result = connection.workspace.getConfiguration({
-			scopeUri: resource,
-			section: 'languageServerExample'
-		});
-		documentSettings.set(resource, result);
-	}
-	return result;
-}
-
 // Only keep settings for open documents
 documents.onDidClose(e => {
-	documentSettings.delete(e.document.uri);
+	if (globalSettings.removeFindingsOnClose)
+	{
+		const diagnostics: Diagnostic[] = [];
+		connection.sendDiagnostics({ uri: e.document.uri, diagnostics });
+	}
 });
 
 // The content of a text document has changed. This event is emitted
@@ -163,19 +145,31 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 		connection.console.log("devskimPath is not configured and server cannot execute.");
 		return;
 	}
-	// In this simple example we get the settings for every validate run.
-	const settings = await getDocumentSettings(textDocument.uri);
+	const settings = globalSettings;
 	const fileNameOnly = textDocument.uri.split('/').slice(-1)[0];
-	// The validator creates diagnostics for all uppercase words length 2 and more
 	const text = textDocument.getText();
 	const stdInStream = new Stream.Readable();
 	stdInStream.push(text);
 	stdInStream.push(null);
 	try
 	{
-		const child = cp.spawn(dotnetPath, [ devskimPath, 'analyze', fileNameOnly, '-f', 'json', '-o', '%F%L%C%l%c%R%N%S%D%f','--useStdIn']);
+		const severity = ['critical','important','moderate'];
+		if (settings.enableBestPracticeRules)
+		{
+			severity.push('practice');
+		}
+		if (settings.enableManualReviewRules)
+		{
+			severity.push('manual');
+		}
 		
-		// stdInStream.pipe(child.stdin);
+		const args = [devskimPath, 'analyze', fileNameOnly, '-f', 'json', '-o', '%F%L%C%l%c%R%N%S%D%f', '--useStdIn', '-s', severity.join(','), '--ignore-regex', `"${settings.ignoreFiles.join(',')}"`];
+		if (settings.ignoreRulesList.length > 0){
+			args.push('--ignore-rule-ids');
+			settings.ignoreRulesList;
+		}
+		const child = cp.spawn(dotnetPath, args);
+		
 		let theOutput = '';
 		let theError = '';
 		child.stdout.on('data', data => {
@@ -205,8 +199,6 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	catch(err){
 		connection.console.log("err");
 	}
-
-	// Send the computed diagnostics to VSCode.
 }
 
 function parseToDiagnostics(jsonOutputFromDevskim: string, uri: string) : Diagnostic[]
@@ -230,7 +222,7 @@ function parseToDiagnostics(jsonOutputFromDevskim: string, uri: string) : Diagno
 		{
 			for(const fix in deserialized[finding]["fixes"])
 			{
-				connection.sendNotification("addCodeFixMapping", new CodeFixMapping(diagnostic, deserialized[finding]["fixes"][fix], uri));
+				connection.sendNotification(getCodeFixMapping(), new CodeFixMapping(diagnostic, deserialized[finding]["fixes"][fix], uri));
 			}
 		}
 	}
