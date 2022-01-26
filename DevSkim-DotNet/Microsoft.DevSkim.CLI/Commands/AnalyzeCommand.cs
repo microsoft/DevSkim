@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,6 +38,8 @@ namespace Microsoft.DevSkim.CLI.Commands
         public bool AbsolutePaths { get; set; } = false;
         public string? Base64Text { get; set; }
         public bool UseStdIn { get; set; }
+        public IEnumerable<string> IgnoreRuleIds { get; set; } = new List<string>();
+        public IEnumerable<Regex> Regexes { get; set; } = Array.Empty<Regex>();
     }
 
     public class AnalyzeCommand : ICommand
@@ -106,7 +109,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                 CommandOptionType.SingleValue);
 
             var globOptions = command.Option("-g|--ignore-globs",
-                                    "**/.git/**,**/bin/**",
+                                    "Comma separated Glob expressions which when matched against a path will cause skip of file scan. For example: **/.git/**,**/bin/**",
+                                    CommandOptionType.SingleValue);
+
+            var regexOptions = command.Option("--ignore-regex",
+                                    "Comma separated Regular expressions which when matched against a path will cause skip of file scan. For example: .*.exe",
                                     CommandOptionType.SingleValue);
 
             var disableSuppressionOption = command.Option("-d|--disable-suppression",
@@ -124,6 +131,8 @@ namespace Microsoft.DevSkim.CLI.Commands
             var ignoreOption = command.Option("-i|--ignore-default-rules",
                                               "Ignore rules bundled with DevSkim",
                                               CommandOptionType.NoValue);
+
+            var ignoreRulesOption = command.Option("--ignore-rule-ids", "Ignore specific rules by ID.", CommandOptionType.SingleValue);
 
             var errorOption = command.Option("-e|--suppress-standard-error",
                                               "Suppress output to standard error",
@@ -183,11 +192,13 @@ Output format options:
                     CrawlArchives = crawlArchives.HasValue(),
                     ExitCodeIsNumIssues = exitCodeIsNumIssues.HasValue(),
                     Globs = globOptions.Value()?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
+                    Regexes = regexOptions.Value()?.Split(',').Select<string, Regex>(x => new Regex(x)) ?? Array.Empty<Regex>(),
                     BasePath = basePath.Value(),
                     DisableParallel = disableParallel.HasValue(),
                     AbsolutePaths = absolutePaths.HasValue(),
                     Base64Text = base64.Value(),
-                    UseStdIn = stdIn.HasValue()
+                    UseStdIn = stdIn.HasValue(),
+                    IgnoreRuleIds = ignoreRulesOption.Value().Split(',')
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));
@@ -248,7 +259,7 @@ Output format options:
                         }
                         else
                         {
-                            fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
+                            fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x)) && !opts.Regexes.Any(z => z.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
                         }
                         return RunFileEntries(fileListing);
                     }
@@ -317,6 +328,11 @@ Output format options:
                     var rulesString = file.ReadToEnd();
                     rules.AddString(rulesString, filePath, null);
                 }
+            }
+
+            if (opts.IgnoreRuleIds.Any())
+            {
+                rules = new RuleSet(rules.Where(x => opts.IgnoreRuleIds.Any(y => y == x.DevSkimRule.Id)));
             }
 
             // Initialize the processor

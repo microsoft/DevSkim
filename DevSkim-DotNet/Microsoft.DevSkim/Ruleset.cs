@@ -23,7 +23,11 @@ namespace Microsoft.DevSkim
         /// </summary>
         public RuleSet()
         {
-            _oatRules = new List<ConvertedOatRule>();
+        }
+
+        public RuleSet(IEnumerable<ConvertedOatRule> convertedOatRules)
+        {
+            _oatRules.AddRange(convertedOatRules);
         }
 
         /// <summary>
@@ -385,7 +389,7 @@ namespace Microsoft.DevSkim
 
         }
 
-        private List<ConvertedOatRule> _oatRules;
+        private List<ConvertedOatRule> _oatRules = new List<ConvertedOatRule>();
         private Regex searchInRegex = new Regex("\\((.*),(.*)\\)", RegexOptions.Compiled);
 
         /// <summary>
