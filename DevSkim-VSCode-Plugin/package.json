@@ -178,10 +178,13 @@
 		"build-net-dependencies": "dotnet publish -f net6.0 ../DevSkim-DotNet/Microsoft.DevSkim.CLI -o devskimBinaries",
 		"test": "sh ./scripts/e2e.sh",
 		"vscode:prepublish": "npm run build-net-dependencies && npm run esbuild-base -- --minify",
+		"set-version": "gulp setPackageVersion",
+		"reset-version": "gulp resetPackageVersion",
 		"esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node && esbuild ./server/src/server.ts --bundle --outfile=server/out/server.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-		"test-compile": "tsc -p ./"
+		"test-compile": "tsc -p ./",
+		"pack-ext": "gulp setPackageVersion && vsce package && gulp resetPackageVersion"
 	},
 	"devDependencies": {
 		"@types/mocha": "^8.2.2",
@@ -190,6 +193,7 @@
 		"@typescript-eslint/parser": "^4.23.0",
 		"esbuild": "^0.14.14",
 		"eslint": "^7.26.0",
+		"gulp": "^4.0.2",
 		"mocha": "^8.3.2",
 		"nerdbank-gitversioning": "^3.4.255",
 		"typescript": "^4.4.3"
