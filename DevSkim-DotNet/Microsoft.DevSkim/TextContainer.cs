@@ -146,18 +146,18 @@ namespace Microsoft.DevSkim
             }
             else
             {
-                for (int i = 0; i < LineEnds.Count; i++)
+                for (int i = 1; i < LineEnds.Count; i++)
                 {
                     if (LineEnds[i] >= index)
                     {
                         result.Line = i;
-                        result.Column = index - LineEnds[i - 1];
+                        result.Column = index - LineStarts[i] + 1;
 
                         return result;
                     }
                 }
                 result.Line = LineEnds.Count - 1;
-                result.Column = index - LineEnds[LineEnds.Count - 2];
+                result.Column = index - LineEnds[^2];
             }
             return result;
         }
