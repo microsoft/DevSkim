@@ -1,10 +1,12 @@
 .vscode
-node_modules
+**/node_modules
 out/
 src/
 tsconfig.json
 scripts/
-server/
-client/
+server/src
+client/src
+client/*.json
+server/*.json
 .eslintignore
 .gitignore
