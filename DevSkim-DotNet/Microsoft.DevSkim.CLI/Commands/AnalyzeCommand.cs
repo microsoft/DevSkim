@@ -1,15 +1,18 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using DiscUtils.Ntfs.Internals;
 using GlobExpressions;
 using Microsoft.CST.RecursiveExtractor;
 using Microsoft.DevSkim.CLI.Writers;
 using Microsoft.Extensions.CommandLineUtils;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,6 +35,8 @@ namespace Microsoft.DevSkim.CLI.Commands
         public bool ExitCodeIsNumIssues { get; set; }
         public string OutputTextFormat { get; set; } = string.Empty;
         public bool AbsolutePaths { get; set; } = false;
+        public string? Base64Text { get; set; }
+        public bool UseStdIn { get; set; }
     }
 
     public class AnalyzeCommand : ICommand
@@ -140,6 +145,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                            "Output absolute paths (overrides --base-path).",
                            CommandOptionType.NoValue);
 
+            var base64 = command.Option("--base64", "Input a single file's contents base64 encoded.", CommandOptionType.SingleValue);
+
+            var stdIn = command.Option("--useStdIn", "Read a file from stdin until EOF.", CommandOptionType.NoValue);
+
             command.ExtendedHelpText = 
 @"
 Output format options:
@@ -176,10 +185,24 @@ Output format options:
                     Globs = globOptions.Value()?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
                     BasePath = basePath.Value(),
                     DisableParallel = disableParallel.HasValue(),
-                    AbsolutePaths = absolutePaths.HasValue()
+                    AbsolutePaths = absolutePaths.HasValue(),
+                    Base64Text = base64.Value(),
+                    UseStdIn = stdIn.HasValue()
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));
+        }
+
+        FileEntry Base64ToFileEntry(string base64encodedText, string fileName)
+        {
+            var decodedStream = new MemoryStream(Convert.FromBase64String(base64encodedText));
+            return new FileEntry(fileName, decodedStream);
+        }
+
+        FileEntry FileEntryFromString(string textForEntry, string fileName)
+        {
+            var decodedStream = new MemoryStream(Encoding.UTF8.GetBytes(textForEntry));
+            return new FileEntry(fileName, decodedStream);
         }
 
         public int Run()
@@ -189,25 +212,50 @@ Output format options:
                 Console.SetError(StreamWriter.Null);
             }
 
-            if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
+            if (!string.IsNullOrEmpty(opts.Path))
             {
-                Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
-
-                return (int)ExitCode.CriticalError;
-            }
-
-            IEnumerable<FileEntry> fileListing;
-            var extractor = new Extractor();
-            var fp = Path.GetFullPath(opts.Path);
-            if (!Directory.Exists(fp))
-            {
-                fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false });
+                if (opts.Base64Text is not null)
+                {
+                    var entry = Base64ToFileEntry(opts.Base64Text, opts.Path);
+                    return RunFileEntries(new FileEntry[] { entry });
+                }
+                else if (opts.UseStdIn)
+                {
+                    StringBuilder stringBuilder = new();
+                    int? input;
+                    while ((input = Console.Read()) != -1)
+                    {
+                        stringBuilder.Append((char)input);
+                    }
+                    var entry = FileEntryFromString(stringBuilder.ToString(), opts.Path);
+                    return RunFileEntries(new FileEntry[] { entry });
+                }
+                if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
+                {
+                    Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
+                    return (int)ExitCode.CriticalError;
+                }
+                else
+                {
+                    IEnumerable<FileEntry> fileListing;
+                    var extractor = new Extractor();
+                    var fp = Path.GetFullPath(opts.Path);
+                    if (!Directory.Exists(fp))
+                    {
+                        fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false });
+                    }
+                    else
+                    {
+                        fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
+                    }
+                    return RunFileEntries(fileListing);
+                }
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
+                Debug.WriteLine("Error: Null or empty file or directory provided.");
+                return (int)ExitCode.CriticalError;
             }
-            return RunFileEntries(fileListing);
         }
 
         string TryRelativizePath(string parentPath, string childPath)
@@ -260,18 +308,16 @@ Output format options:
                 Assembly? assembly = Assembly.GetAssembly(typeof(Boundary));
                 string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
                 Stream? resource = assembly?.GetManifestResourceStream(filePath);
-                if (resource is Stream)
+                if (resource is not null)
                 {
-                    using (StreamReader file = new StreamReader(resource))
-                    {
-                        var rulesString = file.ReadToEnd();
-                        rules.AddString(rulesString, filePath, null);
-                    }
+                    using StreamReader file = new(resource);
+                    var rulesString = file.ReadToEnd();
+                    rules.AddString(rulesString, filePath, null);
                 }
             }
 
             // Initialize the processor
-            RuleProcessor processor = new RuleProcessor(rules);
+            RuleProcessor processor = new(rules);
             processor.EnableSuppressions = !opts.DisableSuppression;
 
             if (opts.Severities.Count() > 0)
@@ -304,7 +350,6 @@ Output format options:
 
             void parseFileEntry(FileEntry fileEntry)
             {
-                Uri baseUri = new Uri(Path.GetFullPath(opts.Path));
                 string language = Language.FromFileName(fileEntry.FullPath);
 
                 // Skip files written in unknown language

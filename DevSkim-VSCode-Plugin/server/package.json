@@ -1,48 +1,19 @@
 {
-  "name": "devskim-vscode-analyzer",
-  "description": "Devskim Security Analyzer",
-  "version": "0.0.0-placeholder",
-  "author": "Microsoft Corporation",
-  "publisher": "MS-CST-E",
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/devskim.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Microsoft/devskim/issues"
-  },
-  "license": "MIT",
-  "main": "./out/cli.js",
-  "bin": {
-    "devskim": "./out/cli.js"
-  },
-  "preferGlobal": true,
-  "engines": {
-    "node": "*"
-  },
-  "scripts": {
-    "clean": "npx --ignore-existing --quiet rimraf node_modules dist out data/rules"
-  },
-  "dependencies": {
-    "@babel/types": "^7.11.0",
-    "@schemastore/sarif-2.1.0-rtm.4": "0.0.2",
-    "commander": "^2.20.3",
-    "git-repo-info": "^2.1.1",
-    "glob-promise": "^3.4.0",
-    "mkdirp": "^1.0.4",
-    "node-dir": ">=0.1.17",
-    "vscode-languageserver": "^6.1.1",
-    "vscode-languageserver-protocol": "^3.15.3",
-    "vscode-languageserver-textdocument": "^1.0.1",
-    "xregexp": "^4.3.0"
-  },
-  "devDependencies": {
-    "@types/node": "^6.14.10",
-    "rimraf": "^2.7.1",
-    "ts-loader": "^6.2.2",
-    "typescript": "^3.9.7",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
-  }
+	"name": "lsp-sample-server",
+	"description": "Example implementation of a language server in node.",
+	"version": "1.0.0",
+	"author": "Microsoft Corporation",
+	"license": "MIT",
+	"engines": {
+		"node": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Microsoft/vscode-extension-samples"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^7.0.0",
+		"vscode-languageserver-textdocument": "^1.0.1"
+	},
+	"scripts": {}
 }

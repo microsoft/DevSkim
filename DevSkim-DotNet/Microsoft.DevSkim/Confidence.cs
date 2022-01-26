@@ -5,7 +5,7 @@ using System;
 namespace Microsoft.DevSkim
 {
     /// <summary>
-    ///     Issue severity
+    ///     Issue confidence
     /// </summary>
     [Flags]
     public enum Confidence
