@@ -88,7 +88,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             command.HelpOption("-?|-h|--help");
 
             var locationArgument = command.Argument("[path]",
-                                                    "Path to source code");
+                                                    "Path to source code.");
 
             var outputArgument = command.Argument("[output]",
                                                   "Output file");
@@ -145,9 +145,9 @@ namespace Microsoft.DevSkim.CLI.Commands
                            "Output absolute paths (overrides --base-path).",
                            CommandOptionType.NoValue);
 
-            var base64 = command.Option("--base64", "Input a single file's contents base64 encoded.", CommandOptionType.SingleValue);
+            var base64 = command.Option("--base64", "Input a single file's contents base64 encoded as the parameter for this argument. Uses the path provided as the filename for output.", CommandOptionType.SingleValue);
 
-            var stdIn = command.Option("--useStdIn", "Read a file from stdin until EOF.", CommandOptionType.NoValue);
+            var stdIn = command.Option("--useStdIn", "Read a file from stdin until EOF.  Uses the path provided as the filename for output.", CommandOptionType.NoValue);
 
             command.ExtendedHelpText = 
 @"
@@ -222,7 +222,7 @@ Output format options:
                 else if (opts.UseStdIn)
                 {
                     StringBuilder stringBuilder = new();
-                    int? input;
+                    int input;
                     while ((input = Console.Read()) != -1)
                     {
                         stringBuilder.Append((char)input);
@@ -230,30 +230,33 @@ Output format options:
                     var entry = FileEntryFromString(stringBuilder.ToString(), opts.Path);
                     return RunFileEntries(new FileEntry[] { entry });
                 }
-                if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
-                {
-                    Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
-                    return (int)ExitCode.CriticalError;
-                }
                 else
                 {
-                    IEnumerable<FileEntry> fileListing;
-                    var extractor = new Extractor();
-                    var fp = Path.GetFullPath(opts.Path);
-                    if (!Directory.Exists(fp))
+                    if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
                     {
-                        fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false });
+                        Console.Error.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
+                        return (int)ExitCode.CriticalError;
                     }
                     else
                     {
-                        fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
+                        IEnumerable<FileEntry> fileListing;
+                        var extractor = new Extractor();
+                        var fp = Path.GetFullPath(opts.Path);
+                        if (!Directory.Exists(fp))
+                        {
+                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false });
+                        }
+                        else
+                        {
+                            fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
+                        }
+                        return RunFileEntries(fileListing);
                     }
-                    return RunFileEntries(fileListing);
                 }
             }
             else
             {
-                Debug.WriteLine("Error: Null or empty file or directory provided.");
+                Console.Error.WriteLine("Error: Null or empty string file or directory provided.");
                 return (int)ExitCode.CriticalError;
             }
         }
