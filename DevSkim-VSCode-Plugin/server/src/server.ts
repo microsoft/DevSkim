@@ -25,6 +25,7 @@ import { Stream } from 'stream';
 import { stdin, stdout } from 'process';
 import { Console } from 'console';
 import { JsonIssueRecord, Severity } from './issue';
+import { CodeFixMapping } from './codeFixMapping';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -172,7 +173,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	stdInStream.push(null);
 	try
 	{
-		const child = cp.spawn(dotnetPath, [ devskimPath, 'analyze', fileNameOnly, '-f', 'json', '--useStdIn']);
+		const child = cp.spawn(dotnetPath, [ devskimPath, 'analyze', fileNameOnly, '-f', 'json', '-o', '%F%L%C%l%c%R%N%S%D%f','--useStdIn']);
 		
 		// stdInStream.pipe(child.stdin);
 		let theOutput = '';
@@ -194,7 +195,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 						`code ${code} and signal ${signal}`);
 			if (code == 0)
 			{
-				const diagnostics = parseToDiagnostics(theOutput);
+				const diagnostics = parseToDiagnostics(theOutput, textDocument.uri.toString());
 				connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 			}
 		});
@@ -208,7 +209,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	// Send the computed diagnostics to VSCode.
 }
 
-function parseToDiagnostics(jsonOutputFromDevskim: string) : Diagnostic[]
+function parseToDiagnostics(jsonOutputFromDevskim: string, uri: string) : Diagnostic[]
 {
 	const deserialized = JSON.parse(jsonOutputFromDevskim);
 	const diags : Diagnostic[] = [];
@@ -221,11 +222,18 @@ function parseToDiagnostics(jsonOutputFromDevskim: string) : Diagnostic[]
 				end: { line: parseInt(deserialized[finding]["end_line"])-1, character: parseInt(deserialized[finding]["end_column"]) - 1}
 			},
 			message: deserialized[finding]["description"],
-			source: `[${deserialized[finding]["rule_id"]}] ${deserialized[finding]["rule_name"]}`
+			source: `[${deserialized[finding]["rule_id"]}] ${deserialized[finding]["rule_name"]}`,
+			code: "MS-CST-E.vscode-devskim"
 		};
 		diags.push(diagnostic);
+		if (deserialized[finding]["fixes"] != undefined)
+		{
+			for(const fix in deserialized[finding]["fixes"])
+			{
+				connection.sendNotification("addCodeFixMapping", new CodeFixMapping(diagnostic, deserialized[finding]["fixes"][fix], uri));
+			}
+		}
 	}
-	connection.console.log(jsonOutputFromDevskim);
 	return diags;
 }
 
