@@ -17,7 +17,6 @@ import {
 	InitializeResult
 } from 'vscode-languageserver/node';
 import * as cp from 'child_process';
-import path = require('path');
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
