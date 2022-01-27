@@ -1,9 +1,10 @@
 {
-	"extends": "../base.tsconfig",
+	"extends": "../base.tsconfig.json",
 	"compilerOptions": {
+		"composite": true,
 		"outDir": "out",
-		"rootDirs": ["src", "../shared/src"],
+		"rootDir": "src",
 	},
-	"include": ["src", "../shared/src"],
+	"include": ["src"],
 	"exclude": ["node_modules", ".vscode-test"]
 }

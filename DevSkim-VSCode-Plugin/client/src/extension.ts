@@ -14,8 +14,8 @@ import {
 } from 'vscode-languageclient/node';
 
 import * as vscode from 'vscode';
-import { DevSkimSettings, DevSkimSettingsObject } from '../../shared/src/devskimSettings';
-import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from '../../shared/src/notificationNames';
+import { DevSkimSettings, DevSkimSettingsObject } from './devskimSettings';
+import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from './notificationNames';
 
 let client: LanguageClient;
 
