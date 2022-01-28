@@ -32,16 +32,13 @@ DevSkim takes an approach that is programming language agnostic. It primarily fi
 
 ## Building
 
-First install dependencies
+In order to build you will need the latest .NET Core SDK as well as the appropriate version of node.js.
 
-`npm run setup`
-
-Then run the script to pack the extension, this will pack the rules and build the .NET binary to be called by the extension.
-
+### Build Extension 
+You can build the vsix directly with npm:
 `npm run pack-ext`
 
-## Debugging
-
+### Debugging
 To debug the code in vscode, you can use the `Client and Server` task that is defined. You will first need to setup the environment and build:
 
 `npm run setup`

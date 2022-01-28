@@ -167,7 +167,7 @@
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"test-compile": "tsc -p ./",
-		"pack-ext": "gulp setPackageVersion && npm run setup && vsce package && gulp resetPackageVersion"
+		"pack-ext": "npm run setup && gulp setPackageVersion && vsce package && gulp resetPackageVersion"
 	},
 	"devDependencies": {
 		"@types/mocha": "^8.2.2",
