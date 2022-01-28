@@ -32,13 +32,13 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
-        languages: javascript
+        languages: javascript, csharp
 
     - name: Build DevSkim VSCode Plugin
       run: |
-         npm install
-         npm run pack-ext
-      working-directory: ./DevSkim-VSCode-Plugin
+        cd DevSkim-VSCode-Plugin
+        npm run pack-ext
+      working-directory: .
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
