@@ -332,7 +332,7 @@ Output format options:
 
             if (opts.IgnoreRuleIds.Any())
             {
-                rules = new RuleSet(rules.Where(x => opts.IgnoreRuleIds.Any(y => y == x.DevSkimRule.Id)));
+                rules = new RuleSet(rules.Where(x => !opts.IgnoreRuleIds.Any(y => y == x.DevSkimRule.Id)));
             }
 
             // Initialize the processor

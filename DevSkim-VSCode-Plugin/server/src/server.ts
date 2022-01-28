@@ -160,7 +160,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 		const args = [devskimPath, 'analyze', fileNameOnly, '-f', 'json', '-o', '%F%L%C%l%c%R%N%S%D%f', '--useStdIn', '-s', severity.join(','), '--ignore-regex', `"${settings.ignoreFiles.join(',')}"`];
 		if (settings.ignoreRulesList.length > 0){
 			args.push('--ignore-rule-ids');
-			settings.ignoreRulesList;
+			args.push(settings.ignoreRulesList);
 		}
 		const child = cp.spawn(dotnetPath, args);
 		
