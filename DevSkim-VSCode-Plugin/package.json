@@ -75,20 +75,10 @@
 			"type": "object",
 			"title": "DevSkim configuration",
 			"properties": {
-				"devskim.maxFileSizeKB": {
-					"type": "number",
-					"default": 100,
-					"description": "To control the performance of DevSkim, this setting controls the maximum file size that it will analyze, in Kilobytes."
-				},
 				"devskim.enableManualReviewRules": {
 					"type": "boolean",
 					"default": false,
 					"description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
-				},
-				"devskim.manualReviewerName": {
-					"type": "string",
-					"default": "",
-					"description": "when enableManualReviewRules is set to true, if this property is set to a name/alias/email address it will be inserted when marking a finding as reviewed.  For example //DevSkim: reviewed DS123321 on 2016-12-10 by <whatever this value is>.  If left blank the \"by <whatever this value is>\" is omitted when marking a finding reviewed."
 				},
 				"devskim.enableBestPracticeRules": {
 					"type": "boolean",
@@ -109,14 +99,10 @@
 					"default": "line",
 					"description": "When DevSkim inserts a suppression comment it defaults to using single line comments for every language that has them.  Setting this to block will instead use block comments for the languages that support them.  Block comments are suggested if regularly adding explanations for why a finding was suppressed"
 				},
-				"devskim.suppressionCommentPlacement": {
+				"devskim.manualReviewerName": {
 					"type": "string",
-					"enum": [
-						"same line as finding",
-						"line above finding"
-					],
-					"default": "same line as finding",
-					"description": "When DevSkim inserts a suppression comment it defaults placing the comment after the finding being suppressed, on the same line.  Changing this setting will place the suppression the line above the finding instead."
+					"default": "",
+					"description": "If set, insert this name in inserted suppression comments."
 				},
 				"devskim.guidanceBaseURL": {
 					"type": "string",

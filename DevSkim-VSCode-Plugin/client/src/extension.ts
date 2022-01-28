@@ -3,6 +3,9 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import * as languages from './languages.json';
+import * as comments from './comments.json';
+
 import * as path from 'path';
 import { workspace, ExtensionContext } from 'vscode';
 import { CodeFix, CodeFixMapping } from './codeFixMapping';
@@ -71,15 +74,71 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 	provideCodeActions(document: vscode.TextDocument, range: vscode.Range | vscode.Selection, context: vscode.CodeActionContext, token: vscode.CancellationToken): vscode.CodeAction[] {
 		// for each diagnostic entry that has the matching `code`, create a code action command
 		const output : vscode.CodeAction[] = [];
-		context.diagnostics.filter(diagnostic => diagnostic.code === "MS-CST-E.vscode-devskim").forEach((filtered : vscode.Diagnostic) => 
-			fixMapping.get(createMapKeyForDiagnostic(filtered, document.uri.toString()))?.forEach(codeFix => {
+		context.diagnostics.filter(diagnostic => diagnostic.code === "MS-CST-E.vscode-devskim").forEach((filteredDiagnostic : vscode.Diagnostic) => {
+			fixMapping.get(createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString()))?.forEach(codeFix => {
 				output.push(this.createFix(document, range, codeFix));
-			})
-		);
+			});
+			const suppression = this.createSuppression(document, range, filteredDiagnostic);
+			if (suppression != null)
+			{
+				output.push(suppression);
+			}
+		});
+
 		return output;
 	}
 
-	private createFix(document: vscode.TextDocument, range: vscode.Range, codeFix: CodeFix): vscode.CodeAction {
+	private createSuppression(document: vscode.TextDocument, range: vscode.Range, diagnostic: vscode.Diagnostic): vscode.CodeAction | null
+	{
+		const issueNum = diagnostic.source?.split(new RegExp('[\\[\\]]'))[1];
+		if (issueNum != undefined)
+		{
+			const config = getDevSkimConfiguration();
+
+			let inline : string | undefined;
+			let prefix : string | undefined;
+			let suffix : string | undefined;
+			let language : string | undefined;
+			languages.some(x => 
+			{
+				const index = x.extensions.indexOf(`.${document.uri.path.split('.').pop()?.toLowerCase() ?? ''}`);
+				if (index >= 0)
+				{
+					language = x.name;
+					return true;
+				}
+			});
+			if (language != undefined)
+			{
+				comments.some(y => {
+					if (y.language.includes(language ?? ''))
+					{
+						inline = y.inline;
+						prefix = y.preffix;
+						suffix = y.suffix;
+						return true;
+					}
+				});
+			}
+			const fix = new vscode.CodeAction(`Suppress ${issueNum} finding`, vscode.CodeActionKind.QuickFix);
+			fix.edit = new vscode.WorkspaceEdit();
+			const text = document.lineAt(range.end.line);
+			const reviewer = config.manualReviewerName != '' ? ` by ${config.manualReviewerName}` : '';
+			if (config.suppressionCommentStyle == "block" && prefix != undefined && suffix != undefined)
+			{
+				fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${prefix} DevSkim: Ignore ${issueNum}${reviewer} ${suffix}`);
+			}
+			else
+			{
+				fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${inline} DevSkim: Ignore ${issueNum}${reviewer}`);
+			}
+			return fix;
+		}
+		return null;
+	}
+
+	private createFix(document: vscode.TextDocument, range: vscode.Range, codeFix: CodeFix): vscode.CodeAction 
+	{
 		const fix = new vscode.CodeAction(codeFix.name, vscode.CodeActionKind.QuickFix);
 		fix.edit = new vscode.WorkspaceEdit();
 		fix.edit.replace(document.uri, range, codeFix.replacement);
@@ -98,6 +157,7 @@ function getDevSkimConfiguration(section='devskim' ): DevSkimSettings {
 	settings.manualReviewerName = vscode.workspace.getConfiguration(section).get('manualReviewerName', '');
 	settings.removeFindingsOnClose = vscode.workspace.getConfiguration(section).get('removeFindingsOnClose', false);
 	settings.suppressionDurationInDays = vscode.workspace.getConfiguration(section).get('suppressionDurationInDays', 30);
+	settings.suppressionCommentStyle = vscode.workspace.getConfiguration(section).get('suppressionCommentStyle', 'line');
 	return settings;
 
 }

@@ -14,7 +14,8 @@ import {
 	CompletionItemKind,
 	TextDocumentPositionParams,
 	TextDocumentSyncKind,
-	InitializeResult
+	InitializeResult,
+	DiagnosticRelatedInformation
 } from 'vscode-languageserver/node';
 import * as cp from 'child_process';
 import {

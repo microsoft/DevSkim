@@ -11,6 +11,7 @@ export interface DevSkimSettings {
     ignoreRulesList: string;
     guidanceBaseURL: string;
     removeFindingsOnClose: boolean;
+    suppressionCommentStyle: string;
 }
 
 export class DevSkimSettingsObject implements DevSkimSettings {
@@ -22,4 +23,5 @@ export class DevSkimSettingsObject implements DevSkimSettings {
     manualReviewerName: string = "";
     removeFindingsOnClose: boolean = false;
     suppressionDurationInDays: number = 30;
+    suppressionCommentStyle: string = "line";
 }
