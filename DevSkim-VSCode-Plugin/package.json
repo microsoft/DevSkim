@@ -151,7 +151,8 @@
 		"clean:out": "npx --quiet rimraf out client/out server/out **/tsconfig.tsbuildinfo",
 		"clean:modules": "npx --quiet rimraf node_modules client/node_modules server/node_modules",
 		"reset": "npm run clean && npm run setup",
-		"setup": "npm run build-net-dependencies && npm i",
+		"net-setup": "npm run package-rules && npm run build-net-dependencies",
+		"setup": "npm run net-setup && npm i",
 		"compile": "tsc -b",
 		"watch": "tsc -b -w",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
@@ -159,14 +160,14 @@
 		"package-rules": "dotnet ../rulePacker/devskim.dll pack-rules ../rules ../DevSkim-DotNet/Microsoft.DevSkim/resources/devskim-rules.json",
 		"build-net-dependencies": "dotnet publish -f net6.0 ../DevSkim-DotNet/Microsoft.DevSkim.CLI -o devskimBinaries",
 		"test": "sh ./scripts/e2e.sh",
-		"vscode:prepublish": "npm run clean:out && npm run package-rules && npm run build-net-dependencies && npm run esbuild-base -- --minify",
+		"vscode:prepublish": "npm run clean:out && npm run esbuild-base -- --minify",
 		"set-version": "gulp setPackageVersion",
 		"reset-version": "gulp resetPackageVersion",
 		"esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node && esbuild ./server/src/server.ts --bundle --outfile=server/out/server.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"test-compile": "tsc -p ./",
-		"pack-ext": "gulp setPackageVersion && vsce package && gulp resetPackageVersion"
+		"pack-ext": "gulp setPackageVersion && npm run net-setup && vsce package && gulp resetPackageVersion"
 	},
 	"devDependencies": {
 		"@types/mocha": "^8.2.2",

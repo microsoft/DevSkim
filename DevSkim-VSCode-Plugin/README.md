@@ -30,6 +30,23 @@ Suppressions can be accessed from the lightbulb menu. Once a suppression is adde
 
 DevSkim takes an approach that is programming language agnostic. It primarily finds issues via regular expression, so rules can be written for just about any programming language. Out of the box, DevSkim can find dangerous crypto usage in most programming languages, and also includes rules for a range of language specific issues. The built-in ruleset is growing regularly, and it is very easy for users to write their own rules. For more information, see [Writing Rules](https://github.com/Microsoft/DevSkim/wiki/Writing-Rules).
 
+## Building
+
+First install dependencies
+
+`npm run setup`
+
+Then run the script to pack the extension, this will pack the rules and build the .NET binary to be called by the extension.
+
+`npm run pack-ext`
+
+## Debugging
+
+To debug the code in vscode, you can use the `Client and Server` task that is defined. You will first need to setup the environment and build:
+
+`npm run setup`
+`tsc -b`
+
 ## Thank You
 
 Thanks for trying DevSkim! If you find issues, please [report them on GitHub](https://github.com/Microsoft/DevSkim) and feel free to contribute!
