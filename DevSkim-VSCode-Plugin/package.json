@@ -157,7 +157,7 @@
 		"watch": "tsc -b -w",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
 		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-		"package-rules": "dotnet ../rulePacker/devskim.dll pack ../rules ../DevSkim-DotNet/Microsoft.DevSkim/resources/devskim-rules.json",
+		"package-rules": "dotnet ../RulePacker/devskim.dll pack ../rules ../DevSkim-DotNet/Microsoft.DevSkim/resources/devskim-rules.json",
 		"build-net-dependencies": "dotnet publish -f net6.0 ../DevSkim-DotNet/Microsoft.DevSkim.CLI -o devskimBinaries",
 		"test": "sh ./scripts/e2e.sh",
 		"vscode:prepublish": "npm run clean:out && npm run esbuild-base -- --minify",
