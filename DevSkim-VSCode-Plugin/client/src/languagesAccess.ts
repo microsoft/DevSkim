@@ -4,19 +4,22 @@
  * ------------------------------------------------------------------------------------------ */
 
 interface CodeCommentsEntry{
-	language: string[];
+	languages: string[];
 	inline?: string;
 	prefix?: string;
 	suffix?: string;
 }
 
-interface LanguagesEntry
+interface LanguageEntry
 {
 	name: string;
 	extensions: string[];
 }
 
-const languageList : LanguagesEntry[] = JSON.parse(`[
+// TODO: Ideally these would be pulled in from a .json file on disk - ideally the same json file that the .NET version uses.
+// However, it seems that tsc will correctly place the json files and it will work but esbuild will completely ignore them and ends up with no data.
+// For now, they are just pasted here as string literals.
+const languageList : LanguageEntry[] = JSON.parse(`[
 	{
 	  "name": "c",
 	  "extensions": [ ".c", ".h" ]
@@ -162,7 +165,7 @@ const languageList : LanguagesEntry[] = JSON.parse(`[
 const commentsList : CodeCommentsEntry[] = JSON.parse(`
 [
 	{
-	  "language": [
+	  "languages": [
 		"c",
 		"cpp",
 		"csharp",
@@ -184,13 +187,13 @@ const commentsList : CodeCommentsEntry[] = JSON.parse(`
 	  "suffix": "*/"
 	},
 	{
-	  "language": [
+	  "languages": [
 		"plaintext"
 	  ],
 	  "always":  true
 	},
 	{
-	  "language": [
+	  "languages": [
 		"perl",
 		"perl6",
 		"r",
@@ -205,7 +208,7 @@ const commentsList : CodeCommentsEntry[] = JSON.parse(`
 	  "suffix": "\\n"
 	},
 	{
-	  "language": [
+	  "languages": [
 		"lua",
 		"sql"
 	  ],
@@ -214,7 +217,7 @@ const commentsList : CodeCommentsEntry[] = JSON.parse(`
 	  "suffix": "\\n"
 	},
 	{
-	  "language": [
+	  "languages": [
 		"clojure"
 	  ],
 	  "inline": ";;",
@@ -222,7 +225,7 @@ const commentsList : CodeCommentsEntry[] = JSON.parse(`
 	  "suffix": ""
 	},
 	{
-	  "language": [
+	  "languages": [
 		"vb"
 	  ],
 	  "inline": "'",
@@ -234,7 +237,7 @@ const commentsList : CodeCommentsEntry[] = JSON.parse(`
 const extensionToCodeCommentStyleMap = new Map<string, CodeCommentsEntry>();
 
 languageList.forEach(languageEntry => {
-	const commentsEntry = commentsList.filter(y => y.language.includes(languageEntry.name))[0];
+	const commentsEntry = commentsList.filter(y => y.languages.includes(languageEntry.name))[0];
 	languageEntry.extensions.forEach(extension => {
 		extensionToCodeCommentStyleMap.set(extension.startsWith('.') ? extension.substring(1) : extension, commentsEntry);
 	});

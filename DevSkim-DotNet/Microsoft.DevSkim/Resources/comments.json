@@ -1,6 +1,6 @@
 ﻿[
   {
-    "language": [
+    "languages": [
       "c",
       "cpp",
       "csharp",
@@ -22,13 +22,13 @@
     "suffix": "*/"
   },
   {
-    "language": [
+    "languages": [
       "plaintext"
     ],
     "always":  true
   },
   {
-    "language": [
+    "languages": [
       "perl",
       "perl6",
       "r",
@@ -43,7 +43,7 @@
     "suffix": "\n"
   },
   {
-    "language": [
+    "languages": [
       "lua",
       "sql"
     ],
@@ -52,7 +52,7 @@
     "suffix": "\n"
   },
   {
-    "language": [
+    "languages": [
       "clojure"
     ],
     "inline": ";;",
@@ -60,7 +60,7 @@
     "suffix": ""
   },
   {
-    "language": [
+    "languages": [
       "vb"
     ],
     "inline": "'",

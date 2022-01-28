@@ -12,7 +12,7 @@ namespace Microsoft.DevSkim
         [JsonPropertyName("inline")]
         public string? Inline { get; set; }
 
-        [JsonPropertyName("language")]
+        [JsonPropertyName("languages")]
         public string[]? Languages { get; set; }
 
         [JsonPropertyName("prefix")]
