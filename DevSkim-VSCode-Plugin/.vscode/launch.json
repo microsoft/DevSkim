@@ -8,11 +8,7 @@
 			"name": "Launch Client",
 			"runtimeExecutable": "${execPath}",
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-			"outFiles": ["${workspaceRoot}/out/client/**/*.js", "${workspaceRoot}/out/shared/**/*.js"],
-			"preLaunchTask": {
-				"type": "npm",
-				"script": "watch"
-			}
+			"outFiles": ["${workspaceRoot}/out/client/**/*.js"]
 		},
 		{
 			"type": "node",
@@ -20,7 +16,7 @@
 			"name": "Attach to Server",
 			"port": 6009,
 			"restart": true,
-			"outFiles": ["${workspaceRoot}/out/server/**/*.js", "${workspaceRoot}/out/shared/**/*.js"]
+			"outFiles": ["${workspaceRoot}/out/server/**/*.js"]
 		}
 	],
 	"compounds": [

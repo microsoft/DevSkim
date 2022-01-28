@@ -10,3 +10,4 @@ client/*.json
 server/*.json
 .eslintignore
 .gitignore
+**/tsconfig.tsbuildinfo

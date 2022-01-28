@@ -18,7 +18,7 @@ import { DevSkimSettings, DevSkimSettingsObject } from './devskimSettings';
 import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from './notificationNames';
 
 let client: LanguageClient;
-
+const serverPath = path.join('server', 'out', 'server.js');
 const selectors = [{ scheme: 'file', language: 'c' },
 { scheme: 'file', language: 'clojure' },
 { scheme: 'file', language: 'coffeescript' },
@@ -110,7 +110,7 @@ export function activate(context: ExtensionContext) {
 	);
 	// The server bridge is implemented in node
 	const serverModule = context.asAbsolutePath(
-		path.join('server', 'out', 'server.js')
+		serverPath
 	);
 	// The debug options for the server
 	// --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging

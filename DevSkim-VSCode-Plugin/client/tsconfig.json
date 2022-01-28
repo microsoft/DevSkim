@@ -1,10 +1,14 @@
 {
-	"extends": "../base.tsconfig",
 	"compilerOptions": {
-		"composite": true,
+		"target": "es2019",
+		"lib": ["ES2019"],
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"strict": true,
 		"outDir": "out",
-		"rootDir": "src",
+		"rootDir": "src"
 	},
-	"include": ["src", ],
+	"include": ["src"],
 	"exclude": ["node_modules", ".vscode-test"]
 }
