@@ -37,7 +37,7 @@ jobs:
     - name: Build DevSkim VSCode Plugin
       run: |
         npm run pack-ext
-      working-directory: .DevSkim-VSCode-Plugin
+      working-directory: ./DevSkim-VSCode-Plugin
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
