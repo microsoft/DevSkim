@@ -35,11 +35,11 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    - task: Npm@1
-      displayName: npm install
+    - task: UseDotNet@2
+      displayName: Install Dotnet SDK
       inputs:
-        command: 'install'
-        workingDir: 'DevSkim-VSCode-Plugin/'
+        packageType: 'sdk'
+        version: '6.0.x'
     - task: Npm@1
       inputs:
         command: 'custom'
