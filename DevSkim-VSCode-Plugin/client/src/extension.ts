@@ -3,8 +3,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import * as languages from './languages.json';
-import * as comments from './comments.json';
+import { ExtensionToCodeCommentStyle } from './languagesAccess';
 
 import * as path from 'path';
 import { workspace, ExtensionContext } from 'vscode';
@@ -93,46 +92,25 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		const issueNum = diagnostic.source?.split(new RegExp('[\\[\\]]'))[1];
 		if (issueNum != undefined)
 		{
-			const config = getDevSkimConfiguration();
-
-			let inline : string | undefined;
-			let prefix : string | undefined;
-			let suffix : string | undefined;
-			let language : string | undefined;
-			languages.some(x => 
+			const extension = document.uri.path.split('.').pop()?.toLowerCase() ?? '';
+			const commentStyle = ExtensionToCodeCommentStyle(extension);
+			if (commentStyle != undefined)
 			{
-				const index = x.extensions.indexOf(`.${document.uri.path.split('.').pop()?.toLowerCase() ?? ''}`);
-				if (index >= 0)
+				const config = getDevSkimConfiguration();
+				const fix = new vscode.CodeAction(`Suppress ${issueNum} finding`, vscode.CodeActionKind.QuickFix);
+				fix.edit = new vscode.WorkspaceEdit();
+				const text = document.lineAt(range.end.line);
+				const reviewer = config.manualReviewerName != '' ? ` by ${config.manualReviewerName}` : '';
+				if (config.suppressionCommentStyle == "block" && commentStyle.prefix != undefined && commentStyle.suffix != undefined)
 				{
-					language = x.name;
-					return true;
+					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.prefix} DevSkim: Ignore ${issueNum}${reviewer} ${commentStyle.suffix}`);
 				}
-			});
-			if (language != undefined)
-			{
-				comments.some(y => {
-					if (y.language.includes(language ?? ''))
-					{
-						inline = y.inline;
-						prefix = y.preffix;
-						suffix = y.suffix;
-						return true;
-					}
-				});
+				else
+				{
+					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.inline} DevSkim: Ignore ${issueNum}${reviewer}`);
+				}
+				return fix;
 			}
-			const fix = new vscode.CodeAction(`Suppress ${issueNum} finding`, vscode.CodeActionKind.QuickFix);
-			fix.edit = new vscode.WorkspaceEdit();
-			const text = document.lineAt(range.end.line);
-			const reviewer = config.manualReviewerName != '' ? ` by ${config.manualReviewerName}` : '';
-			if (config.suppressionCommentStyle == "block" && prefix != undefined && suffix != undefined)
-			{
-				fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${prefix} DevSkim: Ignore ${issueNum}${reviewer} ${suffix}`);
-			}
-			else
-			{
-				fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${inline} DevSkim: Ignore ${issueNum}${reviewer}`);
-			}
-			return fix;
 		}
 		return null;
 	}

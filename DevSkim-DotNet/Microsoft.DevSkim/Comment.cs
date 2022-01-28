@@ -15,7 +15,7 @@ namespace Microsoft.DevSkim
         [JsonPropertyName("language")]
         public string[]? Languages { get; set; }
 
-        [JsonPropertyName("preffix")]
+        [JsonPropertyName("prefix")]
         public string? Prefix { get; set; }
 
         [JsonPropertyName("suffix")]

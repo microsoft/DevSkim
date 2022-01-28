@@ -77,7 +77,7 @@ namespace Microsoft.DevSkim
         public static bool IsAlwaysCommented(string language) => Instance.Comments.Where(x => x.Languages?.Contains(language) ?? false).Any(x => x.Always);
 
         /// <summary>
-        ///     Gets comment preffix for given language
+        ///     Gets comment prefix for given language
         /// </summary>
         /// <param name="language"> Language </param>
         /// <returns> Commented string </returns>

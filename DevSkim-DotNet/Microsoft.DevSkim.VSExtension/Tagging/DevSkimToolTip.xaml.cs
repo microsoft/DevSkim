@@ -38,10 +38,10 @@ namespace Microsoft.DevSkim.VSExtension
             this.SeverityBox.Text = string.Format(Messages.Severity, rule.Severity);
 
             this.Url.Foreground = new SolidColorBrush(Color.FromRgb(linkColor.R, linkColor.G, linkColor.B));
-            this.Url.NavigateUri = new Uri(url_preffix + rule.RuleInfo);
+            this.Url.NavigateUri = new Uri(url_prefix + rule.RuleInfo);
         }
 
-        private const string url_preffix = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
+        private const string url_prefix = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
         private Rule _rule;
 
         private void Url_RequestNavigate(object sender, RequestNavigateEventArgs e)

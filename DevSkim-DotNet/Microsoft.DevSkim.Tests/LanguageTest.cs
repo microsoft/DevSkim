@@ -13,24 +13,24 @@ namespace Microsoft.DevSkim.Tests
         public void LanguageCommentPrefixTest()
         {
             string lang = "csharp";
-            string preffix = Language.GetCommentInline(lang);
-            Assert.AreEqual("//", preffix, "Incorect prefix for " + lang);
+            string prefix = Language.GetCommentInline(lang);
+            Assert.AreEqual("//", prefix, "Incorect prefix for " + lang);
 
             lang = "python";
-            preffix = Language.GetCommentInline(lang);
-            Assert.AreEqual("#", preffix, "Incorect prefix for " + lang);
+            prefix = Language.GetCommentInline(lang);
+            Assert.AreEqual("#", prefix, "Incorect prefix for " + lang);
 
             lang = "sql";
-            preffix = Language.GetCommentInline(lang);
-            Assert.AreEqual("--", preffix, "Incorect prefix for " + lang);
+            prefix = Language.GetCommentInline(lang);
+            Assert.AreEqual("--", prefix, "Incorect prefix for " + lang);
 
             lang = "klyngon";
-            preffix = Language.GetCommentInline(lang);
-            Assert.AreEqual(string.Empty, preffix, "Incorect prefix for " + lang);
+            prefix = Language.GetCommentInline(lang);
+            Assert.AreEqual(string.Empty, prefix, "Incorect prefix for " + lang);
 
             lang = null;
-            preffix = Language.GetCommentInline(lang);
-            Assert.AreEqual(string.Empty, preffix, "Incorect prefix for " + lang);
+            prefix = Language.GetCommentInline(lang);
+            Assert.AreEqual(string.Empty, prefix, "Incorect prefix for " + lang);
         }
 
         [TestMethod]
