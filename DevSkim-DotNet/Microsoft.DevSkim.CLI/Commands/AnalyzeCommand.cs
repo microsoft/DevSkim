@@ -40,6 +40,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         public bool UseStdIn { get; set; }
         public IEnumerable<string> IgnoreRuleIds { get; set; } = new List<string>();
         public IEnumerable<Regex> Regexes { get; set; } = Array.Empty<Regex>();
+        public bool GenerateReplacements { get; set; }
     }
 
     public class AnalyzeCommand : ICommand
@@ -158,6 +159,10 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             var stdIn = command.Option("--useStdIn", "Read a file from stdin until EOF.  Uses the path provided as the filename for output.", CommandOptionType.NoValue);
 
+            var generateReplacements = command.Option("--simple-replacements",
+                                              "Generate simple replacements when available using the fixes. (For JSON Output use %V.)",
+                                              CommandOptionType.NoValue);
+
             command.ExtendedHelpText = 
 @"
 Output format options:
@@ -198,7 +203,8 @@ Output format options:
                     AbsolutePaths = absolutePaths.HasValue(),
                     Base64Text = base64.Value(),
                     UseStdIn = stdIn.HasValue(),
-                    IgnoreRuleIds = ignoreRulesOption.Value()?.Split(',') ?? Enumerable.Empty<string>()
+                    IgnoreRuleIds = ignoreRulesOption.Value()?.Split(',') ?? Enumerable.Empty<string>(),
+                    GenerateReplacements = generateReplacements.HasValue()
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));
@@ -336,18 +342,21 @@ Output format options:
             }
 
             // Initialize the processor
-            RuleProcessor processor = new(rules);
-            processor.EnableSuppressions = !opts.DisableSuppression;
+            var rpo = new RuleProcessorOptions
+            {
+                EnableSuppressions = !opts.DisableSuppression,
+                GenerateReplacements = opts.GenerateReplacements
+            };
 
             if (opts.Severities.Count() > 0)
             {
-                processor.SeverityLevel = 0;
+                rpo.SeverityLevel = 0;
                 foreach (string severityText in opts.Severities)
                 {
                     Severity severity;
                     if (ParseSeverity(severityText, out severity))
                     {
-                        processor.SeverityLevel |= severity;
+                        rpo.SeverityLevel |= severity;
                     }
                     else
                     {
@@ -356,6 +365,8 @@ Output format options:
                     }
                 }
             }
+
+            RuleProcessor processor = new(rules, rpo);
 
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,

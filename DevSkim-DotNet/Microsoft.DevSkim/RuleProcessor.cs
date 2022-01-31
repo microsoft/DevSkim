@@ -11,37 +11,50 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim
 {
+    public class RuleProcessorOptions
+    {
+
+        /// <summary>
+        ///     Enables caching of rules queries. Increases performance and memory use!
+        /// </summary>
+        public bool EnableCache { get; set; } = true;
+
+        /// <summary>
+        ///     Enable suppresion syntax checking during analysis
+        /// </summary>
+        public bool EnableSuppressions { get; set; } = false;
+
+        /// <summary>
+        ///     Enable processing the fixes to generate straight text replacements
+        /// </summary>
+        public bool GenerateReplacements { get; set; } = false;
+
+        /// <summary>
+        ///     Sets severity levels for analysis
+        /// </summary>
+        public Severity SeverityLevel { get; set; } = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
+    }
+
     /// <summary>
     ///     Heart of DevSkim. Parses code applies rules
     /// </summary>
     public class RuleProcessor
     {
+        public RuleProcessorOptions ProcessorOptions { get; set; } = new RuleProcessorOptions();
         /// <summary>
         ///     Creates instance of RuleProcessor
         /// </summary>
-        public RuleProcessor(RuleSet rules)
+        public RuleProcessor(RuleSet rules, RuleProcessorOptions? ruleProcessorOptions = null)
         {
+            ProcessorOptions = ruleProcessorOptions ?? new RuleProcessorOptions();
             _ruleset = rules;
             _rulesCache = new ConcurrentDictionary<string, IEnumerable<ConvertedOatRule>>();
-            EnableSuppressions = false;
-            EnableCache = true;
 
-            SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice;
-
-            analyzer = new Analyzer(new AnalyzerOptions(false, false));
+            analyzer = new Analyzer(new AnalyzerOptions(false, true));
             analyzer.SetOperation(new WithinOperation(analyzer));
             analyzer.SetOperation(new ScopedRegexOperation(analyzer));
         }
 
-        /// <summary>
-        ///     Enables caching of rules queries. Increases performance and memory use!
-        /// </summary>
-        public bool EnableCache { get; set; }
-
-        /// <summary>
-        ///     Enable suppresion syntax checking during analysis
-        /// </summary>
-        public bool EnableSuppressions { get; set; }
 
         /// <summary>
         ///     Ruleset to be used for analysis
@@ -57,11 +70,6 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        ///     Sets severity levels for analysis
-        /// </summary>
-        public Severity SeverityLevel { get; set; }
-
-        /// <summary>
         ///     Applies given fix on the provided source code line
         /// </summary>
         /// <param name="text"> Source code line </param>
@@ -75,7 +83,15 @@ namespace Microsoft.DevSkim
             {
                 if (fixRecord.Pattern is { })
                 {
-                    //TODO: Better pattern search and modifiers
+                    RegexOptions regexOptions = new RegexOptions();
+                    if (fixRecord.Pattern.Modifiers?.Any(x => x.Equals("i", StringComparison.OrdinalIgnoreCase)) ?? false)
+                    {
+                        regexOptions |= RegexOptions.IgnoreCase;
+                    }
+                    if (fixRecord.Pattern.Modifiers?.Any(x => x.Equals("m", StringComparison.OrdinalIgnoreCase)) ?? false)
+                    {
+                        regexOptions |= RegexOptions.Multiline;
+                    }
                     Regex regex = new Regex(fixRecord.Pattern.Pattern ?? string.Empty);
                     result = regex.Replace(text, fixRecord.Replacement ?? string.Empty);
                 }
@@ -113,7 +129,7 @@ namespace Microsoft.DevSkim
         {
             var lng = languages ?? Array.Empty<string>();
             // Get rules for the given content type
-            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(lng).Where(x => !x.DevSkimRule.Disabled && SeverityLevel.HasFlag(x.DevSkimRule.Severity));
+            IEnumerable<CST.OAT.Rule> rules = GetRulesForLanguages(lng).Where(x => !x.DevSkimRule.Disabled && ProcessorOptions.SeverityLevel.HasFlag(x.DevSkimRule.Severity));
             // Skip rules that are disabled or don't have the right severity if (rule.Disabled ||
             // !SeverityLevel.HasFlag(rule.Severity)) continue;
 
@@ -148,8 +164,17 @@ namespace Microsoft.DevSkim
                         {
                             foreach (var boundary in tcc.Result)
                             {
-                                var issue = new Issue(Boundary: boundary, StartLocation: textContainer.GetLocation(boundary.Index), EndLocation: textContainer.GetLocation(boundary.Index + boundary.Length), Rule: orh.DevSkimRule);
-                                if (EnableSuppressions)
+                                List<string> fixes = new();
+                                if (ProcessorOptions.GenerateReplacements)
+                                {
+                                    foreach(var codeFix in orh.DevSkimRule.Fixes ?? new List<CodeFix>())
+                                    {
+                                        string fix = Fix(textContainer.GetBoundaryText(boundary), codeFix);
+                                        fixes.Add(fix);
+                                    }
+                                }
+                                var issue = new Issue(Boundary: boundary, StartLocation: textContainer.GetLocation(boundary.Index), EndLocation: textContainer.GetLocation(boundary.Index + boundary.Length), Rule: orh.DevSkimRule, Fixes: fixes);
+                                if (ProcessorOptions.EnableSuppressions)
                                 {
                                     var supp = new Suppression(textContainer, (lineNumber > 0) ? lineNumber : issue.StartLocation.Line);
                                     var supissue = supp.GetSuppressedIssue(issue.Rule.Id);
@@ -207,12 +232,7 @@ namespace Microsoft.DevSkim
         private ConcurrentDictionary<string, IEnumerable<ConvertedOatRule>> _rulesCache;
 
         private RuleSet _ruleset;
-        private Analyzer analyzer;
-
-        private IEnumerable<ConvertedOatRule> GetOatRulesForLanguages(string[] languages)
-        {
-            return GetRulesForLanguages(languages);
-        }
+        private readonly Analyzer analyzer;
 
         /// <summary>
         ///     Filters the rules for those matching the content type. Resolves all the overrides
@@ -223,7 +243,7 @@ namespace Microsoft.DevSkim
         {
             string langid = string.Empty;
 
-            if (EnableCache)
+            if (ProcessorOptions.EnableCache)
             {
                 Array.Sort(languages);
                 // Make language id for cache purposes
@@ -236,7 +256,7 @@ namespace Microsoft.DevSkim
             IEnumerable<ConvertedOatRule> filteredRules = _ruleset.ByLanguages(languages);
 
             // Add the list to the cache so we save time on the next call
-            if (EnableCache)
+            if (ProcessorOptions.EnableCache)
             {
                 _rulesCache.TryAdd(langid, filteredRules);
             }

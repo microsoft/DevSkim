@@ -4,11 +4,11 @@ export interface JsonIssueRecord {
     start_column: number;
     end_line: number;
     end_column: number;
-    rule_name: string;
     rule_id: string;
+    rule_name: string;
     severity: Severity;
     description: string;
-    match: string;
+    fixes: Fix[];
 }
 
 export enum Severity {
@@ -18,4 +18,17 @@ export enum Severity {
     Moderate = 4,
     BestPractice = 8,
     ManualReview = 16
+}
+
+export interface Fix{
+    name: string;
+    range: DevSkimRange;
+    replacement: string;
+}
+
+export interface DevSkimRange{
+    start_line: number;
+    start_column: number;
+    end_line: number;
+    end_column: number;
 }

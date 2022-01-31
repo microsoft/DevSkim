@@ -60,6 +60,8 @@ namespace Microsoft.DevSkim.CLI.Writers
                 item.Add("tags", issue.Issue.Rule.Tags ?? new List<string>());
             if (_formatString.Contains("%f"))
                 item.Add("fixes", issue.Issue.Rule.Fixes ?? new List<CodeFix>());
+            if (_formatString.Contains("%V"))
+                item.Add("processed_fixes", issue.Issue.Fixes ?? new List<string>());
             // Store the result in the result list
             jsonResult.Push(item);
         }

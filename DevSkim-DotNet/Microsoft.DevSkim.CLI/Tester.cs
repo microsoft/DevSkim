@@ -153,8 +153,8 @@ namespace Microsoft.DevSkim.CLI
             Dictionary<int, List<string>> expecations = GetExpectations(fileHeader, defaultId);
 
             RuleProcessor processor = new RuleProcessor(_rules);
-            processor.EnableSuppressions = false;
-            processor.SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice | Severity.ManualReview;
+            processor.ProcessorOptions.EnableSuppressions = false;
+            processor.ProcessorOptions.SeverityLevel = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice | Severity.ManualReview;
 
             Issue[] issues = processor.Analyze(fileContent, languages);
 

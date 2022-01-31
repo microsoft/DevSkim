@@ -15,7 +15,6 @@ import {
 	TextDocumentPositionParams,
 	TextDocumentSyncKind,
 	InitializeResult,
-	DiagnosticRelatedInformation
 } from 'vscode-languageserver/node';
 import * as cp from 'child_process';
 import {
@@ -82,9 +81,6 @@ connection.onInitialized(() => {
 	}
 });
 
-// The global settings, used when the `workspace/configuration` request is not supported by the client.
-// Please note that this is not the case when using this server with the client provided in this example
-// but could happen with other clients.
 const defaultSettings: DevSkimSettings = new DevSkimSettingsObject();
 let globalSettings: DevSkimSettings = defaultSettings;
 
@@ -145,6 +141,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const text = textDocument.getText();
 	const stdInStream = new Stream.Readable();
 	stdInStream.push(text);
+	// sends EOF so devskim knows the input has ended.
 	stdInStream.push(null);
 	try
 	{
@@ -158,7 +155,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 			severity.push('manual');
 		}
 		
-		const args = [devskimPath, 'analyze', fileNameOnly, '-f', 'json', '-o', '%F%L%C%l%c%R%N%S%D%f', '--useStdIn', '-s', severity.join(','), '--ignore-regex', `"${settings.ignoreFiles.join(',')}"`];
+		const args = [devskimPath, 'analyze', fileNameOnly, '-f', 'json', '--simple-replacements', '-o', '%F%L%C%l%c%R%N%S%D%V', '--useStdIn', '-s', severity.join(','), '--ignore-regex', `"${settings.ignoreFiles.join(',')}"`];
 		if (settings.ignoreRulesList.length > 0){
 			args.push('--ignore-rule-ids');
 			args.push(settings.ignoreRulesList);
@@ -170,29 +167,28 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 		child.stdout.on('data', data => {
 			theOutput += data;
 		});
-		child.stdout.on('end', () => {
-			connection.console.log("Finished data.");
-		});
 		child.stderr.on('data', data => {
 			theError += data;
 		});
 		child.on('error', err => {
-			connection.console.log("Failed to spawn devskim");
+			connection.console.log(`Failed to spawn DevSkim. ${err.message}`);
 		});
 		child.on('exit', function (code, signal) {
-			connection.console.log('child process exited with ' +
-						`code ${code} and signal ${signal}`);
 			if (code == 0)
 			{
 				const diagnostics = parseToDiagnostics(theOutput, textDocument.uri.toString());
 				connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 			}
+			else
+			{
+				connection.console.log('DevSkim process exited with ' +
+					`code ${code} and signal ${signal}`);
+			}
 		});
 		stdInStream.pipe(child.stdin);
-		connection.console.log("Process run");
 	}
 	catch(err){
-		connection.console.log("err");
+		connection.console.log(`${err}`);
 	}
 }
 
@@ -213,11 +209,11 @@ function parseToDiagnostics(jsonOutputFromDevskim: string, uri: string) : Diagno
 			code: "MS-CST-E.vscode-devskim"
 		};
 		diags.push(diagnostic);
-		if (deserialized[finding]["fixes"] != undefined)
+		if (deserialized[finding]["processed_fixes"] != undefined)
 		{
-			for(const fix in deserialized[finding]["fixes"])
+			for(const fix in deserialized[finding]["processed_fixes"])
 			{
-				connection.sendNotification(getCodeFixMapping(), new CodeFixMapping(diagnostic, deserialized[finding]["fixes"][fix], uri));
+				connection.sendNotification(getCodeFixMapping(), new CodeFixMapping(diagnostic, deserialized[finding]["processed_fixes"][fix], uri));
 			}
 		}
 	}

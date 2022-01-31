@@ -7,7 +7,7 @@ import { ExtensionToCodeCommentStyle } from './languagesAccess';
 
 import * as path from 'path';
 import { workspace, ExtensionContext } from 'vscode';
-import { CodeFix, CodeFixMapping } from './codeFixMapping';
+import { CodeFixMapping } from './codeFixMapping';
 import {
 	LanguageClient,
 	LanguageClientOptions,
@@ -18,40 +18,11 @@ import {
 import * as vscode from 'vscode';
 import { DevSkimSettings, DevSkimSettingsObject } from './devskimSettings';
 import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from './notificationNames';
+import { selectors } from './selectors';
+import { DevSkimFixer } from './devSkimFixer';
 
 let client: LanguageClient;
 const serverPath = path.join('server', 'out', 'server.js');
-const selectors = [{ scheme: 'file', language: 'c' },
-{ scheme: 'file', language: 'clojure' },
-{ scheme: 'file', language: 'coffeescript' },
-{ scheme: 'file', language: 'cpp' },
-{ scheme: 'file', language: 'csharp' },
-{ scheme: 'file', language: 'fsharp' },
-{ scheme: 'file', language: 'go' },
-{ scheme: 'file', language: 'groovy' },
-{ scheme: 'file', language: 'jade' },
-{ scheme: 'file', language: 'java' },
-{ scheme: 'file', language: 'javascript' },
-{ scheme: 'file', language: 'javascriptreact' },
-{ scheme: 'file', language: 'lua' },
-{ scheme: 'file', language: 'objective-c' },
-{ scheme: 'file', language: 'perl' },
-{ scheme: 'file', language: 'perl6' },
-{ scheme: 'file', language: 'php' },
-{ scheme: 'file', language: 'plaintext' },
-{ scheme: 'file', language: 'powershell' },
-{ scheme: 'file', language: 'python' },
-{ scheme: 'file', language: 'r' },
-{ scheme: 'file', language: 'ruby' },
-{ scheme: 'file', language: 'rust' },
-{ scheme: 'file', language: 'shellscript' },
-{ scheme: 'file', language: 'sql' },
-{ scheme: 'file', language: 'swift' },
-{ scheme: 'file', language: 'typescript' },
-{ scheme: 'file', language: 'typescriptreact' },
-{ scheme: 'file', language: 'vb' },
-{ scheme: 'file', language: 'xml' },
-{ scheme: 'file', language: 'yaml' }];
 
 async function resolveDotNetPath(): Promise<string> {
 	const result = await vscode.commands.executeCommand<any>(
@@ -62,66 +33,6 @@ async function resolveDotNetPath(): Promise<string> {
 		}
 	);
 	return result?.dotnetPath;
-}
-
-export class DevSkimFixer implements vscode.CodeActionProvider {
-
-	public static readonly providedCodeActionKinds = [
-		vscode.CodeActionKind.QuickFix
-	];
-
-	provideCodeActions(document: vscode.TextDocument, range: vscode.Range | vscode.Selection, context: vscode.CodeActionContext, token: vscode.CancellationToken): vscode.CodeAction[] {
-		// for each diagnostic entry that has the matching `code`, create a code action command
-		const output : vscode.CodeAction[] = [];
-		context.diagnostics.filter(diagnostic => diagnostic.code === "MS-CST-E.vscode-devskim").forEach((filteredDiagnostic : vscode.Diagnostic) => {
-			fixMapping.get(createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString()))?.forEach(codeFix => {
-				output.push(this.createFix(document, range, codeFix));
-			});
-			const suppression = this.createSuppression(document, range, filteredDiagnostic);
-			if (suppression != null)
-			{
-				output.push(suppression);
-			}
-		});
-
-		return output;
-	}
-
-	private createSuppression(document: vscode.TextDocument, range: vscode.Range, diagnostic: vscode.Diagnostic): vscode.CodeAction | null
-	{
-		const issueNum = diagnostic.source?.split(new RegExp('[\\[\\]]'))[1];
-		if (issueNum != undefined)
-		{
-			const extension = document.uri.path.split('.').pop()?.toLowerCase() ?? '';
-			const commentStyle = ExtensionToCodeCommentStyle(extension);
-			if (commentStyle != undefined)
-			{
-				const config = getDevSkimConfiguration();
-				const fix = new vscode.CodeAction(`Suppress ${issueNum} finding`, vscode.CodeActionKind.QuickFix);
-				fix.edit = new vscode.WorkspaceEdit();
-				const text = document.lineAt(range.end.line);
-				const reviewer = config.manualReviewerName != '' ? ` by ${config.manualReviewerName}` : '';
-				if (config.suppressionCommentStyle == "block" && commentStyle.prefix != undefined && commentStyle.suffix != undefined)
-				{
-					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.prefix} DevSkim: Ignore ${issueNum}${reviewer} ${commentStyle.suffix}`);
-				}
-				else
-				{
-					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.inline} DevSkim: Ignore ${issueNum}${reviewer}`);
-				}
-				return fix;
-			}
-		}
-		return null;
-	}
-
-	private createFix(document: vscode.TextDocument, range: vscode.Range, codeFix: CodeFix): vscode.CodeAction 
-	{
-		const fix = new vscode.CodeAction(codeFix.name, vscode.CodeActionKind.QuickFix);
-		fix.edit = new vscode.WorkspaceEdit();
-		fix.edit.replace(document.uri, range, codeFix.replacement);
-		return fix;
-	}
 }
 
 function getDevSkimConfiguration(section='devskim' ): DevSkimSettings {
@@ -141,8 +52,11 @@ function getDevSkimConfiguration(section='devskim' ): DevSkimSettings {
 }
 
 export function activate(context: ExtensionContext) {
+	const config = getDevSkimConfiguration();
+	const fixer = new DevSkimFixer();
+	fixer.setConfig(config);
 	context.subscriptions.push(
-		vscode.languages.registerCodeActionsProvider(selectors, new DevSkimFixer(), {
+		vscode.languages.registerCodeActionsProvider(selectors, fixer, {
 			providedCodeActionKinds: DevSkimFixer.providedCodeActionKinds
 		})
 	);
@@ -199,10 +113,12 @@ export function activate(context: ExtensionContext) {
 				client.sendNotification(getDevSkimPath(),path.join(devskimExtension.extensionPath, 'devskimBinaries', 'devskim.dll'));
 				client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
 				{
-					ensureMapHasMapping(mapping);
+					fixer.ensureMapHasMapping(mapping);
 				});
 				vscode.workspace.onDidChangeConfiguration(e => {
-					client.sendNotification(getSetSettings(),getDevSkimConfiguration());
+					const newConfig = getDevSkimConfiguration();
+					client.sendNotification(getSetSettings(),newConfig);
+					fixer.setConfig(newConfig);
 				});
 			});
 			// Start the client. This will also launch the server
@@ -210,30 +126,6 @@ export function activate(context: ExtensionContext) {
 		}
 	});
 }
-
-function createMapKeyForDiagnostic(diagnostic: vscode.Diagnostic, fileName: string) : string
-{
-	return `${fileName}: ${diagnostic.message}, ${diagnostic.code?.valueOf()}, ${diagnostic.range.start.line}, ${diagnostic.range.start.character}, ${diagnostic.range.end.line}, ${diagnostic.range.end.character}`;
-}
-
-function ensureMapHasMapping(mapping: CodeFixMapping)
-{
-	const key = createMapKeyForDiagnostic(mapping.diagnostic, mapping.fileName);
-	const keyVal = fixMapping.get(key);
-	if(keyVal != undefined)
-	{
-		if (!keyVal.find(x => x.name == mapping.replacement.name && x.replacement == mapping.replacement.replacement && x.type == mapping.replacement.type))
-		{
-			fixMapping.set(key, keyVal.concat(mapping.replacement));
-		}
-	}
-	else
-	{
-		fixMapping.set(key, [mapping.replacement]);
-	}
-}
-
-const fixMapping = new Map<string, CodeFix[]>();
 
 export function deactivate(): Thenable<void> | undefined {
 	if (!client) {

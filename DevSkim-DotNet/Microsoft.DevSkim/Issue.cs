@@ -2,17 +2,20 @@
 
 namespace Microsoft.DevSkim
 {
+    using System.Collections.Generic;
+
     /// <summary>
     ///     Analysis Issue
     /// </summary>
     public class Issue
     {
-        public Issue(Boundary Boundary, Location StartLocation, Location EndLocation, Rule Rule)
+        public Issue(Boundary Boundary, Location StartLocation, Location EndLocation, Rule Rule, System.Collections.Generic.List<string>? Fixes)
         {
             this.Boundary = Boundary;
             this.StartLocation = StartLocation;
             this.EndLocation = EndLocation;
             this.Rule = Rule;
+            this.Fixes = Fixes;
         }
 
         /// <summary>
@@ -34,6 +37,11 @@ namespace Microsoft.DevSkim
         ///     Matching rule
         /// </summary>
         public Rule Rule { get; set; }
+
+        /// <summary>
+        ///     Processed fixes which can directly replace the provided boundary
+        /// </summary>
+        public List<string>? Fixes { get; }
 
         /// <summary>
         ///     Location (line, column) where issue starts
