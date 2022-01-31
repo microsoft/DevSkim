@@ -165,7 +165,7 @@
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"test-compile": "tsc -p ./",
-		"pack-ext": "npm run setup && node setPackageVersion.js && vsce package && node resetPackageVersion.js"
+		"pack-ext": "npm run clean:out && npm run setup && node setPackageVersion.js && vsce package && node resetPackageVersion.js"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",

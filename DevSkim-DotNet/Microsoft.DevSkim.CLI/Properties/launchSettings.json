@@ -2,7 +2,7 @@
   "profiles": {
     "Microsoft.DevSkim.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "analyze -f json --useStdIn test.cs"
+      "commandLineArgs": "analyze C:\\Users\\gstocco\\test.cs -f json -o %F%L%C%l%c%R%N%S%D%f -s critical,important,moderate --ignore-regex \"\\.(exe|dll|so|dylib|bin|so\\..*)$,\\.(png|jpg|jpeg|gif|psd|ico|mp3|mpeg|bmp)$,\\.(zip|tar|gz|rar|jar|gz|7z|bz|bz2|gzip|cab|war|xz|nupkg|gem|egg)$,\\.(sqlite3|db)$,(^|/)(out|bin)/,(^|/)(tests?|unittests?|__tests__|__mocks__)/,(^|/)(\\.git|git)/,\\.(git|git[^./])$,-lock\\.[^/]|\\.lock$,(^|/)(\\.vscode|\\.cache|logs)/,(^|/)(nuget|node_modules)/,\\.(log|sarif|test)$,\\.(py[cod])$,(^|/)__pycache__/\" --ignore-rule-ids DS126858"
     },
     "PackRules": {
       "commandName": "Project",

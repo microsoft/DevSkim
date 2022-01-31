@@ -2,7 +2,6 @@
 @page "/reports/{RunGuid}"
 @using Microsoft.CodeAnalysis.Sarif;
 @using System.Text; 
-@using MoreLinq; 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <h1>Report Viewer</h1>
@@ -83,7 +82,7 @@
             }
             else
             {
-                SelectedRun = results.RunIdMap.Values.Select(runId => (DateTime.Parse(runId), runId)).MaxBy(x => x.Item1).First().runId;
+                SelectedRun = results.RunIdMap.Values.Select(runId => (DateTime.Parse(runId), runId)).MaxBy(x => x.Item1).runId;
             }
             await GetResults();
         }

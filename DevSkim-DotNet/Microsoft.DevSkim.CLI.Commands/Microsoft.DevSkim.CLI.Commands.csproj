@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+<ItemGroup>
+	<PackageReference Include="Glob" Version="1.1.9" />
+	<PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="1.1.6" />
+	<PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+	<PackageReference Include="Sarif.Sdk" Version="2.4.12" />
+</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj" />
+  </ItemGroup>
+
+</Project>
