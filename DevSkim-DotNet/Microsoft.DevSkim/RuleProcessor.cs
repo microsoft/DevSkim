@@ -164,7 +164,7 @@ namespace Microsoft.DevSkim
                         {
                             foreach (var boundary in tcc.Result)
                             {
-                                List<string> fixes = new();
+                                List<string> fixes = new List<string>();
                                 if (ProcessorOptions.GenerateReplacements)
                                 {
                                     foreach(var codeFix in orh.DevSkimRule.Fixes ?? new List<CodeFix>())
