@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7f009d24-6eb7-4185-a439-9260820095e3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Microsoft.DevSkim.VSExtension.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Checker\DevSkimError.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Checker\DevSkimErrorsFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Checker\DevSkimErrorsSnapshot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Checker\SinkManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Checker\SkimChecker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GuidStrings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\OptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Options\OptionsDialogPageControl.xaml.cs">
+      <DependentUpon>OptionsDialogPageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Messages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shim\ContentType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shim\ContentTypeRecord.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shim\SkimShim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shim\SuppressorEx.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Suggestions\FixSuggestedAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Suggestions\SuggestedActionsSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Suggestions\SuggestedActionsSourceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Suggestions\SuppressSuggestedAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tagging\DevSkimProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tagging\DevSkimTag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tagging\DevSkimTagger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tagging\DevSkimToolTip.xaml.cs">
+      <DependentUpon>DevSkimToolTip.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\ExternalCommandRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\GitHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VSPackage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Content\ContentTypes.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Content\License.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Content\readme-gallery.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Media\devskim.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Media\preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Options\OptionsDialogPageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Tagging\DevSkimToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)VSPackage.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>VSPackage.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)app.config" />
+  </ItemGroup>
+</Project>

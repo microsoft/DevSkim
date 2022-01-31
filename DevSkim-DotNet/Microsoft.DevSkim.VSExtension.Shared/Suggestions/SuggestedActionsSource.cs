@@ -71,9 +71,9 @@ namespace Microsoft.DevSkim.VSExtension
 
                 // We don't want empty group and spacer in the pop-up menu
                 if (fixActions.Count > 0)
-                    return new SuggestedActionSet[] { new SuggestedActionSet(fixActions), new SuggestedActionSet(suppActions) };
+                    return new SuggestedActionSet[] { new SuggestedActionSet("DevSkimFixes",fixActions), new SuggestedActionSet("DevSkimSuppression", suppActions) };
                 else
-                    return new SuggestedActionSet[] { new SuggestedActionSet(suppActions) };
+                    return new SuggestedActionSet[] { new SuggestedActionSet("DevSkimFixes",suppActions) };
             }
 
             return Enumerable.Empty<SuggestedActionSet>();

@@ -18,7 +18,7 @@ namespace Microsoft.DevSkim.VSExtension
         public SkimShim()
         {
             ruleset = new RuleSet();
-            processor = new RuleProcessor(ruleset) { EnableSuppressions = true };
+            processor = new RuleProcessor(ruleset, new RuleProcessorOptions() { EnableSuppressions = true }) ;
             LoadRules();
         }
 
@@ -125,12 +125,12 @@ namespace Microsoft.DevSkim.VSExtension
 
             processor.Rules = ruleset;
 
-            processor.SeverityLevel = Severity.Critical;
+            processor.ProcessorOptions.SeverityLevel = Severity.Critical;
 
-            if (set.EnableImportantRules) processor.SeverityLevel |= Severity.Important;
-            if (set.EnableModerateRules) processor.SeverityLevel |= Severity.Moderate;
-            if (set.EnableBestPracticeRules) processor.SeverityLevel |= Severity.BestPractice;
-            if (set.EnableManualReviewRules) processor.SeverityLevel |= Severity.ManualReview;
+            if (set.EnableImportantRules) processor.ProcessorOptions.SeverityLevel |= Severity.Important;
+            if (set.EnableModerateRules) processor.ProcessorOptions.SeverityLevel |= Severity.Moderate;
+            if (set.EnableBestPracticeRules) processor.ProcessorOptions.SeverityLevel |= Severity.BestPractice;
+            if (set.EnableManualReviewRules) processor.ProcessorOptions.SeverityLevel |= Severity.ManualReview;
         }
     }
 }

@@ -46,6 +46,7 @@ namespace Microsoft.DevSkim.VSExtension
 
         private void Url_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             IVsWindowFrame ppFrame;
             IVsWebBrowsingService browserService;
             browserService = Package.GetGlobalService(typeof(SVsWebBrowsingService)) as IVsWebBrowsingService;

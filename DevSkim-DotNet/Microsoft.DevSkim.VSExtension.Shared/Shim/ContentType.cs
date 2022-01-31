@@ -1,11 +1,11 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using System.Text.Json;
-using System.Collections.Generic;
-using System.IO;
-
 namespace Microsoft.DevSkim.VSExtension
 {
+    using System.Text.Json;
+    using System.Collections.Generic;
+    using System.IO;
+
     /// <summary>
     ///     Helper class for language based commenting and type converion
     /// </summary>

@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following set of attributes. Change these
 // attribute values to modify the information associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.DevSkim.VSExtension")]
-[assembly: AssemblyDescription("Visual Studio Extension for VS 2019")]
+[assembly: AssemblyTitle("Microsoft.DevSkim.VSExtension.2022")]
+[assembly: AssemblyDescription("Visual Studio Extension for VS 2022")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft Corporation")]
 [assembly: AssemblyProduct("Microsoft.DevSkim.VSExtension")]
