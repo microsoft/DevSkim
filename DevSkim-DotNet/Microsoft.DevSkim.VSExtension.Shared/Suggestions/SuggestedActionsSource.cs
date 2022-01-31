@@ -86,7 +86,7 @@ namespace Microsoft.DevSkim.VSExtension
                 DevSkimError error = GetErrorUnderCaret(range);
 
                 return (error != null && error.Actionable);
-            });
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         public bool TryGetTelemetryId(out Guid telemetryId)

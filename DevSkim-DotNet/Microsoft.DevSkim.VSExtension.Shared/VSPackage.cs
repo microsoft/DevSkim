@@ -29,6 +29,7 @@ namespace Microsoft.DevSkim.VSExtension
         /// <returns> Project name </returns>
         public static string GetProjectName(string fileName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             string result = null;
             if (DTE != null && DTE.Solution != null)
             {
@@ -54,6 +55,7 @@ namespace Microsoft.DevSkim.VSExtension
 
         public static void LogEvent(string message)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (_log == null) return;
 
             int hr = _log.LogEntry((UInt32)__ACTIVITYLOG_ENTRYTYPE.ALE_INFORMATION,
@@ -74,6 +76,7 @@ namespace Microsoft.DevSkim.VSExtension
 
             // Initialize shared components
             DTE = await GetServiceAsync(typeof(DTE)) as DTE2;
+            Assumes.Present(DTE);
 
             // Initialize ActivityLog
             _log = await GetServiceAsync(typeof(SVsActivityLog)) as IVsActivityLog;

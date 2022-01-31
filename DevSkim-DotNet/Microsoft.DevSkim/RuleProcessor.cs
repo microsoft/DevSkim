@@ -55,6 +55,22 @@ namespace Microsoft.DevSkim
             analyzer.SetOperation(new ScopedRegexOperation(analyzer));
         }
 
+        public bool EnableSuppressions
+        {
+            get => ProcessorOptions.EnableSuppressions;
+            set
+            {
+                ProcessorOptions.EnableSuppressions = value;
+            }
+        }
+        public Severity SeverityLevel
+        {
+            get => ProcessorOptions.SeverityLevel;
+            set
+            {
+                ProcessorOptions.SeverityLevel = value;
+            }
+        }
 
         /// <summary>
         ///     Ruleset to be used for analysis

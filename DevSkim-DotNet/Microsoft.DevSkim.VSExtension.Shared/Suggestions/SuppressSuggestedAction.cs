@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -128,11 +129,13 @@ namespace Microsoft.DevSkim.VSExtension
         {
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD114:Avoid returning a null Task", Justification = "Documentation specifies this should return null. https://github.com/microsoft/vs-editor-api/blob/61ca43c05f2254b80e87dccaf029acec3f25feb3/src/Editor/Language/Def/Intellisense/Suggestions/ISuggestedAction.cs#L39 ")]
         public Task<IEnumerable<SuggestedActionSet>> GetActionSetsAsync(CancellationToken cancellationToken)
         {
             return null;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD114:Avoid returning a null Task", Justification = "Documentation specifies this should return null. https://github.com/microsoft/vs-editor-api/blob/61ca43c05f2254b80e87dccaf029acec3f25feb3/src/Editor/Language/Def/Intellisense/Suggestions/ISuggestedAction.cs#L39 ")]
         public Task<object> GetPreviewAsync(CancellationToken cancellationToken)
         {
             return null;

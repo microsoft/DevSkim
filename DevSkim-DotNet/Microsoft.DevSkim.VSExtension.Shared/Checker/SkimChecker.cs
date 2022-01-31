@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace Microsoft.DevSkim.VSExtension
@@ -146,24 +145,9 @@ namespace Microsoft.DevSkim.VSExtension
                     {
                         int errorStart = issue.StartLocation.Column;
                         int errorLength = issue.Boundary.Length;
-                        if (errorLength > 0)    // Ignore any single character error.
-                        {
-                            line = _textView.TextSnapshot.GetLineFromLineNumber(issue.StartLocation.Line - 1);
-                            var newSpan = new SnapshotSpan(line.Start + errorStart - 1, errorLength);
-                            var oldError = oldSecurityErrors.Errors.Find((e) => e.Span == newSpan);
-
-                            if (oldError != null)
-                            {
-                                // There was a security error at the same span as the old one so we should be
-                                // able to just reuse it.
-                                oldError.NextIndex = newSecurityErrors.Errors.Count;
-                                newSecurityErrors.Errors.Add(DevSkimError.Clone(oldError));    // Don't clone the old error yet
-                            }
-                            else
-                            {
-                                newSecurityErrors.Errors.Add(new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo));
-                            }
-                        }
+                        line = _textView.TextSnapshot.GetLineFromLineNumber(issue.StartLocation.Line - 1);
+                        var newSpan = new SnapshotSpan(line.Start + errorStart - 1, errorLength);
+                        newSecurityErrors.Errors.Add(new DevSkimError(newSpan, issue.Rule, !issue.IsSuppressionInfo));
                     }
 
                     UpdateSecurityErrors(newSecurityErrors);
@@ -182,7 +166,7 @@ namespace Microsoft.DevSkim.VSExtension
             {
                 _isUpdating = true;
                 // TODO: Improve this
-               _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
+                _uiThreadDispatcher.BeginInvoke(new Action(() => this.DoUpdate()), DispatcherPriority.Background);
             }
         }
 

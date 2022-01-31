@@ -104,10 +104,8 @@ namespace Microsoft.DevSkim
             if (!File.Exists(filename))
                 throw new FileNotFoundException();
 
-            using (StreamReader file = File.OpenText(filename))
-            {
-                AddString(file.ReadToEnd(), filename, tag);
-            }
+            using StreamReader file = File.OpenText(filename);
+            AddString(file.ReadToEnd(), filename, tag);
         }
 
         /// <summary>

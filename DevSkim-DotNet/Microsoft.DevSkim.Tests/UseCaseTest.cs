@@ -30,10 +30,10 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void Conditions1Test()
         {
-            RuleProcessor processor = new RuleProcessor(LoadRules(false))
+            RuleProcessor processor = new RuleProcessor(LoadRules(false), new RuleProcessorOptions() 
             {
                 EnableSuppressions = true
-            };
+            });
 
             // http test
             string testString = "<h:table xmlns:h=\"http://www.w3.org/TR/html4/\">";
