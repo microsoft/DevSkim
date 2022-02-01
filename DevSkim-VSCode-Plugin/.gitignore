@@ -1,5 +1,4 @@
-out
-node_modules
-client/server
 .vscode-test
 devskimBinaries
+**/node_modules/**
+**/out/**
