@@ -12,11 +12,12 @@ namespace Microsoft.DevSkim.CLI.Commands
 {
     public class PackCommand : ICommand
     {
-        public PackCommand(string path, string output, bool indent)
+        public PackCommand(string path, string output, bool indent, bool checkGuidanceOnline = false)
         {
             _path = path;
             _outputfile = output;
             _indent = indent;
+            _checkGuidance = checkGuidanceOnline;
         }
 
         public static void Configure(CommandLineApplication command)
@@ -33,12 +34,14 @@ namespace Microsoft.DevSkim.CLI.Commands
             var indentOption = command.Option("-i|--indent",
                                               "Indent the output json",
                                               CommandOptionType.NoValue);
+            var checkGuidance = command.Option("-c", "Check online to see if guidance documents referenced exist.", CommandOptionType.NoValue);
 
             command.OnExecute(() =>
             {
                 return (new PackCommand(locationArgument.Value,
                                  outputArgument.Value,
-                                 indentOption.HasValue())).Run();
+                                 indentOption.HasValue(),
+                                 checkGuidance.HasValue())).Run();
             });
         }
 
@@ -46,7 +49,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             Verifier verifier = new Verifier(_path);
 
-            if (!verifier.Verify())
+            if (!verifier.Verify(_checkGuidance))
             {
                 foreach(var message in verifier.Messages)
                 {
@@ -73,6 +76,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         }
 
         private bool _indent;
+        private bool _checkGuidance;
         private string _outputfile;
         private string _path;
     }
