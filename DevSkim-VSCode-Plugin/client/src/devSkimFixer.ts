@@ -44,9 +44,9 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		const output : vscode.CodeAction[] = [];
 		context.diagnostics.filter(diagnostic => diagnostic.code === "MS-CST-E.vscode-devskim").forEach((filteredDiagnostic : vscode.Diagnostic) => {
 			this.fixMapping.get(this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString()))?.forEach(codeFix => {
-				output.push(this.createFix(document, range, codeFix));
+				output.push(this.createFix(document, filteredDiagnostic.range, codeFix));
 			});
-			const suppression = this.createSuppression(document, range, filteredDiagnostic);
+			const suppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic);
 			if (suppression != null)
 			{
 				output.push(suppression);
