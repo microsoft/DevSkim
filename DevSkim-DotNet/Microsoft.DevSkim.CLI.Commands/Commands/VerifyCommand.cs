@@ -7,9 +7,10 @@ namespace Microsoft.DevSkim.CLI.Commands
 {
     public class VerifyCommand : ICommand
     {
-        public VerifyCommand(string path)
+        public VerifyCommand(string path, bool checkGuidanceOnline = false)
         {
             _path = path;
+            _checkGuidance = checkGuidanceOnline;
         }
 
         public static void Configure(CommandLineApplication command)
@@ -19,17 +20,17 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             var locationArgument = command.Argument("[path]",
                                                     "Path to rules");
-
+            var checkGuidance = command.Option("-c", "Check online to see if guidance documents referenced exist.", CommandOptionType.NoValue);
             command.OnExecute(() =>
             {
-                return (new VerifyCommand(locationArgument.Value)).Run();
+                return (new VerifyCommand(locationArgument.Value, checkGuidance.HasValue())).Run();
             });
         }
 
         public int Run()
         {
             Verifier verifier = new Verifier(_path);
-            if (verifier.Verify())
+            if (verifier.Verify(_checkGuidance))
             {
                 Console.WriteLine("No errors found.");
                 return (int)ExitCode.NoIssues;
@@ -46,5 +47,6 @@ namespace Microsoft.DevSkim.CLI.Commands
         }
 
         private string _path;
+        private bool _checkGuidance;
     }
 }

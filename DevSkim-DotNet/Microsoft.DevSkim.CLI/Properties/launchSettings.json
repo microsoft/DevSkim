@@ -7,6 +7,10 @@
     "PackRules": {
       "commandName": "Project",
       "commandLineArgs": "pack C:\\Users\\gstocco\\Documents\\GitHub\\DevSkim\\rules C:\\Users\\gstocco\\Documents\\GitHub\\DevSkim\\DevSkim-DotNet\\Microsoft.DevSkim\\Resources\\devskim-rules.json"
+    },
+    "Verify Rules + Online Check": {
+      "commandName": "Project",
+      "commandLineArgs": "verify C:\\Users\\gstocco\\GitHub\\DevSkim\\rules -c"
     }
   }
 }

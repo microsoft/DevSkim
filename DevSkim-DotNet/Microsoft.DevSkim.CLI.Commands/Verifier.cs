@@ -9,6 +9,7 @@ namespace Microsoft.DevSkim.CLI
 {
     internal class Verifier
     {
+        private const string baseGuidanceUri = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
         public Verifier(string[] paths)
         {
             _messages = new List<ErrorMessage>();
@@ -31,7 +32,7 @@ namespace Microsoft.DevSkim.CLI
             get { return _messages.ToArray(); }
         }
 
-        public bool Verify()
+        public bool Verify(bool checkGuidanceOnline = false)
         {
 
             foreach (string rulesPath in _paths)
@@ -44,7 +45,7 @@ namespace Microsoft.DevSkim.CLI
                     Console.Error.WriteLine("Error: Not a valid file or directory {0}", rulesPath);
             }
 
-            CheckIntegrity();
+            CheckIntegrity(checkGuidanceOnline);
 
             foreach (ErrorMessage message in _messages)
             {
@@ -71,8 +72,12 @@ namespace Microsoft.DevSkim.CLI
 
         private RuleSet _rules;
 
-        private void CheckIntegrity()
+        private void CheckIntegrity(bool checkGuidanceOnline = false)
         {
+            using HttpClient client = new()
+            {
+                BaseAddress = new Uri(baseGuidanceUri)
+            };
             string[] languages = Language.GetNames();
 
             foreach (Rule rule in _rules.AsEnumerable().Select(x => x.DevSkimRule))
@@ -92,6 +97,22 @@ namespace Microsoft.DevSkim.CLI
                         _messages.Add(new ErrorMessage(Message: "Two or more rules have a same ID", RuleID: rule.Id, File: rule.Source, Warning: true));
                     }
 
+                }
+
+                if (rule.RuleInfo is null)
+                {
+                    _messages.Add(new ErrorMessage(Message: "Rule does not contain guidance information.", RuleID: rule.Id, File: rule.Source, Warning: true));
+                }
+                else if (checkGuidanceOnline)
+                {
+                    HttpResponseMessage response = client.GetAsync(rule.RuleInfo).Result;
+                    if (response != null)
+                    {
+                        if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                        {
+                            _messages.Add(new ErrorMessage(Message: $"{response.StatusCode} encountered when trying to fetch guidance '${rule.RuleInfo}'.", RuleID: rule.Id, File: rule.Source, Warning: true));
+                        }
+                    }
                 }
 
                 if (rule.AppliesTo != null)
