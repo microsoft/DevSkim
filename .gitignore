@@ -1,5 +1,5 @@
 ﻿*.vsix
 DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
-DevSkim-DotNet/Microsoft.DevSkim.Blazor/bin/
-DevSkim-DotNet/Microsoft.DevSkim.Blazor/obj/
-DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj.user
+**/bin/
+**/obj/
+**/*.csproj.user
