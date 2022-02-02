@@ -61,6 +61,10 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY'
+    - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+    displayName: 'Generation Task'
+    inputs:
+        BuildDropPath: '$(Build.StagingDirectory)'
     - task: PublishBuildArtifacts@1
       displayName: Publish Unsigned Artifact
       inputs:
