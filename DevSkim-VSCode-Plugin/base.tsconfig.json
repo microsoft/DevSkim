@@ -8,7 +8,8 @@
 	  "strict": true,
 	  "strictNullChecks": true,
 	  "removeComments": false,
-	  "moduleResolution": "node"
+	  "moduleResolution": "node",
+	  "resolveJsonModule": true
 	},  
 	"files": [	
 		"./common/codeFixMapping.ts",
