@@ -21,9 +21,9 @@ import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
 import { Stream } from 'stream';
-import { CodeFixMapping } from './codeFixMapping';
-import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from './notificationNames';
-import { DevSkimSettings, DevSkimSettingsObject } from './devskimSettings';
+import { CodeFixMapping } from '../common/codeFixMapping';
+import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from '../common/notificationNames';
+import { DevSkimSettings, DevSkimSettingsObject } from '../common/devskimSettings';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.

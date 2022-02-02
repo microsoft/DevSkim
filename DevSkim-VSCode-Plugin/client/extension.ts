@@ -3,11 +3,11 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ExtensionToCodeCommentStyle } from './languagesAccess';
+import { ExtensionToCodeCommentStyle } from '../common/languagesAccess';
 
 import * as path from 'path';
 import { workspace, ExtensionContext } from 'vscode';
-import { CodeFixMapping } from './codeFixMapping';
+import { CodeFixMapping } from '../common/codeFixMapping';
 import {
 	LanguageClient,
 	LanguageClientOptions,
@@ -16,13 +16,13 @@ import {
 } from 'vscode-languageclient/node';
 
 import * as vscode from 'vscode';
-import { DevSkimSettings, DevSkimSettingsObject } from './devskimSettings';
-import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from './notificationNames';
-import { selectors } from './selectors';
+import { DevSkimSettings, DevSkimSettingsObject } from '../common/devskimSettings';
+import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from '../common/notificationNames';
+import { selectors } from '../common/selectors';
 import { DevSkimFixer } from './devSkimFixer';
 
 let client: LanguageClient;
-const serverPath = path.join('server', 'out', 'server.js');
+const serverPath = path.join('server','out', 'server', 'server.js');
 
 async function resolveDotNetPath(): Promise<string> {
 	const result = await vscode.commands.executeCommand<any>(

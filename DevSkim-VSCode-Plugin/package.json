@@ -62,7 +62,7 @@
 		"onLanguage:plaintext",
 		"onLanguage:python"
 	],
-	"main": "./client/out/extension",
+	"main": "./client/out/client/extension",
 	"contributes": {
 		"commands": [
 			{
@@ -146,21 +146,22 @@
 		"ms-dotnettools.vscode-dotnet-runtime"
 	],
 	"scripts": {
-		"clean": "npm run clean:net && npm run clean:out && npm run clean:modules",
+		"clean": "npm run clean:net && npm run clean:out && npm run clean:modules && clean:vsix",
 		"clean:net": "npx --quiet rimraf devskimBinaries",
 		"clean:out": "npx --quiet rimraf out client/out server/out **/tsconfig.tsbuildinfo",
 		"clean:modules": "npx --quiet rimraf node_modules client/node_modules server/node_modules",
+		"clean:vsix": "npx --quiet rimraf **.vsix",
 		"build-net-dependencies": "dotnet publish -f net6.0 ../DevSkim-DotNet/Microsoft.DevSkim.CLI -o devskimBinaries",
 		"package-rules": "dotnet ../RulePacker/devskim.dll pack ../rules ../DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json",
 		"net-setup": "npm run package-rules && npm run build-net-dependencies",
 		"setup": "npm run net-setup && npm i",
 		"reset": "npm run clean && npm run setup",
-		"compile": "tsc -b",
-		"watch": "tsc -b -w",
+		"compile": "tsc -b client server",
+		"watch": "tsc -b -w client server",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
 		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
-		"esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node && esbuild ./server/src/server.ts --bundle --outfile=server/out/server.js --external:vscode --format=cjs --platform=node",
+		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/client/extension.js --external:vscode --format=cjs --platform=node && esbuild ./server/server.ts --bundle --outfile=server/out/server/server.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"pack-ext": "npm run clean:out && npm run setup && node setPackageVersion.js && vsce package && node resetPackageVersion.js"
@@ -173,6 +174,6 @@
 		"eslint": "^8.8.0",
 		"nerdbank-gitversioning": "^3.4.255",
 		"typescript": "^4.5.5",
-		"vsce": "^2.6.5"
+		"vsce": "^2.6.6"
 	}
 }

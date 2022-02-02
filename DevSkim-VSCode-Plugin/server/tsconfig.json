@@ -1,15 +1,11 @@
 {
-	"compilerOptions": {
-		"target": "es2019",
-		"lib": ["ES2019"],
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"sourceMap": true,
-		"strict": true,
-		"outDir": "out",
-		"rootDir": "src",
-		"resolveJsonModule": true
-	},
-	"include": ["src"],
-	"exclude": ["node_modules", ".vscode-test"]
+    "extends": "../base.tsconfig.json",
+    "compilerOptions": {
+        "outDir": "out", 
+        "sourceRoot": "./src"
+    },
+    "files": [
+        "issue.ts",
+		"server.ts",
+    ]
 }

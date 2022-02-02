@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { CodeFixMapping } from './codeFixMapping';
-import { DevSkimSettings, DevSkimSettingsObject } from './devskimSettings';
-import { ExtensionToCodeCommentStyle } from './languagesAccess';
+import { CodeFixMapping } from '../common/codeFixMapping';
+import { DevSkimSettings, DevSkimSettingsObject } from '../common/devskimSettings';
+import { ExtensionToCodeCommentStyle } from '../common/languagesAccess';
 
 export class DevSkimFixer implements vscode.CodeActionProvider {
 

@@ -1,13 +1,9 @@
 .vscode
 **/node_modules
-out/
-src/
-tsconfig.json
-scripts/
-server/src
-client/src
-client/*.json
-server/*.json
+**/tsconfig.json
+**/*.ts
 .eslintignore
 .gitignore
 **/tsconfig.tsbuildinfo
+resetPackageVersion.js
+setPackageVersion.js
