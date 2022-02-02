@@ -88,6 +88,14 @@ jobs:
       targetType: 'inline'
       script: chmod +x ${{ parameters.projectName }}_macos_$(ReleaseVersion)/devskim
       workingDirectory: 'bin/macos/'
+  - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+    displayName: 'Generation Task - Mac'
+    inputs:
+        BuildDropPath: 'bin/macos'
+  - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+    displayName: 'Generation Task - linux'
+    inputs:
+        BuildDropPath: 'bin/linux'
   - task: ArchiveFiles@2
     displayName: Archive Builds
     inputs:

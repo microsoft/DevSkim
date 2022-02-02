@@ -87,6 +87,14 @@ jobs:
       TreatSignatureUpdateFailureAs: 'Warning'
       SignatureFreshness: 'UpToDate'
       TreatStaleSignatureAs: 'Warning'
+  - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+    displayName: 'Generation Task - Windows'
+    inputs:
+        BuildDropPath: 'bin/win'
+  - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+    displayName: 'Generation Task - NetCoreapp'
+    inputs:
+        BuildDropPath: 'bin/netcoreapp'
   - task: ArchiveFiles@2
     displayName: Archive Builds
     inputs:
