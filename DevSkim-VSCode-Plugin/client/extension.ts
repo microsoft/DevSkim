@@ -22,7 +22,6 @@ import { selectors } from '../common/selectors';
 import { DevSkimFixer } from './devSkimFixer';
 
 let client: LanguageClient;
-const serverPath = path.join('server','out', 'server', 'server.js');
 
 async function resolveDotNetPath(): Promise<string> {
 	const result = await vscode.commands.executeCommand<any>(
@@ -60,12 +59,10 @@ export function activate(context: ExtensionContext) {
 			providedCodeActionKinds: DevSkimFixer.providedCodeActionKinds
 		})
 	);
-	// The server bridge is implemented in node
+	// The server bridge is implemented in .NET
 	const serverModule = context.asAbsolutePath(
-		serverPath
+		path.join(context.extensionPath, 'devskimBinaries', 'DevskimLanguageServer.dll')
 	);
-	// The debug options for the server
-	// --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
 	resolveDotNetPath().then((dotNetPath) =>
 	{
 		if (dotNetPath == undefined || dotNetPath == null)
@@ -74,29 +71,18 @@ export function activate(context: ExtensionContext) {
 		}
 		else
 		{
-			const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
-			// If the extension is launched in debug mode then the debug server options are used
-			// Otherwise the run options are used
+			const workPath = path.dirname(serverModule);
 			const serverOptions: ServerOptions = {
-				run: { module: serverModule, transport: TransportKind.ipc },
-				debug: {
-					module: serverModule,
-					transport: TransportKind.ipc,
-					options: debugOptions
-				}
+				run: { command: "dotnet", args: [serverModule], options: {cwd: workPath}},
+				debug: { command: "dotnet", args: [serverModule], options: {cwd: workPath}}
 			};
 	
 			// Options to control the language client
 			const clientOptions: LanguageClientOptions = {
 				// Register the server for plain text documents
-				documentSelector: selectors,
-				synchronize: {
-					// Notify the server about file changes to '.clientrc files contained in the workspace
-					fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
-				}
+				documentSelector: selectors
 			};
 	
-			// Create the language client and start the client.
 			client = new LanguageClient(
 				'MS-CST-E.vscode-devskim',
 				'DevSkim VS Code Client',
@@ -104,17 +90,12 @@ export function activate(context: ExtensionContext) {
 				clientOptions
 			);
 			client.onReady().then(() => {
-				client.sendNotification(getSetSettings(),getDevSkimConfiguration());
-				client.sendNotification(getDotNetPath(),dotNetPath);
-				const devskimExtension = vscode.extensions.getExtension('MS-CST-E.vscode-devskim');
-				if (!devskimExtension) {
-					throw new Error('Could not find DevSkim extension.');
-				}
-				client.sendNotification(getDevSkimPath(),path.join(devskimExtension.extensionPath, 'devskimBinaries', 'devskim.dll'));
-				client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
-				{
-					fixer.ensureMapHasMapping(mapping);
-				});
+				// client.sendNotification(getSetSettings(),getDevSkimConfiguration());
+				// client.sendNotification(getDotNetPath(),dotNetPath);
+				// client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
+				// {
+				// 	fixer.ensureMapHasMapping(mapping);
+				// });
 				vscode.workspace.onDidChangeConfiguration(e => {
 					const newConfig = getDevSkimConfiguration();
 					client.sendNotification(getSetSettings(),newConfig);

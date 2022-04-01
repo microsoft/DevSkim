@@ -3,3 +3,4 @@ DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
 **/bin/
 **/obj/
 **/*.csproj.user
+.idea/
