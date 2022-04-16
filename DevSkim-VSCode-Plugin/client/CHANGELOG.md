@@ -6,7 +6,7 @@
 ## Version 0.2.0
 * Added ability to apply rules to specific files (e.g. package.json or project.json, instead of all .json files)
 * New manual review rules for deserialization in different languages (e.g. pickle.load in Python, or ReadObject in Java).  Manual review rules are not enabled by default and must be turned on via settings.  These are *potentially* severe security issues, but as DevSkim does not have strong data flow capabilities these rules will also flag safe uses.  
-* Made the HTTP check a little smarter.  It now excludes various xmlns scenarios.  If there are other scenarios that should be whitelisted please tell us in on our github issues page and we will adjust the rules
+* Made the HTTP check a little smarter.  It now excludes various xmlns scenarios.  If there are other scenarios that should be pre-approved please tell us in on our github issues page and we will adjust the rules
 * PHP rules to flag use of $_REQUEST and echo-ing $_GET/PUT/COOKIES without encoding
 * DevSkim will no longer look for issues in the original file when looking at a git comparison of two files (it will still show issues in the current file on the file system in the git comparison view however)
 * Updated to support the new rules schema (documentation at https://github.com/Microsoft/DevSkim/wiki).  This includes:
