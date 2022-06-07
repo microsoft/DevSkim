@@ -89,7 +89,7 @@
                 "_comment": "OpenSSL extension / options"
             },
             {
-                "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
+                "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK|SSL|RSA|TLS)_?([A-Z0-9]+_)+((SHA[0-9]*)|(MD5)|(GOST)[[A-Z0-9\\-]*)",
                 "type": "regex",
                 "scopes": [
                     "code"
