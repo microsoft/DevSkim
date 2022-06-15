@@ -139,7 +139,7 @@
                 "search_in": "finding-region(-5, 5)"
             }
         ]
-    }.
+    },
     {
         "name": ".NET - Do not hardcode SSL/TLS versions within an application.",
         "id": "DS440020",
