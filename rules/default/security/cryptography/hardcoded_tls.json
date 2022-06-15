@@ -94,10 +94,52 @@
                 "scopes": [
                     "code"
                 ],
-                "_comment": "OpenSSL cipher suite"
+                "_comment": "OpenSSL constants"
             }
         ]
-    },    
+    },
+    {
+        "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
+        "id": "DS440011",
+        "description": "SSL/TLS version usage should be based on an OS or external configuration.",
+        "recommendation": "",
+        "does_not_apply_to": [
+            "json",
+            "yaml"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "important",
+        "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
+                "type": "regex",
+                "modifiers":[ "i" ],
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "OpenSSL external call"
+            }
+        ],
+        "conditions" : [
+            {
+                "pattern" : 
+                {
+                    "pattern": "openssl",
+                    "type": "regex",
+                    "modifiers":[ "i" ],
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "finding-region(-5, 5)"
+            }
+        ]
+    }.
     {
         "name": ".NET - Do not hardcode SSL/TLS versions within an application.",
         "id": "DS440020",
