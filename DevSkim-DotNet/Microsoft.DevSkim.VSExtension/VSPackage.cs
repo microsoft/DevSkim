@@ -5,6 +5,7 @@ using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -67,6 +68,7 @@ namespace Microsoft.DevSkim.VSExtension
         /// </summary>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings { MaxDepth = 128 };
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
             base.Initialize();
