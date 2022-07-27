@@ -12,29 +12,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.DevSkim.AI;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
-    public class AnalyzeCommandOptions
-    {
-        public IEnumerable<Glob> Globs { get; set; } = Array.Empty<Glob>();
-        public string BasePath { get; set; } = string.Empty;
-        public bool DisableSuppression { get; set; }
-        public bool IgnoreDefaultRules { get; set; }
-        public string OutputFile { get; set; } = string.Empty;
-        public string OutputFileFormat { get; set; } = string.Empty;
-        public string Path { get; set; } = string.Empty;
-        public string[] Rulespath { get; set; } = Array.Empty<string>();
-        public string[] Severities { get; set; } = Array.Empty<string>();
-        public bool SuppressError { get; set; }
-        public bool CrawlArchives { get; set; }
-        public bool DisableParallel { get; set; }
-        public bool ExitCodeIsNumIssues { get; set; }
-        public string OutputTextFormat { get; set; } = string.Empty;
-        public bool AbsolutePaths { get; set; } = false;
-    }
-
-    public class AnalyzeCommand : ICommand
+    public class AnalyzeCommandRefactored : ICommand
     {
         private AnalyzeCommandOptions opts;
 
@@ -72,7 +54,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             opts = optionsIn;
         }
 
-        public AnalyzeCommand(AnalyzeCommandOptions options)
+        public AnalyzeCommandRefactored(AnalyzeCommandOptions options)
         {
             opts = options;
         }
@@ -236,7 +218,8 @@ Output format options:
 
         public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
         {
-            Verifier? verifier = null;
+            DevSkimRuleSet rules = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
+            
             if (opts.Rulespath.Length > 0)
             {
                 // Setup the rules
@@ -251,7 +234,7 @@ Output format options:
                 }
             }
 
-            RuleSet rules = new RuleSet();
+            DevSkimRuleSet rules = new DevSkimRuleSet();
             if (verifier != null)
                 rules = verifier.CompiledRuleset;
 
@@ -271,7 +254,7 @@ Output format options:
             }
 
             // Initialize the processor
-            RuleProcessor processor = new RuleProcessor(rules);
+            DevSkimRuleProcessor processor = new DevSkimRuleProcessor(rules);
             processor.EnableSuppressions = !opts.DisableSuppression;
 
             if (opts.Severities.Count() > 0)

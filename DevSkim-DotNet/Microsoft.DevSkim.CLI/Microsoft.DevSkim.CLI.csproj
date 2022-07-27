@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net5.0;</TargetFrameworks>
     <AssemblyName>devskim</AssemblyName>
     <StartupObject>Microsoft.DevSkim.CLI.Program</StartupObject>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
@@ -22,8 +21,9 @@
     <PackageVersion>0.0.0</PackageVersion>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>Enable</Nullable>        
+    <LangVersion>10</LangVersion>
+    <Nullable>Enable</Nullable>
+    <TargetFramework>net6.0</TargetFramework>        
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim.AI\Microsoft.DevSkim.AI.csproj" />
     <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj" />
   </ItemGroup>
 

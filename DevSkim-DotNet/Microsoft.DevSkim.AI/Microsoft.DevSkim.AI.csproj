@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <TargetFrameworks>net6.0;netstandard2.1</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.CST.ApplicationInspector.Commands" Version="1.5.20" />
       <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.5.20" />
     </ItemGroup>
 
