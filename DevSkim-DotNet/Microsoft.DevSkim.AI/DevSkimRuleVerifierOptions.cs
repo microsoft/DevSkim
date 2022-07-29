@@ -1,4 +1,4 @@
-﻿using Microsoft.ApplicationInspector.Commands;
+﻿using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.AI;
 

@@ -1,16 +1,17 @@
 ﻿using System.Text.Json.Serialization;
 using Microsoft.ApplicationInspector.RulesEngine;
 
-namespace Microsoft.DevSkim.AI;
-
-public class DevSkimRule : Rule
+namespace Microsoft.DevSkim.AI
 {
-    [JsonPropertyName("fix_its")]
-    public List<CodeFix>? Fixes { get; set; }
+    public class DevSkimRule : Rule
+    {
+        [JsonPropertyName("fix_its")]
+        public List<CodeFix>? Fixes { get; set; }
     
-    [JsonPropertyName("recommendation")]
-    public string? Recommendation { get; set; }
+        [JsonPropertyName("recommendation")]
+        public string? Recommendation { get; set; }
     
-    [JsonPropertyName("confidence")]
-    public Confidence Confidence { get; set; }
+        [JsonPropertyName("confidence")]
+        public Confidence Confidence { get; set; }
+    }
 }

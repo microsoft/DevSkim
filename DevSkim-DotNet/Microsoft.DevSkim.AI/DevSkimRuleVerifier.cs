@@ -1,4 +1,4 @@
-﻿using Microsoft.ApplicationInspector.Commands;
+﻿using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.AI;
 
@@ -10,11 +10,10 @@ public class DevSkimRuleVerifier
         _appInspectorVerifier = new RulesVerifier(options);
     }
     
-    // Add a method to verify DevSkim rules
-
     public DevSkimRulesVerificationResult Verify(DevSkimRuleSet ruleSet)
     {
-        var aiResult = _appInspectorVerifier.Verify(ruleSet);
-        
+        var devSkimResult = new DevSkimRulesVerificationResult(_appInspectorVerifier.Verify(ruleSet));
+        // TODO: Validate devskim specific stuff like fix its
+        return devSkimResult;
     }
 }
