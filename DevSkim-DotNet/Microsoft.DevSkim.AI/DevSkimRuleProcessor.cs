@@ -27,6 +27,7 @@ public class DevSkimRuleProcessor
             // Apply suppressions
             foreach (var matchRecord in matchRecords)
             {
+                // TODO: Code smell. We shouldn't have any rules that aren't DevSkim rules but this theoretically could throw if the Rule returned is somehow an AI Rule and not a DevSkimRule object.
                 var issue = new Issue(Boundary: matchRecord.Boundary, StartLocation: textContainer.GetLocation(matchRecord.Boundary.Index), EndLocation: textContainer.GetLocation(matchRecord.Boundary.Index + matchRecord.Boundary.Length), Rule: (DevSkimRule)matchRecord.Rule);
                 if (EnableSuppressions)
                 {
