@@ -1,19 +1,20 @@
 ﻿using Microsoft.ApplicationInspector.RulesEngine;
 
-namespace Microsoft.DevSkim.AI;
-
-public class DevSkimRuleVerifier
+namespace Microsoft.DevSkim.AI
 {
-    private RulesVerifier _appInspectorVerifier;
-    public DevSkimRuleVerifier(DevSkimRuleVerifierOptions options)
+    public class DevSkimRuleVerifier
     {
-        _appInspectorVerifier = new RulesVerifier(options);
-    }
+        private RulesVerifier _appInspectorVerifier;
+        public DevSkimRuleVerifier(DevSkimRuleVerifierOptions options)
+        {
+            _appInspectorVerifier = new RulesVerifier(options);
+        }
     
-    public DevSkimRulesVerificationResult Verify(DevSkimRuleSet ruleSet)
-    {
-        var devSkimResult = new DevSkimRulesVerificationResult(_appInspectorVerifier.Verify(ruleSet));
-        // TODO: Validate devskim specific stuff like fix its
-        return devSkimResult;
+        public DevSkimRulesVerificationResult Verify(DevSkimRuleSet ruleSet)
+        {
+            var devSkimResult = new DevSkimRulesVerificationResult(_appInspectorVerifier.Verify(ruleSet));
+            // TODO: Validate devskim specific stuff like fix its
+            return devSkimResult;
+        }
     }
 }

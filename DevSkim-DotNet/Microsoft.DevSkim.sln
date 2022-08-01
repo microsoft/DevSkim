@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.Blazor", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI", "Microsoft.DevSkim.AI\Microsoft.DevSkim.AI.csproj", "{7B8D0088-645A-4D4B-9DB9-046EED07B47A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI.CLI", "Microsoft.DevSkim.AI.CLI\Microsoft.DevSkim.AI.CLI.csproj", "{6330E8E3-8D91-458E-945C-CE9B71FE809B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,18 @@ Global
 		{7B8D0088-645A-4D4B-9DB9-046EED07B47A}.Release|x64.Build.0 = Release|Any CPU
 		{7B8D0088-645A-4D4B-9DB9-046EED07B47A}.Release|x86.ActiveCfg = Release|Any CPU
 		{7B8D0088-645A-4D4B-9DB9-046EED07B47A}.Release|x86.Build.0 = Release|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Debug|x64.Build.0 = Debug|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Debug|x86.Build.0 = Debug|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|x64.ActiveCfg = Release|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|x64.Build.0 = Release|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|x86.ActiveCfg = Release|Any CPU
+		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

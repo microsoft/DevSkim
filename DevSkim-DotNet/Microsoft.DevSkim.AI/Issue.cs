@@ -35,7 +35,7 @@ namespace Microsoft.DevSkim.AI
         /// <summary>
         ///     Matching rule
         /// </summary>
-        public Rule Rule { get; set; }
+        public DevSkimRule Rule { get; set; }
 
         /// <summary>
         ///     Location (line, column) where issue starts

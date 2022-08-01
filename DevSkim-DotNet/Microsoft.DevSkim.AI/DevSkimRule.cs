@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.AI
@@ -13,5 +14,8 @@ namespace Microsoft.DevSkim.AI
     
         [JsonPropertyName("confidence")]
         public Confidence Confidence { get; set; }
+        
+        [JsonPropertyName("rule_info")]
+        public string? RuleInfo { get; set; }
     }
 }

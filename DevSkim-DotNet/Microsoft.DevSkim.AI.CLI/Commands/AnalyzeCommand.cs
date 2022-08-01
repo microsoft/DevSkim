@@ -12,49 +12,17 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.AI;
+using Microsoft.DevSkim.AI.CLI.Options;
 
-namespace Microsoft.DevSkim.CLI.Commands
+namespace Microsoft.DevSkim.AI.CLI.Commands
 {
-    public class AnalyzeCommandRefactored : ICommand
+    public class AnalyzeCommand : ICommand
     {
         private AnalyzeCommandOptions opts;
 
-        [Obsolete("Use AnalyzeCommand(AnalyzeCommandOptions) constructor instead.")]
-        public AnalyzeCommand(string path,
-                             string output,
-                             string outputFileFormat,
-                             string outputTextFormat,
-                             string severities,
-                             string rules,
-                             bool ignoreDefault,
-                             bool suppressError,
-                             bool disableSuppression,
-                             bool crawlArchives,
-                             bool disableParallel,
-                             bool exitCodeIsNumIssues,
-                             string globOptions)
-        {
-            var optionsIn = new AnalyzeCommandOptions()
-            {
-                Path = path,
-                OutputFile = output,
-                OutputFileFormat = outputFileFormat,
-                OutputTextFormat = outputTextFormat,
-                Severities = severities?.Split(',') ?? Array.Empty<string>(),
-                Rulespath = rules?.Split(',') ?? Array.Empty<string>(),
-                IgnoreDefaultRules = ignoreDefault,
-                SuppressError = suppressError,
-                DisableSuppression = disableSuppression,
-                CrawlArchives = crawlArchives,
-                ExitCodeIsNumIssues = exitCodeIsNumIssues,
-                Globs = globOptions?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
-                DisableParallel = disableParallel
-            };
-            opts = optionsIn;
-        }
-
-        public AnalyzeCommandRefactored(AnalyzeCommandOptions options)
+        public AnalyzeCommand(AnalyzeCommandOptions options)
         {
             opts = options;
         }
@@ -218,54 +186,48 @@ Output format options:
 
         public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
         {
-            DevSkimRuleSet rules = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
+            DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
             
             if (opts.Rulespath.Length > 0)
             {
-                // Setup the rules
-                verifier = new Verifier(opts.Rulespath);
-                if (!verifier.Verify())
-                    return (int)ExitCode.CriticalError;
-
-                if (verifier.CompiledRuleset.Count() == 0 && opts.IgnoreDefaultRules)
+                foreach (var path in opts.Rulespath)
                 {
-                    Debug.WriteLine("Error: No rules were loaded. ");
+                    devSkimRuleSet.AddPath(path);
+                }
+                var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+                {
+                    //TODO: Add logging factory to get validation errors.
+                });
+
+                var result = devSkimVerifier.Verify(devSkimRuleSet);
+
+                if (!result.Verified)
+                {
+                    Debug.WriteLine("Error: Rules failed validation. ");
                     return (int)ExitCode.CriticalError;
                 }
             }
-
-            DevSkimRuleSet rules = new DevSkimRuleSet();
-            if (verifier != null)
-                rules = verifier.CompiledRuleset;
-
-            if (!opts.IgnoreDefaultRules)
+            
+            if (!devSkimRuleSet.Any())
             {
-                Assembly? assembly = Assembly.GetAssembly(typeof(Boundary));
-                string filePath = "Microsoft.DevSkim.AI.Resources.devskim-rules.json";
-                Stream? resource = assembly?.GetManifestResourceStream(filePath);
-                if (resource is Stream)
-                {
-                    using (StreamReader file = new StreamReader(resource))
-                    {
-                        var rulesString = file.ReadToEnd();
-                        rules.AddString(rulesString, filePath, null);
-                    }
-                }
+                Debug.WriteLine("Error: No rules were loaded. ");
+                return (int)ExitCode.CriticalError;
             }
 
             // Initialize the processor
-            DevSkimRuleProcessor processor = new DevSkimRuleProcessor(rules);
-            processor.EnableSuppressions = !opts.DisableSuppression;
+            var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
+            {
+                // TODO: Parse command line options into appropriate AI options
+            };
 
             if (opts.Severities.Count() > 0)
             {
-                processor.SeverityLevel = 0;
+                devSkimRuleProcessorOptions.SeverityFilter = 0;
                 foreach (string severityText in opts.Severities)
                 {
-                    Severity severity;
-                    if (ParseSeverity(severityText, out severity))
+                    if (ParseSeverity(severityText, out Microsoft.ApplicationInspector.RulesEngine.Severity severity))
                     {
-                        processor.SeverityLevel |= severity;
+                        devSkimRuleProcessorOptions.SeverityFilter |= severity;
                     }
                     else
                     {
@@ -275,6 +237,9 @@ Output format options:
                 }
             }
 
+            DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, devSkimRuleProcessorOptions);
+            processor.EnableSuppressions = !opts.DisableSuppression;
+            
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,
                                                            (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile)):outputStreamWriter,
@@ -284,14 +249,14 @@ Output format options:
             int filesSkipped = 0;
             int filesAffected = 0;
             int issuesCount = 0;
-
+            var Languages = new Languages();
             void parseFileEntry(FileEntry fileEntry)
             {
                 Uri baseUri = new Uri(Path.GetFullPath(opts.Path));
-                string language = Language.FromFileName(fileEntry.FullPath);
+                Languages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
 
                 // Skip files written in unknown language
-                if (string.IsNullOrEmpty(language))
+                if (string.IsNullOrEmpty(languageInfo.Name))
                 {
                     Interlocked.Increment(ref filesSkipped);
                 }
@@ -314,7 +279,7 @@ Output format options:
                         return;
                     }
 
-                    Issue[] issues = processor.Analyze(fileText, language);
+                    var issues = processor.Analyze(fileText, fileEntry.Name).ToList();
 
                     bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || opts.DisableSuppression && issues.Any();
 
@@ -324,7 +289,7 @@ Output format options:
                         Debug.WriteLine("file:{0}", fileEntry.FullPath);
 
                         // Iterate through each issue
-                        foreach (Issue issue in issues)
+                        foreach (Microsoft.DevSkim.AI.Issue issue in issues)
                         {
                             if (!issue.IsSuppressionInfo || opts.DisableSuppression)
                             {
@@ -338,12 +303,12 @@ Output format options:
                                                         issue.Rule.Severity,
                                                         issue.Rule.Name);
                                 
-                                IssueRecord record = new IssueRecord(
+                                var record = new AI.IssueRecord(
                                     Filename: TryRelativizePath(opts.BasePath, fileEntry.FullPath),
                                     Filesize: fileText.Length,
                                     TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
-                                    Language: language);
+                                    Language: languageInfo.Name);
                                 outputWriter.WriteIssue(record);
                             }
                         }
@@ -384,30 +349,30 @@ Output format options:
             return Array.Empty<FileEntry>();
         }
 
-        private bool ParseSeverity(string severityText, out Severity severity)
+        private bool ParseSeverity(string severityText, out Microsoft.ApplicationInspector.RulesEngine.Severity severity)
         {
-            severity = Severity.Critical;
+            severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Critical;
             bool result = true;
             switch (severityText.ToLower())
             {
                 case "critical":
-                    severity = Severity.Critical;
+                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Critical;
                     break;
 
                 case "important":
-                    severity = Severity.Important;
+                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Important;
                     break;
 
                 case "moderate":
-                    severity = Severity.Moderate;
+                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Moderate;
                     break;
 
                 case "practice":
-                    severity = Severity.BestPractice;
+                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.BestPractice;
                     break;
 
                 case "manual":
-                    severity = Severity.ManualReview;
+                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.ManualReview;
                     break;
 
                 default:

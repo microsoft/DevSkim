@@ -1,19 +1,9 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Microsoft.CST.OAT;
-using System.Text.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.ApplicationInspector.RulesEngine;
-using Microsoft.ApplicationInspector.RulesEngine.OatExtensions;
-using Rule = Microsoft.CST.OAT.Rule;
 
 namespace Microsoft.DevSkim.AI
 {
@@ -31,13 +21,13 @@ namespace Microsoft.DevSkim.AI
 
         public static DevSkimRuleSet GetDefaultRuleSet()
         {
-            DevSkimRuleSet ruleSet = new();
+            DevSkimRuleSet ruleSet = new DevSkimRuleSet();
             Assembly assembly = Assembly.GetExecutingAssembly();
             string[] resNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
             foreach (string resName in resNames.Where(x => x.StartsWith("Microsoft.DevSkim.rules.default")))
             {
                 Stream? resource = assembly.GetManifestResourceStream(resName);
-                using StreamReader file = new(resource ?? new MemoryStream());
+                using StreamReader file = new StreamReader(resource ?? new MemoryStream());
                 ruleSet.AddString(file.ReadToEnd(), resName, null);
             }
 

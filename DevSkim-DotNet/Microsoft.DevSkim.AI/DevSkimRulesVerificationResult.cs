@@ -1,18 +1,21 @@
-﻿using Microsoft.ApplicationInspector.RulesEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.ApplicationInspector.RulesEngine;
 
-namespace Microsoft.DevSkim.AI;
-
-public class DevSkimRulesVerificationResult
+namespace Microsoft.DevSkim.AI
 {
-    private readonly RulesVerifierResult _aiResult;
-    public DevSkimRulesVerificationResult(RulesVerifierResult aiResult)
+    public class DevSkimRulesVerificationResult
     {
-        _aiResult = aiResult;
+        private readonly RulesVerifierResult _aiResult;
+        public DevSkimRulesVerificationResult(RulesVerifierResult aiResult)
+        {
+            _aiResult = aiResult;
+        }
+
+        public List<RuleStatus> DevSkimRuleStatuses { get; } = new List<RuleStatus>();
+        public AbstractRuleSet CompiledRuleSet => _aiResult.CompiledRuleSet;
+
+        public bool Verified => _aiResult.RuleStatuses.All(x => x.Verified) && 
+                                DevSkimRuleStatuses.All(x => x.Verified);
     }
-
-    public List<RuleStatus> DevSkimRuleStatuses { get; } = new List<RuleStatus>();
-    public AbstractRuleSet CompiledRuleSet => _aiResult.CompiledRuleSet;
-
-    public bool Verified => _aiResult.RuleStatuses.All(x => x.Verified) && 
-                            DevSkimRuleStatuses.All(x => x.Verified);
 }
