@@ -40,7 +40,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '5.0.x'
+        version: '6.0.x'
     - task: NuGetToolInstaller@1
       inputs:
         versionSpec: '5.x'
