@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI", "Mic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI.CLI", "Microsoft.DevSkim.AI.CLI\Microsoft.DevSkim.AI.CLI.csproj", "{6330E8E3-8D91-458E-945C-CE9B71FE809B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI.Tests", "Microsoft.DevSkim.AI.Tests\Microsoft.DevSkim.AI.Tests.csproj", "{22E5C50D-93C9-4007-881F-D8B751B880D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,18 @@ Global
 		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|x64.Build.0 = Release|Any CPU
 		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|x86.ActiveCfg = Release|Any CPU
 		{6330E8E3-8D91-458E-945C-CE9B71FE809B}.Release|x86.Build.0 = Release|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Debug|x64.Build.0 = Debug|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Debug|x86.Build.0 = Debug|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x64.ActiveCfg = Release|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x64.Build.0 = Release|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x86.ActiveCfg = Release|Any CPU
+		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

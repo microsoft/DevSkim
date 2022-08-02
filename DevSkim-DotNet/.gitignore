@@ -1,7 +1,11 @@
-﻿**/obj/
-**/bin/
-TestResults
-packages
+﻿# Editor Configs
+.idea/
 .vs/
 .vscode/settings.json
-*.log
+
+# Build artifacts
+**/obj/
+**/bin/
+
+# Test Artifacts
+TestResults

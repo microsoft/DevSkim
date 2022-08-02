@@ -11,399 +11,399 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\rules\default\security\api\dangerous_api.json">
+      <EmbeddedResource Include="..\..\rules\default\security\api\dangerous_api.json">
         <Link>rules\default\security\api\dangerous_api.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\deserialization.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\deserialization.json">
         <Link>rules\default\security\api\deserialization.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\misused_api.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\misused_api.json">
         <Link>rules\default\security\api\misused_api.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\suggested_api.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\suggested_api.json">
         <Link>rules\default\security\api\suggested_api.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS108330.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS108330.test">
         <Link>rules\default\security\api\tests\DS108330.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS111237.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS111237.test">
         <Link>rules\default\security\api\tests\DS111237.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS121708.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS121708.test">
         <Link>rules\default\security\api\tests\DS121708.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS140021.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS140021.test">
         <Link>rules\default\security\api\tests\DS140021.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS141863.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS141863.test">
         <Link>rules\default\security\api\tests\DS141863.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS154189.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS154189.test">
         <Link>rules\default\security\api\tests\DS154189.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS161085.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS161085.test">
         <Link>rules\default\security\api\tests\DS161085.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS179924.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS179924.test">
         <Link>rules\default\security\api\tests\DS179924.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS181021.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS181021.test">
         <Link>rules\default\security\api\tests\DS181021.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS181731.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS181731.test">
         <Link>rules\default\security\api\tests\DS181731.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS185832.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS185832.test">
         <Link>rules\default\security\api\tests\DS185832.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS224000.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS224000.test">
         <Link>rules\default\security\api\tests\DS224000.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS425000.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS425000.test">
         <Link>rules\default\security\api\tests\DS425000.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS425010.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS425010.test">
         <Link>rules\default\security\api\tests\DS425010.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS425020.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS425020.test">
         <Link>rules\default\security\api\tests\DS425020.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS425030.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS425030.test">
         <Link>rules\default\security\api\tests\DS425030.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\tests\DS425040.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\tests\DS425040.test">
         <Link>rules\default\security\api\tests\DS425040.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\api\t_sql.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\api\t_sql.json">
         <Link>rules\default\security\api\t_sql.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\attack_surface\outbound_network.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\attack_surface\outbound_network.json">
         <Link>rules\default\security\attack_surface\outbound_network.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\attack_surface\tests\DS137038.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\attack_surface\tests\DS137038.test">
         <Link>rules\default\security\attack_surface\tests\DS137038.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\attack_surface\tests\DS137138.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\attack_surface\tests\DS137138.test">
         <Link>rules\default\security\attack_surface\tests\DS137138.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\control_flow\dynamic_execution.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\control_flow\dynamic_execution.json">
         <Link>rules\default\security\control_flow\dynamic_execution.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\control_flow\format_string.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\control_flow\format_string.json">
         <Link>rules\default\security\control_flow\format_string.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\control_flow\permission_evelation.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\control_flow\permission_evelation.json">
         <Link>rules\default\security\control_flow\permission_evelation.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\control_flow\tests\DS104456.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\control_flow\tests\DS104456.test">
         <Link>rules\default\security\control_flow\tests\DS104456.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\control_flow\tests\DS113286.TODO">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\control_flow\tests\DS113286.TODO">
         <Link>rules\default\security\control_flow\tests\DS113286.TODO</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\control_flow\tests\DS113853.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\control_flow\tests\DS113853.test">
         <Link>rules\default\security\control_flow\tests\DS113853.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\control_flow\tests\DS165746.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\control_flow\tests\DS165746.test">
         <Link>rules\default\security\control_flow\tests\DS165746.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\certificate.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\certificate.json">
         <Link>rules\default\security\cryptography\certificate.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\ciphers.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\ciphers.json">
         <Link>rules\default\security\cryptography\ciphers.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\general.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\general.json">
         <Link>rules\default\security\cryptography\general.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\hardcoded_tls.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\hardcoded_tls.json">
         <Link>rules\default\security\cryptography\hardcoded_tls.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\hash_algorithm.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\hash_algorithm.json">
         <Link>rules\default\security\cryptography\hash_algorithm.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\initialization_vector.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\initialization_vector.json">
         <Link>rules\default\security\cryptography\initialization_vector.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\protocol.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\protocol.json">
         <Link>rules\default\security\cryptography\protocol.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\random.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\random.json">
         <Link>rules\default\security\cryptography\random.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS101155.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS101155.test">
         <Link>rules\default\security\cryptography\tests\DS101155.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS101159.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS101159.test">
         <Link>rules\default\security\cryptography\tests\DS101159.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS101940.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS101940.test">
         <Link>rules\default\security\cryptography\tests\DS101940.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS106863.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS106863.test">
         <Link>rules\default\security\cryptography\tests\DS106863.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS106864.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS106864.test">
         <Link>rules\default\security\cryptography\tests\DS106864.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS106865.TODO">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS106865.TODO">
         <Link>rules\default\security\cryptography\tests\DS106865.TODO</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS106866.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS106866.test">
         <Link>rules\default\security\cryptography\tests\DS106866.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS108647.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS108647.test">
         <Link>rules\default\security\cryptography\tests\DS108647.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS109501.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS109501.test">
         <Link>rules\default\security\cryptography\tests\DS109501.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS109733.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS109733.test">
         <Link>rules\default\security\cryptography\tests\DS109733.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS114352.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS114352.test">
         <Link>rules\default\security\cryptography\tests\DS114352.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS125134.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS125134.test">
         <Link>rules\default\security\cryptography\tests\DS125134.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS126185.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS126185.test">
         <Link>rules\default\security\cryptography\tests\DS126185.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS126186.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS126186.test">
         <Link>rules\default\security\cryptography\tests\DS126186.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS126187.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS126187.test">
         <Link>rules\default\security\cryptography\tests\DS126187.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS126858.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS126858.test">
         <Link>rules\default\security\cryptography\tests\DS126858.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS127101.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS127101.test">
         <Link>rules\default\security\cryptography\tests\DS127101.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS128420.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS128420.test">
         <Link>rules\default\security\cryptography\tests\DS128420.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS128921.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS128921.test">
         <Link>rules\default\security\cryptography\tests\DS128921.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS130822.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS130822.test">
         <Link>rules\default\security\cryptography\tests\DS130822.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS144436.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS144436.test">
         <Link>rules\default\security\cryptography\tests\DS144436.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS148264.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS148264.test">
         <Link>rules\default\security\cryptography\tests\DS148264.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS149435.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS149435.test">
         <Link>rules\default\security\cryptography\tests\DS149435.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS152094.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS152094.test">
         <Link>rules\default\security\cryptography\tests\DS152094.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS156431.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS156431.test">
         <Link>rules\default\security\cryptography\tests\DS156431.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS159369.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS159369.test">
         <Link>rules\default\security\cryptography\tests\DS159369.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS168931.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS168931.test">
         <Link>rules\default\security\cryptography\tests\DS168931.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS169125.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS169125.test">
         <Link>rules\default\security\cryptography\tests\DS169125.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS169127.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS169127.test">
         <Link>rules\default\security\cryptography\tests\DS169127.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS169128.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS169128.test">
         <Link>rules\default\security\cryptography\tests\DS169128.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS175862.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS175862.test">
         <Link>rules\default\security\cryptography\tests\DS175862.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS176603.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS176603.test">
         <Link>rules\default\security\cryptography\tests\DS176603.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS181865.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS181865.test">
         <Link>rules\default\security\cryptography\tests\DS181865.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS182720.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS182720.test">
         <Link>rules\default\security\cryptography\tests\DS182720.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS187371.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS187371.test">
         <Link>rules\default\security\cryptography\tests\DS187371.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS188250.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS188250.test">
         <Link>rules\default\security\cryptography\tests\DS188250.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS196098.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS196098.test">
         <Link>rules\default\security\cryptography\tests\DS196098.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS197800.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS197800.test">
         <Link>rules\default\security\cryptography\tests\DS197800.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\tests\DS197836.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS197836.test">
         <Link>rules\default\security\cryptography\tests\DS197836.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\underhanded.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\underhanded.json">
         <Link>rules\default\security\cryptography\underhanded.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\cryptography\weak_cipher_modes.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\weak_cipher_modes.json">
         <Link>rules\default\security\cryptography\weak_cipher_modes.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\frameworks\aspnet5.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\aspnet5.json">
         <Link>rules\default\security\frameworks\aspnet5.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\frameworks\dotnet_framework.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\dotnet_framework.json">
         <Link>rules\default\security\frameworks\dotnet_framework.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\frameworks\php.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\php.json">
         <Link>rules\default\security\frameworks\php.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\frameworks\tests\DS144886.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\tests\DS144886.test">
         <Link>rules\default\security\frameworks\tests\DS144886.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\frameworks\tests\DS163877.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\tests\DS163877.test">
         <Link>rules\default\security\frameworks\tests\DS163877.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\frameworks\tests\DS184626.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\tests\DS184626.test">
         <Link>rules\default\security\frameworks\tests\DS184626.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\hygiene\localhost.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\hygiene\localhost.json">
         <Link>rules\default\security\hygiene\localhost.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\hygiene\tests\DS162092.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\hygiene\tests\DS162092.test">
         <Link>rules\default\security\hygiene\tests\DS162092.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\hygiene\tests\DS176209.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\hygiene\tests\DS176209.test">
         <Link>rules\default\security\hygiene\tests\DS176209.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\hygiene\todo.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\hygiene\todo.json">
         <Link>rules\default\security\hygiene\todo.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\manualreview\dynamiccode.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\manualreview\dynamiccode.json">
         <Link>rules\default\security\manualreview\dynamiccode.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\manualreview\tests\DS113854.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\manualreview\tests\DS113854.test">
         <Link>rules\default\security\manualreview\tests\DS113854.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\manualreview\tests\DS172411.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\manualreview\tests\DS172411.test">
         <Link>rules\default\security\manualreview\tests\DS172411.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\manualreview\tests\DS172412.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\manualreview\tests\DS172412.test">
         <Link>rules\default\security\manualreview\tests\DS172412.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\manualreview\tests\DS189424.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\manualreview\tests\DS189424.test">
         <Link>rules\default\security\manualreview\tests\DS189424.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\manualreview\zip_slip.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\manualreview\zip_slip.json">
         <Link>rules\default\security\manualreview\zip_slip.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\privacy\device_restrictions.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\privacy\device_restrictions.json">
         <Link>rules\default\security\privacy\device_restrictions.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\privacy\secrets.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\privacy\secrets.json">
         <Link>rules\default\security\privacy\secrets.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\privacy\tests\DS117838.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\privacy\tests\DS117838.test">
         <Link>rules\default\security\privacy\tests\DS117838.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\privacy\tests\DS165348.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\privacy\tests\DS165348.test">
         <Link>rules\default\security\privacy\tests\DS165348.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\privacy\tests\DS173237.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\privacy\tests\DS173237.test">
         <Link>rules\default\security\privacy\tests\DS173237.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\storage\secure_storage.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\storage\secure_storage.json">
         <Link>rules\default\security\storage\secure_storage.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\storage\tests\DS112266.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\storage\tests\DS112266.test">
         <Link>rules\default\security\storage\tests\DS112266.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\storage\tests\DS191340.TODO">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\storage\tests\DS191340.TODO">
         <Link>rules\default\security\storage\tests\DS191340.TODO</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tests\DS112835.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tests\DS112835.test">
         <Link>rules\default\security\TLS\tests\DS112835.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tests\DS112836.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tests\DS112836.test">
         <Link>rules\default\security\TLS\tests\DS112836.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tests\DS112837.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tests\DS112837.test">
         <Link>rules\default\security\TLS\tests\DS112837.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tests\DS112838.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tests\DS112838.test">
         <Link>rules\default\security\TLS\tests\DS112838.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tests\DS112839.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tests\DS112839.test">
         <Link>rules\default\security\TLS\tests\DS112839.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_appconfig.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_appconfig.json">
         <Link>rules\default\security\TLS\tls_appconfig.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_appcontext.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_appcontext.json">
         <Link>rules\default\security\TLS\tls_appcontext.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_cobol.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_cobol.json">
         <Link>rules\default\security\TLS\tls_cobol.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_functioncall.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_functioncall.json">
         <Link>rules\default\security\TLS\tls_functioncall.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_generic.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_generic.json">
         <Link>rules\default\security\TLS\tls_generic.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_go.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_go.json">
         <Link>rules\default\security\TLS\tls_go.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_java.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_java.json">
         <Link>rules\default\security\TLS\tls_java.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_javascript.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_javascript.json">
         <Link>rules\default\security\TLS\tls_javascript.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_macos.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_macos.json">
         <Link>rules\default\security\TLS\tls_macos.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_python.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_python.json">
         <Link>rules\default\security\TLS\tls_python.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_rust.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_rust.json">
         <Link>rules\default\security\TLS\tls_rust.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_securityprotocol.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_securityprotocol.json">
         <Link>rules\default\security\TLS\tls_securityprotocol.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_sslprotocol.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_sslprotocol.json">
         <Link>rules\default\security\TLS\tls_sslprotocol.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\TLS\tls_win32.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_win32.json">
         <Link>rules\default\security\TLS\tls_win32.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\vulnerable_libraries\microsoft_nuget.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\vulnerable_libraries\microsoft_nuget.json">
         <Link>rules\default\security\vulnerable_libraries\microsoft_nuget.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\vulnerable_libraries\tests\DS300001.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\vulnerable_libraries\tests\DS300001.test">
         <Link>rules\default\security\vulnerable_libraries\tests\DS300001.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\vulnerable_libraries\tests\DS300005.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\vulnerable_libraries\tests\DS300005.test">
         <Link>rules\default\security\vulnerable_libraries\tests\DS300005.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\xml\external_entities.json">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\xml\external_entities.json">
         <Link>rules\default\security\xml\external_entities.json</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\xml\tests\DS132779.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\xml\tests\DS132779.test">
         <Link>rules\default\security\xml\tests\DS132779.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\xml\tests\DS132780.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\xml\tests\DS132780.test">
         <Link>rules\default\security\xml\tests\DS132780.test</Link>
-      </Content>
-      <Content Include="..\..\rules\default\security\xml\tests\DS132790.test">
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\xml\tests\DS132790.test">
         <Link>rules\default\security\xml\tests\DS132790.test</Link>
-      </Content>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

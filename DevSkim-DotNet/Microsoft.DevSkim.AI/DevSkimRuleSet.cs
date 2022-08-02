@@ -24,7 +24,7 @@ namespace Microsoft.DevSkim.AI
             DevSkimRuleSet ruleSet = new DevSkimRuleSet();
             Assembly assembly = Assembly.GetExecutingAssembly();
             string[] resNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-            foreach (string resName in resNames.Where(x => x.StartsWith("Microsoft.DevSkim.rules.default")))
+            foreach (string resName in resNames.Where(x => x.StartsWith("Microsoft.DevSkim.AI.rules.default")))
             {
                 Stream? resource = assembly.GetManifestResourceStream(resName);
                 using StreamReader file = new StreamReader(resource ?? new MemoryStream());
