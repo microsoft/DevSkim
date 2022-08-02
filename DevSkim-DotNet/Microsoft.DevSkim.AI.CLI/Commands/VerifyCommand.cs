@@ -39,6 +39,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
             {
+                LanguageSpecs = DevSkimLanguages.LoadEmbedded()
                 //TODO: Add logging factory to get validation errors.
             });
 

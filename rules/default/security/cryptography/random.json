@@ -78,7 +78,7 @@
             },
             {
                 "pattern": "\\bRandom\\(",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]
@@ -149,7 +149,7 @@
             },
             {
                 "pattern": "(32969|18273)",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]

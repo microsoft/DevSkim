@@ -24,11 +24,12 @@ namespace Microsoft.DevSkim.AI
             DevSkimRuleSet ruleSet = new DevSkimRuleSet();
             Assembly assembly = Assembly.GetExecutingAssembly();
             string[] resNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-            foreach (string resName in resNames.Where(x => x.StartsWith("Microsoft.DevSkim.AI.rules.default")))
+            foreach (string resName in resNames.Where(x => x.StartsWith("Microsoft.DevSkim.AI.rules.default") && x.EndsWith(".json")))
             {
                 Stream? resource = assembly.GetManifestResourceStream(resName);
                 using StreamReader file = new StreamReader(resource ?? new MemoryStream());
-                ruleSet.AddString(file.ReadToEnd(), resName, null);
+                string value = file.ReadToEnd();
+                ruleSet.AddString(value, resName, null);
             }
 
             return ruleSet;

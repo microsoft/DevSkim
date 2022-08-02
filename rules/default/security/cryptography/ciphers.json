@@ -51,7 +51,7 @@
         "fix_its": [
             {
                 "name": "Change to AESCryptoServiceProvider",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "AESCryptoServiceProvider",
                 "pattern": {
                     "pattern": "TripleDESCryptoServiceProvider",
@@ -88,7 +88,7 @@
         "fix_its": [
             {
                 "name": "Change to AES",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "AES",
                 "pattern": {
                     "pattern": "DES",
@@ -127,7 +127,7 @@
         "fix_its": [
             {
                 "name": "Change to AESCryptoServiceProvider",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "AESCryptoServiceProvider",
                 "pattern": {
                     "pattern": "DESCryptoServiceProvider",
@@ -165,7 +165,7 @@
         "fix_its": [
             {
                 "name": "Change to AES-128-CBC",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "AES-128-CBC",
                 "pattern": {
                     "pattern": "(?:DES(?:-(?:C(?:BC|FB[18]?)|E(?:CB|DE(?:-(?:C(?:BC|FB)|OFB))?)|OFB))?)",
@@ -203,7 +203,7 @@
         "fix_its": [
             {
                 "name": "Change to AESEngine",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "AESEngine",
                 "pattern": {
                     "pattern": "DESEngine|DESedeEngine",
@@ -242,7 +242,7 @@
         "fix_its": [
             {
                 "name": "Change to AESCryptoServiceProvider",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "AESCryptoServiceProvider",
                 "pattern": {
                     "pattern": "RC2CryptoServiceProvider",

@@ -25,7 +25,7 @@
         "fix_its": [
             {
                 "name": "Use a predefined format string",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "[NSString stringWithFormat:@\"%@\", $1",
                 "pattern": {
                     "pattern": "\\[NSString stringWithFormat:\\s*([^@\\\"\\]]+\\])",

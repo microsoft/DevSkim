@@ -16,7 +16,7 @@
         "patterns": [
             {
                 "pattern": "SecurityProtocolType\\.(Ssl3|Tls|Tls11)",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]
@@ -25,7 +25,7 @@
         "fix_its": [
             {
                 "name": "Change to SecurityProtocolType.Tls12",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "SecurityProtocolType.Tls12",
                 "pattern": {
                     "pattern": "\\bSecurityProtocolType\\.(Ssl3|Tls|Tls11)\\b",
@@ -54,7 +54,7 @@
         "patterns": [
             {
                 "pattern": "SecPkgCred_SupportedProtocols",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]
@@ -74,7 +74,7 @@
         "patterns": [
             {
                 "pattern": "(SSLv?2|SSLv?3|TLSv?1|TLSv?10)",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]

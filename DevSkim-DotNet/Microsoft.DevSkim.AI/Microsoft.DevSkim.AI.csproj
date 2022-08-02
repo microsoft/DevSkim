@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.6.2-beta" />
+      <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.6.4-beta" />
       <PackageReference Include="System.Text.Json" Version="6.0.5" />
     </ItemGroup>
 
@@ -404,6 +404,8 @@
       <EmbeddedResource Include="..\..\rules\default\security\xml\tests\DS132790.test">
         <Link>rules\default\security\xml\tests\DS132790.test</Link>
       </EmbeddedResource>
+      <EmbeddedResource Include="resources\comments.json" />
+      <EmbeddedResource Include="resources\languages.json" />
     </ItemGroup>
 
 </Project>

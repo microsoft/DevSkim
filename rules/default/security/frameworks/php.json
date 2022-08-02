@@ -24,7 +24,7 @@
         "fix_its": [
             {
                 "name": "Change to $_GET",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$_GET",
                 "pattern": {
                     "pattern": "\\$_REQUEST",
@@ -37,7 +37,7 @@
             },
             {
                 "name": "Change to $_POST",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$_POST",
                 "pattern": {
                     "pattern": "\\$_REQUEST",
@@ -50,7 +50,7 @@
             },
             {
                 "name": "Change to $_COOKIE",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$_COOKIE",
                 "pattern": {
                     "pattern": "\\$_REQUEST",
@@ -103,7 +103,7 @@
         "fix_its": [
             {
                 "name": "HTML Entity encode the data",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "htmlentities($1)",
                 "pattern": {
                     "pattern": "(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",
@@ -116,7 +116,7 @@
             },
             {
                 "name": "URL encode the data",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "rawurlencode($1)",
                 "pattern": {
                     "pattern": "(\\$_(POST|GET|REQUEST|COOKIE)\\[.*\\])",

@@ -10,7 +10,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS112838.md",
         "patterns": [
             {

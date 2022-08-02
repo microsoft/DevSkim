@@ -13,7 +13,7 @@
     "patterns": [
       {
         "pattern": "(QUICKFIX|REMOVEME|HACK|BLACK MAGIC)",
-        "type": "regex-word",
+        "type": "RegexWord",
         "scopes": [
           "code",
           "comment"

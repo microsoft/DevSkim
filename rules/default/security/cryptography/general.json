@@ -51,7 +51,7 @@
         "tags": [
             "Cryptography.SecurityContext.Initialization"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS101159.md",
         "patterns": [
             {

@@ -12,6 +12,7 @@ namespace Microsoft.DevSkim.AI
             _aiResult = aiResult;
         }
 
+        public IEnumerable<RuleStatus> Errors => DevSkimRuleStatuses.Where(x => x.Errors.Any());
         public List<RuleStatus> DevSkimRuleStatuses { get; } = new List<RuleStatus>();
         public AbstractRuleSet CompiledRuleSet => _aiResult.CompiledRuleSet;
 

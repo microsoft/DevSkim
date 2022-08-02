@@ -11,7 +11,7 @@
         "tags": [
             "DotNet.DangerousFunctionCall"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS113854.md",
         "patterns": [
             {

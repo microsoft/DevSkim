@@ -12,12 +12,12 @@
     "patterns": [
       {
         "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
-        "type": "regex-word",
+        "type": "RegexWord",
         "modifiers": [ "IGNORECASE" ]
       },
       {
         "pattern": "(quick fix|later)",
-        "type": "regex-word",
+        "type": "RegexWord",
         "modifiers": [ "MULTILINE" ]
       }
     ],

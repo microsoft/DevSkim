@@ -10,7 +10,7 @@
         "tags": [
             "ThreatModel.Integration.HTTP"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS137038.md",
         "patterns": [
             {
@@ -59,7 +59,7 @@
         "fix_its": [
             {
                 "name": "Change to HTTPS ",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "https://",
                 "pattern": {
                     "pattern": "http:\/\/",

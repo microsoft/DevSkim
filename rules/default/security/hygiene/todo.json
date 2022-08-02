@@ -7,12 +7,12 @@
         "tags": [
             "Hygiene.Comment.Suspicious"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS176209.md",
         "patterns": [
             {
                 "pattern": "(TODO|FIXME|REMOVEME|HACK|BLACK MAGIC)",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code", "comment"
                 ]

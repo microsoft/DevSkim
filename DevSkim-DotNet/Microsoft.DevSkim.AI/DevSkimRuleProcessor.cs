@@ -10,12 +10,13 @@ namespace Microsoft.DevSkim.AI
     public class DevSkimRuleProcessor
     {
         private readonly RuleProcessor _aiProcessor;
-        private readonly Languages _languages;
+        private Languages _languages => _processorOptions.Languages;
+        private readonly DevSkimRuleProcessorOptions _processorOptions;
 
         public DevSkimRuleProcessor(DevSkimRuleSet ruleSet, DevSkimRuleProcessorOptions processorOptions)
         {
             _aiProcessor = new RuleProcessor(ruleSet, processorOptions);
-            _languages = new Languages();
+            _processorOptions = processorOptions;
         }
 
         public IEnumerable<Issue> Analyze(string text, string fileName)

@@ -10,7 +10,7 @@
         "tags": [
             "Framework.NET.Outdated"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS450000.md",
         "patterns": [
             {

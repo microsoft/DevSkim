@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.AI;
 using Microsoft.DevSkim.AI.CLI.Options;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Microsoft.DevSkim.AI.CLI.Commands
 {
@@ -151,7 +152,7 @@ Output format options:
             var fp = Path.GetFullPath(opts.Path);
             if (!Directory.Exists(fp))
             {
-                fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false });
+                fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
             }
             else
             {
@@ -187,7 +188,7 @@ Output format options:
         public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
         {
             DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
-            
+            Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
             if (opts.Rulespath.Length > 0)
             {
                 foreach (var path in opts.Rulespath)
@@ -196,6 +197,7 @@ Output format options:
                 }
                 var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
                 {
+                    LanguageSpecs = devSkimLanguages
                     //TODO: Add logging factory to get validation errors.
                 });
 
@@ -213,10 +215,14 @@ Output format options:
                 Debug.WriteLine("Error: No rules were loaded. ");
                 return (int)ExitCode.CriticalError;
             }
-
+            
             // Initialize the processor
             var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
             {
+                Languages = devSkimLanguages,
+                AllowAllTagsInBuildFiles = true,
+                LoggerFactory = NullLoggerFactory.Instance,
+                Parallel = !opts.DisableParallel
                 // TODO: Parse command line options into appropriate AI options
             };
 

@@ -15,7 +15,7 @@
         "patterns": [
             {
                 "pattern": "shouldResolveExternalEntities\\s*=\\s*YES",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]
@@ -24,7 +24,7 @@
         "fix_its": [
             {
                 "name": "Disable external entity resolution",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$1NO",
                 "pattern": {
                     "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(YES)",
@@ -53,7 +53,7 @@
         "patterns": [
             {
                 "pattern": "shouldResolveExternalEntities\\s*=\\s*TRUE",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]
@@ -62,7 +62,7 @@
         "fix_its": [
             {
                 "name": "Disable external entity resolution",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$1FALSE",
                 "pattern": {
                     "pattern": "(shouldResolveExternalEntities\\s*=\\s*)(TRUE)",
@@ -91,7 +91,7 @@
         "patterns": [
             {
                 "pattern": "setShouldResolveExternalEntities:\\s*YES",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]
@@ -100,7 +100,7 @@
         "fix_its": [
             {
                 "name": "Disable external entity resolution",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$1NO",
                 "pattern": {
                     "pattern": "(setShouldResolveExternalEntities:\\s*)(YES)",

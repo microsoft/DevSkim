@@ -10,7 +10,7 @@
         "tags": [
             "Deserialization"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS425000.md",
         "patterns": [
             {
@@ -33,7 +33,7 @@
         "tags": [
             "Deserialization"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS425000.md",
         "patterns": [
             {
@@ -56,7 +56,7 @@
         "tags": [
             "Deserialization"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS425000.md",
         "patterns": [
             {
@@ -79,7 +79,7 @@
         "tags": [
             "Deserialization"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS425000.md",
         "patterns": [
             {
@@ -110,7 +110,7 @@
         "tags": [
             "Deserialization"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS425000.md",
         "patterns": [
             {
@@ -124,7 +124,7 @@
         "fix_its": [
             {
                 "name": "Change to TypeNameHandling.None",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "TypeNameHandling.None",
                 "pattern": {
                     "pattern": "TypeNameHandling\\.(Objects|Arrays|Auto|All)",
