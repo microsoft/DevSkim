@@ -54,6 +54,30 @@
                 },
                 "negate_finding": true,
                 "search_in": "finding-region(-3, 0)"
+            },
+            {
+                "pattern" : 
+                {
+                    "pattern": "http://localhost",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            },
+            {
+                "pattern" : 
+                {
+                    "pattern": "http://127.0.0.1",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
             }
         ],
         "fix_its": [
