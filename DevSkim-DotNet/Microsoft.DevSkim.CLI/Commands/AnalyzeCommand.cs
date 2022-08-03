@@ -257,17 +257,7 @@ Output format options:
 
             if (!opts.IgnoreDefaultRules)
             {
-                Assembly? assembly = Assembly.GetAssembly(typeof(Boundary));
-                string filePath = "Microsoft.DevSkim.AI.Resources.devskim-rules.json";
-                Stream? resource = assembly?.GetManifestResourceStream(filePath);
-                if (resource is Stream)
-                {
-                    using (StreamReader file = new StreamReader(resource))
-                    {
-                        var rulesString = file.ReadToEnd();
-                        rules.AddString(rulesString, filePath, null);
-                    }
-                }
+                rules.LoadEmbeddedRules();
             }
 
             // Initialize the processor

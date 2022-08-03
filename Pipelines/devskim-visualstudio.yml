@@ -49,8 +49,6 @@ stages:
         command: 'restore'
         restoreSolution: 'DevSkim-DotNet/Microsoft.DevSkim.sln'
         feedsToUse: 'select'
-    - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
-      displayName: 'Pack DevSkim Rules'
     - task: MSBuild@1
       displayName: MSBuild VSExtension
       inputs:

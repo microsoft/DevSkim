@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -26,6 +27,19 @@ namespace Microsoft.DevSkim
             _oatRules = new List<ConvertedOatRule>();
         }
 
+        public void LoadEmbeddedRules()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string[] resNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            foreach (string resName in resNames.Where(x => x.StartsWith("Microsoft.DevSkim.rules.default") && x.EndsWith(".json")))
+            {
+                Stream? resource = assembly.GetManifestResourceStream(resName);
+                using StreamReader file = new StreamReader(resource ?? new MemoryStream());
+                string value = file.ReadToEnd();
+                AddString(value, resName, null);
+            }
+        }
+        
         /// <summary>
         ///     Parse a directory with rule files and loads the rules
         /// </summary>

@@ -39,7 +39,6 @@ stages:
       projectName: 'DevSkim'
       preBuild:
       - template: templates/nbgv-set-version-steps.yml
-      - template: templates/devskim-pack-rules-steps.yml
   - template: templates/dotnet-publish-win-netcore-job.yml
     parameters:
       dotnetVersion: '6.0.x'
@@ -47,15 +46,12 @@ stages:
       projectName: 'DevSkim'
       preBuild:
       - template: templates/nbgv-set-version-steps.yml
-      - template: templates/devskim-pack-rules-steps.yml
   - template: templates/nuget-build-job.yml
     parameters:
       jobName: 'pack_lib'
       dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
-      preBuild:
-      - template: templates/devskim-pack-rules-steps.yml
   - template: templates/nuget-build-job-framework.yml
     parameters:
       jobName: 'pack_cli'
@@ -63,8 +59,6 @@ stages:
       publishFramework: 'net6.0'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
-      preBuild:
-      - template: templates/devskim-pack-rules-steps.yml
 
 - stage: Release
   dependsOn:

@@ -12,7 +12,7 @@ namespace Microsoft.DevSkim
     public class CodeFix
     {
         [JsonPropertyName("type")]
-        [JsonConverter(typeof(FixTypeConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public FixType? FixType { get; set; }
 
         [JsonPropertyName("name")]
