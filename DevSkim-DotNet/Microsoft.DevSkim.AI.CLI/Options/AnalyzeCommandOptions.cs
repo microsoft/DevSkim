@@ -21,4 +21,5 @@ public class AnalyzeCommandOptions
     public string OutputTextFormat { get; set; } = string.Empty;
     public bool AbsolutePaths { get; set; } = false;
     public bool RespectGitIgnore { get; set; }
+    public bool SkipExcerpts { get; set; }
 }

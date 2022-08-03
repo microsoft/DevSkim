@@ -94,6 +94,10 @@ namespace Microsoft.DevSkim.AI.CLI.Commands
             var respectGitIgnore = command.Option("--skip-git-ignored-files",
                 "Set to skip files which are ignored by .gitignore. Requires git to be installed.",
                 CommandOptionType.NoValue);
+            
+            var skipExcerpts = command.Option("--skip-excerpts",
+                "Set to skip gathering excerpts and samples to include in the report.",
+                CommandOptionType.NoValue);
 
             command.ExtendedHelpText = 
 @"
@@ -132,7 +136,8 @@ Output format options:
                     BasePath = basePath.Value(),
                     DisableParallel = disableParallel.HasValue(),
                     AbsolutePaths = absolutePaths.HasValue(),
-                    RespectGitIgnore = respectGitIgnore.HasValue()
+                    RespectGitIgnore = respectGitIgnore.HasValue(),
+                    SkipExcerpts = skipExcerpts.HasValue()
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));
@@ -386,7 +391,7 @@ Output format options:
                                 var record = new AI.IssueRecord(
                                     Filename: TryRelativizePath(opts.BasePath, fileEntry.FullPath),
                                     Filesize: fileText.Length,
-                                    TextSample: fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
+                                    TextSample: opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
                                     Language: languageInfo.Name);
                                 outputWriter.WriteIssue(record);
