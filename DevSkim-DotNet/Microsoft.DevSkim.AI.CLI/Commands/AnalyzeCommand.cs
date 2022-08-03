@@ -90,6 +90,10 @@ namespace Microsoft.DevSkim.AI.CLI.Commands
             var absolutePaths = command.Option("--absolute-path",
                            "Output absolute paths (overrides --base-path).",
                            CommandOptionType.NoValue);
+            
+            var respectGitIgnore = command.Option("--skip-git-ignored-files",
+                "Set to skip files which are ignored by .gitignore. Requires git to be installed.",
+                CommandOptionType.NoValue);
 
             command.ExtendedHelpText = 
 @"
@@ -127,7 +131,8 @@ Output format options:
                     Globs = globOptions.Value()?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
                     BasePath = basePath.Value(),
                     DisableParallel = disableParallel.HasValue(),
-                    AbsolutePaths = absolutePaths.HasValue()
+                    AbsolutePaths = absolutePaths.HasValue(),
+                    RespectGitIgnore = respectGitIgnore.HasValue()
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));
@@ -152,13 +157,82 @@ Output format options:
             var fp = Path.GetFullPath(opts.Path);
             if (!Directory.Exists(fp))
             {
-                fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                if (opts.RespectGitIgnore)
+                {
+                    if (isGitPresent())
+                    {
+                        if (isGitIgnored(fp))
+                        {
+                            Console.WriteLine("The file specified was ignored by gitignore.");
+                            return (int)ExitCode.CriticalError;
+                        }
+                        else
+                        {
+                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
+                        return (int)ExitCode.CriticalError;
+                    }
+                }
+                else
+                {
+                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                }
             }
             else
             {
-                fileListing = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories).Where(x => !opts.Globs.Any(y => y.IsMatch(x))).SelectMany(x => opts.CrawlArchives ? extractor.Extract(x, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern) }) : FilenameToFileEntryArray(x));
+                if (opts.RespectGitIgnore)
+                {
+                    if (isGitPresent())
+                    {
+                        var innerList = new List<FileEntry>();
+                        var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories)
+                            .Where(fileName => !isGitIgnored(fileName));
+                        foreach (var notIgnoredFileName in files)
+                        {
+                            innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)}));
+                        }
+
+                        fileListing = innerList;
+                    }
+                    else
+                    {                        
+                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
+                        return (int)ExitCode.CriticalError;
+                    }
+                }
+                else
+                {
+                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                }
             }
             return RunFileEntries(fileListing);
+        }
+
+        private bool isGitIgnored(string fp)
+        {
+            var process = Process.Start(new ProcessStartInfo("git")
+            {
+                Arguments = $"check-ignore {fp}",
+                WorkingDirectory = Directory.GetParent(fp)?.FullName,
+                RedirectStandardOutput = true
+            });
+            process?.WaitForExit();
+            var stdOut = process?.StandardOutput.ReadToEnd();
+            return process?.ExitCode == 0 && stdOut?.Length > 0;
+        }
+
+        private bool isGitPresent()
+        {
+            var process = Process.Start(new ProcessStartInfo("git")
+            {
+                Arguments = "--version"
+            });
+            process?.WaitForExit();
+            return process?.ExitCode == 0;
         }
 
         string TryRelativizePath(string parentPath, string childPath)

@@ -20,4 +20,5 @@ public class AnalyzeCommandOptions
     public bool ExitCodeIsNumIssues { get; set; }
     public string OutputTextFormat { get; set; } = string.Empty;
     public bool AbsolutePaths { get; set; } = false;
+    public bool RespectGitIgnore { get; set; }
 }
