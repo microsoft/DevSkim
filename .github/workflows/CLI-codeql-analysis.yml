@@ -30,7 +30,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1.7.2
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
@@ -39,7 +39,6 @@ jobs:
 
     - name: Build DevSkim CLI
       run: |
-         dotnet ../RulePacker/devskim.dll pack ../rules Microsoft.DevSkim/Resources/devskim-rules.json
          dotnet restore Microsoft.DevSkim.CLI
          dotnet build Microsoft.DevSkim.CLI -c Release
       working-directory: ./DevSkim-DotNet
