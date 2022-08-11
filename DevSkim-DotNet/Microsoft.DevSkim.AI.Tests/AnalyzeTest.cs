@@ -1,22 +1,18 @@
 // Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.CodeAnalysis.Sarif;
-using Microsoft.DevSkim.CLI.Commands;
+using Microsoft.DevSkim.AI.CLI.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Text;
+using Microsoft.DevSkim.AI.CLI.Options;
 
-namespace Microsoft.DevSkim.CLI.Tests
+namespace Microsoft.DevSkim.AI.Tests
 {
     [TestClass]
     public class AnalyzeTest
     {
-        [TestMethod]
-        public void AnalyzeGoodRunTest()
-        {
-        }
-
         [TestMethod]
         public void RelativePathTest()
         {

@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Microsoft.DevSkim.AI.CLI\Microsoft.DevSkim.AI.CLI.csproj" />
       <ProjectReference Include="..\Microsoft.DevSkim.AI\Microsoft.DevSkim.AI.csproj" />
     </ItemGroup>
 
