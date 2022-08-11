@@ -1,17 +1,17 @@
 name: "CodeQL (VS)"
 
-on:
-  push:
-    branches:
-    - main
-    paths:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-  pull_request:
-    branches:
-    - main
-  schedule:
-    - cron: '0 3 * * 3'
+# on:
+#   push:
+#     branches:
+#     - main
+#     paths:
+#     - DevSkim-DotNet/Microsoft.DevSkim/*
+#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+#   pull_request:
+#     branches:
+#     - main
+#   schedule:
+#     - cron: '0 3 * * 3'
 
 jobs:
   CodeQL-Build:
