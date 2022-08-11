@@ -34,29 +34,40 @@
         "rule_info": "DS137138.md",
         "patterns": [
             {
-                "pattern": "http:\/\/",
+                "pattern": "http://",
                 "type": "substring",
                 "scopes": [
                     "code"
-                ],
-                "modifiers": ["i"]
+                ]
             }
         ],
         "conditions" : [
             {
                 "pattern" : 
                 {
-                    "pattern": "xmlns",
-                    "type": "regex",
+                    "pattern": "xmlns=",
+                    "type": "substring",
                     "scopes": [
                         "code"
                     ]
                 },
                 "negate_finding": true,
-                "search_in": "finding-region(-3, 0)"
+                "search_in": "finding-region(-1, 0)"
             },
             {
-                "pattern" : 
+                "pattern" :
+                {
+                    "pattern": "<!DOCTYPE",
+                    "type": "string",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "finding-region(-1, 0)"
+            },
+            {
+                "pattern" :
                 {
                     "pattern": "http://localhost",
                     "type": "regex",
@@ -68,7 +79,7 @@
                 "search_in": "same-line"
             },
             {
-                "pattern" : 
+                "pattern" :
                 {
                     "pattern": "http://127.0.0.1",
                     "type": "substring",
@@ -94,6 +105,15 @@
                     "modifiers": ["i"]
                 }
             }
+        ],
+        "must-match": [
+            "http://contoso.com"
+        ],
+        "must-not-match": [
+            "http://localhost",
+            "http://127.0.0.1",
+            "<html xmlns=\"http://www.w3.org/1999/xhtml\">",
+            "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
         ]
     }
 ]
