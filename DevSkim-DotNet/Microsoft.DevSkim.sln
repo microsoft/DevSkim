@@ -2,11 +2,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI", "Microsoft.DevSkim.AI\Microsoft.DevSkim.AI.csproj", "{7B8D0088-645A-4D4B-9DB9-046EED07B47A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim", "Microsoft.DevSkim\Microsoft.DevSkim.csproj", "{7B8D0088-645A-4D4B-9DB9-046EED07B47A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI.CLI", "Microsoft.DevSkim.AI.CLI\Microsoft.DevSkim.AI.CLI.csproj", "{6330E8E3-8D91-458E-945C-CE9B71FE809B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.CLI", "Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.csproj", "{6330E8E3-8D91-458E-945C-CE9B71FE809B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.AI.Tests", "Microsoft.DevSkim.AI.Tests\Microsoft.DevSkim.AI.Tests.csproj", "{22E5C50D-93C9-4007-881F-D8B751B880D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.Tests", "Microsoft.DevSkim.Tests\Microsoft.DevSkim.Tests.csproj", "{22E5C50D-93C9-4007-881F-D8B751B880D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
