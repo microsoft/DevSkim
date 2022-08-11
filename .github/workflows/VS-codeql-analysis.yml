@@ -1,5 +1,7 @@
 name: "CodeQL (VS)"
 
+# Temporarily disabled until VS extension rewrite
+on: workflow_dispatch
 # on:
 #   push:
 #     branches:
