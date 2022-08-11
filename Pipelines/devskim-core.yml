@@ -24,6 +24,12 @@ pr:
     - rules/*
 
 stages:
+- stage: Test
+  jobs:
+  - template: templates/dotnet-test-job.yml
+    parameters:
+      dotnetVersion: 6.0.x
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
 - stage: SDL
   jobs:
   - template: templates/sdl-job.yml
