@@ -2,6 +2,8 @@
 # https://aka.ms/yaml
 
 name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+# Temporarily disable VS Extension pipeline
+trigger: none
 # trigger:
 #   batch: true
 #   branches:
