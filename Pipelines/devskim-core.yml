@@ -81,15 +81,7 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '6.0.x'
-    - script: 'dotnet tool install -g nbgv'
-      displayName: 'Install GitVersioning'
-    - task: PowerShell@2
-      displayName: Set Release Version
-      inputs:
-        targetType: 'inline'
-        script: |
-          $version = (nbgv get-version -v AssemblyInformationalVersion).split('+')[0]
-          Write-Host "##vso[task.setvariable variable=ReleaseVersion;]$version"
+    - template: templates/nbgv-set-version-steps.yml
     - task: DownloadBuildArtifacts@0
       displayName: Download Unsigned Archives
       inputs:
