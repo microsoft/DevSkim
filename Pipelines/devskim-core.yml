@@ -37,6 +37,8 @@ stages:
       serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
 
 - stage: Build
+  dependsOn:
+  - Test
   jobs:
   - template: templates/dotnet-publish-linux-mac-job.yml
     parameters:
