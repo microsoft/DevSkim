@@ -18,6 +18,11 @@
     <Nullable>Enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
     <ItemGroup>
       <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.6.13-beta" />
       <PackageReference Include="System.Text.Json" Version="6.0.5" />
