@@ -308,7 +308,7 @@ Output format options:
             // }
             
             Confidence confidenceFilter = Confidence.Unspecified;
-            foreach (var confidence in opts.Confidences)
+            foreach (var confidence in opts.Confidences ?? Array.Empty<string>())
             {
                 if (Enum.TryParse<Confidence>(confidence, out Confidence confidenceFilterComponent))
                 {

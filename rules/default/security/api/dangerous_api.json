@@ -238,6 +238,9 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "strncat (str1, str2, 6);"
         ]
     },
     {

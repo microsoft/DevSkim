@@ -15,7 +15,7 @@ namespace Microsoft.DevSkim.Tests
         {
             var tempFileName = $"{Path.GetTempFileName()}.cs";
             var outFileName = Path.GetTempFileName();
-            // GetTempFileName actualy makes the file
+            // GetTempFileName actually makes the file
             File.Delete(outFileName);
 
             var basePath = Path.GetTempPath();

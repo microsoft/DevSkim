@@ -34,7 +34,7 @@
         "rule_info": "DS137138.md",
         "patterns": [
             {
-                "pattern": "http://(.*?)[/\\s\"]",
+                "pattern": "http://(.*?)[/\\s\"]*",
                 "type": "regex",
                 "scopes": [
                     "code"
