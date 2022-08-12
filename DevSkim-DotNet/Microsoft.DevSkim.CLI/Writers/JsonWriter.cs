@@ -1,7 +1,10 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using System;
 using System.Text.Json;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Microsoft.DevSkim.CLI.Writers
 {

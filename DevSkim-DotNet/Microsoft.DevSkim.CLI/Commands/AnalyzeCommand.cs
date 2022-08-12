@@ -1,10 +1,16 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
 using GlobExpressions;
 using Microsoft.CST.RecursiveExtractor;
 using Microsoft.DevSkim.CLI.Writers;
 using Microsoft.Extensions.CommandLineUtils;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
 using Microsoft.Extensions.Logging.Abstractions;

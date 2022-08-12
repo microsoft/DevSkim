@@ -1,4 +1,6 @@
-﻿using GlobExpressions;
+﻿using System;
+using System.Collections.Generic;
+using GlobExpressions;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
