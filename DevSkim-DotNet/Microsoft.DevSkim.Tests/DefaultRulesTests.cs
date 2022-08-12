@@ -1,67 +1,79 @@
-﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
+namespace Microsoft.DevSkim.Tests;
 
-using Microsoft.CST.OAT;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-
-namespace Microsoft.DevSkim.Tests
+[TestClass]
+public class DefaultRulesTests
 {
-    [TestClass]
-    public class DefaultRulesTests
+    [TestMethod]
+    public void ValidateDefaultRules()
     {
-
-
-        [TestMethod]
-        public void VerifyDefaultRules()
+        var devSkimRuleSet = DevSkim.DevSkimRuleSet.GetDefaultRuleSet();
+        Assert.AreNotEqual(0, devSkimRuleSet.Count());
+        var validator = new DevSkim.DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
         {
-            var rules = new RuleSet();
-            Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
-            string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
-            Stream resource = assembly?.GetManifestResourceStream(filePath);
-            if (resource is Stream)
-            {
-                using StreamReader file = new StreamReader(resource);
-                rules.AddString(file.ReadToEnd(), filePath, null);
-            }
-
-            var analyzer = new Analyzer();
-            analyzer.SetOperation(new ScopedRegexOperation(analyzer));
-            analyzer.SetOperation(new WithinOperation(analyzer));
-            Assert.IsFalse(analyzer.EnumerateRuleIssues(rules.GetAllOatRules()).Any());
-        }
-
-        static RuleProcessor processor = new RuleProcessor(new RuleSet());
-
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
+            LanguageSpecs = DevSkimLanguages.LoadEmbedded()
+        });
+        var result = validator.Verify(devSkimRuleSet);
+        foreach (var status in result.Errors)
         {
-            var rules = new RuleSet();
-            Assembly assembly = Assembly.GetAssembly(typeof(Boundary));
-            string filePath = "Microsoft.DevSkim.Resources.devskim-rules.json";
-            Stream resource = assembly?.GetManifestResourceStream(filePath);
-            if (resource is Stream)
+            foreach (var error in status.Errors)
             {
-                using StreamReader file = new StreamReader(resource);
-                rules.AddString(file.ReadToEnd(), filePath, null);
-            }
-            processor = new RuleProcessor(rules);
-        }
-
-        [DataRow("DS440000", new string[] { "SSL_V1", "SSLV1", "SSL_V2", "SSLV2", "SSL_V3", "SSLV3" }, new string[] { "SSL", "SSL_", "SSL_V" }, "csharp")]
-        [DataTestMethod]
-        public void VerifyRule(string ruleId, IEnumerable<string> mustMatch, IEnumerable<string> mustNotMatch, string language)
-        {
-            foreach (var stringThatMustMatch in mustMatch)
-            {
-                Assert.IsTrue(processor.Analyze(stringThatMustMatch, language).Any(x => x.Rule.Id == ruleId), $"{stringThatMustMatch} is supposed to match {ruleId}");
-            }
-            foreach (var stringThatMustNotMatch in mustNotMatch)
-            {
-                Assert.IsTrue(!processor.Analyze(stringThatMustNotMatch, language).Any(x => x.Rule.Id == ruleId), $"{stringThatMustNotMatch} is not supposed to match {ruleId}");
+                Console.WriteLine(error);
             }
         }
+        Assert.IsTrue(result.Verified);
+        Assert.IsFalse(result.DevSkimRuleStatuses.Any(x => x.Errors.Any()));
+    }
+
+    [TestMethod]
+    public void DenamespacedRule()
+    {
+        var content = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<project xmlns=""http://maven.apache.org/POM/4.0.0"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>xxx</groupId>
+  <artifactId>xxx</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description />
+
+  <properties>
+    <java.version>17</java.version>
+  </properties>
+
+</project>";
+        var rule = @"[{
+    ""name"": ""Source code: Java 17"",
+    ""id"": ""CODEJAVA000000"",
+    ""description"": ""Java 17 maven configuration"",
+    ""applies_to_file_regex"": [
+      ""pom.xml""
+    ],
+    ""tags"": [
+      ""Code.Java.17""
+    ],
+    ""severity"": ""critical"",
+    ""patterns"": [
+      {
+        ""pattern"": ""17"",
+        ""xpaths"" : [""/*[local-name(.)='project']/*[local-name(.)='properties']/*[local-name(.)='java.version']""],
+        ""type"": ""regex"",
+        ""scopes"": [
+          ""code""
+        ],
+        ""modifiers"": [
+          ""i""
+        ],
+        ""confidence"": ""high""
+      }
+    ]
+  }]";
+        var deSkimRuleSet = new DevSkimRuleSet();
+        deSkimRuleSet.AddString(rule, "testRules");
+        var analyzer = new DevSkimRuleProcessor(deSkimRuleSet, new DevSkimRuleProcessorOptions());
+        var analysis = analyzer.Analyze(content, "pom.xml");
+        Console.WriteLine("breakpoint");
     }
 }

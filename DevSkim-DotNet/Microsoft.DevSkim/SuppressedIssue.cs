@@ -1,5 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.ApplicationInspector.RulesEngine;
+
 namespace Microsoft.DevSkim
 {
     /// <summary>

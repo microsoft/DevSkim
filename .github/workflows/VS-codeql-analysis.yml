@@ -1,17 +1,19 @@
 name: "CodeQL (VS)"
 
-on:
-  push:
-    branches:
-    - main
-    paths:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-  pull_request:
-    branches:
-    - main
-  schedule:
-    - cron: '0 3 * * 3'
+# Temporarily disabled until VS extension rewrite
+on: workflow_dispatch
+# on:
+#   push:
+#     branches:
+#     - main
+#     paths:
+#     - DevSkim-DotNet/Microsoft.DevSkim/*
+#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+#   pull_request:
+#     branches:
+#     - main
+#   schedule:
+#     - cron: '0 3 * * 3'
 
 jobs:
   CodeQL-Build:
@@ -37,7 +39,6 @@ jobs:
 
     - name: Build DevSkim VS Extension
       run: |
-         dotnet ../RulePacker/devskim.dll pack ../rules Microsoft.DevSkim/Resources/devskim-rules.json
          dotnet restore Microsoft.DevSkim.VSExtension
          msbuild Microsoft.DevSkim.VSExtension /p:Configuration=Release /p:Platform=AnyCPU
       working-directory: ./DevSkim-DotNet

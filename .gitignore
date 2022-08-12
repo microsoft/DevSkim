@@ -1,4 +1,3 @@
 ﻿*.vsix
-DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
-DevSkim-DotNet/Microsoft.DevSkim.Blazor/bin/
-DevSkim-DotNet/Microsoft.DevSkim.Blazor/obj/
+DevSkim-DotNet/Microsoft.DevSkim.sln.DotSettings.user
+DevSkim-DotNet/Microsoft.DevSkim.CLI/output.json

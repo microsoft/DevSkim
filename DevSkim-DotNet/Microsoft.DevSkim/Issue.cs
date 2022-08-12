@@ -1,5 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using Microsoft.ApplicationInspector.RulesEngine;
+
 namespace Microsoft.DevSkim
 {
     /// <summary>
@@ -7,7 +9,7 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class Issue
     {
-        public Issue(Boundary Boundary, Location StartLocation, Location EndLocation, Rule Rule)
+        public Issue(Boundary Boundary, Location StartLocation, Location EndLocation, DevSkimRule Rule)
         {
             this.Boundary = Boundary;
             this.StartLocation = StartLocation;
@@ -33,7 +35,7 @@ namespace Microsoft.DevSkim
         /// <summary>
         ///     Matching rule
         /// </summary>
-        public Rule Rule { get; set; }
+        public DevSkimRule Rule { get; set; }
 
         /// <summary>
         ///     Location (line, column) where issue starts

@@ -2,26 +2,28 @@
 # https://aka.ms/yaml
 
 name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-trigger:
-  batch: true
-  branches:
-    include:
-    - main
-  paths:
-    include:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-    - rules/*
-pr:
-  branches:
-    include:
-    - main
-  paths:
-    include:
-    - Pipelines
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-    - rules/*
+# Temporarily disable VS Extension pipeline
+trigger: none
+# trigger:
+#   batch: true
+#   branches:
+#     include:
+#     - main
+#   paths:
+#     include:
+#     - DevSkim-DotNet/Microsoft.DevSkim/*
+#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+#     - rules/*
+# pr:
+#   branches:
+#     include:
+#     - main
+#   paths:
+#     include:
+#     - Pipelines
+#     - DevSkim-DotNet/Microsoft.DevSkim/*
+#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
+#     - rules/*
 
 stages:
 - stage: SDL
@@ -40,7 +42,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '5.0.x'
+        version: '6.0.x'
     - task: NuGetToolInstaller@1
       inputs:
         versionSpec: '5.x'
@@ -49,8 +51,6 @@ stages:
         command: 'restore'
         restoreSolution: 'DevSkim-DotNet/Microsoft.DevSkim.sln'
         feedsToUse: 'select'
-    - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
-      displayName: 'Pack DevSkim Rules'
     - task: MSBuild@1
       displayName: MSBuild VSExtension
       inputs:

@@ -25,7 +25,7 @@
         "fix_its": [
             {
                 "name": "Add entropy placeholder",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$1<entropy>$2",
                 "pattern": {
                     "pattern": "(ProtectedData\\.Protect[^,]+,\\s*)null(.*)",

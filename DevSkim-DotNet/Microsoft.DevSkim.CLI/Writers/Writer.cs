@@ -14,7 +14,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         public abstract void FlushAndClose();
 
-        public abstract void WriteIssue(IssueRecord issue);
+        public abstract void WriteIssue(DevSkim.IssueRecord issue);
 
         public void Dispose()
         {

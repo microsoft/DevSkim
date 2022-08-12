@@ -80,7 +80,7 @@
             },
             {
                 "pattern": "(NtCreateThreadEx|CreateRemoteThread)",
-                "type": "regex-word",
+                "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]

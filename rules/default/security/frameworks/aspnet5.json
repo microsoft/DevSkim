@@ -46,7 +46,7 @@
         "fix_its": [
             {
                 "name": "Change to inherit from Controller",
-                "type": "regex-replace",
+                "type": "RegexReplace",
 
                 "replacement": "$1 : Controller",
                 "pattern": {

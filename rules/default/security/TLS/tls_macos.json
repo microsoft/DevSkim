@@ -12,7 +12,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "_comment": "Generic, since there are multiple languages that bind to these constants.",
         "rule_info": "DS440000.md",
         "patterns": [

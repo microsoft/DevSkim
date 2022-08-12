@@ -1,7 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim
 {
@@ -11,7 +11,7 @@ namespace Microsoft.DevSkim
     public class CodeFix
     {
         [JsonPropertyName("type")]
-        [JsonConverter(typeof(FixTypeConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public FixType? FixType { get; set; }
 
         [JsonPropertyName("name")]

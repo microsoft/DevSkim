@@ -1,7 +1,7 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using System.Text.Json;
 using System;
+using System.Text.Json;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -57,7 +57,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             if (_formatString.Contains("%m"))
                 item.Add("match", issue.TextSample);
             if (_formatString.Contains("%T"))
-                item.Add("tags", issue.Issue.Rule.Tags ?? new List<string>());
+                item.Add("tags", issue.Issue.Rule.Tags ?? Array.Empty<string>());
             if (_formatString.Contains("%f"))
                 item.Add("fixes", issue.Issue.Rule.Fixes ?? new List<CodeFix>());
             // Store the result in the result list

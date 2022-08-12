@@ -29,9 +29,6 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             app.Command("analyze", AnalyzeCommand.Configure, false);
             app.Command("verify", VerifyCommand.Configure, false);
-            app.Command("pack", PackCommand.Configure, false);
-            app.Command("catalogue", CatalogueCommand.Configure, false);
-            app.Command("test", TestCommand.Configure, false);
 
             app.OnExecute(() =>
             {

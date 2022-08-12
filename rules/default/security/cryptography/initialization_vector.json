@@ -25,7 +25,7 @@
         "fix_its": [
             {
                 "name": "Add initialization vector",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "$1, <$iv>$2",
                 "pattern": {
                     "pattern": "(mcrypt_encrypt\\s*\\([^,]+,[^,]+,[^,]+,[^,]+)(\\);)",

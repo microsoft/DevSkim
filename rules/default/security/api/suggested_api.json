@@ -12,7 +12,7 @@
         "tags": [
             "API.DangerousAPI.ProblematicFunction"
         ],
-        "severity": "best-practice",
+        "severity": "BestPractice",
         "rule_info": "DS161085.md",
         "patterns": [
             {
@@ -26,7 +26,7 @@
         "fix_its": [
             {
                 "name": "Change to calloc ",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "calloc(<number of elements>, <size of each element>)",
                 "pattern": {
                     "pattern": "\\bmalloc\\s*\\(([^,\\)]+)\\)",
@@ -51,7 +51,7 @@
         "tags": [
             "API.DangerousAPI.ProblematicFunction"
         ],
-        "severity": "best-practice",
+        "severity": "BestPractice",
         "rule_info": "DS121708.md",
         "patterns": [
             {
@@ -65,7 +65,7 @@
         "fix_its": [
             {
                 "name": "Change to memcpy_s (Recommended for VC++)",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "memcpy_s($1, <size of $1>, $2, $3)",
                 "pattern": {
                     "pattern": "\\bmemcpy\\s*\\(([^,]+),([^,]+),([^,\\)]+)\\)",
@@ -93,7 +93,7 @@
         "tags": [
             "API.DangerousAPI.ProblematicFunction"
         ],
-        "severity": "best-practice",
+        "severity": "BestPractice",
         "rule_info": "DS140021.md",
         "patterns": [
             {
@@ -107,7 +107,7 @@
         "fix_its": [
             {
                 "name": "Change to strlen_s (Recommended for VC++)",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "strlen_s($1, <size of $1>)",
                 "pattern": {
                     "pattern": "\\bstrlen\\s*\\(([^,\\)]+)\\)",
@@ -119,7 +119,7 @@
             },
             {
                 "name": "Change to strnlen",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "strnlen($1, <size of $1>)",
                 "pattern": {
                     "pattern": "\\bstrlen\\s*\\(([^,\\)]+)\\)",

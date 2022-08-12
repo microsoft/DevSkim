@@ -1,12 +1,15 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
-using Microsoft.Extensions.CommandLineUtils;
 using System;
+using Microsoft.Extensions.CommandLineUtils;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
     public class VerifyCommand : ICommand
     {
+        private string _path;
         public VerifyCommand(string path)
         {
             _path = path;
@@ -28,23 +31,42 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
-            Verifier verifier = new Verifier(_path);
-            if (verifier.Verify())
+            DevSkimRuleSet devSkimRuleSet = new();
+            
+            devSkimRuleSet.AddPath(_path);
+
+            var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
             {
-                Console.WriteLine("No errors found.");
-                return (int)ExitCode.NoIssues;
-            }
-            else
+                LanguageSpecs = DevSkimLanguages.LoadEmbedded()
+                //TODO: Add logging factory to get validation errors.
+            });
+
+            var result = devSkimVerifier.Verify(devSkimRuleSet);
+
+            if (!result.Verified)
             {
-                Console.Error.WriteLine("Errors found.");
-                foreach(var message in verifier.Messages)
+                Console.WriteLine("Error: Rules failed validation. ");
+                foreach (var status in result.DevSkimRuleStatuses)
                 {
-                    Console.WriteLine(message.Message);
+                    if (!status.Verified)
+                    {
+                        foreach (var error in status.Errors)
+                        {
+                            Console.WriteLine(status.Errors);
+                        }
+                    }
+
+                    return (int)ExitCode.IssuesExists;
                 }
             }
-            return (int)ExitCode.IssuesExists;
-        }
 
-        private string _path;
+            if (!devSkimRuleSet.Any())
+            {
+                Debug.WriteLine("Error: No rules were loaded. ");
+                return (int)ExitCode.CriticalError;
+            }
+            
+            return (int)ExitCode.NoIssues;
+        }
     }
 }

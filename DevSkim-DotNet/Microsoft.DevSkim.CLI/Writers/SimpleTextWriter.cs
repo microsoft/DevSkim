@@ -40,7 +40,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             TextWriter.Close();
         }
 
-        public override void WriteIssue(IssueRecord issue)
+        public override void WriteIssue(DevSkim.IssueRecord issue)
         {
             anyIssues = true;
             string output = _formatString.Replace("%F", issue.Filename);
@@ -55,8 +55,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             output = output.Replace("%S", issue.Issue.Rule.Severity.ToString());
             output = output.Replace("%D", issue.Issue.Rule.Description);
             output = output.Replace("%m", issue.TextSample);
-            output = output.Replace("%T", string.Join(",", issue.Issue.Rule.Tags ?? new System.Collections.Generic.List<string>()));
-
+            output = output.Replace("%T", string.Join(",", issue.Issue.Rule.Tags ?? Array.Empty<string>()));
             TextWriter.WriteLine(output);
         }
 

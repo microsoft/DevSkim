@@ -7,7 +7,7 @@
         "tags": [
             "Hygiene.Network.AccessingLocalhost"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS162092.md",
         "patterns": [
             {

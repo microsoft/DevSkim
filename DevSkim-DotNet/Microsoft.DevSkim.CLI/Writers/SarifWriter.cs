@@ -1,13 +1,11 @@
-﻿using Microsoft.CodeAnalysis.Sarif;
-using Microsoft.CodeAnalysis.Sarif.Readers;
-using System.Text.Json;
-using NLog.LayoutRenderers;
-using System;
+﻿using System;
+using Microsoft.CodeAnalysis.Sarif;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.CLI.Writers
 {
@@ -141,7 +139,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         public string? OutputPath { get; }
 
-        private void AddRuleToSarifRule(Rule devskimRule)
+        private void AddRuleToSarifRule(DevSkimRule devskimRule)
         {
             if (!_rules.ContainsKey(devskimRule.Id))
             {
@@ -191,7 +189,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                     {
                         CharOffset = issue.Issue.Boundary.Index,
                         CharLength = issue.Issue.Boundary.Length,
-                    }, new ArtifactContent() { Text = RuleProcessor.Fix(issue.TextSample, fix) }, null));
+                    }, new ArtifactContent() { Text = DevSkimRuleProcessor.Fix(issue.TextSample, fix) }, null));
 
                     var changes = new ArtifactChange[] 
                     {
@@ -232,7 +230,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             resultItem.RuleId = rule.Id;
             resultItem.Message = new Message() { Text = rule.Name };
-            foreach (string tag in rule.Tags ?? new List<string>())
+            foreach (string tag in rule.Tags ?? Array.Empty<string>())
             {
                 resultItem.Tags.Add(tag);
             }

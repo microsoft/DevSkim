@@ -14,7 +14,7 @@
         "overrides": [
             "DS440000"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -43,7 +43,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -112,7 +112,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -141,7 +141,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "_comment": "Applies to all languages since many just wrap GnuTLS constructs.",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -170,7 +170,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "_comment": "Applies to all languages since many just wrap LibreSSL constructs.",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -199,7 +199,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "_comment": "Applies to all languages since many just wrap mbedTLS constructs.",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -236,7 +236,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS440000.md",
         "patterns": [
             {
@@ -315,7 +315,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Elliptic-Curve.Hard-Coded"
         ],
-        "severity": "manual-review",
+        "severity": "ManualReview",
         "rule_info": "DS440100.md",
         "patterns": [
             {

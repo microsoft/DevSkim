@@ -1,17 +1,11 @@
-﻿Microsoft.DevSkim/bin
-Microsoft.DevSkim/obj
-Microsoft.DevSkim.Tests/bin
-Microsoft.DevSkim.Tests/obj
-Microsoft.DevSkim.CLI/bin
-Microsoft.DevSkim.CLI/obj
-Microsoft.DevSkim.CLI.Tests/bin
-Microsoft.DevSkim.CLI.Tests/obj
-Microsoft.DevSkim.VSExtension/bin
-Microsoft.DevSkim.VSExtension/obj
-Microsoft.DevSkim.VSExtension.Tests/bin
-Microsoft.DevSkim.VSExtension.Tests/obj
-TestResults
-packages
+﻿# Editor Configs
+.idea/
 .vs/
 .vscode/settings.json
-*.log
+
+# Build artifacts
+**/obj/
+**/bin/
+
+# Test Artifacts
+TestResults
