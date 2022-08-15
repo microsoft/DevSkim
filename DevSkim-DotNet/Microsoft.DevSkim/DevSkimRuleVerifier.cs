@@ -18,7 +18,7 @@ namespace Microsoft.DevSkim
             {
                 devSkimResult.DevSkimRuleStatuses.Add(status);
             }
-            // TODO: Validate devskim specific stuff like fix its
+            // TODO: Validate devskim specific stuff like fix-its
             return devSkimResult;
         }
     }
