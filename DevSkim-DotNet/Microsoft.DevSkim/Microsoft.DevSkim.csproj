@@ -173,6 +173,10 @@
       <EmbeddedResource Include="..\..\rules\default\security\xml\external_entities.json">
         <Link>rules\default\security\xml\external_entities.json</Link>
       </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\correctness\datetime.json">
+        <Link>rules\default\correctness\datetime.json</Link>
+      </EmbeddedResource>
+
       <EmbeddedResource Include="resources\comments.json" />
       <EmbeddedResource Include="resources\languages.json" />
     </ItemGroup>
