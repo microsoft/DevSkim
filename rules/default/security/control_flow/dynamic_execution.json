@@ -5,9 +5,11 @@
         "description": "This line of code shows the dynamic evaluation of JavaScript, sourced from a string. It's important that this string not contain unsanitized user-supplied data, as it could be a vector for a cross-site scripting (XSS) attack.",
         "recommendation": "",
         "applies_to": [
-            "objective-c"
+            "objective-c",
+            "swift"
         ],
         "tags": [
+            "ControlFlow.DynamicExecution.JavaScript",
             "Design.Mobile.iOS.WebView.DynamicJavaScript"
         ],
         "severity": "important",
@@ -19,7 +21,28 @@
                 "scopes": [
                     "code"
                 ]
+            },
+            {
+                "pattern": "evaluateJavaScript",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ]
+            },
+            {
+                "pattern": "callAsyncJavaScript",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ]
             }
+        ],
+        "must-match": [
+            "[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@\"getExample1('%@')\", class]];",
+            "wk.evaluateJavaScript('device=', completionHandler: nil)",
+            "wk.callAsyncJavaScript('device=')"
+        ],
+        "must-not-match": [
         ]
     }
 ]
