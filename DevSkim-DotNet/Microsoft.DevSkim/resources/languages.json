@@ -1,5 +1,9 @@
 [
   {
+    "name": "batch",
+    "extensions": [ ".bat" ]
+  },
+  {
     "name": "c",
     "extensions": [ ".c", ".h" ]
   },
