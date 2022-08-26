@@ -89,6 +89,12 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "setValidatesSecureCertificate: NO"
+        ],
+        "must-not-match": [
+            "setValidatesSecureCertificate: YES"
         ]
     },
     {
@@ -142,6 +148,16 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "request.check_hostname = False",
+            "disable_ssl_certificate_validation = True"
+        ],
+        "must-not-match": [
+            "request.check_hostname = SomeOtherValue",
+            "request.check_hostname = True",
+            "disable_ssl_certificate_validation = SomeOtherValue",
+            "disable_ssl_certificate_validation = False"
         ]
     },
     {
@@ -342,7 +358,7 @@
                 "pattern" :
                 {
                     "pattern": "requests.",
-                    "type": "substring",                    
+                    "type": "substring",
                     "scopes": [
                         "code"
                     ],
@@ -369,35 +385,35 @@
         "rule_info": "DS114352.md",
         "patterns": [
             {
-                "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "pattern": "ServerCertificateValidationCallback\\s*=\\s*delegate\\s*{\\s*return true;\\s*}",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             },
             {
-                "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*};",
+                "pattern": "ServerCertificateValidationCallback\\s*=\\s*\\(?[^\\)]+\\)\\s*=>\\s*{\\s*return true;\\s*}",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             },
             {
-                "pattern": "\\.ServerCertificateValidationCallback\\s*=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
+                "pattern": "ServerCertificateValidationCallback\\s*=\\s*\\(+[^\\)]+\\)\\s*=>\\s*true",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             },
             {
-                "pattern": "RemoteCertificateValidationCallback\\(delegate\\s*{\\s*return true;\\s*}\\);",
+                "pattern": "RemoteCertificateValidationCallback\\(delegate\\s*{\\s*return true;\\s*}\\)",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             },
             {
-                "pattern": "\\.CertificatePolicy\\s*=\\s*delegate\\s*{\\s*return true;\\s*};",
+                "pattern": "CertificatePolicy\\s*=\\s*delegate\\s*{\\s*return true;\\s*}",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -409,7 +425,57 @@
                 "scopes": [
                     "code"
                 ]
+            },
+            {
+                "pattern": "SkipTlsVerify\\s*=\\s*true",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
             }
+        ],
+        "must-match": [
+            "ServerCertificateValidationCallback = delegate { return true; }",
+            "ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; }",
+            "ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true",
+            "SkipTlsVerify = true"
+        ],
+        "must-not-match": [
+            "ServerCertificateValidationCallback = customDelegate;"
+        ]
+    },
+    {
+        "name": "Disabled certificate validation",
+        "id": "DS126188",
+        "description": "Do not disable certificate validation (Kubernetes)",
+        "recommendation": "Always use a valid certificate, even during testing.",
+        "applies_to": [
+            "shellscript",
+            "powershell",
+            "batch"
+        ],
+        "tags": [
+            "Cryptography.Certificate.Validation"
+        ],
+        "severity": "critical",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "--insecure-skip-tls-verify(=true|$|[^=])",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            },
+
+        ],
+        "must-match": [
+            "@kubectl config --kubeconfig=config/development set-cluster scratch --server=https://5.6.7.8 --insecure-skip-tls-verify",
+            "@kubectl config --kubeconfig=config/development set-cluster scratch --server=https://5.6.7.8 --insecure-skip-tls-verify=true"
+
+        ],
+        "must-not-match": [
+            "@kubectl config --kubeconfig=config/development set-cluster scratch --server=https://5.6.7.8 --insecure-skip-tls-verify=false"
         ]
     }
 ]
