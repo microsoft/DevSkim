@@ -66,5 +66,13 @@
     "inline": "'",
     "preffix": "'",
     "suffix": ""
+  },
+  {
+    "language": [
+      "batch"
+    ],
+    "inline": "::",
+    "preffix": "Rem",
+    "suffix": "\n"
   }
 ]
