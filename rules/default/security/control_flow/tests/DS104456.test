@@ -1,3 +1,0 @@
-line: 1
-====
-$IsWow64Process = GetDelegateForFunctionPointer($IsWow64ProcessAddr, $IsWow64ProcessDelegate)

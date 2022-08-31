@@ -56,9 +56,6 @@
       <EmbeddedResource Include="..\..\rules\default\security\control_flow\permission_evelation.json">
         <Link>rules\default\security\control_flow\permission_evelation.json</Link>
       </EmbeddedResource>
-      <EmbeddedResource Include="..\..\rules\default\security\control_flow\tests\DS113286.TODO">
-        <Link>rules\default\security\control_flow\tests\DS113286.TODO</Link>
-      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\certificate.json">
         <Link>rules\default\security\cryptography\certificate.json</Link>
       </EmbeddedResource>
