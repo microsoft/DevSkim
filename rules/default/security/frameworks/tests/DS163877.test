@@ -1,3 +1,0 @@
-line: 1
-====
-echo($_POST["var"]);

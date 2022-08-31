@@ -57,6 +57,11 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "using System.Web;\n class UserController : CustomObject"
+        ],
+        "must-not-match": [
         ]
     }
 ]
