@@ -20,6 +20,10 @@ public class DefaultRulesTests
                 Console.WriteLine(error);
             }
         }
+
+        Console.WriteLine("{0} of {1} rules have positive self-tests.",result.DevSkimRuleStatuses.Count(x => x.HasPositiveSelfTests),result.DevSkimRuleStatuses.Count());
+        Console.WriteLine("{0} of {1} rules have negative self-tests.",result.DevSkimRuleStatuses.Count(x => x.HasNegativeSelfTests),result.DevSkimRuleStatuses.Count());
+
         Assert.IsTrue(result.Verified);
         Assert.IsFalse(result.DevSkimRuleStatuses.Any(x => x.Errors.Any()));
     }
