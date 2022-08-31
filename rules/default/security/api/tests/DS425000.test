@@ -1,3 +1,0 @@
-line: 1
-=====
-favorite_color = pickle.load( open( "save.p", "rb" ) )

@@ -36,6 +36,9 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "int main () {\n   char *str;\n\n   /* Following line should be hit */\n   str = (char *) malloc(15);\n}"
         ]
     },
     {
@@ -75,6 +78,9 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "int main () {\\n   const char src[50] = \"www.tutorialspoint.com\";\\n   char dest[50];\\n\\n   memcpy(dest, src, 20);\\n}"
         ]
     },
     {
@@ -129,6 +135,9 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "int main () {\\n   const char src[50] = \"www.tutorialspoint.com\";\\n   int a = strlen(src)+1;\\n}"
         ]
     }
 ]

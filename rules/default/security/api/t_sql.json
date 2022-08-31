@@ -20,6 +20,12 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "exec master.dbo.xp_cmdshell 'dir c:\\temp\\*.sql'"
+        ],
+        "must-not-match": [
+            "select * from t where a = 'b';"
         ]
     }
 ]

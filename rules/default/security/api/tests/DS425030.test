@@ -1,7 +1,0 @@
-line: 1
-line: 2
-line: 3
-=====
-thing = YAML.load_file('some.yml')
-obj = Marshal.load(data)
-ruby_obj = YAML::load( yaml_obj )

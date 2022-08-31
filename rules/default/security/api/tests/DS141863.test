@@ -1,8 +1,0 @@
-line: 4
-====
-int main ()
-{
-  char str[80];  
-  strcat (str,"strings ");
-  return 0;
-}

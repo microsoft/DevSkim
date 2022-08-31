@@ -1,8 +1,0 @@
-line: 5
-=====
-int main () {
-   const char src[50] = "www.tutorialspoint.com";
-   char dest[50];
-
-   memcpy(dest, src, 20);
-}

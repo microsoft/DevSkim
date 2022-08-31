@@ -20,6 +20,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "favorite_color = pickle.load( open( \"save.p\", \"rb\" ) )"
         ]
     },
     {
@@ -43,6 +46,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "this.author = (String)in.readObject();"
         ]
     },
     {
@@ -66,6 +72,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "$session_data = unserialize($tmp[0]);"
         ]
     },
     {
@@ -96,6 +105,11 @@
                     "code"
                 ]
             }            
+        ],
+        "must-match": [
+            "thing = YAML.load_file('some.yml')",
+            "thing = YAML.load_file('some.yml')\nobj = Marshal.load(data)",
+            "ruby_obj = YAML::load( yaml_obj )"
         ]
     },
     {
@@ -134,6 +148,12 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "TypeNameHandling = TypeNameHandling.Auto",
+            "TypeNameHandling = TypeNameHandling.Objects",
+            "TypeNameHandling = TypeNameHandling.Arrays",
+            "TypeNameHandling = TypeNameHandling.All"
         ]
     }
 ]

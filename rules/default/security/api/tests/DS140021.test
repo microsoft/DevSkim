@@ -1,6 +1,0 @@
-line: 3
-======
-int main () {
-   const char src[50] = "www.tutorialspoint.com";
-   int a = strlen(src)+1;
-}
