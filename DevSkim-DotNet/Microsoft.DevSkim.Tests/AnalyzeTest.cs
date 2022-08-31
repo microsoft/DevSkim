@@ -85,8 +85,9 @@ namespace Microsoft.DevSkim.Tests
             resultsFile = SarifLog.Load(outFileName4);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
+            
             // The path to CWD isnt relative 
-            Assert.AreEqual(new Uri(Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName)).ToString(), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.ToString());
+            Assert.IsTrue(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.Equals(Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName)));
         }
     }
 }
