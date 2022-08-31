@@ -35,6 +35,11 @@
                 "search_in" : "finding-region(-15,0)",             
                 "_comment": "" 
             }          
+        ],
+        "must-match": [
+            "using (ZipArchive archive = ZipFile.OpenRead(zipPath))\n{\n    foreach (ZipArchiveEntry entry in archive.Entries)\n    {\n        if (entry.FullName.EndsWith(\".txt\", StringComparison.OrdinalIgnoreCase))\n        {\n            entry.ExtractToFile(Path.Combine(extractPath, entry.FullName));\n        }\n    }\n}"
+        ],
+        "must-not-match": [
         ]
     }
 ]
