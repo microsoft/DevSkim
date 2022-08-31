@@ -58,6 +58,15 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "SslStream.AuthenticateAsClient()",
+            "SslStream.AuthenticateAsClientAsync()",
+            "BeginAuthenticateAsClient()",
+            "SslStream.AuthenticateAsServer()",
+            "SslStream.AuthenticateAsServerAsync()",
+            "BeginAuthenticateAsServer()"        ],
+        "must-not-match": [
         ]
     }
 ]

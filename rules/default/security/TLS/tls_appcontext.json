@@ -30,6 +30,12 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "private const string DisableCachingName = @\"TestSwitch.LocalAppContext.DisableCaching\";",
+            "private const string DontEnableSchUseStrongCryptoName = @\"Switch.System.Net.DontEnableSchUseStrongCrypto\";"
+        ],
+        "must-not-match": [
         ]
     }
 ]

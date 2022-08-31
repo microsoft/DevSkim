@@ -110,7 +110,19 @@
                     "code"
                 ]
             }
-
+        ],
+        "must-match": [
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.Tls11;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.Tls12;",
+            "System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.SystemDefault;"
+        ],
+        "must-not-match": [
         ]
     }
 ]
