@@ -1,3 +1,0 @@
-line: 1
-======
-ProtectedData.Protect(data ,null, DataProtectionScope.CurrentUser)

@@ -36,6 +36,11 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "ProtectedData.Protect(data ,null, DataProtectionScope.CurrentUser)"
+        ],
+        "must-not-match": [
         ]
     },
     {
