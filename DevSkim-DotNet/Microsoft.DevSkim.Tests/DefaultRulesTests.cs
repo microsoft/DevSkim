@@ -45,35 +45,35 @@ public class DefaultRulesTests
 
 </project>";
         var rule = @"[{
-    ""name"": ""Source code: Java 17"",
-    ""id"": ""CODEJAVA000000"",
-    ""description"": ""Java 17 maven configuration"",
-    ""applies_to_file_regex"": [
-      ""pom.xml""
-    ],
-    ""tags"": [
-      ""Code.Java.17""
-    ],
-    ""severity"": ""critical"",
-    ""patterns"": [
-      {
-        ""pattern"": ""17"",
-        ""xpaths"" : [""/*[local-name(.)='project']/*[local-name(.)='properties']/*[local-name(.)='java.version']""],
-        ""type"": ""regex"",
-        ""scopes"": [
-          ""code""
-        ],
-        ""modifiers"": [
-          ""i""
-        ],
-        ""confidence"": ""high""
-      }
-    ]
-  }]";
+  ""name"": ""Source code: Java 17"",
+  ""id"": ""CODEJAVA000000"",
+  ""description"": ""Java 17 maven configuration"",
+  ""applies_to"": [
+    ""pom.xml""
+  ],
+  ""tags"": [
+    ""Code.Java.17""
+  ],
+  ""severity"": ""critical"",
+  ""patterns"": [
+    {
+      ""pattern"": ""17"",
+      ""xpaths"" : [""/*[local-name(.)='project']/*[local-name(.)='properties']/*[local-name(.)='java.version']""],
+      ""type"": ""regex"",
+      ""scopes"": [
+        ""code""
+      ],
+      ""modifiers"": [
+        ""i""
+      ],
+      ""confidence"": ""high""
+    }
+  ]
+}]";
         var deSkimRuleSet = new DevSkimRuleSet();
         deSkimRuleSet.AddString(rule, "testRules");
         var analyzer = new DevSkimRuleProcessor(deSkimRuleSet, new DevSkimRuleProcessorOptions());
         var analysis = analyzer.Analyze(content, "pom.xml");
-        Console.WriteLine("breakpoint");
+        Assert.AreEqual(1, analysis.Count());
     }
 }
