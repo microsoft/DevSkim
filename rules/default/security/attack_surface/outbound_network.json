@@ -20,6 +20,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "res = Net::HTTP.get_response(uri)"
         ]
     },
     {
@@ -107,13 +110,19 @@
             }
         ],
         "must-match": [
-            "http://contoso.com"
+            "http://contoso.com",
+            "http://foo.com",
+            "this is \"http://foo.com\"",
+            "blah 'http://blah'"
         ],
         "must-not-match": [
             "http://localhost",
             "http://127.0.0.1",
             "<html xmlns=\"http://www.w3.org/1999/xhtml\">",
-            "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
+            "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">",
+            "https://",
+            "this is \"https://foo.com\"",
+            "<SCRIPT SRC=\"//BLAH\"></SCRIPT>"
         ]
     }
 ]

@@ -16,12 +16,15 @@
         "rule_info": "DS154189.md",
         "patterns": [
             {
-                "pattern": " (sprintf|_getts|_getws|_snprintf|_sntprintf|_snwprintf|_stprintf|_tcsat|_tcscpy|_tcslen|_tcsncpy|_vsnprintf|_vsntprintf|_vsnwprintf|_vstprintf|alloca|asctime|atof|atoi|atoll|bsearch|ctime|fopen|fprintf|freopen|fscanf|fwprintf|fwscanf|getenv|getwd|gmtime|localtime|lstrcat|lstrcpy|mbsrtowcs|mbstowcs|memmove|mktemp|printf|qsort|rewind|scanf|setbuf|sscanf|strcatbuff|strerror|strtok|swprintf|swscanf|tmpnam|vfprintf|vfscanf|vfwscanf|vprintf|vscanf|vsnprintf|vsprintf|vsscanf|vswprintf|vswscanf|vwprintf|vwscanf|wcrtomb|wcrtombs|wcscat|wcscpy|wcslen|wcsncat|wcsncpy|wcsrtombs|wcstok|wctomb|wmemcpy|wmemmove|wnsprintf|wprintf|wscanf|wsprintf|wvnsprintf|wvsprintf) *\\(",
+                "pattern": "(sprintf|_getts|_getws|_snprintf|_sntprintf|_snwprintf|_stprintf|_tcsat|_tcscpy|_tcslen|_tcsncpy|_vsnprintf|_vsntprintf|_vsnwprintf|_vstprintf|alloca|asctime|atof|atoi|atoll|bsearch|ctime|fopen|fprintf|freopen|fscanf|fwprintf|fwscanf|getenv|getwd|gmtime|localtime|lstrcat|lstrcpy|mbsrtowcs|mbstowcs|memmove|mktemp|printf|qsort|rewind|scanf|setbuf|sscanf|strcatbuff|strerror|strtok|swprintf|swscanf|tmpnam|vfprintf|vfscanf|vfwscanf|vprintf|vscanf|vsnprintf|vsprintf|vsscanf|vswprintf|vswscanf|vwprintf|vwscanf|wcrtomb|wcrtombs|wcscat|wcscpy|wcslen|wcsncat|wcsncpy|wcsrtombs|wcstok|wctomb|wmemcpy|wmemmove|wnsprintf|wprintf|wscanf|wsprintf|wvnsprintf|wvsprintf)",
                 "type": "RegexWord",
                 "scopes": [
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "int main ()\n{\n  char buffer [50];\n  int n, a=5, b=3;\n  n=sprintf (buffer, \"%d plus %d is %d\", a, b, a+b);\\n  printf (\"[%s] is a string %d chars long\n\",buffer,n);\n  return 0;\n}"
         ]
     },
     {
@@ -76,6 +79,14 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "strcpy (str2,str1);",
+            "strcpy (str3,\"copy successful\");"
+        ],
+        "must-not-match": [
+            "strcpy_s(string);",
+            "strlcpy(string);"
         ]
     },
     {
@@ -130,6 +141,9 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "int main ()\\n{\\n  char str1[]= \"To be or not to be\";\\n  char str2[40];\\n  char str3[40];\\n \\n  strncpy ( str2, str1, sizeof(str2) );\\n\\n  return 0;\\n}"
         ]
     },
     {
@@ -184,6 +198,9 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "int main ()\n{\n  char str[80];  \n  strcat (str,\"strings \");\n  return 0;\n}"
         ]
     },
     {
@@ -240,7 +257,7 @@
             }
         ],
         "must-match": [
-            "strncat (str1, str2, 6);"
+            "\\n=====\\nint main ()\\n{\\n  char str1[20];\\n  char str2[20];\\n  strncat (str1, str2, 6);\\n\\n  return 0;\\n}"
         ]
     },
     {
@@ -295,6 +312,13 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "gets(string);     // warning: unsafe (see fgets instead)"
+        ],
+        "must-not-match": [
+            "fgets(string);",
+            "gets_s(string);"
         ]
     }
 ]

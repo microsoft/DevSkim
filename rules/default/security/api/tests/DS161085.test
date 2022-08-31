@@ -1,8 +1,0 @@
-line: 5
-=======
-int main () {
-   char *str;
-
-   /* Following line should be hit */
-   str = (char *) malloc(15);
-}

@@ -22,6 +22,12 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "FILE tdout = *stdout;"
+        ],
+        "must-not-match": [
+            "FILE *my_stdout = stdout;"
         ]
     },
     {
@@ -45,6 +51,15 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "include($_GET['t']);",
+            "include($_POST['t']);",
+            "require_once($_POST['t']);"
+        ],
+        "must-not-match": [
+            "include(\"lib/file.php\");",
+            "require_once(\"lib/file.php\");"
         ]
     }
 ]

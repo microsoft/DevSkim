@@ -1,7 +1,0 @@
-line: 2
-line: 4
-===
-context.verify_mode = ssl.CERT_REQUIRED
-context.check_hostname = False
-
-disable_ssl_certificate_validation = True

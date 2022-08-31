@@ -1,7 +1,0 @@
-line: 2
-===============================================
-// Flag these
-exec master.dbo.xp_cmdshell 'dir c:\temp\*.sql'
-
-// Not these
-select * from t where a = 'b';

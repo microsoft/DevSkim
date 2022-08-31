@@ -1,4 +1,0 @@
-line: 2
-======
-ServicePointManager.Expect100Continue = true;
-ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;

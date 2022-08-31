@@ -56,9 +56,6 @@
       <EmbeddedResource Include="..\..\rules\default\security\control_flow\permission_evelation.json">
         <Link>rules\default\security\control_flow\permission_evelation.json</Link>
       </EmbeddedResource>
-      <EmbeddedResource Include="..\..\rules\default\security\control_flow\tests\DS113286.TODO">
-        <Link>rules\default\security\control_flow\tests\DS113286.TODO</Link>
-      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\certificate.json">
         <Link>rules\default\security\cryptography\certificate.json</Link>
       </EmbeddedResource>
@@ -82,9 +79,6 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\random.json">
         <Link>rules\default\security\cryptography\random.json</Link>
-      </EmbeddedResource>
-      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS106865.TODO">
-        <Link>rules\default\security\cryptography\tests\DS106865.TODO</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\underhanded.json">
         <Link>rules\default\security\cryptography\underhanded.json</Link>
@@ -121,9 +115,6 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\storage\secure_storage.json">
         <Link>rules\default\security\storage\secure_storage.json</Link>
-      </EmbeddedResource>
-      <EmbeddedResource Include="..\..\rules\default\security\storage\tests\DS191340.TODO">
-        <Link>rules\default\security\storage\tests\DS191340.TODO</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_appconfig.json">
         <Link>rules\default\security\TLS\tls_appconfig.json</Link>

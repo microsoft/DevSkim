@@ -45,6 +45,12 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "MD5 hash = new Hash();"
+        ],
+        "must-not-match": [
+            "SHA512"
         ]
     },
     {
@@ -99,6 +105,11 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "unsigned char result[CC_MD5_DIGEST_LENGTH];"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -153,6 +164,9 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "echo hash('ripemd160', 'The quick brown fox jumped over the lazy dog.');"
         ]
     },
     {
@@ -207,6 +221,15 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "Digest::MD5.hexdigest('foobar')",
+            "Digest::RMD160.hexdigest('foobar')",
+            "Digest::SHA1.hexdigest('foobar')"
+
+        ],
+        "must-not-match": [
+            "Digest::SHA512.hexdigest('foobar')"
         ]
     },
     {
@@ -261,6 +284,11 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "hash = md5.new()"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -316,6 +344,12 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "var hash = new MD5CryptoServiceProvider();"
+        ],
+        "must-not-match": [
+            "var hash = new SHA512CryptoServiceProvider();"
         ]
     },
     {
@@ -337,6 +371,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "md5time = hash(time);"
+        ],
+        "must-not-match": [
         ]
     }
 ]

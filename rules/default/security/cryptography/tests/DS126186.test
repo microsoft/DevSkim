@@ -1,4 +1,0 @@
-line: 2
-======
-r = requests.get('https://github.com/timeline.json', 
-                  verify=False)

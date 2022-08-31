@@ -26,6 +26,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "c = eval(a+b)"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -51,6 +56,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "setTimeout(500);"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -75,6 +85,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "    unsafe static void Main()\n"
+        ],
+        "must-not-match": [
         ]
     }
 ]

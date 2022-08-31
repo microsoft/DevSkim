@@ -36,6 +36,11 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key,\n $plaintext, MCRYPT_MODE_CBC);"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -60,6 +65,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "$iv = mcrypt_create_iv(5000, MCRYPT_RAND);"
         ]
     }
 ]

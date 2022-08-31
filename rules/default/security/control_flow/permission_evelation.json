@@ -20,6 +20,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "Set-ExecutionPolicy RemoteSigned"
         ]
     },
     {
@@ -129,6 +132,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "$IsWow64Process = GetDelegateForFunctionPointer($IsWow64ProcessAddr, $IsWow64ProcessDelegate)"
         ]
     }
 ]

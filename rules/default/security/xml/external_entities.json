@@ -35,6 +35,15 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "foo.shouldResolveExternalEntities = YES ;",
+            "bar.shouldResolveExternalEntities=YES;"
+        ],
+        "must-not-match": [
+            "foo.shouldResolveExternalEntities = NO ;",
+            "bar.shouldResolveExternalEntities=NO;",
+            "foo.shouldResolveExternalEntities = baz;"
         ]
     },
     {
@@ -73,6 +82,11 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "shouldResolveExternalEntities=TRUE",
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -111,6 +125,11 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "setShouldResolveExternalEntities: YES"
+        ],
+        "must-not-match": [
         ]
     }
 ]

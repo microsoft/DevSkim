@@ -24,6 +24,10 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "IntegrityCheck = optional",
+            "EncryptionEnabled = optional"
         ]
     },
     {
@@ -91,7 +95,14 @@
             }
         ],
         "must-match": [
-            "setValidatesSecureCertificate: NO"
+            "setValidatesSecureCertificate: NO",
+            "setAllowsAnyHTTPSCertificate: YES",
+            "allowsAnyHTTPSCertificate = YES",
+            "setValidatesSecureCertificate: NO",
+            "validatesSecureCertificate = NO",
+            "continueWithoutCredentialForAuthenticationChallenge = true",
+            "kCFStreamSSLAllowsExpiredCertificates",
+            "kCFStreamPropertySSLSettings"
         ],
         "must-not-match": [
             "setValidatesSecureCertificate: YES"
@@ -118,6 +129,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "http.verify_mode = OpenSSL::SSL::VERIFY_NONE"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -216,6 +232,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "old|=SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;"
         ]
     },
     {
@@ -260,6 +279,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "<authentication certificateValidationMode = \"None\" revocationMode=\"NoCheck\" />"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -283,6 +307,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "export NODE_TLS_REJECT_UNAUTHORIZED = 0"
         ]
     },
     {
@@ -306,6 +333,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "sInsecureFactory = SSLCertificateSocketFactory.getInsecure(0, null);"
         ]
     },
     {
@@ -329,6 +359,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "::ServerCertificateValidationCallback={$true}"
         ]
     },
     {
@@ -367,6 +400,9 @@
                 "search_in": "finding-region(-3, 0)",
                 "negate_finding": false
             }
+        ],
+        "must-match": [
+            "r = requests.get('https://github.com/timeline.json', verify=False)\n"
         ]
     },
     {
@@ -466,7 +502,7 @@
                 "scopes": [
                     "code"
                 ]
-            },
+            }
 
         ],
         "must-match": [

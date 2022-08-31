@@ -40,7 +40,8 @@
         "must-match": [
             "[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@\"getExample1('%@')\", class]];",
             "wk.evaluateJavaScript('device=', completionHandler: nil)",
-            "wk.callAsyncJavaScript('device=')"
+            "wk.callAsyncJavaScript('device=')",
+            "NSString *title = [webView stringByEvaluatingJavaScriptFromString:@\"document.title\"];"
         ],
         "must-not-match": [
         ]

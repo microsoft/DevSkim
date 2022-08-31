@@ -38,6 +38,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "encrypt=false"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -61,6 +66,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "InitializeSecurityContext"
+        ],
+        "must-not-match": [
         ]
     }
 ]

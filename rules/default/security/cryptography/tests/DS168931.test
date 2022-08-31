@@ -1,3 +1,0 @@
-line: 1
-======
-var hash = new MD5CryptoServiceProvider();
