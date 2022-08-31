@@ -36,6 +36,9 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;"
         ]
     },
     {
@@ -59,6 +62,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "returns SecPkgCred_SupportedProtocols"
         ]
     },
     {
@@ -79,6 +85,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "SSLv3",
+            "TLSv1",
+            "TLSv10"
         ]
     },
     {
@@ -127,6 +138,12 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "SSLv3",
+            "TLSv1",
+            "TLSv10",
+            "SSLv2_client"
         ]
     },
     {
@@ -375,6 +392,20 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "SP_PROT_PCT1_CLIENT",
+            "SP_PROT_PCT1_SERVER",
+            "SP_PROT_SSL2_CLIENT",
+            "SP_PROT_SSL2_SERVER",
+            "SP_PROT_SSL3_CLIENT",
+            "SP_PROT_SSL3_SERVER",
+            "SP_PROT_TLS1_CLIENT",
+            "SP_PROT_TLS1_SERVER",
+            "SP_PROT_TLS1_0_CLIENT",
+            "SP_PROT_TLS1_0_SERVER"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -419,6 +450,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "protocol = ssl.PROTOCOL_SSLv2"
+        ],
+        "must-not-match": [
         ]
     }
 ]

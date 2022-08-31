@@ -1,4 +1,0 @@
-line: 2
-======
-if protocol is None:
-    protocol = ssl.PROTOCOL_SSLv2

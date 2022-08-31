@@ -1,4 +1,0 @@
-line: 1
-=====
-$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, 
-                              $plaintext, MCRYPT_MODE_CBC);

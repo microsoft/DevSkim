@@ -80,9 +80,6 @@
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\random.json">
         <Link>rules\default\security\cryptography\random.json</Link>
       </EmbeddedResource>
-      <EmbeddedResource Include="..\..\rules\default\security\cryptography\tests\DS106865.TODO">
-        <Link>rules\default\security\cryptography\tests\DS106865.TODO</Link>
-      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\underhanded.json">
         <Link>rules\default\security\cryptography\underhanded.json</Link>
       </EmbeddedResource>

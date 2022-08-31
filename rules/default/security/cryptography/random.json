@@ -90,6 +90,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "$md5->add($$ , 500 , rand(500) );"
         ]
     },
     {
@@ -181,6 +184,9 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "srand(time(NULL)) "
         ]
     }
 ]

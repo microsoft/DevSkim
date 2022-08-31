@@ -1,3 +1,0 @@
-line: 1
-=====
-irb(main):002:0> Digest::MD5.hexdigest('foobar')

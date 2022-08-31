@@ -20,6 +20,11 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "$size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);\n"
+        ],
+        "must-not-match": [
         ]
     },
     {
@@ -62,6 +67,13 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "var tDESalg = new TripleDESCryptoServiceProvider();"
+
+        ],
+        "must-not-match": [
+            "var aesalg = new AESCryptoServiceProvider();"
         ]
     },
     {
@@ -99,6 +111,12 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "DES();"
+        ],
+        "must-not-match": [
+            "AES();"
         ]
     },
     {
@@ -138,6 +156,12 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "using (var myDES = new DESCryptoServiceProvider())\n"
+        ],
+        "must-not-match": [
+            "using (var myAES = new AESCryptoServiceProvider())\n"
         ]
     },
     {
@@ -214,6 +238,12 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "cipher = new DESEngine();"
+        ],
+        "must-not-match": [
+            "cipher = new AESEngine();"
         ]
     },    
     {
@@ -253,6 +283,12 @@
                     "_comment": ""
                 }
             }
+        ],
+        "must-match": [
+            "using (var myRC2 = new RC2CryptoServiceProvider())\n"
+        ],
+        "must-not-match": [
+            "using (var myaes = new AESCryptoServiceProvider())\n"
         ]
     }
 ]
