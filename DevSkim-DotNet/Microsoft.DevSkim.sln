@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.CLI", "Mi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.Tests", "Microsoft.DevSkim.Tests\Microsoft.DevSkim.Tests.csproj", "{22E5C50D-93C9-4007-881F-D8B751B880D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.LanguageServer", "Microsoft.DevSkim.LanguageServer\Microsoft.DevSkim.LanguageServer.csproj", "{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,18 @@ Global
 		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x64.Build.0 = Release|Any CPU
 		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x86.ActiveCfg = Release|Any CPU
 		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x86.Build.0 = Release|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Debug|x64.Build.0 = Debug|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Debug|x86.Build.0 = Debug|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|x64.ActiveCfg = Release|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|x64.Build.0 = Release|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|x86.ActiveCfg = Release|Any CPU
+		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
