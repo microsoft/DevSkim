@@ -1,0 +1,22 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+	  "module": "commonjs",
+	  "target": "es2019",
+	  "lib":["ES2019"],
+	  "sourceMap": true,
+	  "strict": true,
+	  "strictNullChecks": true,
+	  "removeComments": false,
+	  "moduleResolution": "node",
+	  "resolveJsonModule": true,
+	  "esModuleInterop": true
+	},  
+	"files": [	
+		"./common/codeFixMapping.ts",
+		"./common/devskimSettings.ts",
+		"./common/languagesAccess.ts",
+		"./common/notificationNames.ts",
+		"./common/selectors.ts"
+	]
+  }

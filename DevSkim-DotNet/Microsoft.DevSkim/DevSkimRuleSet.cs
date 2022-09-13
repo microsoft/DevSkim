@@ -29,7 +29,7 @@ namespace Microsoft.DevSkim
                 Stream? resource = assembly.GetManifestResourceStream(resName);
                 using StreamReader file = new StreamReader(resource ?? new MemoryStream());
                 string value = file.ReadToEnd();
-                ruleSet.AddString(value, resName, null);
+                ruleSet.AddString(value, resName);
             }
 
             return ruleSet;

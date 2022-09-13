@@ -32,17 +32,16 @@ namespace Microsoft.DevSkim.LanguageServer
         public static async Task Main(string[] args)
             => await RunWithCancellationAsync(async cancellationToken =>
             {
-
                 var parser = new Parser(settings => {
                     settings.IgnoreUnknownArguments = true;
                 });
 
                 await parser.ParseArguments<CommandLineOptions>(args)
                     .WithNotParsed((x) => Environment.Exit(1))
-                    .WithParsedAsync(async options => await RunServer(options, cancellationToken));
+                    .WithParsedAsync(async options => await RunServerAsync(options, cancellationToken));
             });
 
-        private static async Task RunServer(CommandLineOptions options, CancellationToken cancellationToken)
+        private static async Task RunServerAsync(CommandLineOptions options, CancellationToken cancellationToken)
         {
             if (options.WaitForDebugger)
             {
@@ -100,7 +99,6 @@ namespace Microsoft.DevSkim.LanguageServer
                         .WithInput(Console.OpenStandardInput())
                         .WithOutput(Console.OpenStandardOutput()));
             }
-
             await server.RunAsync(cancellationToken);
         }
 

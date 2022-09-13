@@ -304,15 +304,6 @@ Output format options:
                 return (int)ExitCode.CriticalError;
             }
 
-            // Severity severityFilter = Severity.Unspecified;
-            // foreach (var severity in opts.Severities)
-            // {
-            //     if (Enum.TryParse<Severity>(severity, out Severity sevFilterComponent))
-            //     {
-            //         severityFilter |= sevFilterComponent;
-            //     }
-            // }
-            
             Confidence confidenceFilter = Confidence.Unspecified;
             foreach (var confidence in opts.Confidences ?? Array.Empty<string>())
             {

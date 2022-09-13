@@ -23,10 +23,7 @@ namespace Microsoft.DevSkim.LanguageServer
         {
             server = OmnisharpLanguageServer.PreInit(options =>
             {
-                options.Services.AddSingleton(server)
-                    .AddSingleton<ILanguageServerFacade>(server);
-                options
-                    .WithHandler<DevSkimTextDocumentSyncHandler>();
+                options.WithHandler<DevSkimTextDocumentSyncHandler>();
                 onOptionsFunc(options);
             });
         }
