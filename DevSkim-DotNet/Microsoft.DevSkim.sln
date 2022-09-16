@@ -1,14 +1,18 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim", "Microsoft.DevSkim\Microsoft.DevSkim.csproj", "{7B8D0088-645A-4D4B-9DB9-046EED07B47A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim", "Microsoft.DevSkim\Microsoft.DevSkim.csproj", "{7B8D0088-645A-4D4B-9DB9-046EED07B47A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.CLI", "Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.csproj", "{6330E8E3-8D91-458E-945C-CE9B71FE809B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.CLI", "Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.csproj", "{6330E8E3-8D91-458E-945C-CE9B71FE809B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.Tests", "Microsoft.DevSkim.Tests\Microsoft.DevSkim.Tests.csproj", "{22E5C50D-93C9-4007-881F-D8B751B880D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.Tests", "Microsoft.DevSkim.Tests\Microsoft.DevSkim.Tests.csproj", "{22E5C50D-93C9-4007-881F-D8B751B880D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.LanguageServer", "Microsoft.DevSkim.LanguageServer\Microsoft.DevSkim.LanguageServer.csproj", "{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.LanguageServer", "Microsoft.DevSkim.LanguageServer\Microsoft.DevSkim.LanguageServer.csproj", "{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.VSLanguageServerClient", "Microsoft.DevSkim.VSLanguageServerClient\Microsoft.DevSkim.VSLanguageServerClient.csproj", "{949FE9D5-EFF3-46A9-BF91-882C64498F22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.VSLanguageServerClient.Vsix", "Microsoft.DevSkim.VSLanguageServerClient.Vsix\Microsoft.DevSkim.VSLanguageServerClient.Vsix.csproj", "{A722010A-27D3-433E-8469-465E72AB0E8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +72,30 @@ Global
 		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|x64.Build.0 = Release|Any CPU
 		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|x86.ActiveCfg = Release|Any CPU
 		{6FFE7872-7F4A-4C1A-87BB-61ED8E84E208}.Release|x86.Build.0 = Release|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Debug|x64.Build.0 = Debug|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Debug|x86.Build.0 = Debug|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Release|x64.ActiveCfg = Release|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Release|x64.Build.0 = Release|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Release|x86.ActiveCfg = Release|Any CPU
+		{949FE9D5-EFF3-46A9-BF91-882C64498F22}.Release|x86.Build.0 = Release|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Debug|x64.Build.0 = Debug|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Debug|x86.ActiveCfg = Debug|x86
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Debug|x86.Build.0 = Debug|x86
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Release|x64.ActiveCfg = Release|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Release|x64.Build.0 = Release|Any CPU
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Release|x86.ActiveCfg = Release|x86
+		{A722010A-27D3-433E-8469-465E72AB0E8E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

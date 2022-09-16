@@ -72,8 +72,7 @@ namespace Microsoft.DevSkim.LanguageServer
                 await clientPipe.ConnectAsync(cancellationToken);
 
                 server = new(
-                    new(),
-                    options => options
+                    languageServerOptions => languageServerOptions
                         .WithInput(clientPipe)
                         .WithOutput(clientPipe));
             }
@@ -85,8 +84,7 @@ namespace Microsoft.DevSkim.LanguageServer
                 var tcpStream = tcpClient.GetStream();
 
                 server = new(
-                    new(),
-                    options => options
+                    languageServerOptions => languageServerOptions
                         .WithInput(tcpStream)
                         .WithOutput(tcpStream)
                         .RegisterForDisposal(tcpClient));
@@ -94,8 +92,7 @@ namespace Microsoft.DevSkim.LanguageServer
             else
             {
                 server = new(
-                    new(),
-                    options => options
+                    languageServerOptions => languageServerOptions
                         .WithInput(Console.OpenStandardInput())
                         .WithOutput(Console.OpenStandardOutput()));
             }

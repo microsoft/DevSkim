@@ -49,6 +49,46 @@ function getDevSkimConfiguration(section='devskim' ): DevSkimSettings {
 	return settings;
 }
 
+function getServerStartupOptions(
+	dotnetCommandPath: string,
+	languageServerPath: string,
+	transportKind: TransportKind,
+	waitForDebugger: boolean
+  ): ServerOptions {
+	const args = [];
+	if (waitForDebugger) {
+	  // pause language server startup until a dotnet debugger has been attached
+	  args.push(`--wait-for-debugger`);
+	}
+  
+	switch (transportKind) {
+	  case TransportKind.stdio: {
+		const executable = {
+		  command: dotnetCommandPath,
+		  args: [languageServerPath, ...args],
+		};
+		return {
+		  run: executable,
+		  debug: executable,
+		};
+	  }
+	  case TransportKind.pipe: {
+		const module = {
+		  runtime: dotnetCommandPath,
+		  module: languageServerPath,
+		  transport: transportKind,
+		  args
+		};
+		return {
+		  run: module,
+		  debug: module,
+		};
+	  }
+	}
+  
+	throw new Error(`TransportKind '${transportKind}' is not supported.`);
+  }
+
 export function activate(context: ExtensionContext) {
 	const config = getDevSkimConfiguration();
 	const fixer = new DevSkimFixer();
@@ -60,7 +100,6 @@ export function activate(context: ExtensionContext) {
 	);
 	// The server bridge is implemented in .NET
 	const serverModule = context.asAbsolutePath(
-		//path.join(context.extensionPath, 'devskimBinaries', 'Microsoft.DevSkim.LanguageServer.dll')
 		path.join('devskimBinaries', 'Microsoft.DevSkim.LanguageServer.dll')
 	);
 	resolveDotNetPath().then((dotNetPath) =>
@@ -72,13 +111,10 @@ export function activate(context: ExtensionContext) {
 		else
 		{
 			const workPath = path.dirname(serverModule);
-			const serverOptions: ServerOptions = {
-				run: { command: "dotnet", transport: TransportKind.stdio, args: [serverModule, "--stdio", "--wait-for-debugger"]},
-				debug: { command: "dotnet", transport: TransportKind.stdio, args: [serverModule, "--stdio", "--wait-for-debugger"]}
-			};
+			const serverOptions: ServerOptions = getServerStartupOptions(dotNetPath, serverModule, TransportKind.pipe, false);
 			const clientOptions: LanguageClientOptions = {
 				// Register the server for DevSkim formats
-				documentSelector: selectors,
+				documentSelector: [{language:"csharp"}],
 				outputChannelName: 'DevSkim Language Server'
 			};				
 			client = new LanguageClient(

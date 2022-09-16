@@ -15,11 +15,10 @@ namespace Microsoft.DevSkim.LanguageServer
 {
     public class Server : IDisposable
     {
-        public record CreationOptions();
 
         private readonly OmnisharpLanguageServer server;
 
-        public Server(CreationOptions creationOptions, Action<LanguageServerOptions> onOptionsFunc)
+        public Server(Action<LanguageServerOptions> onOptionsFunc)
         {
             server = OmnisharpLanguageServer.PreInit(options =>
             {
