@@ -1,32 +1,32 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v5.0",
+    "name": ".NETCoreApp,Version=v6.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v5.0": {
-      "devskim/0.5.8-g551d0e8be6": {
+    ".NETCoreApp,Version=v6.0": {
+      "devskim/0.6.29-ga9ed476e93": {
         "dependencies": {
-          "Glob": "1.1.8",
+          "Glob": "1.1.9",
           "Microsoft.CST.DevSkim": "0.0.0",
-          "Microsoft.CST.RecursiveExtractor": "1.1.4",
+          "Microsoft.CST.RecursiveExtractor": "1.1.6",
           "Microsoft.Extensions.CommandLineUtils": "1.1.1",
           "Nerdbank.GitVersioning": "3.4.231",
-          "Sarif.Sdk": "2.4.11"
+          "Sarif.Sdk": "2.4.12"
         },
         "runtime": {
           "devskim.dll": {}
         }
       },
-      "CompareNETObjects/4.73.0": {
+      "CompareNETObjects/4.74.0": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0"
         },
         "runtime": {
           "lib/netstandard2.1/KellermanSoftware.Compare-NET-Objects.dll": {
-            "assemblyVersion": "4.73.0.0",
-            "fileVersion": "4.73.0.0"
+            "assemblyVersion": "4.74.0.0",
+            "fileVersion": "4.74.0.0"
           }
         }
       },
@@ -173,11 +173,11 @@
           }
         }
       },
-      "Glob/1.1.8": {
+      "Glob/1.1.9": {
         "runtime": {
           "lib/netstandard2.0/Glob.dll": {
-            "assemblyVersion": "1.1.8.0",
-            "fileVersion": "1.1.8.0"
+            "assemblyVersion": "1.1.9.0",
+            "fileVersion": "1.1.9.0"
           }
         }
       },
@@ -192,29 +192,29 @@
           }
         }
       },
-      "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
+      "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
         "runtime": {
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
           }
         }
       },
       "Microsoft.CodeAnalysis.Analyzers/3.3.2": {},
-      "Microsoft.CodeAnalysis.Common/3.11.0": {
+      "Microsoft.CodeAnalysis.Common/4.0.1": {
         "dependencies": {
           "Microsoft.CodeAnalysis.Analyzers": "3.3.2",
           "System.Collections.Immutable": "5.0.0",
           "System.Memory": "4.5.4",
           "System.Reflection.Metadata": "5.0.0",
-          "System.Runtime.CompilerServices.Unsafe": "5.0.0",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
           "System.Text.Encoding.CodePages": "4.5.1",
           "System.Threading.Tasks.Extensions": "4.5.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.CodeAnalysis.dll": {
-            "assemblyVersion": "3.11.0.0",
-            "fileVersion": "3.1100.21.40306"
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.121.55815"
           }
         },
         "resources": {
@@ -259,14 +259,14 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.CSharp/3.11.0": {
+      "Microsoft.CodeAnalysis.CSharp/4.0.1": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "3.11.0"
+          "Microsoft.CodeAnalysis.Common": "4.0.1"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.CodeAnalysis.CSharp.dll": {
-            "assemblyVersion": "3.11.0.0",
-            "fileVersion": "3.1100.21.40306"
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.121.55815"
           }
         },
         "resources": {
@@ -311,17 +311,17 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.CSharp.Scripting/3.11.0": {
+      "Microsoft.CodeAnalysis.CSharp.Scripting/4.0.1": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
-          "Microsoft.CodeAnalysis.CSharp": "3.11.0",
-          "Microsoft.CodeAnalysis.Common": "3.11.0",
-          "Microsoft.CodeAnalysis.Scripting.Common": "3.11.0"
+          "Microsoft.CodeAnalysis.CSharp": "4.0.1",
+          "Microsoft.CodeAnalysis.Common": "4.0.1",
+          "Microsoft.CodeAnalysis.Scripting.Common": "4.0.1"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.CodeAnalysis.CSharp.Scripting.dll": {
-            "assemblyVersion": "3.11.0.0",
-            "fileVersion": "3.1100.21.40306"
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.121.55815"
           }
         },
         "resources": {
@@ -366,14 +366,14 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.Scripting.Common/3.11.0": {
+      "Microsoft.CodeAnalysis.Scripting.Common/4.0.1": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "3.11.0"
+          "Microsoft.CodeAnalysis.Common": "4.0.1"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.CodeAnalysis.Scripting.dll": {
-            "assemblyVersion": "3.11.0.0",
-            "fileVersion": "3.1100.21.40306"
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.121.55815"
           }
         },
         "resources": {
@@ -419,22 +419,22 @@
         }
       },
       "Microsoft.CSharp/4.7.0": {},
-      "Microsoft.CST.OAT/1.1.13": {
+      "Microsoft.CST.OAT/1.1.16": {
         "dependencies": {
-          "CompareNETObjects": "4.73.0",
-          "Microsoft.CodeAnalysis.CSharp.Scripting": "3.11.0",
+          "CompareNETObjects": "4.74.0",
+          "Microsoft.CodeAnalysis.CSharp.Scripting": "4.0.1",
           "Serilog": "2.10.0",
-          "Serilog.Sinks.Console": "4.0.0",
+          "Serilog.Sinks.Console": "4.0.1",
           "System.Collections": "4.3.0"
         },
         "runtime": {
-          "lib/net5.0/OAT.dll": {
+          "lib/net6.0/OAT.dll": {
             "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.13.11224"
+            "fileVersion": "1.1.16.15332"
           }
         }
       },
-      "Microsoft.CST.RecursiveExtractor/1.1.4": {
+      "Microsoft.CST.RecursiveExtractor/1.1.6": {
         "dependencies": {
           "DiscUtils.Btrfs": "0.16.13",
           "DiscUtils.Core": "0.16.13",
@@ -448,16 +448,17 @@
           "DiscUtils.Vmdk": "0.16.13",
           "DiscUtils.Wim": "0.16.13",
           "DiscUtils.Xfs": "0.16.13",
-          "Glob": "1.1.8",
-          "Microsoft.Bcl.AsyncInterfaces": "5.0.0",
-          "NLog": "4.7.11",
-          "SharpCompress": "0.29.0",
-          "SharpZipLib": "1.3.3"
+          "Glob": "1.1.9",
+          "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
+          "NLog": "4.7.13",
+          "SharpCompress": "0.30.1",
+          "SharpZipLib": "1.3.3",
+          "System.Linq.Async": "5.1.0"
         },
         "runtime": {
-          "lib/net5.0/RecursiveExtractor.dll": {
+          "lib/net6.0/RecursiveExtractor.dll": {
             "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.4.22289"
+            "fileVersion": "1.1.6.61756"
           }
         }
       },
@@ -538,11 +539,11 @@
           }
         }
       },
-      "NLog/4.7.11": {
+      "NLog/4.7.13": {
         "runtime": {
           "lib/netstandard2.0/NLog.dll": {
             "assemblyVersion": "4.0.0.0",
-            "fileVersion": "4.7.11.13229"
+            "fileVersion": "4.7.13.493"
           }
         }
       },
@@ -594,15 +595,15 @@
       "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
-      "Sarif.Sdk/2.4.11": {
+      "Sarif.Sdk/2.4.12": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
           "System.Collections.Immutable": "5.0.0"
         },
         "runtime": {
           "lib/netstandard2.0/Sarif.dll": {
-            "assemblyVersion": "2.4.11.0",
-            "fileVersion": "2.4.11.0"
+            "assemblyVersion": "2.4.12.0",
+            "fileVersion": "2.4.12.0"
           }
         }
       },
@@ -614,22 +615,22 @@
           }
         }
       },
-      "Serilog.Sinks.Console/4.0.0": {
+      "Serilog.Sinks.Console/4.0.1": {
         "dependencies": {
           "Serilog": "2.10.0"
         },
         "runtime": {
           "lib/net5.0/Serilog.Sinks.Console.dll": {
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "4.0.0.0"
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
           }
         }
       },
-      "SharpCompress/0.29.0": {
+      "SharpCompress/0.30.1": {
         "runtime": {
           "lib/net5.0/SharpCompress.dll": {
-            "assemblyVersion": "0.29.0.0",
-            "fileVersion": "0.29.0.0"
+            "assemblyVersion": "0.30.1.0",
+            "fileVersion": "0.30.1.0"
           }
         }
       },
@@ -808,6 +809,14 @@
           "System.Runtime.Extensions": "4.3.0"
         }
       },
+      "System.Linq.Async/5.1.0": {
+        "runtime": {
+          "lib/netcoreapp3.1/System.Linq.Async.dll": {
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.2"
+          }
+        }
+      },
       "System.Linq.Expressions/4.3.0": {
         "dependencies": {
           "System.Collections": "4.3.0",
@@ -957,7 +966,7 @@
           "Microsoft.NETCore.Targets": "1.1.0"
         }
       },
-      "System.Runtime.CompilerServices.Unsafe/5.0.0": {},
+      "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
       "System.Runtime.Extensions/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
@@ -1141,7 +1150,7 @@
       "System.Text.Encoding.CodePages/4.5.1": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Runtime.CompilerServices.Unsafe": "5.0.0"
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
       "System.Text.Encoding.Extensions/4.3.0": {
@@ -1152,11 +1161,20 @@
           "System.Text.Encoding": "4.3.0"
         }
       },
-      "System.Text.Json/5.0.2": {
+      "System.Text.Encodings.Web/6.0.0": {
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        }
+      },
+      "System.Text.Json/6.0.1": {
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+          "System.Text.Encodings.Web": "6.0.0"
+        },
         "runtime": {
-          "lib/netcoreapp3.0/System.Text.Json.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.521.16609"
+          "lib/net6.0/System.Text.Json.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.121.56705"
           }
         }
       },
@@ -1223,8 +1241,8 @@
       },
       "Microsoft.CST.DevSkim/0.0.0": {
         "dependencies": {
-          "Microsoft.CST.OAT": "1.1.13",
-          "System.Text.Json": "5.0.2"
+          "Microsoft.CST.OAT": "1.1.16",
+          "System.Text.Json": "6.0.1"
         },
         "runtime": {
           "Microsoft.DevSkim.dll": {}
@@ -1233,17 +1251,17 @@
     }
   },
   "libraries": {
-    "devskim/0.5.8-g551d0e8be6": {
+    "devskim/0.6.29-ga9ed476e93": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "CompareNETObjects/4.73.0": {
+    "CompareNETObjects/4.74.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-29WqrExNPfuAQnngHm1AI4Lbb+qfU1s6eMe8S4vHVF4nGJOtN2PiJZ2fjh3GtOwFPoVUi1gmNQR3LBu4M9LxnA==",
-      "path": "comparenetobjects/4.73.0",
-      "hashPath": "comparenetobjects.4.73.0.nupkg.sha512"
+      "sha512": "sha512-bde4/W+K9K/rugttwf/4bxwRvuGwIlLXs1wSPYJvDkVizcT81Tx9hykQUe6dooJAVNnU0OtZiNzE/1OV9pvUgg==",
+      "path": "comparenetobjects/4.74.0",
+      "hashPath": "comparenetobjects.4.74.0.nupkg.sha512"
     },
     "DiscUtils.Btrfs/0.16.13": {
       "type": "package",
@@ -1336,12 +1354,12 @@
       "path": "discutils.xfs/0.16.13",
       "hashPath": "discutils.xfs.0.16.13.nupkg.sha512"
     },
-    "Glob/1.1.8": {
+    "Glob/1.1.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-t9OBRTf69gqpQ6yO4/VQj2B+EewRmwsmv5CG48Nb5nwRJv2BWx76TY2DILlbNYE4LooHrXhw59Sdzhs1HfD++Q==",
-      "path": "glob/1.1.8",
-      "hashPath": "glob.1.1.8.nupkg.sha512"
+      "sha512": "sha512-AfK5+ECWYTP7G3AAdnU8IfVj+QpGjrh9GC2mpdcJzCvtQ4pnerAGwHsxJ9D4/RnhDUz2DSzd951O/lQjQby2Sw==",
+      "path": "glob/1.1.9",
+      "hashPath": "glob.1.1.9.nupkg.sha512"
     },
     "lzo.net/0.0.3": {
       "type": "package",
@@ -1350,12 +1368,12 @@
       "path": "lzo.net/0.0.3",
       "hashPath": "lzo.net.0.0.3.nupkg.sha512"
     },
-    "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
+    "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-W8DPQjkMScOMTtJbPwmPyj9c3zYSFGawDW3jwlBOOsnY+EzZFLgNQ/UMkK35JmkNOVPdCyPr2Tw7Vv9N+KA3ZQ==",
-      "path": "microsoft.bcl.asyncinterfaces/5.0.0",
-      "hashPath": "microsoft.bcl.asyncinterfaces.5.0.0.nupkg.sha512"
+      "sha512": "sha512-UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg==",
+      "path": "microsoft.bcl.asyncinterfaces/6.0.0",
+      "hashPath": "microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis.Analyzers/3.3.2": {
       "type": "package",
@@ -1364,33 +1382,33 @@
       "path": "microsoft.codeanalysis.analyzers/3.3.2",
       "hashPath": "microsoft.codeanalysis.analyzers.3.3.2.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Common/3.11.0": {
+    "Microsoft.CodeAnalysis.Common/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-FDKSkRRXnaEWMa2ONkLMo0ZAt/uiV1XIXyodwKIgP1AMIKA7JJKXx/OwFVsvkkUT4BeobLwokoxFw70fICahNg==",
-      "path": "microsoft.codeanalysis.common/3.11.0",
-      "hashPath": "microsoft.codeanalysis.common.3.11.0.nupkg.sha512"
+      "sha512": "sha512-SMREwaVD5SzatlWhh9aahQAtSWdb63NcE//f+bQzgHSECU6xtDtaxk0kwV+asdFfr6HtW38UeO6jvqdfzudg3w==",
+      "path": "microsoft.codeanalysis.common/4.0.1",
+      "hashPath": "microsoft.codeanalysis.common.4.0.1.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp/3.11.0": {
+    "Microsoft.CodeAnalysis.CSharp/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-aDRRb7y/sXoJyDqFEQ3Il9jZxyUMHkShzZeCRjQf3SS84n2J0cTEi3TbwVZE9XJvAeMJhGfVVxwOdjYBg6ljmw==",
-      "path": "microsoft.codeanalysis.csharp/3.11.0",
-      "hashPath": "microsoft.codeanalysis.csharp.3.11.0.nupkg.sha512"
+      "sha512": "sha512-Q9RxxydPpUElj/x1/qykDTUGsRoKbJG8H5XUSeMGmMu54fBiuX1xyanom9caa1oQfh5JIW1BgLxobSaWs4WyHQ==",
+      "path": "microsoft.codeanalysis.csharp/4.0.1",
+      "hashPath": "microsoft.codeanalysis.csharp.4.0.1.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp.Scripting/3.11.0": {
+    "Microsoft.CodeAnalysis.CSharp.Scripting/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-iXH3PV1AEabB3sa16VGWdqIJtu+Q82KBLypVMjvOAxnYxg2f5FtO8m2mH0fRSdf2YzA5g3Kt9oq7sbLSFeXgVw==",
-      "path": "microsoft.codeanalysis.csharp.scripting/3.11.0",
-      "hashPath": "microsoft.codeanalysis.csharp.scripting.3.11.0.nupkg.sha512"
+      "sha512": "sha512-B3Mw2HYEcmN6kh0r4AYL2YRnqYzpjr9dt9t05GRRLa8SWU8y5gIh9yBwRO2VUr+U0Tqxr+mfCTduAhAm2tLIjw==",
+      "path": "microsoft.codeanalysis.csharp.scripting/4.0.1",
+      "hashPath": "microsoft.codeanalysis.csharp.scripting.4.0.1.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Scripting.Common/3.11.0": {
+    "Microsoft.CodeAnalysis.Scripting.Common/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-3R0TwSj+74/iDl9R2MDwsGiyrYjCnIKs5a1e17Fa/jGI/C5/c3v/X7tAhnvdXl7pIUnXtTjyWrkVLTv5EKBPmQ==",
-      "path": "microsoft.codeanalysis.scripting.common/3.11.0",
-      "hashPath": "microsoft.codeanalysis.scripting.common.3.11.0.nupkg.sha512"
+      "sha512": "sha512-4wr4dtSWoZv8p+jykG7CmiVTLlbbXnphZKQnpVer4figUTL7MMKjuuu7LDUatCvx7NOZxn4CZA6oH6rSwSU6tg==",
+      "path": "microsoft.codeanalysis.scripting.common/4.0.1",
+      "hashPath": "microsoft.codeanalysis.scripting.common.4.0.1.nupkg.sha512"
     },
     "Microsoft.CSharp/4.7.0": {
       "type": "package",
@@ -1399,19 +1417,19 @@
       "path": "microsoft.csharp/4.7.0",
       "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
     },
-    "Microsoft.CST.OAT/1.1.13": {
+    "Microsoft.CST.OAT/1.1.16": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-E4XQktzE4S03ZSCg4DNIw8s0472loprOx76fySOCXDG9oFZa6IqSBFePj1dpoGmI8hfhSX5Wqe0WAeBEhvF7LQ==",
-      "path": "microsoft.cst.oat/1.1.13",
-      "hashPath": "microsoft.cst.oat.1.1.13.nupkg.sha512"
+      "sha512": "sha512-vz8TngRWlS8PTzea+b1Xbcbr5HzxGsmQjc+qK+DqwZZ4UZr5hHuT8RINQJzwxujFNC7pTWAI72/tUwn4pL/nTg==",
+      "path": "microsoft.cst.oat/1.1.16",
+      "hashPath": "microsoft.cst.oat.1.1.16.nupkg.sha512"
     },
-    "Microsoft.CST.RecursiveExtractor/1.1.4": {
+    "Microsoft.CST.RecursiveExtractor/1.1.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-jYYCg9ur7MH9k+j+tGw90pGKkjDB9wf8c30IiQwTE8AIn5Fas1+CqPBoYCscniEQX2qpl853cP3L0YA+HttNYQ==",
-      "path": "microsoft.cst.recursiveextractor/1.1.4",
-      "hashPath": "microsoft.cst.recursiveextractor.1.1.4.nupkg.sha512"
+      "sha512": "sha512-S4ttiNVI5QxyRIoeaNkqFCOGtpYGVDX3zWtQ/2TDOkgTk9InFbwjm0nUFUmAeWktcxolRfjtD3FEOUJZX1BMRg==",
+      "path": "microsoft.cst.recursiveextractor/1.1.6",
+      "hashPath": "microsoft.cst.recursiveextractor.1.1.6.nupkg.sha512"
     },
     "Microsoft.Extensions.CommandLineUtils/1.1.1": {
       "type": "package",
@@ -1462,12 +1480,12 @@
       "path": "newtonsoft.json/12.0.3",
       "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
     },
-    "NLog/4.7.11": {
+    "NLog/4.7.13": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-A7EpoOjWesV5BPx1cOiBndazZq1VGdagIs6oK8ttcRDl5adCMtHiTqnsD5yYaOrMxOQeCjHBf/w3nKzCmhGbgw==",
-      "path": "nlog/4.7.11",
-      "hashPath": "nlog.4.7.11.nupkg.sha512"
+      "sha512": "sha512-AvoGpCuq36B+0wY313XA6gC+YeMvk24rqF8P+HS9fInBGOjCzPjpXp2ln9ATZjPOJtXgHfc8zNmTjyswFGLxvg==",
+      "path": "nlog/4.7.13",
+      "hashPath": "nlog.4.7.13.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "type": "package",
@@ -1581,12 +1599,12 @@
       "path": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl/4.3.0",
       "hashPath": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512"
     },
-    "Sarif.Sdk/2.4.11": {
+    "Sarif.Sdk/2.4.12": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-jJa4C5EGJCy+Ywav/qbgj09/xC6pKhkgqIMV4zwzS16nAcVPpEMECSptVATRChfqI3KOJCkJVXtxWvq0MuGNhg==",
-      "path": "sarif.sdk/2.4.11",
-      "hashPath": "sarif.sdk.2.4.11.nupkg.sha512"
+      "sha512": "sha512-6ICVeqiY7MQDWkABBdBNzCZPa4HrZ96/pequZFrJmrbPKOs12EhUrLoo7f6wuD7rnOeLjxrTE6qlVVF/55OP5A==",
+      "path": "sarif.sdk/2.4.12",
+      "hashPath": "sarif.sdk.2.4.12.nupkg.sha512"
     },
     "Serilog/2.10.0": {
       "type": "package",
@@ -1595,19 +1613,19 @@
       "path": "serilog/2.10.0",
       "hashPath": "serilog.2.10.0.nupkg.sha512"
     },
-    "Serilog.Sinks.Console/4.0.0": {
+    "Serilog.Sinks.Console/4.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-yJQit9sTJ4xGLKgCujqDJsaGqBNJwGB/H898z+xYlMG06twy4//6LLnSrsmpduZxcHIG4im7cv+JmXLzXz2EkQ==",
-      "path": "serilog.sinks.console/4.0.0",
-      "hashPath": "serilog.sinks.console.4.0.0.nupkg.sha512"
+      "sha512": "sha512-apLOvSJQLlIbKlbx+Y2UDHSP05kJsV7mou+fvJoRGs/iR+jC22r8cuFVMjjfVxz/AD4B2UCltFhE1naRLXwKNw==",
+      "path": "serilog.sinks.console/4.0.1",
+      "hashPath": "serilog.sinks.console.4.0.1.nupkg.sha512"
     },
-    "SharpCompress/0.29.0": {
+    "SharpCompress/0.30.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-k7iUB0mZWS6eEj6L0PuuxASzjpQvlYKfHJ0JtnHBJFbU3VeQJ4SNQC4eloiYsPbmFrJCJYiqFhV4AZuBXpIXiQ==",
-      "path": "sharpcompress/0.29.0",
-      "hashPath": "sharpcompress.0.29.0.nupkg.sha512"
+      "sha512": "sha512-XqD4TpfyYGa7QTPzaGlMVbcecKnXy4YmYLDWrU+JIj7IuRNl7DH2END+Ll7ekWIY8o3dAMWLFDE1xdhfIWD1nw==",
+      "path": "sharpcompress/0.30.1",
+      "hashPath": "sharpcompress.0.30.1.nupkg.sha512"
     },
     "SharpZipLib/1.3.3": {
       "type": "package",
@@ -1749,6 +1767,13 @@
       "path": "system.linq/4.3.0",
       "hashPath": "system.linq.4.3.0.nupkg.sha512"
     },
+    "System.Linq.Async/5.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TkDTElj3vvizUnhS4mj0oZW8kX6KOBcsUkj79w/q6IUI7nsW+bXmWZfixknClug/IA+8vTWcArXSjIxn9hIWxQ==",
+      "path": "system.linq.async/5.1.0",
+      "hashPath": "system.linq.async.5.1.0.nupkg.sha512"
+    },
     "System.Linq.Expressions/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -1861,12 +1886,12 @@
       "path": "system.runtime/4.3.0",
       "hashPath": "system.runtime.4.3.0.nupkg.sha512"
     },
-    "System.Runtime.CompilerServices.Unsafe/5.0.0": {
+    "System.Runtime.CompilerServices.Unsafe/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ZD9TMpsmYJLrxbbmdvhwt9YEgG5WntEnZ/d1eH8JBX9LBp+Ju8BSBhUGbZMNVHHomWo2KVImJhTDl2hIgw/6MA==",
-      "path": "system.runtime.compilerservices.unsafe/5.0.0",
-      "hashPath": "system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+      "sha512": "sha512-/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg==",
+      "path": "system.runtime.compilerservices.unsafe/6.0.0",
+      "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
     },
     "System.Runtime.Extensions/4.3.0": {
       "type": "package",
@@ -1987,12 +2012,19 @@
       "path": "system.text.encoding.extensions/4.3.0",
       "hashPath": "system.text.encoding.extensions.4.3.0.nupkg.sha512"
     },
-    "System.Text.Json/5.0.2": {
+    "System.Text.Encodings.Web/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-I47dVIGiV6SfAyppphxqupertT/5oZkYLDCX6vC3HpOI4ZLjyoKAreUoem2ie6G0RbRuFrlqz/PcTQjfb2DOfQ==",
-      "path": "system.text.json/5.0.2",
-      "hashPath": "system.text.json.5.0.2.nupkg.sha512"
+      "sha512": "sha512-Vg8eB5Tawm1IFqj4TVK1czJX89rhFxJo9ELqc/Eiq0eXy13RK00eubyU6TJE6y+GQXjyV5gSfiewDUZjQgSE0w==",
+      "path": "system.text.encodings.web/6.0.0",
+      "hashPath": "system.text.encodings.web.6.0.0.nupkg.sha512"
+    },
+    "System.Text.Json/6.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-X3cTdM+jna1YyfTUzToW7aVgINFv7R1W4+1+3hua/YCyLjApPoR8fd+2Cep9DbfYjbv+rBx4K6dlmAWEJr9AHg==",
+      "path": "system.text.json/6.0.1",
+      "hashPath": "system.text.json.6.0.1.nupkg.sha512"
     },
     "System.Text.RegularExpressions/4.3.0": {
       "type": "package",
