@@ -6,31 +6,13 @@ trigger:
   batch: true
   branches:
     include:
-    - main
-    - v/0.6
-  paths:
-    include:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-    - rules/*
-pr:
-  branches:
-    include:
-    - main
-    - v/0.6
+    - da/net6-pipelinedebug2
   paths:
     include:
     - Pipelines
     - DevSkim-DotNet/Microsoft.DevSkim/*
     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
     - rules/*
-
-stages:
-- stage: SDL
-  jobs:
-  - template: templates/sdl-job.yml
-    parameters:
-      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
 
 - stage: Build
   jobs:
@@ -60,17 +42,6 @@ stages:
         msbuildArguments: '/p:Configuration=Release /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
         restoreNugetPackages: false
         msbuildVersion: 'latest'
-    - task: AntiMalware@3
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: '$(Build.BinariesDirectory)'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Warning'
     - task: PowerShell@2
       displayName: Move Extension File
       inputs:
@@ -82,104 +53,3 @@ stages:
         PathtoPublish: '$(Build.StagingDirectory)'
         ArtifactName: 'Unsigned_Extension'
         publishLocation: 'Container'
-
-- stage: Release
-  dependsOn:
-  - SDL
-  - Build
-  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
-  jobs:
-  - job: sign_hash_release
-    displayName: Code Sign, Generate Hashes, Publish Public Release
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: DownloadBuildArtifacts@0
-      displayName: Retrieve Unsigned Artifact 
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: 'Unsigned_Extension\*.vsix'
-        downloadPath: '$(Build.BinariesDirectory)'
-    - task: AntiMalware@3
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: '$(Build.BinariesDirectory)\Unsigned_Extension'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Warning'
-    - task: EsrpCodeSigning@1
-      displayName: Code Sign VS Extension
-      inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)\Unsigned_Extension'
-        Pattern: '*.vsix'
-        signConfigType: 'inlineSignParams'
-        inlineOperation: |
-          [
-                  {
-                      "KeyCode" : "CP-233016",
-                      "OperationCode" : "OpcSign",
-                      "Parameters" : {
-                          "FileDigest" : "/fd SHA256"
-                      },
-                      "ToolName" : "sign",
-                      "ToolVersion" : "1.0"
-                  },
-                  {
-                      "KeyCode" : "CP-233016",
-                      "OperationCode" : "OpcVerify",
-                      "Parameters" : {},
-                      "ToolName" : "sign",
-                      "ToolVersion" : "1.0"
-                  }
-              ]
-        SessionTimeout: '60'
-        MaxConcurrency: '50'
-        MaxRetryAttempts: '5'
-    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
-      displayName: 'Delete Code Sign Summaries'
-    - task: PowerShell@2
-      displayName: Move Extension File
-      inputs:
-        targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Extension/*.vsix $env:BUILD_STAGINGDIRECTORY/'
-    - task: PowerShell@2
-      displayName: Generate Hashes
-      inputs:
-        targetType: 'inline'
-        script: |
-          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
-            $name = $_.Name
-            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
-            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
-          }
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Signed Artifact to Pipeline
-      inputs:
-        targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Signed_Extension'
-    - task: PowerShell@2
-      displayName: Move VS Marketplace Manifest
-      inputs:
-        targetType: 'inline'
-        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
-    - task: PowerShell@2
-      displayName: Move Readme-gallery.txt
-      inputs:
-        targetType: 'inline'
-        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Content/readme-gallery.txt $env:BUILD_STAGINGDIRECTORY/'
-    - task: PowerShell@2
-      displayName: Deploy to VS Marketplace
-      inputs:
-        targetType: 'inline'
-        script: |
-          Install-Module VSSetup -Force
-          $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
-          $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-          & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/vs-manifest.json -personalAccessToken $(VS_Token) -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
-        workingDirectory: '$(Build.StagingDirectory)'
