@@ -1,28 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="DevSkim" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="MS CST-E" />
+        <Identity Id="DevSkim" Version="0.0.0" Language="en-US" Publisher="MS CST-E" />
         <DisplayName>Microsoft DevSkim</DisplayName>
         <Description xml:space="preserve">DevSkim is a framework of IDE plugins and language analyzers that provide inline security analysis as the developer writes code. It works with multiple IDEs and has a flexible rule model that supports multiple programming languages.</Description>
         <MoreInfo>https://github.com/Microsoft/DevSkim</MoreInfo>
-        <License>Content\License.txt</License>
-        <GettingStartedGuide>Content\readme-gallery.txt</GettingStartedGuide>
-        <Icon>Media\devskim.ico</Icon>
-        <PreviewImage>Media\preview.png</PreviewImage>
         <Tags>Security, Linters, c, cpp, csharp, js, python, vb</Tags>
     </Metadata>
     <Installation>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Community">
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0,18.0)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Pro">
+        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[16.0,18.0)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Enterprise">
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[16.0,18.0)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
     </Installation>
     <Dependencies>
+
         <Dependency Id="Microsoft.VisualStudio.MPF.16.0" DisplayName="Visual Studio MPF 16.0" d:Source="Installed" Version="[16.0,17.0)" />
     </Dependencies>
     <Assets>
