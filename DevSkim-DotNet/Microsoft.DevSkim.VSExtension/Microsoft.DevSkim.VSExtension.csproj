@@ -188,19 +188,19 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost">
-      <Version>16.10.230</Version>
+      <Version>16.11.52</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.CoreUtility">
-      <Version>16.10.230</Version>
+      <Version>16.11.52</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Imaging">
       <Version>16.10.31321.278</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense">
-      <Version>16.10.230</Version>
+      <Version>16.11.52</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification">
-      <Version>16.10.230</Version>
+      <Version>16.11.52</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.RemoteControl">
       <Version>16.3.41</Version>
@@ -233,7 +233,7 @@
       <Version>16.10.31320.204</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Telemetry">
-      <Version>16.3.211</Version>
+      <Version>16.6.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Text.Data">
       <Version>16.10.230</Version>
@@ -250,7 +250,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>16.11.35</Version>
+      <Version>17.4.2118</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

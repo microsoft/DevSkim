@@ -7,6 +7,7 @@ trigger:
   branches:
     include:
     - main
+    - v/0.6
   paths:
     include:
     - DevSkim-VSCode-Plugin/*
@@ -15,6 +16,7 @@ pr:
   branches:
     include:
     - main
+    - v/0.6
   paths:
     include:
     - Pipelines

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net5.0;</TargetFrameworks>
+    <TargetFrameworks>net6.0;</TargetFrameworks>
     <AssemblyName>devskim</AssemblyName>
     <StartupObject>Microsoft.DevSkim.CLI.Program</StartupObject>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
@@ -22,15 +22,15 @@
     <PackageVersion>0.0.0</PackageVersion>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10</LangVersion>
     <Nullable>Enable</Nullable>        
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Glob" Version="1.1.9" />
-    <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="1.1.6" />
+    <PackageReference Include="Microsoft.CST.RecursiveExtractor" Version="1.1.18" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="Sarif.Sdk" Version="2.4.12" />
+    <PackageReference Include="Sarif.Sdk" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>

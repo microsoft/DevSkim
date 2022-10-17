@@ -7,6 +7,7 @@ trigger:
   branches:
     include:
     - main
+    - v/0.6
   paths:
     include:
     - DevSkim-DotNet/Microsoft.DevSkim/*
@@ -16,6 +17,7 @@ pr:
   branches:
     include:
     - main
+    - v/0.6
   paths:
     include:
     - Pipelines
@@ -40,7 +42,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '5.0.x'
+        version: '6.0.x'
     - task: NuGetToolInstaller@1
       inputs:
         versionSpec: '5.x'
