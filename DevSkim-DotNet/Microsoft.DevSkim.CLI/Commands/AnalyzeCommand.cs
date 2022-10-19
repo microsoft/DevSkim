@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -294,7 +295,7 @@ Output format options:
 
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,
-                                                           (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile)):outputStreamWriter,
+                                                           (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : new StreamWriter(opts.OutputFile, false, new UTF8Encoding(false))):outputStreamWriter,
                                                            (outputStreamWriter is null)?opts.OutputFile:null);
 
             int filesAnalyzed = 0;
