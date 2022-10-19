@@ -26,7 +26,12 @@ jobs:
         if-no-files-found: error # optional, default is warn
         # Duration after which artifact will expire in days. 0 means using default retention.
         retention-days: 1 # optional
+    - name: SARIF Multitool
+      uses: microsoft/sarif-actions@v0.1
+      with:
+        # Command to be sent to SARIF Multitool
+        command: validate devskim-results.sarif # optional, default is version
     - name: Upload DevSkim scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: devskim-results.sarif
