@@ -47,9 +47,16 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             if (OutputPath is string)
             {
-                TextWriter.Close();
-                File.Delete(OutputPath);
-                sarifLog.Save(OutputPath);
+                if (TextWriter is StreamWriter streamWriter)
+                {
+                    sarifLog.Save(streamWriter);
+                }
+                else
+                {
+                    TextWriter.Close();
+                    File.Delete(OutputPath);
+                    sarifLog.Save(OutputPath);
+                }
             }
             else
             {
