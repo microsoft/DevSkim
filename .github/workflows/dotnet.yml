@@ -27,6 +27,6 @@ jobs:
         # Duration after which artifact will expire in days. 0 means using default retention.
         retention-days: 1 # optional
     - name: Upload DevSkim scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: devskim-results.sarif
