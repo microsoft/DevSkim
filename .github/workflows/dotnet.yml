@@ -20,7 +20,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build src/DevSkim-DotNet --no-restore
     - name: DevSkim
       uses: microsoft/DevSkim-Action@v1.0.4
       with:
