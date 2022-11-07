@@ -17,15 +17,5 @@ namespace Microsoft.DevSkim
         public Issue Issue { get; }
         public string Language { get; }
         public string TextSample { get; }
-        
-        /// <summary>
-        /// Set by the processor if a Fix was applied for this issue
-        /// </summary>
-        public bool Fixed { get; set; }
-        
-        /// <summary>
-        /// The fix which was applied
-        /// </summary>
-        public CodeFix FixApplied { get; set; }
     }
 }

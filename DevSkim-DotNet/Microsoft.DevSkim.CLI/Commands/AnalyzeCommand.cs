@@ -18,137 +18,13 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
-    public class AnalyzeCommand : ICommand
+    public class AnalyzeCommand
     {
         private AnalyzeCommandOptions opts;
 
         public AnalyzeCommand(AnalyzeCommandOptions options)
         {
             opts = options;
-        }
-
-        public static void Configure(CommandLineApplication command)
-        {
-            command.Description = "Analyze source code";
-            command.HelpOption("-?|-h|--help");
-
-            var locationArgument = command.Argument("[path]",
-                                                    "Path to source code");
-
-            var outputArgument = command.Argument("[output]",
-                                                  "Output file");
-
-            var outputFileFormat = command.Option("-f|--file-format",
-                                                  "Output file format: [text,json,sarif]",
-                                                  CommandOptionType.SingleValue);
-
-            var outputTextFormat = command.Option("-o|--output-format",
-                                                  "Output format for text writer or elements to include for json writer.",
-                                                  CommandOptionType.SingleValue);
-
-            var severityOption = command.Option("-s|--severity",
-                                                "Severity: [critical,important,moderate,practice,manual]",
-                                                CommandOptionType.SingleValue);
-
-            var confidenceOption = command.Option("--confidence",
-                "Specify confidence levels to use",
-                CommandOptionType.SingleValue);
-            
-            var globOptions = command.Option("-g|--ignore-globs",
-                                    "**/.git/**,**/bin/**",
-                                    CommandOptionType.SingleValue);
-
-            var disableSuppressionOption = command.Option("-d|--disable-suppression",
-                                                   "Disable suppression of findings with ignore comments",
-                                                   CommandOptionType.NoValue);
-
-            var disableParallel = command.Option("--disable-parallel",
-                                       "Disable parallel processing.",
-                                       CommandOptionType.NoValue);
-
-            var rulesOption = command.Option("-r|--rules",
-                                             "Rules to use. Comma delimited.",
-                                             CommandOptionType.SingleValue);
-
-            var ignoreOption = command.Option("-i|--ignore-default-rules",
-                                              "Ignore rules bundled with DevSkim",
-                                              CommandOptionType.NoValue);
-
-            var errorOption = command.Option("-e|--suppress-standard-error",
-                                              "Suppress output to standard error",
-                                              CommandOptionType.NoValue);
-
-            var crawlArchives = command.Option("-c|--crawl-archives",
-                                       "Enable crawling into archives when processing directories.",
-                                       CommandOptionType.NoValue);
-
-            var exitCodeIsNumIssues = command.Option("-E",
-                                        "Use the exit code to indicate number of issues identified.",
-                                        CommandOptionType.NoValue);
-
-            var basePath = command.Option("--base-path",
-                                        "Specify what path to root result URIs with. When not set will generate paths relative to the source directory (or directory containing the source file specified).",
-                                        CommandOptionType.SingleValue);
-
-            var absolutePaths = command.Option("--absolute-path",
-                           "Output absolute paths (overrides --base-path).",
-                           CommandOptionType.NoValue);
-            
-            var respectGitIgnore = command.Option("--skip-git-ignored-files",
-                "Set to skip files which are ignored by .gitignore. Requires git to be installed.",
-                CommandOptionType.NoValue);
-            
-            var skipExcerpts = command.Option("--skip-excerpts",
-                "Set to skip gathering excerpts and samples to include in the report.",
-                CommandOptionType.NoValue);
-
-            var applyFixes = command.Option("--apply-fixes",
-                "Set to apply the first listed fix when fixes are present.", CommandOptionType.NoValue);
-            
-            command.ExtendedHelpText = 
-@"
-Output format options:
-%F  file path
-%L  start line number
-%C  start column
-%l  end line number
-%c  end column
-%I  location inside file
-%i  match length
-%m  match
-%R  rule id
-%N  rule name
-%S  severity
-%D  issue description
-%T  tags (comma-separated in text writer)
-%f  fixes (json only)";
-
-            command.OnExecute((Func<int>)(() =>
-            {
-                var opts = new AnalyzeCommandOptions()
-                {
-                    Path = locationArgument.Value,
-                    OutputFile = outputArgument.Value,
-                    OutputFileFormat = outputFileFormat.Value(),
-                    OutputTextFormat = outputTextFormat.Value(),
-                    Severities = severityOption.Value()?.Split(',') ?? Array.Empty<string>(),
-                    Confidences = confidenceOption.Value()?.Split(',') ?? Array.Empty<string>(),
-                    Rulespath = rulesOption.Value()?.Split(',') ?? Array.Empty<string>(),
-                    IgnoreDefaultRules = ignoreOption.HasValue(),
-                    SuppressError = errorOption.HasValue(),
-                    DisableSuppression = disableSuppressionOption.HasValue(),
-                    CrawlArchives = crawlArchives.HasValue(),
-                    ExitCodeIsNumIssues = exitCodeIsNumIssues.HasValue(),
-                    Globs = globOptions.Value()?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
-                    BasePath = basePath.Value(),
-                    DisableParallel = disableParallel.HasValue(),
-                    AbsolutePaths = absolutePaths.HasValue(),
-                    RespectGitIgnore = respectGitIgnore.HasValue(),
-                    SkipExcerpts = skipExcerpts.HasValue(),
-                    ApplyFixes = applyFixes.HasValue()
-                };
-                return (new AnalyzeCommand(opts).Run());
-            }));
         }
 
         public int Run()
@@ -181,7 +57,7 @@ Output format options:
                         }
                         else
                         {
-                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
                         }
                     }
                     else
@@ -192,7 +68,7 @@ Output format options:
                 }
                 else
                 {
-                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
                 }
             }
             else
@@ -206,7 +82,7 @@ Output format options:
                             .Where(fileName => !isGitIgnored(fileName));
                         foreach (var notIgnoredFileName in files)
                         {
-                            innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)}));
+                            innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
                         }
 
                         fileListing = innerList;
@@ -223,7 +99,7 @@ Output format options:
                     var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                     {
-                        innerList.AddRange(extractor.Extract(file, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)}));
+                        innerList.AddRange(extractor.Extract(file, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
                     }
 
                     fileListing = innerList;                }
@@ -282,9 +158,9 @@ Output format options:
         {
             DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
             Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
-            if (opts.Rulespath.Length > 0)
+            if (opts.Rules.Any())
             {
-                foreach (var path in opts.Rulespath)
+                foreach (var path in opts.Rules)
                 {
                     devSkimRuleSet.AddPath(path);
                 }
@@ -312,19 +188,13 @@ Output format options:
             Severity severityFilter = Severity.Unspecified;
             foreach (var severity in opts.Severities)
             {
-                if (Enum.TryParse<Severity>(severity, out Severity sevFilterComponent))
-                {
-                    severityFilter |= sevFilterComponent;
-                }
+                severityFilter |= severity;
             }
             
             Confidence confidenceFilter = Confidence.Unspecified;
-            foreach (var confidence in opts.Confidences ?? Array.Empty<string>())
+            foreach (var confidence in opts.Confidences)
             {
-                if (Enum.TryParse<Confidence>(confidence, out Confidence confidenceFilterComponent))
-                {
-                    confidenceFilter |= confidenceFilterComponent;
-                }
+                confidenceFilter |= confidence;
             }
             
             // Initialize the processor
@@ -395,11 +265,11 @@ Output format options:
                         // Offset is incremented when applying a fix that is longer than the original
                         // and reduced when applying a fix that is smaller than the original
                         int offset = 0;
-                        StringBuilder fileTextRebuilder = new StringBuilder();
-                        if (opts.ApplyFixes)
-                        {
-                            fileTextRebuilder.Append(fileText);
-                        }
+                        // StringBuilder fileTextRebuilder = new StringBuilder();
+                        // if (opts.ApplyFixes)
+                        // {
+                        //     fileTextRebuilder.Append(fileText);
+                        // }
                         // Iterate through each issue
                         foreach (Issue issue in issues)
                         {
@@ -422,26 +292,26 @@ Output format options:
                                     Issue: issue,
                                     Language: languageInfo.Name);
                                 
-                                // Can't change files in archives, so we need the actual path to exist on disc
-                                if (opts.ApplyFixes && issue.Rule.Fixes?.Any() is true)
-                                {
-                                    if (File.Exists(fileEntry.FullPath))
-                                    {
-                                        var theFixToUse = issue.Rule.Fixes[0];
-                                        var theIssueIndexWithOffset = issue.Boundary.Index + offset;
-                                        var theIssueLength = issue.Boundary.Length;
-                                        var theTargetToFix = fileText[theIssueIndexWithOffset..(theIssueIndexWithOffset + theIssueLength)];
-                                        var theFixedTarget = DevSkimRuleProcessor.Fix(theTargetToFix, theFixToUse);
-                                        fileText = $"{fileText[..theIssueIndexWithOffset]}{theFixedTarget}{fileText[(theIssueIndexWithOffset + theFixedTarget.Length)..]}";
-                                        offset += (theFixedTarget.Length - theIssueLength);
-                                        record.Fixed = true;
-                                        record.FixApplied = theFixToUse;
-                                    }
-                                    else
-                                    {
-                                        Debug.WriteLine("{0} appears to be a file located inside an archive so fixed will have to be applied manually.");
-                                    }
-                                }
+                                // // Can't change files in archives, so we need the actual path to exist on disc
+                                // if (opts.ApplyFixes && issue.Rule.Fixes?.Any() is true)
+                                // {
+                                //     if (File.Exists(fileEntry.FullPath))
+                                //     {
+                                //         var theFixToUse = issue.Rule.Fixes[0];
+                                //         var theIssueIndexWithOffset = issue.Boundary.Index + offset;
+                                //         var theIssueLength = issue.Boundary.Length;
+                                //         var theTargetToFix = fileText[theIssueIndexWithOffset..(theIssueIndexWithOffset + theIssueLength)];
+                                //         var theFixedTarget = DevSkimRuleProcessor.Fix(theTargetToFix, theFixToUse);
+                                //         fileText = $"{fileText[..theIssueIndexWithOffset]}{theFixedTarget}{fileText[(theIssueIndexWithOffset + theFixedTarget.Length)..]}";
+                                //         offset += (theFixedTarget.Length - theIssueLength);
+                                //         record.Fixed = true;
+                                //         record.FixApplied = theFixToUse;
+                                //     }
+                                //     else
+                                //     {
+                                //         Debug.WriteLine("{0} appears to be a file located inside an archive so fixed will have to be applied manually.");
+                                //     }
+                                // }
                                 outputWriter.WriteIssue(record);
                             }
                         }
