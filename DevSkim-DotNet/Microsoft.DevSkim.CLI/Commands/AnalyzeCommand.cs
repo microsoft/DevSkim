@@ -9,6 +9,7 @@ using Microsoft.Extensions.CommandLineUtils;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInspector.RulesEngine;
@@ -101,6 +102,9 @@ namespace Microsoft.DevSkim.CLI.Commands
                 "Set to skip gathering excerpts and samples to include in the report.",
                 CommandOptionType.NoValue);
 
+            var applyFixes = command.Option("--apply-fixes",
+                "Set to apply the first listed fix when fixes are present.", CommandOptionType.NoValue);
+            
             command.ExtendedHelpText = 
 @"
 Output format options:
@@ -140,7 +144,8 @@ Output format options:
                     DisableParallel = disableParallel.HasValue(),
                     AbsolutePaths = absolutePaths.HasValue(),
                     RespectGitIgnore = respectGitIgnore.HasValue(),
-                    SkipExcerpts = skipExcerpts.HasValue()
+                    SkipExcerpts = skipExcerpts.HasValue(),
+                    ApplyFixes = applyFixes.HasValue()
                 };
                 return (new AnalyzeCommand(opts).Run());
             }));
@@ -304,14 +309,14 @@ Output format options:
                 return (int)ExitCode.CriticalError;
             }
 
-            // Severity severityFilter = Severity.Unspecified;
-            // foreach (var severity in opts.Severities)
-            // {
-            //     if (Enum.TryParse<Severity>(severity, out Severity sevFilterComponent))
-            //     {
-            //         severityFilter |= sevFilterComponent;
-            //     }
-            // }
+            Severity severityFilter = Severity.Unspecified;
+            foreach (var severity in opts.Severities)
+            {
+                if (Enum.TryParse<Severity>(severity, out Severity sevFilterComponent))
+                {
+                    severityFilter |= sevFilterComponent;
+                }
+            }
             
             Confidence confidenceFilter = Confidence.Unspecified;
             foreach (var confidence in opts.Confidences ?? Array.Empty<string>())
@@ -329,26 +334,9 @@ Output format options:
                 AllowAllTagsInBuildFiles = true,
                 LoggerFactory = NullLoggerFactory.Instance,
                 Parallel = !opts.DisableParallel,
-                // SeverityFilter = severityFilter,
+                SeverityFilter = severityFilter,
                 ConfidenceFilter = confidenceFilter,
             };
-
-            if (opts.Severities.Count() > 0)
-            {
-                devSkimRuleProcessorOptions.SeverityFilter = 0;
-                foreach (string severityText in opts.Severities)
-                {
-                    if (ParseSeverity(severityText, out Microsoft.ApplicationInspector.RulesEngine.Severity severity))
-                    {
-                        devSkimRuleProcessorOptions.SeverityFilter |= severity;
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Invalid severity: {0}", severityText);
-                        return (int)ExitCode.CriticalError;
-                    }
-                }
-            }
 
             DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, devSkimRuleProcessorOptions);
             processor.EnableSuppressions = !opts.DisableSuppression;
@@ -392,17 +380,28 @@ Output format options:
                         return;
                     }
 
-                    var issues = processor.Analyze(fileText, fileEntry.Name).ToList();
 
-                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || opts.DisableSuppression && issues.Any();
+                    var issues = processor.Analyze(fileText, fileEntry.Name).ToList();
+                    // We need to make sure the issues are ordered by index, so when doing replacements we can keep a straight count of the offset caused by previous changes
+                    issues.Sort((issue1, issue2) => issue1.Boundary.Index - issue2.Boundary.Index);
+
+                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || opts.DisableSuppression;
 
                     if (issuesFound)
                     {
                         Interlocked.Increment(ref filesAffected);
                         Debug.WriteLine("file:{0}", fileEntry.FullPath);
 
+                        // Offset is incremented when applying a fix that is longer than the original
+                        // and reduced when applying a fix that is smaller than the original
+                        int offset = 0;
+                        StringBuilder fileTextRebuilder = new StringBuilder();
+                        if (opts.ApplyFixes)
+                        {
+                            fileTextRebuilder.Append(fileText);
+                        }
                         // Iterate through each issue
-                        foreach (DevSkim.Issue issue in issues)
+                        foreach (Issue issue in issues)
                         {
                             if (!issue.IsSuppressionInfo || opts.DisableSuppression)
                             {
@@ -422,6 +421,27 @@ Output format options:
                                     TextSample: opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
                                     Language: languageInfo.Name);
+                                
+                                // Can't change files in archives, so we need the actual path to exist on disc
+                                if (opts.ApplyFixes && issue.Rule.Fixes?.Any() is true)
+                                {
+                                    if (File.Exists(fileEntry.FullPath))
+                                    {
+                                        var theFixToUse = issue.Rule.Fixes[0];
+                                        var theIssueIndexWithOffset = issue.Boundary.Index + offset;
+                                        var theIssueLength = issue.Boundary.Length;
+                                        var theTargetToFix = fileText[theIssueIndexWithOffset..(theIssueIndexWithOffset + theIssueLength)];
+                                        var theFixedTarget = DevSkimRuleProcessor.Fix(theTargetToFix, theFixToUse);
+                                        fileText = $"{fileText[..theIssueIndexWithOffset]}{theFixedTarget}{fileText[(theIssueIndexWithOffset + theFixedTarget.Length)..]}";
+                                        offset += (theFixedTarget.Length - theIssueLength);
+                                        record.Fixed = true;
+                                        record.FixApplied = theFixToUse;
+                                    }
+                                    else
+                                    {
+                                        Debug.WriteLine("{0} appears to be a file located inside an archive so fixed will have to be applied manually.");
+                                    }
+                                }
                                 outputWriter.WriteIssue(record);
                             }
                         }

@@ -24,4 +24,5 @@ public class AnalyzeCommandOptions
     public bool RespectGitIgnore { get; set; }
     public bool SkipExcerpts { get; set; }
     public string[] Confidences { get; set; }
+    public bool ApplyFixes { get; set; }
 }

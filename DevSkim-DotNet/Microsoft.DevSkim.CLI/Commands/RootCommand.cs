@@ -29,7 +29,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             app.Command("analyze", AnalyzeCommand.Configure, false);
             app.Command("verify", VerifyCommand.Configure, false);
-
+            app.Command("fix", FixCommand.Configure, false);
             app.OnExecute(() =>
             {
                 return (new RootCommand(app)).Run();
