@@ -41,6 +41,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return (int)ExitCode.CriticalError;
             }
 
+            if (string.IsNullOrEmpty(opts.BasePath))
+            {
+                opts.BasePath = Path.GetFullPath(opts.Path);
+            }
+
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
             var fp = Path.GetFullPath(opts.Path);
@@ -223,7 +228,6 @@ namespace Microsoft.DevSkim.CLI.Commands
             var Languages = new Languages();
             void parseFileEntry(FileEntry fileEntry)
             {
-                Uri baseUri = new Uri(Path.GetFullPath(opts.Path));
                 Languages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
 
                 // Skip files written in unknown language
