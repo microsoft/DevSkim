@@ -3,6 +3,7 @@
 using System;
 using Microsoft.Extensions.CommandLineUtils;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis.Sarif;
@@ -22,46 +23,42 @@ namespace Microsoft.DevSkim.CLI.Commands
         public int Run()
         {
             var sarifLog = SarifLog.Load(_opts.SarifInput);
-            foreach (var run in sarifLog.Runs)
+            if (sarifLog.Runs.Count > 0)
             {
-                // foreach (Address location in run.Addresses)
-                // {
-                //     var resultsForLocation = run.Results.Where(x => x.Locations.First().);
-                // }
-                // foreach (var result in run.Results)
-                // {
-                //     
-                // }
+                var run = sarifLog.Runs[0];
+                var groupedResults = run.Results.GroupBy(x => x.Locations[0].PhysicalLocation.ArtifactLocation.Uri).ToList();
+                foreach (var resultGroup in groupedResults)
+                {
+                    var fileName = resultGroup.Key;
+                    var listOfReplacements = resultGroup.SelectMany(x =>
+                        x.Fixes.SelectMany(y => y.ArtifactChanges).SelectMany(z => z.Replacements)).ToList();
+                    // Order the results by the character offset
+                    listOfReplacements.Sort((a, b) => a.DeletedRegion.CharOffset - b.DeletedRegion.CharOffset);
+                    
+                    // TODO: Support path rooting
+                    if (File.Exists(fileName.AbsolutePath))
+                    {
+                        var theContent = File.ReadAllText(fileName.AbsolutePath);
+                        // CurPos tracks the current position in the original string
+                        int curPos = 0;
+                        var sb = new StringBuilder();
+                        foreach (var replacement in listOfReplacements)
+                        {
+                            if (replacement.DeletedRegion.CharOffset < curPos)
+                            {
+                                continue;
+                            }
+                            sb.Append(theContent[curPos..replacement.DeletedRegion.CharOffset]);
+                            sb.Append(replacement.InsertedContent.Text);
+                            curPos = replacement.DeletedRegion.CharOffset + replacement.DeletedRegion.CharLength;
+                        }
+
+                        sb.Append(theContent[curPos..]);
+                        File.WriteAllText(fileName.AbsolutePath, sb.ToString());
+                    }
+                }
             }
-            // Offset is incremented when applying a fix that is longer than the original
-            // and reduced when applying a fix that is smaller than the original
-            int offset = 0;
-            // StringBuilder fileTextRebuilder = new StringBuilder();
-            // if (opts.ApplyFixes)
-            // {
-            //     fileTextRebuilder.Append(fileText);
-            // }
-            // Iterate through each issue
-            // // Can't change files in archives, so we need the actual path to exist on disc
-            // if (opts.ApplyFixes && issue.Rule.Fixes?.Any() is true)
-            // {
-            //     if (File.Exists(fileEntry.FullPath))
-            //     {
-            //         var theFixToUse = issue.Rule.Fixes[0];
-            //         var theIssueIndexWithOffset = issue.Boundary.Index + offset;
-            //         var theIssueLength = issue.Boundary.Length;
-            //         var theTargetToFix = fileText[theIssueIndexWithOffset..(theIssueIndexWithOffset + theIssueLength)];
-            //         var theFixedTarget = DevSkimRuleProcessor.Fix(theTargetToFix, theFixToUse);
-            //         fileText = $"{fileText[..theIssueIndexWithOffset]}{theFixedTarget}{fileText[(theIssueIndexWithOffset + theFixedTarget.Length)..]}";
-            //         offset += (theFixedTarget.Length - theIssueLength);
-            //         record.Fixed = true;
-            //         record.FixApplied = theFixToUse;
-            //     }
-            //     else
-            //     {
-            //         Debug.WriteLine("{0} appears to be a file located inside an archive so fixed will have to be applied manually.");
-            //     }
-            // }
+            
             return (int)ExitCode.NoIssues;
         }
     }

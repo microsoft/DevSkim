@@ -9,7 +9,7 @@ namespace Microsoft.DevSkim.CLI.Options;
 [Verb("fix", HelpText = "Apply fixes from a Sarif")]
 public class FixCommandOptions
 {
-    [Option('s',Required = true, HelpText = "Path to source code")]
+    [Option('I',Required = true, HelpText = "Path to source code")]
     public string Path { get; set; } = String.Empty;
     [Option('O',Required = true, HelpText = "Filename for input sarif with proposed fixes.")]
     public string SarifInput { get; set; } = String.Empty;
