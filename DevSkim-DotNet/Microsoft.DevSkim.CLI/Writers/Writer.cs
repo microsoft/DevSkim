@@ -8,7 +8,6 @@ namespace Microsoft.DevSkim.CLI.Writers
     public abstract class Writer : IDisposable
     {
 #nullable disable
-
         public TextWriter TextWriter { get; set; }
 #nullable restore
 

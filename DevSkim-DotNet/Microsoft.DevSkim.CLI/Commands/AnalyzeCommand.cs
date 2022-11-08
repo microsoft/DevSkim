@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LibGit2Sharp;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -40,15 +41,16 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 return (int)ExitCode.CriticalError;
             }
+            
+            var fp = Path.GetFullPath(opts.Path);
 
             if (string.IsNullOrEmpty(opts.BasePath))
             {
-                opts.BasePath = Path.GetFullPath(opts.Path);
+                opts.BasePath = fp;
             }
 
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
-            var fp = Path.GetFullPath(opts.Path);
             if (!Directory.Exists(fp))
             {
                 if (opts.RespectGitIgnore)
@@ -215,11 +217,12 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, devSkimRuleProcessorOptions);
             processor.EnableSuppressions = !opts.DisableSuppression;
-            
+            GitInformation? information = GenerateGitInformation(Path.GetFullPath(opts.Path));
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,
                                                            (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile)):outputStreamWriter,
-                                                           (outputStreamWriter is null)?opts.OutputFile:null);
+                                                           (outputStreamWriter is null)?opts.OutputFile:null,
+                                                           information);
 
             int filesAnalyzed = 0;
             int filesSkipped = 0;
@@ -315,6 +318,37 @@ namespace Microsoft.DevSkim.CLI.Commands
             Debug.WriteLine("Files skipped: {0}", filesSkipped);
 
             return opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? issuesCount : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
+        }
+
+        private GitInformation? GenerateGitInformation(string optsPath)
+        {
+            try
+            {
+                using var repo = new Repository(optsPath);
+                var info = new GitInformation()
+                {
+                    Branch = repo.Head.FriendlyName
+                };
+                if (repo.Network.Remotes.Any())
+                {
+                    info.RepositoryUri = new Uri(repo.Network.Remotes.First().Url);
+                }
+                if (repo.Head.Commits.Any())
+                {
+                    info.CommitHash = repo.Head.Commits.First().Sha;
+                }
+
+                return info;
+            }
+            catch
+            {
+                if (Directory.GetParent(optsPath) is { } notNullParent)
+                {
+                    return GenerateGitInformation(notNullParent.FullName);
+                }
+            }
+
+            return null;
         }
 
         private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)

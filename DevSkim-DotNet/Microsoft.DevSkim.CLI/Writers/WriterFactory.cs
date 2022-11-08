@@ -7,7 +7,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public class WriterFactory
     {
-        public static Writer GetWriter(string writerName, string format, TextWriter output, string? outputPath)
+        public static Writer GetWriter(string writerName, string format, TextWriter output, string? outputPath = null, GitInformation gitInformation = null)
         {
             if (string.IsNullOrEmpty(writerName))
                 writerName = "_dummy";
@@ -24,11 +24,18 @@ namespace Microsoft.DevSkim.CLI.Writers
                     return new SimpleTextWriter(format, output);
 
                 case "sarif":
-                    return new SarifWriter(output, outputPath);
+                    return new SarifWriter(output, outputPath, gitInformation);
 
                 default:
                     throw new Exception("wrong output");
             }
         }
+    }
+
+    public class GitInformation
+    {
+        public Uri RepositoryUri { get; set; }
+        public string CommitHash { get; set; }
+        public string Branch { get; set; }
     }
 }
