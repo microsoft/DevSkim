@@ -6,6 +6,7 @@ namespace Microsoft.DevSkim
 {
     public class DevSkimRule : Rule
     {
+        
         [JsonPropertyName("fix_its")]
         public List<CodeFix>? Fixes { get; set; }
     

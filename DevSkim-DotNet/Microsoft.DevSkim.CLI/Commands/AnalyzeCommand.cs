@@ -196,7 +196,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 confidenceFilter |= confidence;
             }
-            
+
             // Initialize the processor
             var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
             {
@@ -261,16 +261,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     {
                         Interlocked.Increment(ref filesAffected);
                         Debug.WriteLine("file:{0}", fileEntry.FullPath);
-
-                        // Offset is incremented when applying a fix that is longer than the original
-                        // and reduced when applying a fix that is smaller than the original
-                        int offset = 0;
-                        // StringBuilder fileTextRebuilder = new StringBuilder();
-                        // if (opts.ApplyFixes)
-                        // {
-                        //     fileTextRebuilder.Append(fileText);
-                        // }
-                        // Iterate through each issue
+                        
                         foreach (Issue issue in issues)
                         {
                             if (!issue.IsSuppressionInfo || opts.DisableSuppression)
@@ -290,28 +281,9 @@ namespace Microsoft.DevSkim.CLI.Commands
                                     Filesize: fileText.Length,
                                     TextSample: opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
-                                    Language: languageInfo.Name);
+                                    Language: languageInfo.Name,
+                                    Fixes: issue.Rule.Fixes);
                                 
-                                // // Can't change files in archives, so we need the actual path to exist on disc
-                                // if (opts.ApplyFixes && issue.Rule.Fixes?.Any() is true)
-                                // {
-                                //     if (File.Exists(fileEntry.FullPath))
-                                //     {
-                                //         var theFixToUse = issue.Rule.Fixes[0];
-                                //         var theIssueIndexWithOffset = issue.Boundary.Index + offset;
-                                //         var theIssueLength = issue.Boundary.Length;
-                                //         var theTargetToFix = fileText[theIssueIndexWithOffset..(theIssueIndexWithOffset + theIssueLength)];
-                                //         var theFixedTarget = DevSkimRuleProcessor.Fix(theTargetToFix, theFixToUse);
-                                //         fileText = $"{fileText[..theIssueIndexWithOffset]}{theFixedTarget}{fileText[(theIssueIndexWithOffset + theFixedTarget.Length)..]}";
-                                //         offset += (theFixedTarget.Length - theIssueLength);
-                                //         record.Fixed = true;
-                                //         record.FixApplied = theFixToUse;
-                                //     }
-                                //     else
-                                //     {
-                                //         Debug.WriteLine("{0} appears to be a file located inside an archive so fixed will have to be applied manually.");
-                                //     }
-                                // }
                                 outputWriter.WriteIssue(record);
                             }
                         }

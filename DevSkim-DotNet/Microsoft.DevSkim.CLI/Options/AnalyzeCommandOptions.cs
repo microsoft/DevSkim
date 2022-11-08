@@ -6,22 +6,23 @@ using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
+[Verb("analyze", HelpText = "Analyze source code using DevSkim")]
 public class AnalyzeCommandOptions
 {
     [Option('r', HelpText = "Comma separated list of paths to rules files to use", Separator = ',')]
     public IEnumerable<string> Rules { get; set; } = Array.Empty<string>();
-    [Option('s',Required = true, HelpText = "Path to source code")]
+    [Option('I',Required = true, HelpText = "Path to source code")]
     public string Path { get; set; } = String.Empty;
     [Option('O',"output-file",Required = true, HelpText = "Filename for result file.")]
     public string OutputFile { get; set; } = String.Empty;
 
-    [Option('o', "output-format", Required = true, HelpText = "Filename for result file.")]
+    [Option('o', "output-format", Required = true, HelpText = "Format for output text.")]
     public string OutputTextFormat { get; set; } = String.Empty;
-    [Option('f',"file-format", HelpText = "Path to source code")]
+    [Option('f',"file-format", HelpText = "Format type for output. [text|sarif]", Default = "sarif")]
     public string OutputFileFormat { get; set; } = String.Empty;
-    [Option('s',"severity", HelpText = "Comma-separated Severities to match", Separator = ',')]
+    [Option('s',"severity", HelpText = "Comma-separated Severities to match", Separator = ',', Default = new[]{Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice, Severity.ManualReview })]
     public IEnumerable<Severity> Severities { get; set; } = Array.Empty<Severity>();
-    [Option("confidence", HelpText = "Comma-separated Severities to match", Separator = ',')]
+    [Option("confidence", HelpText = "Comma-separated Severities to match", Separator = ',', Default = new[]{ Confidence.High, Confidence.Medium })]
     public IEnumerable<Confidence> Confidences { get; set; } = Array.Empty<Confidence>();
     [Option('g',"ignore-globs", HelpText = "Comma-separated Globs for files to skip analyzing", Separator = ',', Default = new []{"**/.git/**","**/bin/**"})]
     public IEnumerable<string> Globs { get; set; }  = Array.Empty<string>();
@@ -37,7 +38,7 @@ public class AnalyzeCommandOptions
     public bool CrawlArchives { get; set; }
     [Option('E', HelpText = "Use exit code for number of issues. Negative on error.")]
     public bool ExitCodeIsNumIssues { get; set; }
-    [Option("base-path", Required = true,
+    [Option("base-path",
         HelpText =
             "Specify what path to root result URIs with. When not set will generate paths relative to the source directory (or directory containing the source file specified)")]
     public string BasePath { get; set; } = string.Empty;

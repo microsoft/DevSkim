@@ -6,11 +6,12 @@ using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
+[Verb("fix", HelpText = "Apply fixes from a Sarif")]
 public class FixCommandOptions
 {
     [Option('s',Required = true, HelpText = "Path to source code")]
-    public string LocationArgument { get; set; } = String.Empty;
-    [Option('o',Required = true, HelpText = "Filename for result sarif with proposed fixes.")]
+    public string Path { get; set; } = String.Empty;
+    [Option('O',Required = true, HelpText = "Filename for input sarif with proposed fixes.")]
     public string SarifInput { get; set; } = String.Empty;
     [Option("all", HelpText = "Apply all fixes.")]
     public bool ApplyAllFixes { get; set; }
