@@ -44,6 +44,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                         var sb = new StringBuilder();
                         foreach (var replacement in listOfReplacements)
                         {
+                            // The replacements were sorted, so this indicates a second replacement option for the same region
+                            // TODO: Improve
                             if (replacement.DeletedRegion.CharOffset < curPos)
                             {
                                 continue;

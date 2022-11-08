@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>    
+    <TargetFrameworks>netstandard2.1;net6.0;net7.0</TargetFrameworks>    
     <PackageId>Microsoft.CST.DevSkim</PackageId>
     <PackageVersion>0.0.0</PackageVersion>
     <Authors>Microsoft</Authors>
