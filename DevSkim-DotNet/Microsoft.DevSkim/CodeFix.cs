@@ -2,6 +2,8 @@
 
 using System.Text.Json.Serialization;
 using Microsoft.ApplicationInspector.RulesEngine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Microsoft.DevSkim
 {
@@ -10,16 +12,21 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class CodeFix
     {
+        [JsonProperty(PropertyName = "type")]
         [JsonPropertyName("type")]
-        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
         public FixType? FixType { get; set; }
 
+        [JsonProperty(PropertyName = "name")]
         [JsonPropertyName("name")]
         public string? Name { get; set; }
 
+        [JsonProperty(PropertyName = "pattern")]
         [JsonPropertyName("pattern")]
         public SearchPattern? Pattern { get; set; }
 
+        [JsonProperty(PropertyName = "replacement")]
         [JsonPropertyName("replacement")]
         public string? Replacement { get; set; }
     }
