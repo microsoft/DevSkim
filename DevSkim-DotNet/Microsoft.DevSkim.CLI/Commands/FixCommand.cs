@@ -52,7 +52,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 foreach (var resultGroup in groupedResults)
                 {
                     var fileName = resultGroup.Key;
-                    var potentialPath = Path.Combine(_opts.Path, fileName.LocalPath);
+                    var potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
                     // Flatten all the replacements into a single list
                     var listOfReplacements = resultGroup.SelectMany(x =>
                         x.Fixes.SelectMany(y => y.ArtifactChanges)
