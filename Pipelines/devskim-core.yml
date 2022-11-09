@@ -28,7 +28,7 @@ stages:
   jobs:
   - template: templates/dotnet-test-job.yml
     parameters:
-      dotnetVersion: 6.0.x
+      dotnetVersion: 7.0.x
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
 - stage: SDL
   jobs:
@@ -42,14 +42,14 @@ stages:
   jobs:
   - template: templates/dotnet-publish-linux-mac-job.yml
     parameters:
-      dotnetVersion: '6.0.x'
+      dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim'
       preBuild:
       - template: templates/nbgv-set-version-steps.yml
   - template: templates/dotnet-publish-win-netcore-job.yml
     parameters:
-      dotnetVersion: '6.0.x'
+      dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim'
       preBuild:
@@ -57,14 +57,14 @@ stages:
   - template: templates/nuget-build-job.yml
     parameters:
       jobName: 'pack_lib'
-      dotnetVersion: '6.0.x'
+      dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
   - template: templates/nuget-build-job-framework.yml
     parameters:
       jobName: 'pack_cli'
-      dotnetVersion: '6.0.x'
-      publishFramework: 'net6.0'
+      dotnetVersion: '7.0.x'
+      publishFramework: 'net7.0'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
 
@@ -82,7 +82,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '6.0.x'
+        version: '7.0.x'
     - template: templates/nbgv-set-version-steps.yml
     - task: DownloadBuildArtifacts@0
       displayName: Download Unsigned Archives
