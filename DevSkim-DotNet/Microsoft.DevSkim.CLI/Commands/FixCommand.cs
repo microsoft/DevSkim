@@ -1,12 +1,9 @@
 // Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
-using Microsoft.Extensions.CommandLineUtils;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CommandLine;
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Options;
 

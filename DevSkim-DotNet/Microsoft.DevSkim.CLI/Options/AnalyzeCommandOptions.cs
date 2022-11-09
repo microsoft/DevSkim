@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommandLine;
-using GlobExpressions;
 using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.CLI.Options;

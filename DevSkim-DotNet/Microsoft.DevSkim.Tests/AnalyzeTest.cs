@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Commands;
 using System.Text;
 using Microsoft.DevSkim.CLI.Options;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Microsoft.DevSkim.Tests
 {

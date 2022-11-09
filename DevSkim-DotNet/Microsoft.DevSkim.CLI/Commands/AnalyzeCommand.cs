@@ -2,14 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using GlobExpressions;
 using Microsoft.CST.RecursiveExtractor;
 using Microsoft.DevSkim.CLI.Writers;
-using Microsoft.Extensions.CommandLineUtils;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
