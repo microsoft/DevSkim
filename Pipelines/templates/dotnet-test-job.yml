@@ -7,6 +7,10 @@ parameters:
 - name: dotnetVersion
   type: string
   default: '7.0.x'
+# Version of Dotnet SDK to use
+- name: dotnetVersion
+  type: string
+  default: '7.0.x'
 # Version of NuGet Tool to use
 - name: nugetVersion
   type: string
@@ -40,5 +44,5 @@ jobs:
   - task: DotNetCoreCLI@2
     displayName: Dotnet Test
     inputs:
-      command: 'test'
+      command: 'test -f ${{ parameters.testFramework }}'
       projects: ${{ parameters.projectPath }}
