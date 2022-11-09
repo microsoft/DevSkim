@@ -1,4 +1,4 @@
-﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
+// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
 using Microsoft.Extensions.CommandLineUtils;
@@ -62,7 +62,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     
                     if (File.Exists(potentialPath))
                     {
-                        var theContent = File.ReadAllText(fileName.AbsolutePath);
+                        var theContent = File.ReadAllText(potentialPath);
                         // CurPos tracks the current position in the original string
                         int curPos = 0;
                         var sb = new StringBuilder();
@@ -80,7 +80,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         }
 
                         sb.Append(theContent[curPos..]);
-                        File.WriteAllText(fileName.AbsolutePath, sb.ToString());
+                        File.WriteAllText(potentialPath, sb.ToString());
                     }
                 }
             }
