@@ -52,7 +52,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 foreach (var resultGroup in groupedResults)
                 {
                     var fileName = resultGroup.Key;
-
+                    var potentialPath = Path.Combine(_opts.Path, fileName.LocalPath);
                     // Flatten all the replacements into a single list
                     var listOfReplacements = resultGroup.SelectMany(x =>
                         x.Fixes.SelectMany(y => y.ArtifactChanges)
@@ -60,8 +60,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     // Order the results by the character offset
                     listOfReplacements.Sort((a, b) => a.DeletedRegion.CharOffset - b.DeletedRegion.CharOffset);
                     
-                    // TODO: Support path rooting
-                    if (File.Exists(fileName.AbsolutePath))
+                    if (File.Exists(potentialPath))
                     {
                         var theContent = File.ReadAllText(fileName.AbsolutePath);
                         // CurPos tracks the current position in the original string
