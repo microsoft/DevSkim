@@ -21,9 +21,9 @@ public class AnalyzeCommandOptions
     [Option('f',"file-format", HelpText = "Format type for output. [text|sarif]", Default = "sarif")]
     public string OutputFileFormat { get; set; } = String.Empty;
     [Option('s',"severity", HelpText = "Comma-separated Severities to match", Separator = ',', Default = new[]{Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice, Severity.ManualReview })]
-    public IEnumerable<Severity> Severities { get; set; } = Array.Empty<Severity>();
+    public IEnumerable<Severity> Severities { get; set; } = new[]{Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice, Severity.ManualReview };
     [Option("confidence", HelpText = "Comma-separated Severities to match", Separator = ',', Default = new[]{ Confidence.High, Confidence.Medium })]
-    public IEnumerable<Confidence> Confidences { get; set; } = Array.Empty<Confidence>();
+    public IEnumerable<Confidence> Confidences { get; set; } = new[]{ Confidence.High, Confidence.Medium };
     [Option('g',"ignore-globs", HelpText = "Comma-separated Globs for files to skip analyzing", Separator = ',', Default = new []{"**/.git/**","**/bin/**"})]
     public IEnumerable<string> Globs { get; set; }  = Array.Empty<string>();
     [Option('d',"disable-supression", HelpText = "Disable comment suppressions")]
