@@ -54,7 +54,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     var fileName = resultGroup.Key;
                     var potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
                     // Flatten all the replacements into a single list
-                    var listOfReplacements = resultGroup.SelectMany(x =>
+                    var listOfReplacements = resultGroup.Where(x => x.Fixes is {}).SelectMany(x =>
                         x.Fixes.SelectMany(y => y.ArtifactChanges)
                             .SelectMany(z => z.Replacements)).ToList();
                     // Order the results by the character offset
