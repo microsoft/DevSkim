@@ -55,9 +55,9 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 if (opts.RespectGitIgnore)
                 {
-                    if (isGitPresent())
+                    if (IsGitPresent())
                     {
-                        if (isGitIgnored(fp))
+                        if (IsGitIgnored(fp))
                         {
                             Console.WriteLine("The file specified was ignored by gitignore.");
                             return (int)ExitCode.CriticalError;
@@ -82,11 +82,11 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 if (opts.RespectGitIgnore)
                 {
-                    if (isGitPresent())
+                    if (IsGitPresent())
                     {
                         var innerList = new List<FileEntry>();
                         var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories)
-                            .Where(fileName => !isGitIgnored(fileName));
+                            .Where(fileName => !IsGitIgnored(fileName));
                         foreach (var notIgnoredFileName in files)
                         {
                             innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
@@ -114,7 +114,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             return RunFileEntries(fileListing);
         }
 
-        private bool isGitIgnored(string fp)
+        private static bool IsGitIgnored(string fp)
         {
             var process = Process.Start(new ProcessStartInfo("git")
             {
@@ -127,7 +127,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             return process?.ExitCode == 0 && stdOut?.Length > 0;
         }
 
-        private bool isGitPresent()
+        private static bool IsGitPresent()
         {
             var process = Process.Start(new ProcessStartInfo("git")
             {
