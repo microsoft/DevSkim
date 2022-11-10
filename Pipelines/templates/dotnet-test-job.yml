@@ -39,6 +39,7 @@ jobs:
     displayName: Dotnet Restore
     inputs:
       command: 'restore'
+      arguments: '-f {{ parameters.TestFramework }}'
       projects: ${{ parameters.projectPath }}
       verbosityRestore: 'Normal'
   - task: DotNetCoreCLI@2
