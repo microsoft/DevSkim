@@ -7,10 +7,10 @@ parameters:
 - name: dotnetVersion
   type: string
   default: '7.0.x'
-# Version of Dotnet SDK to use
-- name: dotnetVersion
+# Framework argument to the test call
+- name: testFramework
   type: string
-  default: '7.0.x'
+  default: 'net7.0'
 # Version of NuGet Tool to use
 - name: nugetVersion
   type: string
