@@ -24,14 +24,14 @@ pr:
     - rules/*
 
 stages:
-- stage: Test Net Current (7.0)
+- stage: Test_Net_Current
   jobs:
   - template: templates/dotnet-test-job.yml
     parameters:
       dotnetVersion: 7.0.x
       testFramework: net7.0
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
-- stage: Test Net LTS (6.0)
+- stage: Test_Net_LTS
   jobs:
   - template: templates/dotnet-test-job.yml
     parameters:
