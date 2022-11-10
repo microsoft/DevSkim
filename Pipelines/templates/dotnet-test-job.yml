@@ -44,5 +44,6 @@ jobs:
   - task: DotNetCoreCLI@2
     displayName: Dotnet Test
     inputs:
-      command: 'test -f ${{ parameters.testFramework }}'
+      command: 'test'
+      arguments: '-f {{ parameters.testFramework }}'
       projects: ${{ parameters.projectPath }}
