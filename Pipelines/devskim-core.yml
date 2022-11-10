@@ -24,7 +24,7 @@ pr:
     - rules/*
 
 stages:
-- stage: Test_Net_Current
+- stage: Test
   jobs:
   - template: templates/dotnet-test-job.yml
     parameters:
