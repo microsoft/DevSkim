@@ -29,14 +29,7 @@ stages:
   - template: templates/dotnet-test-job.yml
     parameters:
       dotnetVersion: 7.0.x
-      testFramework: net7.0
-      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
-- stage: Test_Net_LTS
-  jobs:
-  - template: templates/dotnet-test-job.yml
-    parameters:
-      dotnetVersion: 6.0.x
-      testFramework: net6.0
+      dotnetVersionLTS: 6.0.x
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
 - stage: SDL
   jobs:
