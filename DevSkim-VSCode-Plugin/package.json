@@ -220,7 +220,7 @@
   },
   "scripts": {
     "clean": "npm run clean:base && npm run clean:client && npm run clean:server",
-    "clean:base": "npx --ignore-existing --quiet rimraf *.log out node_modules",
+    "clean:base": "npx --quiet rimraf *.log out node_modules",
     "clean:client": "cd client && npm run clean && cd ..",
     "clean:server": "cd server && npm run clean && cd ..",
     "compile": "tsc -b",
@@ -258,7 +258,7 @@
     "ts-loader": "^6.2.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7",
-    "vsce": "^1.88.0",
+    "vsce": "^2.14.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   }
