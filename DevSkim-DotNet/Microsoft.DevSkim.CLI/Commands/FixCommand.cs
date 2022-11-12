@@ -18,6 +18,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _opts = options;
         }
 
+        // TODO Use proper logging abstractions
         public int Run()
         {
             var sarifLog = SarifLog.Load(_opts.SarifInput);
@@ -73,11 +74,25 @@ namespace Microsoft.DevSkim.CLI.Commands
                             }
                             sb.Append(theContent[curPos..replacement.DeletedRegion.CharOffset]);
                             sb.Append(replacement.InsertedContent.Text);
+                            if (_opts.DryRun)
+                            {
+                                Console.WriteLine($"{potentialPath} will be changed: {theContent[replacement.DeletedRegion.CharOffset..(replacement.DeletedRegion.CharOffset+replacement.DeletedRegion.CharLength)]}->{replacement.InsertedContent.Text} @ {replacement.DeletedRegion.CharOffset}");
+                            }
+                            // CurPos tracks position in the original string,
+                            // so we only want to move forward the length of the original deleted content, not the new content
                             curPos = replacement.DeletedRegion.CharOffset + replacement.DeletedRegion.CharLength;
                         }
 
                         sb.Append(theContent[curPos..]);
-                        File.WriteAllText(potentialPath, sb.ToString());
+                        
+                        if(!_opts.DryRun)
+                        {
+                            File.WriteAllText(potentialPath, sb.ToString());
+                        }
+                    }
+                    else
+                    {
+                        Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
                 }
             }
