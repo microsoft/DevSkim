@@ -12,6 +12,7 @@ namespace Microsoft.DevSkim
     [JsonConverter(typeof(FixTypeConverter))]
     public enum FixType
     {
+        Unknown,
         RegexReplace
     }
 

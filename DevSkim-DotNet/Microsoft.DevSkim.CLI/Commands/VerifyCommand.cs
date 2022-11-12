@@ -1,39 +1,29 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
-using Microsoft.Extensions.CommandLineUtils;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.DevSkim.CLI.Options;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
-    public class VerifyCommand : ICommand
+    public class VerifyCommand
     {
-        private string _path;
-        public VerifyCommand(string path)
+        private readonly VerifyCommandOptions _opts;
+
+        public VerifyCommand(VerifyCommandOptions options)
         {
-            _path = path;
+            _opts = options;
         }
-
-        public static void Configure(CommandLineApplication command)
-        {
-            command.Description = "Verify integrity and syntax of rules";
-            command.HelpOption("-?|-h|--help");
-
-            var locationArgument = command.Argument("[path]",
-                                                    "Path to rules");
-
-            command.OnExecute(() =>
-            {
-                return (new VerifyCommand(locationArgument.Value)).Run();
-            });
-        }
-
+        
         public int Run()
         {
             DevSkimRuleSet devSkimRuleSet = new();
-            
-            devSkimRuleSet.AddPath(_path);
+
+            foreach (var path in _opts.Rules)
+            {
+                devSkimRuleSet.AddPath(path);
+            }
 
             var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
             {

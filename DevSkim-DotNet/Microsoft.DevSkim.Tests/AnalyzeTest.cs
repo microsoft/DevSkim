@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Commands;
 using System.Text;
 using Microsoft.DevSkim.CLI.Options;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Microsoft.DevSkim.Tests
 {
@@ -56,7 +55,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(new Uri(tempFileName).ToString(), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.ToString());
 
             var outFileName3 = Path.GetTempFileName();
-
+            
             opts = new AnalyzeCommandOptions()
             {
                 Path = tempFileName,
@@ -64,12 +63,12 @@ namespace Microsoft.DevSkim.Tests
                 OutputFileFormat = "sarif"
             };
             new AnalyzeCommand(opts).Run();
-
+            
             resultsFile = SarifLog.Load(outFileName3);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
-            // The path to CWD isnt relative 
-            Assert.AreEqual(new Uri(tempFileName).ToString(), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.ToString());
+            // If no base path is specified, the base path is rooted in by the Path argument
+            Assert.AreEqual(Path.GetFileName(tempFileName), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.ToString());
 
             var outFileName4 = Path.GetTempFileName();
 
@@ -87,7 +86,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
             
             // The path to CWD isnt relative 
-            Assert.IsTrue(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.Equals(Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName)));
+            Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri,Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
         }
     }
 }

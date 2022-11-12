@@ -2,148 +2,27 @@
 
 using System;
 using System.Collections.Generic;
-using GlobExpressions;
 using Microsoft.CST.RecursiveExtractor;
 using Microsoft.DevSkim.CLI.Writers;
-using Microsoft.Extensions.CommandLineUtils;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LibGit2Sharp;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
-    public class AnalyzeCommand : ICommand
+    public class AnalyzeCommand
     {
         private AnalyzeCommandOptions opts;
 
         public AnalyzeCommand(AnalyzeCommandOptions options)
         {
             opts = options;
-        }
-
-        public static void Configure(CommandLineApplication command)
-        {
-            command.Description = "Analyze source code";
-            command.HelpOption("-?|-h|--help");
-
-            var locationArgument = command.Argument("[path]",
-                                                    "Path to source code");
-
-            var outputArgument = command.Argument("[output]",
-                                                  "Output file");
-
-            var outputFileFormat = command.Option("-f|--file-format",
-                                                  "Output file format: [text,json,sarif]",
-                                                  CommandOptionType.SingleValue);
-
-            var outputTextFormat = command.Option("-o|--output-format",
-                                                  "Output format for text writer or elements to include for json writer.",
-                                                  CommandOptionType.SingleValue);
-
-            var severityOption = command.Option("-s|--severity",
-                                                "Severity: [critical,important,moderate,practice,manual]",
-                                                CommandOptionType.SingleValue);
-
-            var confidenceOption = command.Option("--confidence",
-                "Specify confidence levels to use",
-                CommandOptionType.SingleValue);
-            
-            var globOptions = command.Option("-g|--ignore-globs",
-                                    "**/.git/**,**/bin/**",
-                                    CommandOptionType.SingleValue);
-
-            var disableSuppressionOption = command.Option("-d|--disable-suppression",
-                                                   "Disable suppression of findings with ignore comments",
-                                                   CommandOptionType.NoValue);
-
-            var disableParallel = command.Option("--disable-parallel",
-                                       "Disable parallel processing.",
-                                       CommandOptionType.NoValue);
-
-            var rulesOption = command.Option("-r|--rules",
-                                             "Rules to use. Comma delimited.",
-                                             CommandOptionType.SingleValue);
-
-            var ignoreOption = command.Option("-i|--ignore-default-rules",
-                                              "Ignore rules bundled with DevSkim",
-                                              CommandOptionType.NoValue);
-
-            var errorOption = command.Option("-e|--suppress-standard-error",
-                                              "Suppress output to standard error",
-                                              CommandOptionType.NoValue);
-
-            var crawlArchives = command.Option("-c|--crawl-archives",
-                                       "Enable crawling into archives when processing directories.",
-                                       CommandOptionType.NoValue);
-
-            var exitCodeIsNumIssues = command.Option("-E",
-                                        "Use the exit code to indicate number of issues identified.",
-                                        CommandOptionType.NoValue);
-
-            var basePath = command.Option("--base-path",
-                                        "Specify what path to root result URIs with. When not set will generate paths relative to the source directory (or directory containing the source file specified).",
-                                        CommandOptionType.SingleValue);
-
-            var absolutePaths = command.Option("--absolute-path",
-                           "Output absolute paths (overrides --base-path).",
-                           CommandOptionType.NoValue);
-            
-            var respectGitIgnore = command.Option("--skip-git-ignored-files",
-                "Set to skip files which are ignored by .gitignore. Requires git to be installed.",
-                CommandOptionType.NoValue);
-            
-            var skipExcerpts = command.Option("--skip-excerpts",
-                "Set to skip gathering excerpts and samples to include in the report.",
-                CommandOptionType.NoValue);
-
-            command.ExtendedHelpText = 
-@"
-Output format options:
-%F  file path
-%L  start line number
-%C  start column
-%l  end line number
-%c  end column
-%I  location inside file
-%i  match length
-%m  match
-%R  rule id
-%N  rule name
-%S  severity
-%D  issue description
-%T  tags (comma-separated in text writer)
-%f  fixes (json only)";
-
-            command.OnExecute((Func<int>)(() =>
-            {
-                var opts = new AnalyzeCommandOptions()
-                {
-                    Path = locationArgument.Value,
-                    OutputFile = outputArgument.Value,
-                    OutputFileFormat = outputFileFormat.Value(),
-                    OutputTextFormat = outputTextFormat.Value(),
-                    Severities = severityOption.Value()?.Split(',') ?? Array.Empty<string>(),
-                    Confidences = confidenceOption.Value()?.Split(',') ?? Array.Empty<string>(),
-                    Rulespath = rulesOption.Value()?.Split(',') ?? Array.Empty<string>(),
-                    IgnoreDefaultRules = ignoreOption.HasValue(),
-                    SuppressError = errorOption.HasValue(),
-                    DisableSuppression = disableSuppressionOption.HasValue(),
-                    CrawlArchives = crawlArchives.HasValue(),
-                    ExitCodeIsNumIssues = exitCodeIsNumIssues.HasValue(),
-                    Globs = globOptions.Value()?.Split(',').Select<string, Glob>(x => new Glob(x)) ?? Array.Empty<Glob>(),
-                    BasePath = basePath.Value(),
-                    DisableParallel = disableParallel.HasValue(),
-                    AbsolutePaths = absolutePaths.HasValue(),
-                    RespectGitIgnore = respectGitIgnore.HasValue(),
-                    SkipExcerpts = skipExcerpts.HasValue()
-                };
-                return (new AnalyzeCommand(opts).Run());
-            }));
         }
 
         public int Run()
@@ -159,24 +38,30 @@ Output format options:
 
                 return (int)ExitCode.CriticalError;
             }
+            
+            var fp = Path.GetFullPath(opts.Path);
+
+            if (string.IsNullOrEmpty(opts.BasePath))
+            {
+                opts.BasePath = fp;
+            }
 
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
-            var fp = Path.GetFullPath(opts.Path);
             if (!Directory.Exists(fp))
             {
                 if (opts.RespectGitIgnore)
                 {
-                    if (isGitPresent())
+                    if (IsGitPresent())
                     {
-                        if (isGitIgnored(fp))
+                        if (IsGitIgnored(fp))
                         {
                             Console.WriteLine("The file specified was ignored by gitignore.");
                             return (int)ExitCode.CriticalError;
                         }
                         else
                         {
-                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
                         }
                     }
                     else
@@ -187,21 +72,21 @@ Output format options:
                 }
                 else
                 {
-                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)});
+                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
                 }
             }
             else
             {
                 if (opts.RespectGitIgnore)
                 {
-                    if (isGitPresent())
+                    if (IsGitPresent())
                     {
                         var innerList = new List<FileEntry>();
                         var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories)
-                            .Where(fileName => !isGitIgnored(fileName));
+                            .Where(fileName => !IsGitIgnored(fileName));
                         foreach (var notIgnoredFileName in files)
                         {
-                            innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)}));
+                            innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
                         }
 
                         fileListing = innerList;
@@ -218,7 +103,7 @@ Output format options:
                     var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                     {
-                        innerList.AddRange(extractor.Extract(file, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs.Select(x => x.Pattern)}));
+                        innerList.AddRange(extractor.Extract(file, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
                     }
 
                     fileListing = innerList;                }
@@ -226,7 +111,7 @@ Output format options:
             return RunFileEntries(fileListing);
         }
 
-        private bool isGitIgnored(string fp)
+        private static bool IsGitIgnored(string fp)
         {
             var process = Process.Start(new ProcessStartInfo("git")
             {
@@ -239,7 +124,7 @@ Output format options:
             return process?.ExitCode == 0 && stdOut?.Length > 0;
         }
 
-        private bool isGitPresent()
+        private static bool IsGitPresent()
         {
             var process = Process.Start(new ProcessStartInfo("git")
             {
@@ -277,9 +162,9 @@ Output format options:
         {
             DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
             Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
-            if (opts.Rulespath.Length > 0)
+            if (opts.Rules.Any())
             {
-                foreach (var path in opts.Rulespath)
+                foreach (var path in opts.Rules)
                 {
                     devSkimRuleSet.AddPath(path);
                 }
@@ -304,24 +189,18 @@ Output format options:
                 return (int)ExitCode.CriticalError;
             }
 
-            // Severity severityFilter = Severity.Unspecified;
-            // foreach (var severity in opts.Severities)
-            // {
-            //     if (Enum.TryParse<Severity>(severity, out Severity sevFilterComponent))
-            //     {
-            //         severityFilter |= sevFilterComponent;
-            //     }
-            // }
-            
-            Confidence confidenceFilter = Confidence.Unspecified;
-            foreach (var confidence in opts.Confidences ?? Array.Empty<string>())
+            Severity severityFilter = Severity.Unspecified;
+            foreach (var severity in opts.Severities)
             {
-                if (Enum.TryParse<Confidence>(confidence, out Confidence confidenceFilterComponent))
-                {
-                    confidenceFilter |= confidenceFilterComponent;
-                }
+                severityFilter |= severity;
             }
             
+            Confidence confidenceFilter = Confidence.Unspecified;
+            foreach (var confidence in opts.Confidences)
+            {
+                confidenceFilter |= confidence;
+            }
+
             // Initialize the processor
             var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
             {
@@ -329,34 +208,18 @@ Output format options:
                 AllowAllTagsInBuildFiles = true,
                 LoggerFactory = NullLoggerFactory.Instance,
                 Parallel = !opts.DisableParallel,
-                // SeverityFilter = severityFilter,
+                SeverityFilter = severityFilter,
                 ConfidenceFilter = confidenceFilter,
             };
 
-            if (opts.Severities.Count() > 0)
-            {
-                devSkimRuleProcessorOptions.SeverityFilter = 0;
-                foreach (string severityText in opts.Severities)
-                {
-                    if (ParseSeverity(severityText, out Microsoft.ApplicationInspector.RulesEngine.Severity severity))
-                    {
-                        devSkimRuleProcessorOptions.SeverityFilter |= severity;
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Invalid severity: {0}", severityText);
-                        return (int)ExitCode.CriticalError;
-                    }
-                }
-            }
-
             DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, devSkimRuleProcessorOptions);
             processor.EnableSuppressions = !opts.DisableSuppression;
-            
+            GitInformation? information = GenerateGitInformation(Path.GetFullPath(opts.Path));
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,
                                                            (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile)):outputStreamWriter,
-                                                           (outputStreamWriter is null)?opts.OutputFile:null);
+                                                           (outputStreamWriter is null)?opts.OutputFile:null,
+                                                           information);
 
             int filesAnalyzed = 0;
             int filesSkipped = 0;
@@ -365,7 +228,6 @@ Output format options:
             var Languages = new Languages();
             void parseFileEntry(FileEntry fileEntry)
             {
-                Uri baseUri = new Uri(Path.GetFullPath(opts.Path));
                 Languages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
 
                 // Skip files written in unknown language
@@ -392,17 +254,19 @@ Output format options:
                         return;
                     }
 
-                    var issues = processor.Analyze(fileText, fileEntry.Name).ToList();
 
-                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || opts.DisableSuppression && issues.Any();
+                    var issues = processor.Analyze(fileText, fileEntry.Name).ToList();
+                    // We need to make sure the issues are ordered by index, so when doing replacements we can keep a straight count of the offset caused by previous changes
+                    issues.Sort((issue1, issue2) => issue1.Boundary.Index - issue2.Boundary.Index);
+
+                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || opts.DisableSuppression;
 
                     if (issuesFound)
                     {
                         Interlocked.Increment(ref filesAffected);
                         Debug.WriteLine("file:{0}", fileEntry.FullPath);
-
-                        // Iterate through each issue
-                        foreach (DevSkim.Issue issue in issues)
+                        
+                        foreach (Issue issue in issues)
                         {
                             if (!issue.IsSuppressionInfo || opts.DisableSuppression)
                             {
@@ -421,7 +285,9 @@ Output format options:
                                     Filesize: fileText.Length,
                                     TextSample: opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
-                                    Language: languageInfo.Name);
+                                    Language: languageInfo.Name,
+                                    Fixes: issue.Rule.Fixes);
+                                
                                 outputWriter.WriteIssue(record);
                             }
                         }
@@ -449,6 +315,37 @@ Output format options:
             Debug.WriteLine("Files skipped: {0}", filesSkipped);
 
             return opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? issuesCount : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
+        }
+
+        private GitInformation? GenerateGitInformation(string optsPath)
+        {
+            try
+            {
+                using var repo = new Repository(optsPath);
+                var info = new GitInformation()
+                {
+                    Branch = repo.Head.FriendlyName
+                };
+                if (repo.Network.Remotes.Any())
+                {
+                    info.RepositoryUri = new Uri(repo.Network.Remotes.First().Url);
+                }
+                if (repo.Head.Commits.Any())
+                {
+                    info.CommitHash = repo.Head.Commits.First().Sha;
+                }
+
+                return info;
+            }
+            catch
+            {
+                if (Directory.GetParent(optsPath) is { } notNullParent)
+                {
+                    return GenerateGitInformation(notNullParent.FullName);
+                }
+            }
+
+            return null;
         }
 
         private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)

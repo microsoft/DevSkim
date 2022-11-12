@@ -1,7 +1,8 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using CommandLine;
 using Microsoft.DevSkim.CLI.Commands;
-using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.DevSkim.CLI.Options;
 
 namespace Microsoft.DevSkim.CLI
 {
@@ -9,9 +10,12 @@ namespace Microsoft.DevSkim.CLI
     {
         private static int Main(string[] args)
         {
-            var app = new CommandLineApplication(throwOnUnexpectedArg: false);
-            RootCommand.Configure(app);
-            return app.Execute(args);
+            return CommandLine.Parser.Default.ParseArguments<AnalyzeCommandOptions, FixCommandOptions, VerifyCommandOptions>(args)
+                .MapResult(
+                    (AnalyzeCommandOptions opts) => new AnalyzeCommand(opts).Run(),
+                    (FixCommandOptions opts) => new FixCommand(opts).Run(),
+                    (VerifyCommandOptions opts) => new VerifyCommand(opts).Run(),
+                    errs => 1);
         }
     }
 }

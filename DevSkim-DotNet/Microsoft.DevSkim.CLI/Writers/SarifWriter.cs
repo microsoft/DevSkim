@@ -11,8 +11,9 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public class SarifWriter : Writer
     {
-        public SarifWriter(TextWriter writer, string? outputPath)
+        public SarifWriter(TextWriter writer, string? outputPath, GitInformation? gitInformation)
         {
+            _gitInformation = gitInformation;
             TextWriter = writer;
             OutputPath = outputPath;
         }
@@ -24,9 +25,8 @@ namespace Microsoft.DevSkim.CLI.Writers
             Run runItem = new Run();
             runItem.Tool = new Tool();
 
-
             runItem.Tool.Driver = new ToolComponent();
-            if (Assembly.GetEntryAssembly() is Assembly entryAssembly)
+            if (Assembly.GetEntryAssembly() is { } entryAssembly)
             {
                 runItem.Tool.Driver.Name = entryAssembly.GetName().Name;
 
@@ -39,11 +39,23 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             runItem.Tool.Driver.Rules = _rules.Select(x => x.Value).ToList();
             runItem.Results = _results.ToList();
-
+            if (_gitInformation is { })
+            {
+                runItem.VersionControlProvenance = new List<VersionControlDetails>()
+                {
+                    new()
+                    {
+                        Branch = _gitInformation.Branch,
+                        RepositoryUri = _gitInformation.RepositoryUri,
+                        RevisionId = _gitInformation.CommitHash
+                    }
+                };
+            }
+            
             sarifLog.Runs = new List<Run>();
             sarifLog.Runs.Add(runItem);
 
-            if (OutputPath is string)
+            if (OutputPath != null)
             {
                 TextWriter.Close();
                 File.Delete(OutputPath);
@@ -74,12 +86,11 @@ namespace Microsoft.DevSkim.CLI.Writers
             {
                 return value;
             }
-            else
-            {
-                var newVal = new ArtifactLocation() { Uri = new Uri(path,UriKind.Relative) };
-                locationCache[path] = newVal;
-                return newVal;
-            }
+
+            // Need to add UriBaseId = "%srcroot%" when not using absolute paths
+            var newVal = new ArtifactLocation() { Uri = new Uri(path,UriKind.Relative) };
+            locationCache[path] = newVal;
+            return newVal;
         }
 
         public override void WriteIssue(IssueRecord issue)
@@ -136,6 +147,7 @@ namespace Microsoft.DevSkim.CLI.Writers
         private ConcurrentStack<Result> _results = new ConcurrentStack<Result>();
 
         private ConcurrentDictionary<string, ReportingDescriptor> _rules = new ConcurrentDictionary<string, ReportingDescriptor>();
+        private readonly GitInformation? _gitInformation;
 
         public string? OutputPath { get; }
 
