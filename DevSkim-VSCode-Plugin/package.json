@@ -240,7 +240,7 @@
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
     "copy-rules": "ncp ../rules server/data/rules",
-    "pack-ext": "gulp setPackageVersion && vsce package && gulp resetPackageVersion"
+    "pack-ext": "node setPackageVersion.js && vsce package && node setPackageVersion.js"
   },
   "dependencies": {
     "nerdbank-gitversioning": "^3.1.91",
