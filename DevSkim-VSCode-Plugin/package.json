@@ -235,7 +235,7 @@
     "check": "yarn run lint && yarn run build && yarn run test",
     "check:bail": "yarn run lint:bail && yarn run build && yarn run test",
     "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server",
-    "vscode:prepublish": "SET NODE_OPTIONS=--openssl-legacy-provider && npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production",
+    "vscode:prepublish": "npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production",
     "webpack": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
