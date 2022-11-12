@@ -37,11 +37,17 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: NodeTool@0
+      inputs:
+        versionSource: 'spec'
+        versionSpec: '16.x'
+
     - task: Npm@1
       displayName: npm install
       inputs:
         command: 'install'
         workingDir: 'DevSkim-VSCode-Plugin/'
+
     - task: Npm@1
       inputs:
         command: 'custom'
