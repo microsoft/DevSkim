@@ -76,7 +76,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             sb.Append(replacement.InsertedContent.Text);
                             if (_opts.DryRun)
                             {
-                                Console.WriteLine($"{potentialPath} will be changed: {theContent[replacement.DeletedRegion.CharOffset..replacement.DeletedRegion.CharLength]}->{replacement.InsertedContent.Text} @ {replacement.DeletedRegion.CharOffset}");
+                                Console.WriteLine($"{potentialPath} will be changed: {theContent[replacement.DeletedRegion.CharOffset..(replacement.DeletedRegion.CharOffset+replacement.DeletedRegion.CharLength)]}->{replacement.InsertedContent.Text} @ {replacement.DeletedRegion.CharOffset}");
                             }
                             // CurPos tracks position in the original string,
                             // so we only want to move forward the length of the original deleted content, not the new content
