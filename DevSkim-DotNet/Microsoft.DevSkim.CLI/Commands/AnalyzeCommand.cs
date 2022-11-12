@@ -32,7 +32,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         public bool DisableParallel { get; set; }
         public bool ExitCodeIsNumIssues { get; set; }
         public string OutputTextFormat { get; set; } = string.Empty;
-        public bool AbsolutePaths { get; set; } = false;
+        public bool AbsolutePaths { get; set; }
     }
 
     public class AnalyzeCommand : ICommand
