@@ -11,6 +11,10 @@ public class FixCommandOptions
     public string Path { get; set; } = String.Empty;
     [Option('O',Required = true, HelpText = "Filename for input sarif with proposed fixes.")]
     public string SarifInput { get; set; } = String.Empty;
+    
+    [Option("dry-run", HelpText = "Print information about files that would be changed without changing them.")]
+    public bool DryRun { get; set; }
+
     [Option("all", HelpText = "Apply all fixes.")]
     public bool ApplyAllFixes { get; set; }
     [Option("files", HelpText = "Comma separated list of paths to apply fixes to", Separator = ',')]
