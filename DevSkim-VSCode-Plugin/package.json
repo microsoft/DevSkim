@@ -4,7 +4,7 @@
   "description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click",
   "author": "Microsoft Corporation",
   "license": "MIT",
-  "version": "0.7.102-g6a7271311a",
+  "version": "0.0.0-placeholder",
   "publisher": "MS-CST-E",
   "repository": {
     "type": "git",
