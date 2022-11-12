@@ -220,7 +220,7 @@
   },
   "scripts": {
     "clean": "npm run clean:base && npm run clean:client && npm run clean:server",
-    "clean:base": "npx --ignore-existing --quiet rimraf *.log out node_modules",
+    "clean:base": "npx --quiet rimraf *.log out node_modules",
     "clean:client": "cd client && npm run clean && cd ..",
     "clean:server": "cd server && npm run clean && cd ..",
     "compile": "tsc -b",
@@ -240,7 +240,7 @@
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
     "copy-rules": "ncp ../rules server/data/rules",
-    "pack-ext": "gulp setPackageVersion && vsce package && gulp resetPackageVersion"
+    "pack-ext": "node setPackageVersion.js && vsce package && node resetPackageVersion.js"
   },
   "dependencies": {
     "nerdbank-gitversioning": "^3.1.91",
@@ -251,15 +251,13 @@
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "eslint": "^5.16.0",
-    "gulp": "^4.0.2",
-    "gulp-cli": "^2.3.0",
     "ncp": "^2.0.0",
     "rimraf": "^2.7.1",
     "ts-loader": "^6.2.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7",
-    "vsce": "^1.88.0",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "vsce": "^2.14.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.10.0"
   }
 }
