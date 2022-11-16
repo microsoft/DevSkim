@@ -61,7 +61,7 @@ export function activate(context: ExtensionContext) {
 	);
 	// The server bridge is implemented in .NET
 	const serverModule = context.asAbsolutePath(
-		path.join(context.extensionPath, 'devskimBinaries', 'DevskimLanguageServer.dll')
+		path.join(context.extensionPath, 'devskimBinaries', 'Microsoft.DevSkim.LanguageServer.dll')
 	);
 	resolveDotNetPath().then((dotNetPath) =>
 	{
