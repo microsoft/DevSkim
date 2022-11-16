@@ -1,263 +1,179 @@
 {
-  "name": "vscode-devskim",
-  "displayName": "DevSkim",
-  "description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click",
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "version": "0.0.0-placeholder",
-  "publisher": "MS-CST-E",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/devskim.git"
-  },
-  "engines": {
-    "vscode": "^1.33.x"
-  },
-  "icon": "devskim.ico",
-  "galleryBanner": {
-    "color": "#999999",
-    "theme": "dark"
-  },
-  "bugs": {
-    "url": "https://github.com/Microsoft/DevSkim/issues"
-  },
-  "homepage": "https://github.com/Microsoft/DevSkim#readme",
-  "categories": [
-    "Linters"
-  ],
-  "keywords": [
-    "Security"
-  ],
-  "activationEvents": [
-    "onLanguage:bat",
-    "onLanguage:php",
-    "onLanguage:c",
-    "onLanguage:cpp",
-    "onLanguage:csharp",
-    "onLanguage:ruby",
-    "onLanguage:perl",
-    "onLanguage:perl6",
-    "onLanguage:javascriptreact",
-    "onLanguage:javascript",
-    "onLanguage:go",
-    "onLanguage:sql",
-    "onLanguage:rust",
-    "onLanguage:groovy",
-    "onLanguage:typescript",
-    "onLanguage:typescriptreact",
-    "onLanguage:jade",
-    "onLanguage:lua",
-    "onLanguage:swift",
-    "onLanguage:clojure",
-    "onLanguage:vb",
-    "onLanguage:shellscript",
-    "onLanguage:yaml",
-    "onLanguage:fsharp",
-    "onLanguage:objective-c",
-    "onLanguage:xml",
-    "onLanguage:r",
-    "onLanguage:java",
-    "onLanguage:powershell",
-    "onLanguage:coffeescript",
-    "onLanguage:plaintext",
-    "onLanguage:python"
-  ],
-  "capabilities": {
-    "untrustedWorkspaces": {
-      "supported": false
-    }
-  },
-  "main": "./client/dist/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "devskim.reloadRules",
-        "category": "DevSkim",
-        "title": "Reload DevSkim rules"
-      },
-      {
-        "command": "devskim.scanWorkspace",
-        "category": "DevSkim",
-        "title": "Scan all files in the workspace"
-      }
-    ],
-    "configuration": {
-      "type": "object",
-      "title": "DevSkim configuration",
-      "properties": {
-        "devskim.maxFileSizeKB": {
-          "type": "number",
-          "default": 100,
-          "description": "To control the performance of DevSkim, this setting controls the maximum file size that it will analyze, in Kilobytes."
-        },
-        "devskim.enableManualReviewRules": {
-          "type": "boolean",
-          "default": false,
-          "description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
-        },
-        "devskim.manualReviewerName": {
-          "type": "string",
-          "default": "",
-          "description": "when enableManualReviewRules is set to true, if this property is set to a name/alias/email address it will be inserted when marking a finding as reviewed.  For example //DevSkim: reviewed DS123321 on 2016-12-10 by <whatever this value is>.  If left blank the \"by <whatever this value is>\" is omitted when marking a finding reviewed."
-        },
-        "devskim.enableBestPracticeRules": {
-          "type": "boolean",
-          "default": false,
-          "description": "Turn on the rules of severity \"Best-Practice\". These rules either flag issues that are typically of a lower severity, or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities."
-        },
-        "devskim.suppressionDurationInDays": {
-          "type": "number",
-          "default": 30,
-          "description": "DevSkim allows for findings to be suppressed for a temporary period of time. The default is 30 days.  Set to 0 to disable temporary suppressions."
-        },
-        "devskim.suppressionCommentStyle": {
-          "type": "string",
-          "enum": [
-            "line",
-            "block"
-          ],
-          "default": "line",
-          "description": "When DevSkim inserts a suppression comment it defaults to using single line comments for every language that has them.  Setting this to block will instead use block comments for the languages that support them.  Block comments are suggested if regularly adding explanations for why a finding was suppressed"
-        },
-        "devskim.suppressionCommentPlacement": {
-          "type": "string",
-          "enum": [
-            "same line as finding",
-            "line above finding"
-          ],
-          "default": "same line as finding",
-          "description": "When DevSkim inserts a suppression comment it defaults placing the comment after the finding being suppressed, on the same line.  Changing this setting will place the suppression the line above the finding instead."
-        },
-        "devskim.guidanceBaseURL": {
-          "type": "string",
-          "default": "https://github.com/Microsoft/DevSkim/blob/main/guidance/",
-          "description": "Each finding has a guidance file that describes the issue and solutions in more detail.  By default, those files live on the DevSkim github repo however, with this setting, organizations can clone and customize that repo, and specify their own base URL for the guidance."
-        },
-        "devskim.ignoreFiles": {
-          "type": "array",
-          "default": [
-            "\\.(exe|dll|so|dylib|bin|so\\..*)$",
-            "\\.(png|jpg|jpeg|gif|psd|ico|mp3|mpeg|bmp)$",
-            "\\.(zip|tar|gz|rar|jar|gz|7z|bz|bz2|gzip|cab|war|xz|nupkg|gem|egg)$",
-            "\\.(sqlite3|db)$",
-            "(^|/)(out|bin)/",
-            "(^|/)(tests?|unittests?|__tests__|__mocks__)/",
-            "(^|/)(\\.git|git)/",
-            "\\.(git|git[^./])$",
-            "-lock\\.[^/]|\\.lock$",
-            "(^|/)(\\.vscode|\\.cache|logs)/",
-            "(^|/)(nuget|node_modules)/",
-            "\\.(log|sarif|test)$",
-            "\\.(py[cod])$",
-            "(^|/)__pycache__/"
-          ],
-          "description": "Regular expressions to exclude files and folders from analysis.  All regular expressions are executed with the i (case insensitive) flag "
-        },
-        "devskim.ignoreRulesList": {
-          "type": "array",
-          "default": [],
-          "description": "List of DevSkim Rule IDs to be ignored.  For example providing ['DS123456','DS147258','DS147896'] would cause DevSkim to not mark any findings corresponding to those RuleIDs"
-        },
-        "devskim.validateRulesFiles": {
-          "type": "boolean",
-          "default": false,
-          "description": "Intended to help while authoring new rules. When loading the DevSkim rules, analyze the JSON files that contain the rules for mistakes.  If the mistakes are correctable, DevSkim will create a Fixed-Rules folder containing the corrected rules within its extension directory.  rulesValidationLog.json is also created in the DevSkim directory logging any issues found.  This setting is off by default, to reduce load time."
-        },
-        "devskim.removeFindingsOnClose": {
-          "type": "boolean",
-          "default": true,
-          "description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
-        },
-        "devskim.enableSuppressionInfo": {
-          "type": "boolean",
-          "default": false,
-          "description": "Show findings and squiggles for suppressed issues with additional detail on the suppressed issue."
-        }
-      }
-    }
-  },
-  "jest": {
-    "verbose": true,
-    "testEnvironment": "node",
-    "timers": "fake",
-    "clearMocks": true,
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "node",
-      "ts"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/server/out",
-      ".*__mocks__.*"
-    ],
-    "transform": {
-      "\\.ts$": "ts-jest"
-    },
-    "globals": {
-      "ts-jest": {},
-      "tsConfig": "server/tsconfig.json"
-    },
-    "testMatch": [
-      "<rootDir>/**/*.spec.ts",
-      "<rootDir>/**/*.test.ts",
-      "**/__tests__/**/*.(test|spec).ts"
-    ],
-    "setupFiles": [
-      "./server/setupJest.ts"
-    ],
-    "collectCoverageFrom": [
-      "**/*.ts",
-      "!**/*.(test|spec).ts",
-      "!**/__tests__/*",
-      "!testing/*"
-    ],
-    "coverageReporters": [
-      "text-summary",
-      "html"
-    ],
-    "preset": "ts-jest"
-  },
-  "scripts": {
-    "clean": "npm run clean:base && npm run clean:client && npm run clean:server",
-    "clean:base": "npx --ignore-existing --quiet rimraf *.log out node_modules",
-    "clean:client": "cd client && npm run clean && cd ..",
-    "clean:server": "cd server && npm run clean && cd ..",
-    "compile": "tsc -b",
-    "build": "tsc -b",
-    "watch": "tsc -b -w",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "lint": "tslint --project client --fix && tslint --project server --fix",
-    "lint:bail": "tslint --project client && tslint --project server",
-    "test": "jest --runInBand --forceExit",
-    "test:coverage": "yarn run test -- --coverage",
-    "test:watch": "yarn run test -- --watch",
-    "check": "yarn run lint && yarn run build && yarn run test",
-    "check:bail": "yarn run lint:bail && yarn run build && yarn run test",
-    "reinstall-server": "npm uninstall -g devskim-language-server && yarn build && npm i -g ./server",
-    "vscode:prepublish": "npm run copy-rules && cd ./client && webpack --mode production && cd ../server && webpack --mode production",
-    "webpack": "webpack --mode development",
-    "webpack-dev": "webpack --mode development --watch",
-    "test-compile": "tsc -p ./",
-    "copy-rules": "ncp ../rules server/data/rules",
-    "pack-ext": "node setPackageVersion.js && vsce package && node setPackageVersion.js"
-  },
-  "dependencies": {
-    "nerdbank-gitversioning": "^3.1.91",
-    "recursive-readdir": "^2.2.2"
-  },
-  "devDependencies": {
-    "@types/node": "^11.15.27",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "eslint": "^5.16.0",
-    "ncp": "^2.0.0",
-    "rimraf": "^2.7.1",
-    "ts-loader": "^6.2.2",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.7",
-    "vsce": "^2.14.0",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^4.10.0"
-  }
+	"name": "vscode-devskim",
+	"displayName": "DevSkim",
+	"description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click",
+	"author": "Microsoft Corporation",
+	"license": "MIT",
+	"version": "0.0.0-placeholder",
+	"publisher": "MS-CST-E",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Microsoft/devskim.git"
+	},
+	"icon": "devskim.ico",
+	"galleryBanner": {
+		"color": "#999999",
+		"theme": "dark"
+	},
+	"engines": {
+		"vscode": "^1.63.0"
+	},
+	"bugs": {
+		"url": "https://github.com/Microsoft/DevSkim/issues"
+	},
+	"homepage": "https://github.com/Microsoft/DevSkim#readme",
+	"categories": [
+		"Linters"
+	],
+	"keywords": [
+		"Security"
+	],
+	"activationEvents": [
+		"onLanguage:bat",
+		"onLanguage:php",
+		"onLanguage:c",
+		"onLanguage:cpp",
+		"onLanguage:csharp",
+		"onLanguage:ruby",
+		"onLanguage:perl",
+		"onLanguage:perl6",
+		"onLanguage:javascriptreact",
+		"onLanguage:javascript",
+		"onLanguage:go",
+		"onLanguage:sql",
+		"onLanguage:rust",
+		"onLanguage:groovy",
+		"onLanguage:typescript",
+		"onLanguage:typescriptreact",
+		"onLanguage:jade",
+		"onLanguage:lua",
+		"onLanguage:swift",
+		"onLanguage:clojure",
+		"onLanguage:vb",
+		"onLanguage:shellscript",
+		"onLanguage:yaml",
+		"onLanguage:fsharp",
+		"onLanguage:objective-c",
+		"onLanguage:xml",
+		"onLanguage:r",
+		"onLanguage:java",
+		"onLanguage:powershell",
+		"onLanguage:coffeescript",
+		"onLanguage:plaintext",
+		"onLanguage:python"
+	],
+	"main": "./client/out/client/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "devskim.scanWorkspace",
+				"category": "DevSkim",
+				"title": "Scan all files in the workspace"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "DevSkim configuration",
+			"properties": {
+				"devskim.enableManualReviewRules": {
+					"type": "boolean",
+					"default": false,
+					"description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
+				},
+				"devskim.enableBestPracticeRules": {
+					"type": "boolean",
+					"default": false,
+					"description": "Turn on the rules of severity \"Best-Practice\". These rules either flag issues that are typically of a lower severity, or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities."
+				},
+				"devskim.suppressionDurationInDays": {
+					"type": "number",
+					"default": 30,
+					"description": "DevSkim allows for findings to be suppressed for a temporary period of time. The default is 30 days.  Set to 0 to disable temporary suppressions."
+				},
+				"devskim.suppressionCommentStyle": {
+					"type": "string",
+					"enum": [
+						"line",
+						"block"
+					],
+					"default": "line",
+					"description": "When DevSkim inserts a suppression comment it defaults to using single line comments for every language that has them.  Setting this to block will instead use block comments for the languages that support them.  Block comments are suggested if regularly adding explanations for why a finding was suppressed"
+				},
+				"devskim.manualReviewerName": {
+					"type": "string",
+					"default": "",
+					"description": "If set, insert this name in inserted suppression comments."
+				},
+				"devskim.guidanceBaseURL": {
+					"type": "string",
+					"default": "https://github.com/Microsoft/DevSkim/blob/main/guidance/",
+					"description": "Each finding has a guidance file that describes the issue and solutions in more detail.  By default, those files live on the DevSkim github repo however, with this setting, organizations can clone and customize that repo, and specify their own base URL for the guidance."
+				},
+				"devskim.ignoreFiles": {
+					"type": "array",
+					"default": [
+						"\\.(exe|dll|so|dylib|bin|so\\..*)$",
+						"\\.(png|jpg|jpeg|gif|psd|ico|mp3|mpeg|bmp)$",
+						"\\.(zip|tar|gz|rar|jar|gz|7z|bz|bz2|gzip|cab|war|xz|nupkg|gem|egg)$",
+						"\\.(sqlite3|db)$",
+						"(^|/)(out|bin)/",
+						"(^|/)(tests?|unittests?|__tests__|__mocks__)/",
+						"(^|/)(\\.git|git)/",
+						"\\.(git|git[^./])$",
+						"-lock\\.[^/]|\\.lock$",
+						"(^|/)(\\.vscode|\\.cache|logs)/",
+						"(^|/)(nuget|node_modules)/",
+						"\\.(log|sarif|test)$",
+						"\\.(py[cod])$",
+						"(^|/)__pycache__/"
+					],
+					"description": "Regular expressions to exclude files and folders from analysis. May not contain commas."
+				},
+				"devskim.ignoreRulesList": {
+					"type": "string",
+					"default": "",
+					"description": "Comma separated list of DevSkim Rule IDs to be ignored. "
+				},
+				"devskim.removeFindingsOnClose": {
+					"type": "boolean",
+					"default": true,
+					"description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
+				}
+			}
+		}
+	},
+	"extensionDependencies": [
+		"ms-dotnettools.vscode-dotnet-runtime"
+	],
+	"scripts": {
+		"clean": "npm run clean:net && npm run clean:out && npm run clean:modules && clean:vsix",
+		"clean:net": "npx --quiet rimraf devskimBinaries",
+		"clean:out": "npx --quiet rimraf out client/out **/tsconfig.tsbuildinfo",
+		"clean:modules": "npx --quiet rimraf node_modules client/node_modules",
+		"clean:vsix": "npx --quiet rimraf **.vsix",
+		"build-net-dependencies": "dotnet publish -f net6.0 ../DevSkim-DotNet/Microsoft.DevSkim.LanguageServer -o devskimBinaries",
+		"package-rules": "dotnet ../RulePacker/devskim.dll pack ../rules ../DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json",
+		"net-setup": "npm run package-rules && npm run build-net-dependencies",
+		"setup": "npm run net-setup && npm i",
+		"reset": "npm run clean && npm run setup",
+		"compile": "tsc -b client",
+		"watch": "tsc -b -w client",
+		"lint": "eslint ./client/src --ext .ts,.tsx",
+		"postinstall": "cd client && npm install && cd ..",
+		"vscode:prepublish": "npm run esbuild-base -- --minify",
+		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/client/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild": "npm run esbuild-base -- --sourcemap",
+		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+		"pack-ext": "npm run clean:out && npm run setup && node setPackageVersion.js && vsce package && node resetPackageVersion.js"
+	},
+	"devDependencies": {
+		"@types/node": "^14.x",
+		"@typescript-eslint/eslint-plugin": "^5.10.1",
+		"@typescript-eslint/parser": "^5.10.1",
+		"esbuild": "^0.14.14",
+		"eslint": "^8.8.0",
+		"nerdbank-gitversioning": "^3.4.255",
+		"typescript": "^4.5.5",
+		"vsce": "^2.6.6"
+	}
 }

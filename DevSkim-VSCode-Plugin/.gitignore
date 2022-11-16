@@ -1,18 +1,5 @@
-# include these to be ignored
-.idea
-**/out/**
-**/dist/**
-**/npm-debug.log/**
-**/node_modules/**
-**/rulesValidatiionLog.json
-**/.vscode*
-**/.vscode/**
-server/data/rules
-server/rulesValidationLog.json
-
-#exclude these from being ignored
-!**/.gitignore
-
-#exclude everything in .vscode except launch and tasks
-!.vscode/launch.json
-!.vscode/tasks.json
+.vscode-test
+devskimBinaries
+**/node_modules
+**/out
+**/*.tsbuildinfo
