@@ -11,12 +11,17 @@ namespace Microsoft.DevSkim.CLI
     {
         private static int Main(string[] args)
         {
-            return CommandLine.Parser.Default.ParseArguments<AnalyzeCommandOptions, FixCommandOptions, VerifyCommandOptions>(args)
+            return Parser.Default.ParseArguments<AnalyzeCommandOptions, FixCommandOptions, VerifyCommandOptions>(args)
                 .MapResult(
                     (AnalyzeCommandOptions opts) => new AnalyzeCommand(opts).Run(),
                     (FixCommandOptions opts) => new FixCommand(opts).Run(),
                     (VerifyCommandOptions opts) => new VerifyCommand(opts).Run(),
-                    errs => errs.All(x => x.Tag == ErrorType.VersionRequestedError || x.Tag == ErrorType.HelpRequestedError) ? 0 : 1);
+                    errs => 
+                        errs.Any(x => 
+                            x.Tag is not ErrorType.VersionRequestedError 
+                            and not ErrorType.HelpVerbRequestedError 
+                            and not ErrorType.HelpRequestedError) 
+                                ? (int)ExitCode.ArgumentParsingError : (int)ExitCode.Okay);
         }
     }
 }
