@@ -1,5 +1,6 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
+using System.Linq;
 using CommandLine;
 using Microsoft.DevSkim.CLI.Commands;
 using Microsoft.DevSkim.CLI.Options;
@@ -15,7 +16,7 @@ namespace Microsoft.DevSkim.CLI
                     (AnalyzeCommandOptions opts) => new AnalyzeCommand(opts).Run(),
                     (FixCommandOptions opts) => new FixCommand(opts).Run(),
                     (VerifyCommandOptions opts) => new VerifyCommand(opts).Run(),
-                    errs => 1);
+                    errs => errs.All(x => x.Tag == ErrorType.VersionRequestedError || x.Tag == ErrorType.HelpRequestedError) ? 0 : 1);
         }
     }
 }
