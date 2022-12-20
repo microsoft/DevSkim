@@ -11,11 +11,12 @@ namespace Microsoft.DevSkim.CLI
     {
         private static int Main(string[] args)
         {
-            return Parser.Default.ParseArguments<AnalyzeCommandOptions, FixCommandOptions, VerifyCommandOptions>(args)
+            return Parser.Default.ParseArguments<AnalyzeCommandOptions, FixCommandOptions, VerifyCommandOptions, SuppressionCommandOptions>(args)
                 .MapResult(
                     (AnalyzeCommandOptions opts) => new AnalyzeCommand(opts).Run(),
                     (FixCommandOptions opts) => new FixCommand(opts).Run(),
                     (VerifyCommandOptions opts) => new VerifyCommand(opts).Run(),
+                    (SuppressionCommandOptions opts) => new SuppressionCommand(opts).Run(),
                     errs => 
                         errs.Any(x => 
                             x.Tag is not ErrorType.VersionRequestedError 
