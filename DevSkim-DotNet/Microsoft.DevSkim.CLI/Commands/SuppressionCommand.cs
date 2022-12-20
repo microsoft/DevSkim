@@ -56,41 +56,39 @@ namespace Microsoft.DevSkim.CLI.Commands
                       .Where(x => x.Locations is { })
                       .SelectMany(x => x.Locations).Select(x => x.PhysicalLocation).ToList();
 
-                    listOfReplacements.Sort((a, b) => a.Region.StartLine - b.Region.StartLine);
+                    listOfReplacements
+                    .Sort((a, b) => a.Region.StartLine - b.Region.StartLine);
+
+                    var distinctReplacements  = listOfReplacements
+                    .GroupBy(x => x.Region.StartLine)
+                    .Select(x => x.FirstOrDefault());
 
                     var ruleIds = string.Join(",", resultGroup.Select(x => x.RuleId).Distinct());
 
                     if (File.Exists(potentialPath))
                     {
-                        var theContent = File.ReadAllLines(potentialPath);
-                        // CurPos tracks the current position in the original string
+                        var theContent = File.ReadAllText(potentialPath).Split(Environment.NewLine);
                         int currLine = 0;
                         var sb = new StringBuilder();
-
-                        foreach (var replacement in listOfReplacements)
+                        foreach (var replacement in distinctReplacements)
                         {
-                            var zbStartLine = replacement.Region.StartLine - 1;
-                            var zbEndLine = replacement.Region.EndLine - 1;
-                            var endLine = Math.Min(zbEndLine + 1, theContent.Length);
+                            var zbStartLine = theContent[0] == string.Empty ? replacement.Region.StartLine: replacement.Region.StartLine - 1;
+                            var isMultiline = theContent[zbStartLine].EndsWith(@"\");
+                            var ignoreComment = $"{getPrefixComment(replacement.Region.SourceLanguage)} DevSkim: ignore {ruleIds} {getSuffixComment(replacement.Region.SourceLanguage)}";
                             
-                            var isFirstLine = true;
-                            foreach (var line in theContent[currLine..endLine])
-                                if(isFirstLine){
-                                    sb.Append(line);
-                                    isFirstLine = false;
-                                } else{
-                                    sb.Append($"{Environment.NewLine}{line}");
-                                }
-                                    
-                            var ignoreComment = $"{getInlineComment(replacement.Region.SourceLanguage)} DevSkim: ignore {ruleIds}{Environment.NewLine}";
-                            sb.Append(ignoreComment);
-                            // CurPos tracks position in the original string,
-                            // so we only want to move forward the length of the original deleted content, not the new content
-                            currLine = zbEndLine + 1;
+                            foreach (var line in theContent[currLine..zbStartLine])
+                                    sb.Append($"{line}{Environment.NewLine}");
+                            
+                            var suppression = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" : 
+                            $"{theContent[zbStartLine]}{ignoreComment}{Environment.NewLine}";
+                            sb.Append(suppression);
+
+                            currLine = zbStartLine + 1;
                         }
 
-                        foreach (var line in theContent[currLine..])
+                        foreach (var line in theContent[currLine..^1])
                             sb.Append($"{line}{Environment.NewLine}");
+                        sb.Append($"{theContent.Last()}");
 
                         if (!_opts.DryRun)
                         {
@@ -111,6 +109,18 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
            Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
            return devSkimLanguages.GetCommentInline(language);
+        }
+
+        private string getSuffixComment(string language)
+        {
+           Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
+           return devSkimLanguages.GetCommentSuffix(language);
+        }
+
+        private string getPrefixComment(string language)
+        {
+           Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
+           return devSkimLanguages.GetCommentPrefix(language);
         }
     }
 }
