@@ -9,7 +9,7 @@ public class SuppressionCommandOptions
 {
     [Option('I',Required = true, HelpText = "Path to source code")]
     public string Path { get; set; } = String.Empty;
-    [Option('O',Required = true, HelpText = "Filename for input sarif with proposed fixes.")]
+    [Option('O',Required = true, HelpText = "Filename for sarif with DevSkim scan results.")]
     public string SarifInput { get; set; } = String.Empty;
     [Option("dry-run", HelpText = "Print information about files that would be changed without changing them.")]
     public bool DryRun { get; set; }
