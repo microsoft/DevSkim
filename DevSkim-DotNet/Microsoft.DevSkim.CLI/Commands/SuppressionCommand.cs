@@ -62,7 +62,9 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                     var distinctReplacements  = listOfReplacements
                     .GroupBy(x => x.PhysicalLocation.Region.StartLine)
-                    .Select(x => new {PhysicalLocation = x.FirstOrDefault().PhysicalLocation, RulesId = string.Join(",", x.Select(y => y.RuleId))});
+                    .Select(x => new{
+                                        PhysicalLocation = x.FirstOrDefault().PhysicalLocation, RulesId = string.Join(",", x.Select(y => y.RuleId))
+                                    });
 
                     if (File.Exists(potentialPath))
                     {
@@ -77,7 +79,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                             var isMultiline = theContent[zbStartLine].EndsWith(@"\");
                             var ignoreComment = $"{getPrefixComment(region.SourceLanguage)} DevSkim: ignore {replacement.RulesId} {getSuffixComment(region.SourceLanguage)}";
                             
-                            foreach (var line in theContent[currLine..zbStartLine]) {
+                            foreach (var line in theContent[currLine..zbStartLine])
+                            {
                                     sb.Append($"{line}{Environment.NewLine}");
                             }
                             
@@ -88,16 +91,22 @@ namespace Microsoft.DevSkim.CLI.Commands
                             currLine = zbStartLine + 1;
                         }
 
-                        if (currLine < theContent.Length) {
-                            foreach (var line in theContent[currLine..^1]) {
+                        if (currLine < theContent.Length) 
+                        {
+                            foreach (var line in theContent[currLine..^1])
+                            {
                                 sb.Append($"{line}{Environment.NewLine}");
                             }
-                            sb.Append($"{theContent.Last()}");
+                            sb.Append($"{potentialPath} will be changed: {File.ReadAllText(potentialPath)}");
                         }
 
                         if (!_opts.DryRun)
                         {
                             File.WriteAllText(potentialPath, sb.ToString());
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{potentialPath} will be changed from: {string.Join(Environment.NewLine, theContent)} to {sb.ToString()}");
                         }
                     }
                     else

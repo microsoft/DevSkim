@@ -49,6 +49,26 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
+        public void ExecuteDryRun()
+        {
+            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;
+            http://", "c");
+
+            var opts = new SuppressionCommandOptions{
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true,
+                DryRun = true,
+            };
+
+            var resultCode = new SuppressionCommand(opts).Run();
+            var result = File.ReadAllText(sourceFile);
+
+            Assert.IsFalse(result.Contains("MD5;/* DevSkim: ignore DS126858 */"));
+            Assert.IsFalse(result.Contains("http:///* DevSkim: ignore DS137138 */"));
+        }
+
+        [TestMethod]
         public void ExecuteSuppressionsOnSpecificFiles()
         {
             (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;

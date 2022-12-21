@@ -11,10 +11,8 @@ public class SuppressionCommandOptions
     public string Path { get; set; } = String.Empty;
     [Option('O',Required = true, HelpText = "Filename for input sarif with proposed fixes.")]
     public string SarifInput { get; set; } = String.Empty;
-    
     [Option("dry-run", HelpText = "Print information about files that would be changed without changing them.")]
     public bool DryRun { get; set; }
-
     [Option("all", HelpText = "Apply all ignore.")]
     public bool ApplyAllSuppression { get; set; }
     [Option("files", HelpText = "Comma separated list of paths to apply ignore to to", Separator = ',')]
