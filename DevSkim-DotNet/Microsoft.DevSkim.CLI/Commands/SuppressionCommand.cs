@@ -61,58 +61,58 @@ namespace Microsoft.DevSkim.CLI.Commands
                     issueRecords
                     .Sort((a, b) => a.PhysicalLocation.Region.StartLine - b.PhysicalLocation.Region.StartLine);
 
-                    var distinctIssueRecords  = issueRecords
+                    var distinctIssueRecords = issueRecords
                     .GroupBy(x => x.PhysicalLocation.Region.StartLine)
-                    .Select(x => new{
-                                        PhysicalLocation = x.FirstOrDefault().PhysicalLocation, RulesId = string.Join(",", x.Select(y => y.RuleId))
-                                    });
-
-                    if (File.Exists(potentialPath))
+                    .Select(x => new
                     {
-                        var theContent = File.ReadAllText(potentialPath).Split(Environment.NewLine);
-                        int currLine = 0;
-                        var sb = new StringBuilder();
+                        PhysicalLocation = x.FirstOrDefault().PhysicalLocation,
+                        RulesId = string.Join(",", x.Select(y => y.RuleId).Distinct())
+                    });
 
-                        foreach (var issueRecord in distinctIssueRecords)
+                    if (!File.Exists(potentialPath))
+                    {
+                        Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
+                    }
+
+                    var theContent = File.ReadAllText(potentialPath).Split(Environment.NewLine);
+                    int currLine = 0;
+                    var sb = new StringBuilder();
+
+                    foreach (var issueRecord in distinctIssueRecords)
+                    {
+                        var region = issueRecord?.PhysicalLocation.Region;
+                        var zbStartLine = region.StartLine - 1;
+                        var isMultiline = theContent[zbStartLine].EndsWith(@"\");
+                        var ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
+
+                        foreach (var line in theContent[currLine..zbStartLine])
                         {
-                            var region = issueRecord.PhysicalLocation.Region;
-                            var zbStartLine = theContent[0] == string.Empty ? region.StartLine: region.StartLine - 1;
-                            var isMultiline = theContent[zbStartLine].EndsWith(@"\");
-                            var ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
-
-                            foreach (var line in theContent[currLine..zbStartLine])
-                            {
-                                sb.Append($"{line}{Environment.NewLine}");
-                            }
-                            
-                            var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" : 
-                             $"{theContent[zbStartLine]}{ignoreComment}{Environment.NewLine}";
-                            sb.Append(suppressionComment);
-
-                            currLine = zbStartLine + 1;
+                            sb.Append($"{line}{Environment.NewLine}");
                         }
 
-                        if (currLine < theContent.Length) 
-                        {
-                            foreach (var line in theContent[currLine..^1])
-                            {
-                                sb.Append($"{line}{Environment.NewLine}");
-                            }
-                            sb.Append($"{theContent.Last()}");
-                        }
+                        var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" :
+                         $"{theContent[zbStartLine]}{ignoreComment}{Environment.NewLine}";
+                        sb.Append(suppressionComment);
 
-                        if (!_opts.DryRun)
+                        currLine = zbStartLine + 1;
+                    }
+
+                    if (currLine < theContent.Length)
+                    {
+                        foreach (var line in theContent[currLine..^1])
                         {
-                            File.WriteAllText(potentialPath, sb.ToString());
+                            sb.Append($"{line}{Environment.NewLine}");
                         }
-                        else
-                        {
-                            Console.WriteLine($"{potentialPath} will be changed from: {string.Join(Environment.NewLine, theContent)} to {sb.ToString()}");
-                        }
+                        sb.Append($"{theContent.Last()}");
+                    }
+
+                    if (!_opts.DryRun)
+                    {
+                        File.WriteAllText(potentialPath, sb.ToString());
                     }
                     else
                     {
-                        Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
+                        Console.WriteLine($"{potentialPath} will be changed from: {string.Join(Environment.NewLine, theContent)} to {sb.ToString()}");
                     }
                 }
             }
