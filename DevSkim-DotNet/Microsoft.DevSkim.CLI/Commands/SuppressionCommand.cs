@@ -82,7 +82,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             
                             foreach (var line in theContent[currLine..zbStartLine])
                             {
-                                    sb.Append($"{line}{Environment.NewLine}");
+                                sb.Append($"{line}{Environment.NewLine}");
                             }
                             
                             var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" : 
@@ -98,7 +98,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             {
                                 sb.Append($"{line}{Environment.NewLine}");
                             }
-                            sb.Append($"{potentialPath} will be changed: {File.ReadAllText(potentialPath)}");
+                            sb.Append($"{theContent.Last()}");
                         }
 
                         if (!_opts.DryRun)
