@@ -27,7 +27,7 @@ parameters:
 
 jobs:
 - job: ${{ parameters.jobName }}
-  displayName: Dotnet Test
+  displayName: Dotnet Test ${{ parameters.testImage }}
   pool:
     vmImage: ${{ parameters.testImage }}
   steps:
