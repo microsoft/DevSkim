@@ -9,8 +9,7 @@ trigger:
     - main
   paths:
     include:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
+    - DevSkim-DotNet/*
     - rules/*
 pr:
   branches:
@@ -19,8 +18,7 @@ pr:
   paths:
     include:
     - Pipelines
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
+    - DevSkim-DotNet/*
     - rules/*
 
 stages:
