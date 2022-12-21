@@ -14,10 +14,12 @@ namespace Microsoft.DevSkim.CLI.Commands
     public class SuppressionCommand
     {
         private readonly SuppressionCommandOptions _opts;
+        private readonly Languages devSkimLanguages;
 
         public SuppressionCommand(SuppressionCommandOptions options)
         {
             _opts = options;
+            devSkimLanguages = DevSkimLanguages.LoadEmbedded();
         }
 
         public int Run()
@@ -119,21 +121,13 @@ namespace Microsoft.DevSkim.CLI.Commands
             return (int)ExitCode.NoIssues;
         }
 
-        private string getInlineComment(string language)
-        {
-           Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
-           return devSkimLanguages.GetCommentInline(language);
-        }
-
         private string getSuffixComment(string language)
         {
-           Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
            return devSkimLanguages.GetCommentSuffix(language);
         }
 
         private string getPrefixComment(string language)
         {
-           Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
            return devSkimLanguages.GetCommentPrefix(language);
         }
     }
