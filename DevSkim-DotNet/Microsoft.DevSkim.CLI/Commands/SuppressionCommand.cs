@@ -64,7 +64,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     var distinctIssueRecords  = issueRecords
                     .GroupBy(x => x.PhysicalLocation.Region.StartLine)
                     .Select(x => new{
-                                        PhysicalLocation = x.FirstOrDefault().PhysicalLocation, RulesId = string.Join(",", x.Select(y => y.RuleId))
+                                        PhysicalLocation = x.FirstOrDefault().PhysicalLocation, RulesId = string.Join(",", x.Select(y => y.RuleId).Distinct())
                                     });
 
                     if (File.Exists(potentialPath))
@@ -76,7 +76,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         foreach (var issueRecord in distinctIssueRecords)
                         {
                             var region = issueRecord?.PhysicalLocation.Region;
-                            var zbStartLine = theContent[0] == string.Empty ? region.StartLine: region.StartLine - 1;
+                            var zbStartLine = region.StartLine - 1;
                             var isMultiline = theContent[zbStartLine].EndsWith(@"\");
                             var ignoreComment = $"{getPrefixComment(region.SourceLanguage)} DevSkim: ignore {issueRecord.RulesId} {getSuffixComment(region.SourceLanguage)}";
                             
