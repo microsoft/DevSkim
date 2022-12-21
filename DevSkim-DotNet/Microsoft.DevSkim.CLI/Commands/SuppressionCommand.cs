@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Options;
+using Location = Microsoft.CodeAnalysis.Sarif.Location;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -35,7 +36,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 if (_opts.FilesToApplyTo.Any())
                 {
                     groupedResults =
-                        groupedResults.Where(x => _opts.FilesToApplyTo.Any(y => x.Key.AbsolutePath.Contains(y)));
+                        groupedResults.Where(x => _opts.FilesToApplyTo.Any(y => x.Key.ToString().Contains(y)));
                 }
 
                 if (_opts.RulesToApplyFrom.Any())
@@ -51,44 +52,48 @@ namespace Microsoft.DevSkim.CLI.Commands
                 {
                     var fileName = resultGroup.Key;
                     var potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
-                    // Flatten all the replacements into a single list
                     var listOfReplacements = resultGroup
                       .Where(x => x.Locations is { })
-                      .SelectMany(x => x.Locations).Select(x => x.PhysicalLocation).ToList();
+                      .SelectMany(x => x.Locations, (x, y) => new { x.RuleId, y.PhysicalLocation })
+                      .ToList();
 
                     listOfReplacements
-                    .Sort((a, b) => a.Region.StartLine - b.Region.StartLine);
+                    .Sort((a, b) => a.PhysicalLocation.Region.StartLine - b.PhysicalLocation.Region.StartLine);
 
                     var distinctReplacements  = listOfReplacements
-                    .GroupBy(x => x.Region.StartLine)
-                    .Select(x => x.FirstOrDefault());
-
-                    var ruleIds = string.Join(",", resultGroup.Select(x => x.RuleId).Distinct());
+                    .GroupBy(x => x.PhysicalLocation.Region.StartLine)
+                    .Select(x => new {PhysicalLocation = x.FirstOrDefault().PhysicalLocation, RulesId = string.Join(",", x.Select(y => y.RuleId))});
 
                     if (File.Exists(potentialPath))
                     {
                         var theContent = File.ReadAllText(potentialPath).Split(Environment.NewLine);
                         int currLine = 0;
                         var sb = new StringBuilder();
+
                         foreach (var replacement in distinctReplacements)
                         {
-                            var zbStartLine = theContent[0] == string.Empty ? replacement.Region.StartLine: replacement.Region.StartLine - 1;
+                            var region = replacement?.PhysicalLocation.Region;
+                            var zbStartLine = theContent[0] == string.Empty ? region.StartLine: region.StartLine - 1;
                             var isMultiline = theContent[zbStartLine].EndsWith(@"\");
-                            var ignoreComment = $"{getPrefixComment(replacement.Region.SourceLanguage)} DevSkim: ignore {ruleIds} {getSuffixComment(replacement.Region.SourceLanguage)}";
+                            var ignoreComment = $"{getPrefixComment(region.SourceLanguage)} DevSkim: ignore {replacement.RulesId} {getSuffixComment(region.SourceLanguage)}";
                             
-                            foreach (var line in theContent[currLine..zbStartLine])
+                            foreach (var line in theContent[currLine..zbStartLine]) {
                                     sb.Append($"{line}{Environment.NewLine}");
+                            }
                             
-                            var suppression = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" : 
-                            $"{theContent[zbStartLine]}{ignoreComment}{Environment.NewLine}";
-                            sb.Append(suppression);
+                            var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" : 
+                             $"{theContent[zbStartLine]}{ignoreComment}{Environment.NewLine}";
+                            sb.Append(suppressionComment);
 
                             currLine = zbStartLine + 1;
                         }
 
-                        foreach (var line in theContent[currLine..^1])
-                            sb.Append($"{line}{Environment.NewLine}");
-                        sb.Append($"{theContent.Last()}");
+                        if (currLine < theContent.Length) {
+                            foreach (var line in theContent[currLine..^1]) {
+                                sb.Append($"{line}{Environment.NewLine}");
+                            }
+                            sb.Append($"{theContent.Last()}");
+                        }
 
                         if (!_opts.DryRun)
                         {
