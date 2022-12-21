@@ -29,6 +29,23 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsTrue(result.Contains("http:///* DevSkim: ignore DS137138 */"));
         }
 
+        [TestMethod]
+        public void ExecuteMultipleSuppressionsInOneLine()
+        {
+            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;http://", "c");
+
+            var opts = new SuppressionCommandOptions{
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true
+            };
+
+            var resultCode = new SuppressionCommand(opts).Run();
+            var result = File.ReadAllText(sourceFile);
+
+            Assert.IsTrue(result.Contains("MD5;http:///* DevSkim: ignore DS137138,DS126858 */"));
+        }
+
 
         [TestMethod]
         public void NotExecuteSuppressions()
