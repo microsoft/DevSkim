@@ -1,9 +1,8 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-# Temporarily disable VS Extension pipeline
-trigger: none
+# name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+# trigger: none
 # trigger:
 #   batch: true
 #   branches:
@@ -24,9 +23,6 @@ trigger: none
 #     - DevSkim-DotNet/Microsoft.DevSkim/*
 #     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
 #     - rules/*
-
-stages:
-- stage: noOp
 
 # stages:
 # - stage: SDL

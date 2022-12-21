@@ -1,8 +1,8 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_VSCode_CI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-trigger: none
+# name: DevSkim_VSCode_CI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+# trigger:
 #   batch: true
 #   branches:
 #     include:
@@ -20,9 +20,6 @@ trigger: none
 #     - Pipelines
 #     - DevSkim-VSCode-Plugin/*
 #     - rules/*
-
-stages:
-- stage: noOp
 
 # stages:
 # - stage: SDL
