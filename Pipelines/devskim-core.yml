@@ -26,8 +26,17 @@ stages:
   jobs:
   - template: templates/dotnet-test-job.yml
     parameters:
+      jobName: 'test_windows'
       dotnetVersion: 7.0.x
       dotnetVersionLTS: 6.0.x
+      testImage: 'windows-latest'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+  - template: templates/dotnet-test-job.yml
+    parameters:
+      jobName: 'test_ubuntu'
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
+      testImage: 'ubuntu-latest'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
 - stage: SDL
   jobs:
