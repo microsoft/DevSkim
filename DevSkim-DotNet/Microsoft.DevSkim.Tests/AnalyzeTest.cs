@@ -52,7 +52,7 @@ namespace Microsoft.DevSkim.Tests
             resultsFile = SarifLog.Load(outFileName2);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
-            Assert.AreEqual(new Uri(tempFileName).ToString(), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.ToString());
+            Assert.AreEqual(new Uri(tempFileName).GetFilePath(), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath());
 
             var outFileName3 = Path.GetTempFileName();
             
@@ -68,7 +68,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
             // If no base path is specified, the base path is rooted in by the Path argument
-            Assert.AreEqual(Path.GetFileName(tempFileName), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.ToString());
+            Assert.AreEqual(Path.GetFileName(tempFileName), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath());
 
             var outFileName4 = Path.GetTempFileName();
 

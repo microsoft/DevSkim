@@ -19,12 +19,17 @@ parameters:
 - name: projectPath
   type: string
   default: ''
+# Image to use for running tests
+- name: testImage
+  type: string
+  default: 'windows-latest'
+
 
 jobs:
 - job: ${{ parameters.jobName }}
-  displayName: Dotnet Test
+  displayName: Dotnet Test ${{ parameters.testImage }}
   pool:
-    vmImage: 'windows-latest'
+    vmImage: ${{ parameters.testImage }}
   steps:
   - task: UseDotNet@2
     displayName: Install Dotnet SDK

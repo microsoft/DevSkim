@@ -9,8 +9,7 @@ trigger:
     - main
   paths:
     include:
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
+    - DevSkim-DotNet/*
     - rules/*
 pr:
   branches:
@@ -19,8 +18,7 @@ pr:
   paths:
     include:
     - Pipelines
-    - DevSkim-DotNet/Microsoft.DevSkim/*
-    - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
+    - DevSkim-DotNet/*
     - rules/*
 
 stages:
@@ -28,8 +26,17 @@ stages:
   jobs:
   - template: templates/dotnet-test-job.yml
     parameters:
+      jobName: 'dotnet_test_windows'
       dotnetVersion: 7.0.x
       dotnetVersionLTS: 6.0.x
+      testImage: 'windows-latest'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+  - template: templates/dotnet-test-job.yml
+    parameters:
+      jobName: 'dotnet_test_ubuntu'
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
+      testImage: 'ubuntu-latest'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
 - stage: SDL
   jobs:
