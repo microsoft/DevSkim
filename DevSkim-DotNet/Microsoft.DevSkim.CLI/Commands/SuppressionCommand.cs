@@ -7,7 +7,6 @@ using System.Text;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Options;
-using Location = Microsoft.CodeAnalysis.Sarif.Location;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -54,15 +53,15 @@ namespace Microsoft.DevSkim.CLI.Commands
                 {
                     var fileName = resultGroup.Key;
                     var potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
-                    var listOfReplacements = resultGroup
+                    var issueRecords = resultGroup
                       .Where(x => x.Locations is { })
                       .SelectMany(x => x.Locations, (x, y) => new { x.RuleId, y.PhysicalLocation })
                       .ToList();
 
-                    listOfReplacements
+                    issueRecords
                     .Sort((a, b) => a.PhysicalLocation.Region.StartLine - b.PhysicalLocation.Region.StartLine);
 
-                    var distinctReplacements  = listOfReplacements
+                    var distinctIssueRecords  = issueRecords
                     .GroupBy(x => x.PhysicalLocation.Region.StartLine)
                     .Select(x => new{
                                         PhysicalLocation = x.FirstOrDefault().PhysicalLocation, RulesId = string.Join(",", x.Select(y => y.RuleId))
@@ -74,12 +73,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                         int currLine = 0;
                         var sb = new StringBuilder();
 
-                        foreach (var replacement in distinctReplacements)
+                        foreach (var issueRecord in distinctIssueRecords)
                         {
-                            var region = replacement?.PhysicalLocation.Region;
+                            var region = issueRecord?.PhysicalLocation.Region;
                             var zbStartLine = theContent[0] == string.Empty ? region.StartLine: region.StartLine - 1;
                             var isMultiline = theContent[zbStartLine].EndsWith(@"\");
-                            var ignoreComment = $"{getPrefixComment(region.SourceLanguage)} DevSkim: ignore {replacement.RulesId} {getSuffixComment(region.SourceLanguage)}";
+                            var ignoreComment = $"{getPrefixComment(region.SourceLanguage)} DevSkim: ignore {issueRecord.RulesId} {getSuffixComment(region.SourceLanguage)}";
                             
                             foreach (var line in theContent[currLine..zbStartLine])
                             {
