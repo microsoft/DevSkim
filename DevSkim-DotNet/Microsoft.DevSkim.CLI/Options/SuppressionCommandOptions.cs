@@ -19,4 +19,10 @@ public class SuppressionCommandOptions
     public IEnumerable<string> FilesToApplyTo { get; set; } = Array.Empty<string>();
     [Option("rules", HelpText = "Comma separated list of rules to apply ignore for", Separator = ',')]
     public IEnumerable<string> RulesToApplyFrom { get; set; } = Array.Empty<string>();
+
+    [Option("prefer-multiline", HelpText = "Prefer using multi-line formatted suppression comments", Default = false)]
+    public bool PreferMultiline { get; set; }
+
+    [Option("duration", HelpText = "Optional duration for suppressions in days from current system time", Default = 0)]
+    public int Duration { get; set; } = 0;
 }

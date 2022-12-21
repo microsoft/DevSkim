@@ -75,11 +75,11 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                         foreach (var issueRecord in distinctIssueRecords)
                         {
-                            var region = issueRecord?.PhysicalLocation.Region;
+                            var region = issueRecord.PhysicalLocation.Region;
                             var zbStartLine = theContent[0] == string.Empty ? region.StartLine: region.StartLine - 1;
                             var isMultiline = theContent[zbStartLine].EndsWith(@"\");
-                            var ignoreComment = $"{getPrefixComment(region.SourceLanguage)} DevSkim: ignore {issueRecord.RulesId} {getSuffixComment(region.SourceLanguage)}";
-                            
+                            var ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
+
                             foreach (var line in theContent[currLine..zbStartLine])
                             {
                                 sb.Append($"{line}{Environment.NewLine}");
@@ -120,14 +120,32 @@ namespace Microsoft.DevSkim.CLI.Commands
             return (int)ExitCode.NoIssues;
         }
 
-        private string getSuffixComment(string language)
+        private string GenerateSuppression(string sourceLanguage, string rulesId, bool preferMultiLine = false, int duration = 0)
         {
-           return devSkimLanguages.GetCommentSuffix(language);
-        }
+            var inline = devSkimLanguages.GetCommentInline(sourceLanguage);
+            var expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
+            if (!preferMultiLine && !string.IsNullOrEmpty(inline))
+            {
+                var sb = new StringBuilder();
+                sb.Append($"{inline} DevSkim: ignore {rulesId}");
+                if (!string.IsNullOrEmpty(expiration))
+                {
+                    sb.Append($" until {expiration}");
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                var sb = new StringBuilder();
+                sb.Append($"{devSkimLanguages.GetCommentPrefix(sourceLanguage)} DevSkim: ignore {rulesId}");
+                if (!string.IsNullOrEmpty(expiration))
+                {
+                    sb.Append($" until {expiration}");
+                }
 
-        private string getPrefixComment(string language)
-        {
-           return devSkimLanguages.GetCommentPrefix(language);
+                sb.Append(devSkimLanguages.GetCommentSuffix(sourceLanguage));
+                return sb.ToString();
+            }
         }
     }
 }

@@ -8,10 +8,12 @@ using Microsoft.DevSkim.CLI.Options;
 namespace Microsoft.DevSkim.Tests
 {
     [TestClass]
-    public class SupprestionTest
+    public class SuppressionTest
     {
-        [TestMethod]
-        public void ExecuteSuppressions()
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void ExecuteSuppressions(bool preferMultiLine)
         {
             (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;
             http://", "c");
@@ -19,36 +21,73 @@ namespace Microsoft.DevSkim.Tests
             var opts = new SuppressionCommandOptions{
                 Path = basePath,
                 SarifInput = sarifPath,
-                ApplyAllSuppression = true
+                ApplyAllSuppression = true,
+                PreferMultiline = preferMultiLine
             };
 
             var resultCode = new SuppressionCommand(opts).Run();
-            var result = File.ReadAllText(sourceFile);
-
-            Assert.IsTrue(result.Contains("MD5;/* DevSkim: ignore DS126858 */"));
-            Assert.IsTrue(result.Contains("http:///* DevSkim: ignore DS137138 */"));
+            Assert.AreEqual(0, resultCode);
+            var result = File.ReadAllLines(sourceFile);
+            var firstLineSuppression = new Suppression(result[0]);
+            Assert.IsTrue(firstLineSuppression.IsInEffect);
+            Assert.AreEqual("DS126858", firstLineSuppression.GetSuppressedIds.First());
+            var secondLineSuppression = new Suppression(result[1]);
+            Assert.IsTrue(secondLineSuppression.IsInEffect);
+            Assert.AreEqual("DS137138", secondLineSuppression.GetSuppressedIds.First());
         }
 
-        [TestMethod]
-        public void ExecuteMultipleSuppressionsInOneLine()
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void ExecuteMultipleSuppressionsInOneLine(bool preferMultiLineFormat)
         {
             (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;http://", "c");
 
             var opts = new SuppressionCommandOptions{
                 Path = basePath,
                 SarifInput = sarifPath,
-                ApplyAllSuppression = true
+                ApplyAllSuppression = true,
+                PreferMultiline = preferMultiLineFormat
             };
 
             var resultCode = new SuppressionCommand(opts).Run();
-            var result = File.ReadAllText(sourceFile);
+            Assert.AreEqual(0, resultCode);
+            var result = File.ReadAllLines(sourceFile);
+            var firstLineSuppression = new Suppression(result[0]);
+            Assert.IsTrue(firstLineSuppression.IsInEffect);
+            Assert.AreEqual("DS137138", firstLineSuppression.GetSuppressedIds[0]);
+            Assert.AreEqual("DS126858", firstLineSuppression.GetSuppressedIds[1]);
+        }
+        
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void ExecuteSuppressionsWithExpiration(bool preferMultiLineFormat)
+        {
+            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;http://", "c");
 
-            Assert.IsTrue(result.Contains("MD5;http:///* DevSkim: ignore DS137138,DS126858 */"));
+            var opts = new SuppressionCommandOptions{
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true,
+                PreferMultiline = preferMultiLineFormat,
+                Duration = 30
+            };
+            var expectedExpiration = DateTime.Now.AddDays(30);
+            var resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            var result = File.ReadAllLines(sourceFile);
+            var firstLineSuppression = new Suppression(result[0]);
+            Assert.IsTrue(firstLineSuppression.IsInEffect);
+            Assert.AreEqual("DS137138", firstLineSuppression.GetSuppressedIds[0]);
+            Assert.AreEqual("DS126858", firstLineSuppression.GetSuppressedIds[1]);
+            Assert.AreEqual(expectedExpiration.Date, firstLineSuppression.ExpirationDate);
         }
 
-
-        [TestMethod]
-        public void NotExecuteSuppressions()
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void NotExecuteSuppressions(bool preferMultiLine)
         {
             (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;
             http://", "c");
@@ -56,13 +95,13 @@ namespace Microsoft.DevSkim.Tests
             var opts = new SuppressionCommandOptions{
                 Path = basePath,
                 SarifInput = sarifPath,
+                PreferMultiline = preferMultiLine
             };
 
             var resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(2, resultCode);
             var result = File.ReadAllText(sourceFile);
-
-            Assert.IsFalse(result.Contains("MD5;/* DevSkim: ignore DS126858 */"));
-            Assert.IsFalse(result.Contains("http:///* DevSkim: ignore DS137138 */"));
+            Assert.IsFalse(result.Contains("DevSkim: ignore"));
         }
 
         [TestMethod]
@@ -81,8 +120,7 @@ namespace Microsoft.DevSkim.Tests
             var resultCode = new SuppressionCommand(opts).Run();
             var result = File.ReadAllText(sourceFile);
 
-            Assert.IsFalse(result.Contains("MD5;/* DevSkim: ignore DS126858 */"));
-            Assert.IsFalse(result.Contains("http:///* DevSkim: ignore DS137138 */"));
+            Assert.IsFalse(result.Contains("DevSkim: ignore"));
         }
 
         [TestMethod]
@@ -101,12 +139,13 @@ namespace Microsoft.DevSkim.Tests
             var resultCode = new SuppressionCommand(opts).Run();
             var result = File.ReadAllText(sourceFile);
 
-            Assert.IsFalse(result.Contains("MD5;/* DevSkim: ignore DS126858 */"));
-            Assert.IsFalse(result.Contains("http:///* DevSkim: ignore DS137138 */"));
+            Assert.IsFalse(result.Contains("DevSkim: ignore"));
         }
 
-        [TestMethod]
-        public void ExecuteSuppresionsForMultilineFormattedFiles()
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void ExecuteSuppresionsForMultilineFormattedFiles(bool preferMultiLine)
         {
             (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5 \
             Test;
@@ -115,16 +154,20 @@ namespace Microsoft.DevSkim.Tests
             var opts = new SuppressionCommandOptions{
                 Path = basePath,
                 SarifInput = sarifPath,
-                ApplyAllSuppression = true
+                ApplyAllSuppression = true,
+                PreferMultiline = preferMultiLine
             };
 
             var resultCode = new SuppressionCommand(opts).Run();
-            var result = File.ReadAllText(sourceFile);
-
-            Assert.IsTrue(result.Contains(@"/* DevSkim: ignore DS126858 */MD5 \"));
-            Assert.IsTrue(result.Contains("http:///* DevSkim: ignore DS137138 */"));
+            Assert.AreEqual(0, resultCode);
+            var result = File.ReadAllLines(sourceFile);
+            var firstLineSuppression = new Suppression(result[0]);
+            Assert.IsTrue(firstLineSuppression.IsInEffect);
+            Assert.AreEqual("DS126858", firstLineSuppression.GetSuppressedIds.First());
+            var secondLineSuppression = new Suppression(result[2]);
+            Assert.IsTrue(secondLineSuppression.IsInEffect);
+            Assert.AreEqual("DS137138", secondLineSuppression.GetSuppressedIds.First());
         }
-
 
         private (string basePath, string sourceFile, string sarifPath) runAnalysis(string content, string ext) {
             var tempFileName = $"{Path.GetTempFileName()}.{ext}";
