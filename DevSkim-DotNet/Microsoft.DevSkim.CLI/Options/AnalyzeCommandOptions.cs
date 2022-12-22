@@ -14,7 +14,7 @@ public class AnalyzeCommandOptions
     public string Path { get; set; } = String.Empty;
     [Option('O',"output-file",Required = true, HelpText = "Filename for result file.")]
     public string OutputFile { get; set; } = String.Empty;
-    [Option('o', "output-format", Required = false, HelpText = "Format for output text.")]
+    [Option('o', "output-format", HelpText = "Format for output text.")]
     public string OutputTextFormat { get; set; } = String.Empty;
     [Option('f',"file-format", HelpText = "Format type for output. [text|sarif]", Default = "sarif")]
     public string OutputFileFormat { get; set; } = String.Empty;
