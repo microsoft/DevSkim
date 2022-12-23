@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using CommandLine;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Writers;
