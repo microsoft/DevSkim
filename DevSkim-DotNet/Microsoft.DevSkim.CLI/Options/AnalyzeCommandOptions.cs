@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CommandLine;
 using Microsoft.ApplicationInspector.RulesEngine;
+using Microsoft.DevSkim.CLI.Writers;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
@@ -14,8 +15,7 @@ public class AnalyzeCommandOptions
     public string Path { get; set; } = String.Empty;
     [Option('O',"output-file",Required = true, HelpText = "Filename for result file.")]
     public string OutputFile { get; set; } = String.Empty;
-
-    [Option('o', "output-format", Required = true, HelpText = "Format for output text.")]
+    [Option('o', "output-format", HelpText = "Format for output text.", Default = SimpleTextWriter.DefaultFormat)]
     public string OutputTextFormat { get; set; } = String.Empty;
     [Option('f',"file-format", HelpText = "Format type for output. [text|sarif]", Default = "sarif")]
     public string OutputFileFormat { get; set; } = String.Empty;
