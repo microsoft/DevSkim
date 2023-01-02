@@ -91,7 +91,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         }
 
                         var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" :
-                         $"{theContent[zbStartLine]}{ignoreComment}{Environment.NewLine}";
+                         $"{theContent[zbStartLine]} {ignoreComment}{Environment.NewLine}";
                         sb.Append(suppressionComment);
 
                         currLine = zbStartLine + 1;
@@ -143,7 +143,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     sb.Append($" until {expiration}");
                 }
 
-                sb.Append(devSkimLanguages.GetCommentSuffix(sourceLanguage));
+                sb.Append($" {devSkimLanguages.GetCommentSuffix(sourceLanguage)}");
                 return sb.ToString();
             }
         }
