@@ -40,6 +40,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         groupedResults.Where(x => _opts.FilesToApplyTo.Any(y => x.Key.ToString().Contains(y)));
                 }
 
+                // Exclude the files that do have any suppression matching the rules
                 if (_opts.RulesToApplyFrom.Any())
                 {
                     groupedResults = groupedResults.Where(x =>
@@ -58,6 +59,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                       .SelectMany(x => x.Locations, (x, y) => new { x.RuleId, y.PhysicalLocation })
                       .ToList();
 
+                    // Exclude the issues that do have any suppression matching the rules
+                    if (_opts.RulesToApplyFrom.Any())
+                    {
+                        issueRecords = issueRecords.Where(x => _opts.RulesToApplyFrom.Any(y => y == x.RuleId)).ToList();
+                    }
+
                     issueRecords
                     .Sort((a, b) => a.PhysicalLocation.Region.StartLine - b.PhysicalLocation.Region.StartLine);
 
@@ -74,7 +81,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                         Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
 
-                    var theContent = File.ReadAllText(potentialPath).Split(Environment.NewLine);
+                    var theContent = File.ReadAllText(potentialPath).Split(
+                        new string[] { "\r\n", "\r", "\n" },
+                        StringSplitOptions.None
+                    );
                     int currLine = 0;
                     var sb = new StringBuilder();
 

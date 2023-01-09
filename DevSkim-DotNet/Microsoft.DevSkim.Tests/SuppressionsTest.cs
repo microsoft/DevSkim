@@ -15,10 +15,11 @@ namespace Microsoft.DevSkim.Tests
         [DataRow(false)]
         public void ExecuteSuppressions(bool preferMultiLine)
         {
-            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;
             http://", "c");
 
-            var opts = new SuppressionCommandOptions{
+            var opts = new SuppressionCommandOptions
+            {
                 Path = basePath,
                 SarifInput = sarifPath,
                 ApplyAllSuppression = true,
@@ -41,9 +42,10 @@ namespace Microsoft.DevSkim.Tests
         [DataRow(false)]
         public void ExecuteMultipleSuppressionsInOneLine(bool preferMultiLineFormat)
         {
-            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;http://", "c");
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://", "c");
 
-            var opts = new SuppressionCommandOptions{
+            var opts = new SuppressionCommandOptions
+            {
                 Path = basePath,
                 SarifInput = sarifPath,
                 ApplyAllSuppression = true,
@@ -58,15 +60,41 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual("DS137138", firstLineSuppression.GetSuppressedIds[0]);
             Assert.AreEqual("DS126858", firstLineSuppression.GetSuppressedIds[1]);
         }
-        
+
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void ExecuteSuppressionsOnlyForSpecifiedRules(bool preferMultiLineFormat)
+        {
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://", "c");
+
+            var opts = new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true,
+                PreferMultiline = preferMultiLineFormat,
+                RulesToApplyFrom = new string[] { "DS137138" }
+            };
+
+            var resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            var result = File.ReadAllLines(sourceFile);
+            var firstLineSuppression = new Suppression(result[0]);
+            Assert.IsTrue(firstLineSuppression.IsInEffect);
+            Assert.AreEqual("DS137138", firstLineSuppression.GetSuppressedIds[0]);
+            Assert.AreEqual(1, firstLineSuppression.GetSuppressedIds.Length);
+        }
+
         [DataTestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void ExecuteSuppressionsWithExpiration(bool preferMultiLineFormat)
         {
-            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;http://", "c");
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://", "c");
 
-            var opts = new SuppressionCommandOptions{
+            var opts = new SuppressionCommandOptions
+            {
                 Path = basePath,
                 SarifInput = sarifPath,
                 ApplyAllSuppression = true,
@@ -89,10 +117,11 @@ namespace Microsoft.DevSkim.Tests
         [DataRow(false)]
         public void NotExecuteSuppressions(bool preferMultiLine)
         {
-            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;
             http://", "c");
 
-            var opts = new SuppressionCommandOptions{
+            var opts = new SuppressionCommandOptions
+            {
                 Path = basePath,
                 SarifInput = sarifPath,
                 PreferMultiline = preferMultiLine
@@ -107,10 +136,11 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void ExecuteDryRun()
         {
-            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;
             http://", "c");
 
-            var opts = new SuppressionCommandOptions{
+            var opts = new SuppressionCommandOptions
+            {
                 Path = basePath,
                 SarifInput = sarifPath,
                 ApplyAllSuppression = true,
@@ -126,14 +156,15 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void ExecuteSuppressionsOnSpecificFiles()
         {
-            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5;
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;
             http://", "c");
 
-            var opts = new SuppressionCommandOptions{
+            var opts = new SuppressionCommandOptions
+            {
                 Path = basePath,
                 SarifInput = sarifPath,
                 ApplyAllSuppression = true,
-                FilesToApplyTo = new string[]{"/tmp/not-existing.c"}
+                FilesToApplyTo = new string[] { "/tmp/not-existing.c" }
             };
 
             var resultCode = new SuppressionCommand(opts).Run();
@@ -147,11 +178,12 @@ namespace Microsoft.DevSkim.Tests
         [DataRow(false)]
         public void ExecuteSuppresionsForMultilineFormattedFiles(bool preferMultiLine)
         {
-            (string basePath, string sourceFile, string sarifPath)  = runAnalysis(@"MD5 \
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5 \
             Test;
             http://", "c");
 
-            var opts = new SuppressionCommandOptions{
+            var opts = new SuppressionCommandOptions
+            {
                 Path = basePath,
                 SarifInput = sarifPath,
                 ApplyAllSuppression = true,
@@ -169,7 +201,8 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual("DS137138", secondLineSuppression.GetSuppressedIds.First());
         }
 
-        private (string basePath, string sourceFile, string sarifPath) runAnalysis(string content, string ext) {
+        private (string basePath, string sourceFile, string sarifPath) runAnalysis(string content, string ext)
+        {
             var tempFileName = $"{Path.GetTempFileName()}.{ext}";
             var outFileName = Path.GetTempFileName();
             File.Delete(outFileName);
