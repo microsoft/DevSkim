@@ -81,10 +81,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
 
-                    var theContent = File.ReadAllText(potentialPath).Split(
-                        new string[] { "\r\n", "\r", "\n" },
-                        StringSplitOptions.None
-                    );
+                    var theContent = File.ReadAllLines(potentialPath);
                     int currLine = 0;
                     var sb = new StringBuilder();
 
