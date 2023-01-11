@@ -37,16 +37,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 if (_opts.FilesToApplyTo.Any())
                 {
                     groupedResults =
-                        groupedResults.Where(x => _opts.FilesToApplyTo.Any(y => x.Key.ToString().Contains(y)));
-                }
-
-                // Exclude the files that do have any suppression matching the rules
-                if (_opts.RulesToApplyFrom.Any())
-                {
-                    groupedResults = groupedResults.Where(x =>
-                        _opts.RulesToApplyFrom.Any(y =>
-                            x.Any(z =>
-                                z.RuleId == y)));
+                        groupedResults.Where(grouping => _opts.FilesToApplyTo.Any(fileName => grouping.Key.ToString().Contains(fileName)));
                 }
 
                 groupedResults = groupedResults.ToList();
@@ -55,11 +46,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                     var fileName = resultGroup.Key;
                     var potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
                     var issueRecords = resultGroup
-                      .Where(x => x.Locations is { })
-                      .SelectMany(x => x.Locations, (x, y) => new { x.RuleId, y.PhysicalLocation })
+                      .Where(result => result.Locations is { })
+                      .SelectMany(result => result.Locations, (x, y) => new { x.RuleId, y.PhysicalLocation })
                       .ToList();
 
-                    // Exclude the issues that do have any suppression matching the rules
+                    // Exclude the issues that do not have any suppression matching the rules
                     if (_opts.RulesToApplyFrom.Any())
                     {
                         issueRecords = issueRecords.Where(x => _opts.RulesToApplyFrom.Any(y => y == x.RuleId)).ToList();
