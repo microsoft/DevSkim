@@ -99,7 +99,7 @@ namespace Microsoft.DevSkim
         }
 
         public string[] GetSuppressedIds => _issues.Select(x => x.ID ?? string.Empty).Where(x => !string.IsNullOrEmpty(x)).ToArray();
-        
+
         protected const string KeywordAll = "all";
         protected const string KeywordIgnore = "ignore";
         protected const string KeywordPrefix = "DevSkim:";
