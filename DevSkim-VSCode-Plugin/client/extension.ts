@@ -3,11 +3,11 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
-import { ExtensionToCodeCommentStyle } from '../common/languagesAccess';
+import { ExtensionToCodeCommentStyle } from './common/languagesAccess';
 
 import * as path from 'path';
 import { workspace, ExtensionContext } from 'vscode';
-import { CodeFixMapping } from '../common/codeFixMapping';
+import { CodeFixMapping } from './common/codeFixMapping';
 import {
 	LanguageClient,
 	LanguageClientOptions,
@@ -16,9 +16,9 @@ import {
 } from 'vscode-languageclient/node';
 
 import * as vscode from 'vscode';
-import { DevSkimSettings, DevSkimSettingsObject } from '../common/devskimSettings';
-import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from '../common/notificationNames';
-import { selectors } from '../common/selectors';
+import { DevSkimSettings, DevSkimSettingsObject } from './common/devskimSettings';
+import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from './common/notificationNames';
+import { selectors } from './common/selectors';
 import { DevSkimFixer } from './devSkimFixer';
 
 let client: LanguageClient;
