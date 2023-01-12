@@ -62,7 +62,7 @@
 		"onLanguage:plaintext",
 		"onLanguage:python"
 	],
-	"main": "./client/out/client/extension",
+	"main": "./client/out/extension",
 	"contributes": {
 		"commands": [
 			{
@@ -155,15 +155,15 @@
 		"net-setup": "npm run build-net-dependencies",
 		"setup": "npm run net-setup && npm i",
 		"reset": "npm run clean && npm run setup",
-		"compile": "tsc -b client",
-		"watch": "tsc -b -w client",
-		"lint": "eslint ./client/src --ext .ts,.tsx",
+		"compile": "tsc -b",
+		"watch": "tsc -b -w",
+		"lint": "eslint ./client --ext .ts,.tsx",
 		"postinstall": "cd client && npm install && cd ..",
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
-		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/client/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-		"pack-ext": "npm run clean:out && npm run setup && node setPackageVersion.js && vsce package && node resetPackageVersion.js"
+		"pack-ext": "npm run clean:out && npm run setup && node ./scripts/setPackageVersion.js && vsce package && node ./scripts/resetPackageVersion.js"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",
