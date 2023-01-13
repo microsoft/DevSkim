@@ -86,7 +86,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
             
             // The path to CWD isnt relative 
-            Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri,Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
+            Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath(),Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
         }
     }
 }
