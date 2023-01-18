@@ -11,6 +11,10 @@ public class AnalyzeCommandOptions
 {
     [Option('r', HelpText = "Comma separated list of paths to rules files to use", Separator = ',')]
     public IEnumerable<string> Rules { get; set; } = Array.Empty<string>();
+    [Option("rule-ids", HelpText = "Comma separated list of rule IDs to limit analysis to", Separator = ',')]
+    public IEnumerable<string> RuleIds { get; set; } = Array.Empty<string>();
+    [Option("ignore-rule-ids", HelpText = "Comma separated list of rule IDs to ignore", Separator = ',')]
+    public IEnumerable<string> IgnoreRuleIds { get; set; } = Array.Empty<string>();
     [Option('I',Required = true, HelpText = "Path to source code")]
     public string Path { get; set; } = String.Empty;
     [Option('O',"output-file",Required = true, HelpText = "Filename for result file.")]
