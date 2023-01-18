@@ -86,7 +86,67 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
             
             // The path to CWD isnt relative 
-            Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri,Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
+            Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath(),Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
+        }
+        
+        [DataTestMethod]
+        [DataRow("DS126858","DS126858")]
+        [DataRow("DS137138","DS137138")]
+        public void TestFilterByIds(string idToLimitTo, string idToExpect)
+        {
+            var tempFileName = $"{Path.GetTempFileName()}.cs";
+            var outFileName = Path.GetTempFileName();
+            // GetTempFileName actually makes the file
+            File.Delete(outFileName);
+            using var file = File.Open(tempFileName, FileMode.Create);
+            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://\n"));
+            file.Close();
+
+            var opts = new AnalyzeCommandOptions()
+            {
+                Path = tempFileName,
+                OutputFile = outFileName,
+                OutputFileFormat = "sarif",
+                RuleIds = new []{ idToLimitTo }
+            };
+            new AnalyzeCommand(opts).Run();
+            
+            var resultCode = new AnalyzeCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            var resultsFile = SarifLog.Load(outFileName);
+            Assert.AreEqual(1, resultsFile.Runs.Count);
+            Assert.AreEqual(1, resultsFile.Runs[0].Results.Count);
+            Assert.AreEqual(idToExpect, resultsFile.Runs[0].Results[0].RuleId);
+        }
+        
+        [DataTestMethod]
+        [DataRow("DS126858","DS137138")]
+        [DataRow("DS137138","DS126858")]
+        public void TestIgnoreIds(string idToIgnore, string idToExpect)
+        {
+            var tempFileName = $"{Path.GetTempFileName()}.cs";
+            var outFileName = Path.GetTempFileName();
+            // GetTempFileName actually makes the file
+            File.Delete(outFileName);
+            using var file = File.Open(tempFileName, FileMode.Create);
+            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://\n"));
+            file.Close();
+
+            var opts = new AnalyzeCommandOptions()
+            {
+                Path = tempFileName,
+                OutputFile = outFileName,
+                OutputFileFormat = "sarif",
+                IgnoreRuleIds = new []{ idToIgnore }
+            };
+            new AnalyzeCommand(opts).Run();
+            
+            var resultCode = new AnalyzeCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            var resultsFile = SarifLog.Load(outFileName);
+            Assert.AreEqual(1, resultsFile.Runs.Count);
+            Assert.AreEqual(1, resultsFile.Runs[0].Results.Count);
+            Assert.AreEqual(idToExpect, resultsFile.Runs[0].Results[0].RuleId);
         }
     }
 }

@@ -182,6 +182,16 @@ namespace Microsoft.DevSkim.CLI.Commands
                     return (int)ExitCode.CriticalError;
                 }
             }
+
+            if (opts.RuleIds.Any())
+            {
+                devSkimRuleSet = devSkimRuleSet.WithIds(opts.RuleIds);
+            }
+
+            if (opts.IgnoreRuleIds.Any())
+            {
+                devSkimRuleSet = devSkimRuleSet.WithoutIds(opts.IgnoreRuleIds);
+            }
             
             if (!devSkimRuleSet.Any())
             {
