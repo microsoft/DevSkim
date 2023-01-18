@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CommandLine;
 using LibGit2Sharp;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
@@ -115,13 +116,22 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 if (string.IsNullOrEmpty(opts.CommentsPath) || string.IsNullOrEmpty(opts.LanguagesPath))
                 {
-                    Console.WriteLine("When either comments or languages are specified both must be specified.");
+                    Console.Error.WriteLine("When either comments or languages are specified both must be specified.");
                     return (int)ExitCode.ArgumentParsingError;
                 }
-                languages = Languages.FromConfigurationFiles(null, opts.CommentsPath, opts.LanguagesPath);
+
+                try
+                {
+                    languages = DevSkimLanguages.FromFiles(opts.CommentsPath, opts.LanguagesPath);
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine($"Either the Comments or Languages file was not able to be read. ({e.Message})");
+                    return (int)ExitCode.ArgumentParsingError;
+                }
             }
             languages ??= DevSkimLanguages.LoadEmbedded();
-            return RunFileEntries(fileListing, null, languages);
+            return RunFileEntries(fileListing, languages);
         }
 
         private static bool IsGitIgnored(string fp)
@@ -171,7 +181,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             return childPath;
         }
 
-        private int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null, Languages devSkimLanguages)
+        private int RunFileEntries(IEnumerable<FileEntry> fileListing, Languages devSkimLanguages)
         {
             DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
             if (opts.Rules.Any())
@@ -239,8 +249,8 @@ namespace Microsoft.DevSkim.CLI.Commands
             GitInformation? information = GenerateGitInformation(Path.GetFullPath(opts.Path));
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,
-                                                           (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile)):outputStreamWriter,
-                                                           (outputStreamWriter is null)?opts.OutputFile:null,
+                                                           string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile),
+                                                           opts.OutputFile,
                                                            information);
 
             int filesAnalyzed = 0;

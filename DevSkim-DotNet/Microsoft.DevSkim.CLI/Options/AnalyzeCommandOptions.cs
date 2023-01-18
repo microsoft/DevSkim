@@ -18,10 +18,10 @@ public class AnalyzeCommandOptions
     [Option("ignore-rule-ids", HelpText = "Comma separated list of rule IDs to ignore", Separator = ',')]
     public IEnumerable<string> IgnoreRuleIds { get; set; } = Array.Empty<string>();
 
-    [Option("languages",Required = true, HelpText = "Path to custom json formatted Language file to specify languages, when specified comments must also be specified")]
+    [Option("languages",Required = false, HelpText = "Path to custom json formatted Language file to specify languages, when specified comments must also be specified")]
     public string LanguagesPath { get; set; } = string.Empty;
     
-    [Option("comments",Required = true, HelpText = "Path to custom json formatted Comments file to specify languages, when specified languages must also be specified")]
+    [Option("comments",Required = false, HelpText = "Path to custom json formatted Comments file to specify languages, when specified languages must also be specified")]
     public string CommentsPath { get; set; } = string.Empty;
     
     [Option('I',Required = true, HelpText = "Path to source code")]
