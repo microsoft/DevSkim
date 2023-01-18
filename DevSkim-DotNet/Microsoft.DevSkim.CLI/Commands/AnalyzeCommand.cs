@@ -106,9 +106,22 @@ namespace Microsoft.DevSkim.CLI.Commands
                         innerList.AddRange(extractor.Extract(file, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
                     }
 
-                    fileListing = innerList;                }
+                    fileListing = innerList;                
+                }
             }
-            return RunFileEntries(fileListing);
+
+            Languages? languages = null;
+            if (!string.IsNullOrEmpty(opts.CommentsPath) || !string.IsNullOrEmpty(opts.LanguagesPath))
+            {
+                if (string.IsNullOrEmpty(opts.CommentsPath) || string.IsNullOrEmpty(opts.LanguagesPath))
+                {
+                    Console.WriteLine("When either comments or languages are specified both must be specified.");
+                    return (int)ExitCode.ArgumentParsingError;
+                }
+                languages = Languages.FromConfigurationFiles(null, opts.CommentsPath, opts.LanguagesPath);
+            }
+            languages ??= DevSkimLanguages.LoadEmbedded();
+            return RunFileEntries(fileListing, null, languages);
         }
 
         private static bool IsGitIgnored(string fp)
@@ -158,10 +171,9 @@ namespace Microsoft.DevSkim.CLI.Commands
             return childPath;
         }
 
-        public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
+        private int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null, Languages devSkimLanguages)
         {
             DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
-            Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
             if (opts.Rules.Any())
             {
                 foreach (var path in opts.Rules)
