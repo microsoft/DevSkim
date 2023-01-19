@@ -23,7 +23,7 @@ public class AnalyzeCommandOptions
     
     [Option("comments",Required = false, HelpText = "Path to custom json formatted Comments file to specify languages, when specified languages must also be specified")]
     public string CommentsPath { get; set; } = string.Empty;
-    
+
     [Option('I',Required = true, HelpText = "Path to source code")]
     public string Path { get; set; } = string.Empty;
     
