@@ -88,6 +88,107 @@ namespace Microsoft.DevSkim.Tests
             // The path to CWD isnt relative 
             Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath(),Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
         }
+
+        public const string contentToTest = @"MD5;
+// MD5
+/* MD5
+*/";
+        
+        public const string languageFileContent = @"[
+    {
+        ""name"": ""lorem"",
+        ""extensions"": [ "".xx"" ]
+    }
+]";
+
+        public const string commentFileContent = @"[
+    {
+        ""language"": 
+        [
+            ""lorem""
+        ],
+        ""inline"": ""//"",
+        ""prefix"": ""/*"",
+        ""suffix"": ""*/""
+    }
+  ]";
+        
+        public const string ruleFileContent = @"[
+    {
+        ""name"": ""Win32 - Hard-coded SSL/TLS Protocol"",
+        ""id"": ""DSTEST"",
+        ""description"": ""Test rule that should match cs but not other languages"",
+        ""applies_to"": [
+            ""lorem""
+        ],
+        ""tags"": [
+            ""Tests.LanguagesAndComments""
+        ],
+        ""severity"": ""ManualReview"",
+        ""confidence"" : ""High"",
+        ""rule_info"": ""DSTEST.md"",
+        ""patterns"": [
+            {
+                ""pattern"": ""MD5"",
+                ""type"": ""regex"",
+                ""scopes"": [
+                    ""code""
+                ]
+            }
+        ]
+    }
+]";
+        
+        [DataRow(commentFileContent, languageFileContent, ruleFileContent, 0, 1)]
+        [DataRow(languageFileContent, commentFileContent, ruleFileContent, 2, 1)]
+        [DataRow(commentFileContent, commentFileContent, ruleFileContent, 2, 1)]
+        [DataRow(languageFileContent, languageFileContent, ruleFileContent, 0, 3)] // We would expect this to fail, but failing to deserialize comments fails open currently in AI, thus comments are ignored, thus 3 results
+
+        [DataTestMethod]
+        public void TestCustomLanguageAndComments(string commentFileContentIn, string languageFileContentIn, string ruleFileContentIn, int expectedExitCode, int expectedNumResults)
+        {
+            var tempFileName = PathHelper.GetRandomTempFile("xx");
+            var languagesFileName = PathHelper.GetRandomTempFile("json");
+            var commentsFileName = PathHelper.GetRandomTempFile("json");
+            var ruleFileName = PathHelper.GetRandomTempFile("json");
+            var outFileName = PathHelper.GetRandomTempFile("sarif");
+            using var file = File.Open(tempFileName, FileMode.Create);
+            file.Write(Encoding.UTF8.GetBytes(contentToTest));
+            file.Close();
+            using var languageFile = File.Open(languagesFileName, FileMode.Create);
+            languageFile.Write(Encoding.UTF8.GetBytes(languageFileContentIn));
+            languageFile.Close();
+            using var commentsFile = File.Open(commentsFileName, FileMode.Create);
+            commentsFile.Write(Encoding.UTF8.GetBytes(commentFileContentIn));
+            commentsFile.Close();
+            using var ruleFile = File.Open(ruleFileName, FileMode.Create);
+            ruleFile.Write(Encoding.UTF8.GetBytes(ruleFileContentIn));
+            ruleFile.Close();
+            var opts = new AnalyzeCommandOptions()
+            {
+                Path = tempFileName,
+                OutputFile = outFileName,
+                OutputFileFormat = "sarif",
+                CommentsPath = commentsFileName,
+                LanguagesPath = languagesFileName,
+                Rules = new []{ ruleFileName },
+                IgnoreDefaultRules = true
+            };
+            new AnalyzeCommand(opts).Run();
+            
+            var resultCode = new AnalyzeCommand(opts).Run();
+            Assert.AreEqual(expectedExitCode, resultCode);
+            if (expectedExitCode == 0)
+            {
+                var resultsFile = SarifLog.Load(outFileName);
+                Assert.AreEqual(1, resultsFile.Runs.Count);
+                Assert.AreEqual(expectedNumResults, resultsFile.Runs[0].Results.Count);
+                if (expectedNumResults > 0)
+                {
+                    Assert.AreEqual("DSTEST", resultsFile.Runs[0].Results[0].RuleId);
+                }
+            }
+        }
         
         [DataTestMethod]
         [DataRow("DS126858","DS126858")]

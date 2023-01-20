@@ -257,10 +257,9 @@ namespace Microsoft.DevSkim.CLI.Commands
             int filesSkipped = 0;
             int filesAffected = 0;
             int issuesCount = 0;
-            var Languages = new Languages();
             void parseFileEntry(FileEntry fileEntry)
             {
-                Languages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
+                devSkimLanguages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
 
                 // Skip files written in unknown language
                 if (string.IsNullOrEmpty(languageInfo.Name))
