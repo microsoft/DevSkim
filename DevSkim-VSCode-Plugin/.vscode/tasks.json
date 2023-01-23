@@ -4,6 +4,7 @@
 		{
 			"type": "npm",
 			"script": "compile",
+			"label": "npm-compile",
 			"group": "build",
 			"presentation": {
 				"panel": "dedicated",
