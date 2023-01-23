@@ -138,6 +138,17 @@
 					"type": "boolean",
 					"default": true,
 					"description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
+				},
+				"MS-CST-E.vscode-devskim.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces communications between VS Code and the language server."
 				}
 			}
 		}
