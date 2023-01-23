@@ -63,7 +63,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     .GroupBy(x => x.PhysicalLocation.Region.StartLine)
                     .Select(x => new
                     {
-                        PhysicalLocation = x.FirstOrDefault().PhysicalLocation,
+                        PhysicalLocation = x.FirstOrDefault()?.PhysicalLocation,
                         RulesId = string.Join(",", x.Select(y => y.RuleId).Distinct())
                     });
 
@@ -78,21 +78,24 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                     foreach (var issueRecord in distinctIssueRecords)
                     {
-                        var region = issueRecord?.PhysicalLocation.Region;
-                        var zbStartLine = region.StartLine - 1;
-                        var isMultiline = theContent[zbStartLine].EndsWith(@"\");
-                        var ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
-
-                        foreach (var line in theContent[currLine..zbStartLine])
+                        if (issueRecord.PhysicalLocation is { })
                         {
-                            sb.Append($"{line}{Environment.NewLine}");
+                            var region = issueRecord.PhysicalLocation.Region;
+                            var zbStartLine = region.StartLine - 1;
+                            var isMultiline = theContent[zbStartLine].EndsWith(@"\");
+                            var ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
+
+                            foreach (var line in theContent[currLine..zbStartLine])
+                            {
+                                sb.Append($"{line}{Environment.NewLine}");
+                            }
+
+                            var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" :
+                                $"{theContent[zbStartLine]} {ignoreComment}{Environment.NewLine}";
+                            sb.Append(suppressionComment);
+
+                            currLine = zbStartLine + 1;
                         }
-
-                        var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" :
-                         $"{theContent[zbStartLine]} {ignoreComment}{Environment.NewLine}";
-                        sb.Append(suppressionComment);
-
-                        currLine = zbStartLine + 1;
                     }
 
                     if (currLine < theContent.Length)

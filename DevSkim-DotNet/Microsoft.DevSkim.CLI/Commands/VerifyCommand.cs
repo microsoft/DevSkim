@@ -3,6 +3,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
 
 namespace Microsoft.DevSkim.CLI.Commands
@@ -18,6 +19,12 @@ namespace Microsoft.DevSkim.CLI.Commands
         
         public int Run()
         {
+            if (!string.IsNullOrEmpty(_opts.CommentsPath) ^ !string.IsNullOrEmpty(_opts.LanguagesPath))
+            {
+                Console.WriteLine("If languages or comments are specified both must be specified.");
+                return (int)ExitCode.ArgumentParsingError;
+            }
+            
             DevSkimRuleSet devSkimRuleSet = new();
 
             foreach (var path in _opts.Rules)
@@ -27,7 +34,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
             {
-                LanguageSpecs = DevSkimLanguages.LoadEmbedded()
+                LanguageSpecs = !string.IsNullOrEmpty(_opts.CommentsPath) && !string.IsNullOrEmpty(_opts.LanguagesPath) ? DevSkimLanguages.FromFiles(_opts.CommentsPath, _opts.LanguagesPath) : new Languages()
                 //TODO: Add logging factory to get validation errors.
             });
 
