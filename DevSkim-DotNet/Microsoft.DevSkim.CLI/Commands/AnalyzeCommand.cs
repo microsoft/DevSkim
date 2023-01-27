@@ -143,7 +143,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 return extractor.Extract(file,extractorOptions);
             }
 
-            return extractorOptions.FileNamePasses(file) ? new []{FileEntry.FromFileName(file)} : Array.Empty<FileEntry>();
+            return extractorOptions.FileNamePasses(file) ? FilenameToFileEntryArray(file) : Array.Empty<FileEntry>();
         }
 
         private static bool IsGitIgnored(string fp)
@@ -391,7 +391,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             return null;
         }
 
-        private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
+        private static IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
         {
             try
             {
