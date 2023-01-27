@@ -49,6 +49,8 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
+            var extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
+            // Analysing a single file
             if (!Directory.Exists(fp))
             {
                 if (opts.RespectGitIgnore)
@@ -60,10 +62,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                             Console.WriteLine("The file specified was ignored by gitignore.");
                             return (int)ExitCode.CriticalError;
                         }
-                        else
-                        {
-                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
-                        }
+
+                        fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
                     }
                     else
                     {
@@ -73,9 +73,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 else
                 {
-                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
+                    fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
                 }
             }
+            // Analyzing a directory
             else
             {
                 if (opts.RespectGitIgnore)
@@ -87,7 +88,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                             .Where(fileName => !IsGitIgnored(fileName));
                         foreach (var notIgnoredFileName in files)
                         {
-                            innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
+                            innerList.AddRange(
+                                FilePathToFileEntries(opts, notIgnoredFileName, extractor, extractorOpts));
                         }
 
                         fileListing = innerList;
@@ -104,7 +106,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                     {
-                        innerList.AddRange(extractor.Extract(file, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
+                        innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
                     }
 
                     fileListing = innerList;                
@@ -132,6 +134,16 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
             languages ??= DevSkimLanguages.LoadEmbedded();
             return RunFileEntries(fileListing, languages);
+        }
+
+        private static IEnumerable<FileEntry> FilePathToFileEntries(AnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
+        {
+            if (opts.CrawlArchives)
+            {
+                return extractor.Extract(file,extractorOptions);
+            }
+
+            return extractorOptions.FileNamePasses(file) ? new []{FileEntry.FromFileName(file)} : Array.Empty<FileEntry>();
         }
 
         private static bool IsGitIgnored(string fp)
