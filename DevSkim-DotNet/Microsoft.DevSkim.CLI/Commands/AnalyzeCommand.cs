@@ -136,6 +136,14 @@ namespace Microsoft.DevSkim.CLI.Commands
             return RunFileEntries(fileListing, languages);
         }
 
+        /// <summary>
+        /// Based on the options, return an enumeration of the files from the path.  For example, if crawl archives is set, will crawl into archives if possible, otherwise just returns the file itself in a FileEntry wrapper
+        /// </summary>
+        /// <param name="opts"></param>
+        /// <param name="file"></param>
+        /// <param name="extractor"></param>
+        /// <param name="extractorOptions"></param>
+        /// <returns></returns>
         private static IEnumerable<FileEntry> FilePathToFileEntries(AnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
         {
             if (opts.CrawlArchives)
@@ -146,6 +154,11 @@ namespace Microsoft.DevSkim.CLI.Commands
             return extractorOptions.FileNamePasses(file) ? FilenameToFileEntryArray(file) : Array.Empty<FileEntry>();
         }
 
+        /// <summary>
+        /// Checks if the file path is ignored by git
+        /// </summary>
+        /// <param name="fp"></param>
+        /// <returns></returns>
         private static bool IsGitIgnored(string fp)
         {
             var process = Process.Start(new ProcessStartInfo("git")
@@ -159,6 +172,10 @@ namespace Microsoft.DevSkim.CLI.Commands
             return process?.ExitCode == 0 && stdOut?.Length > 0;
         }
 
+        /// <summary>
+        /// Checks if git is available on the path
+        /// </summary>
+        /// <returns></returns>
         private static bool IsGitPresent()
         {
             var process = Process.Start(new ProcessStartInfo("git")
@@ -391,14 +408,22 @@ namespace Microsoft.DevSkim.CLI.Commands
             return null;
         }
 
-        private static IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
+        /// <summary>
+        /// Open a read stream for the given file name and return a collection with a single file entry representing that file, or an empty collection if the file could not be read
+        /// </summary>
+        /// <param name="pathToFile"></param>
+        /// <returns></returns>
+        private static ICollection<FileEntry> FilenameToFileEntryArray(string pathToFile)
         {
             try
             {
-                var fs = new FileStream(x, FileMode.Open, FileAccess.Read);
-                return new FileEntry[] { new FileEntry(x, fs, null, true) };
+                var fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read);
+                return new FileEntry[] { new FileEntry(pathToFile, fs, null, true) };
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                Debug.WriteLine("The file located at {0} could not be read", pathToFile);
+            }
             return Array.Empty<FileEntry>();
         }
 
