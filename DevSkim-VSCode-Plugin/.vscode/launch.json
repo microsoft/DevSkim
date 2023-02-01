@@ -1,15 +1,25 @@
-// A launch configuration that compiles the extension and then opens it inside a new window
 {
 	"version": "0.2.0",
 	"configurations": [
 		{
 			"type": "extensionHost",
 			"request": "launch",
-			"name": "Launch Client",
+			"name": "Launch VSC Client",
 			"runtimeExecutable": "${execPath}",
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+			"sourceMaps": true,
 			"outFiles": ["${workspaceRoot}/client/out/**/*.js"],
-			"preLaunchTask": "npm-compile"
+			"preLaunchTask": "npm-build"
+		},
+		{
+			"type": "extensionHost",
+			"request": "launch",
+			"name": "Clean + Launch VSC Client",
+			"runtimeExecutable": "${execPath}",
+			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+			"sourceMaps": true,
+			"outFiles": ["${workspaceRoot}/client/out/**/*.js"],
+			"preLaunchTask": "npm-clean + npm-build"
 		}
 	]
 }

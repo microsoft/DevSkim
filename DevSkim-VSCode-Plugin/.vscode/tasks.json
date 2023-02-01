@@ -3,9 +3,28 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "compile",
-			"label": "npm-compile",
+			"script": "clean",
+			"label": "npm-clean",
 			"group": "build",
+			"options": {
+				"cwd": "${workspaceRoot}"
+			},
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "never"
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"label": "npm-build",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceRoot}"
+			},
 			"presentation": {
 				"panel": "dedicated",
 				"reveal": "never"
@@ -17,10 +36,14 @@
 		{
 			"type": "npm",
 			"script": "watch",
+			"label": "npm-watch",
 			"isBackground": true,
 			"group": {
 				"kind": "build",
 				"isDefault": true
+			},
+			"options": {
+				"cwd": "${workspaceRoot}"
 			},
 			"presentation": {
 				"panel": "dedicated",
@@ -29,6 +52,12 @@
 			"problemMatcher": [
 				"$tsc-watch"
 			]
+		},
+		{
+			"label": "npm-clean + npm-build",
+			"dependsOrder": "sequence",
+			"dependsOn": ["npm-clean", "npm-build"]
 		}
+		  
 	]
 }
