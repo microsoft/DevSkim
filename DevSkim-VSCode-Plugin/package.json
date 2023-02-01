@@ -165,6 +165,7 @@
 		"setup": "npm install && npm run net-setup",
 		"reset": "npm run clean && npm run setup",
 		"compile": "tsc -b",
+		"build": "npm run setup && npm run compile",
 		"watch": "tsc -b -w",
 		"lint": "eslint ./client --ext .ts,.tsx",
 		"postinstall": "cd client && npm install && cd ..",

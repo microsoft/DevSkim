@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "npm",
-			"script": "compile",
+			"script": "build",
 			"label": "npm-build",
 			"group": "build",
 			"options": {
