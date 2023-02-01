@@ -1,7 +1,7 @@
 {
 	"name": "vscode-devskim",
 	"displayName": "DevSkim",
-	"description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click",
+	"description": "DevSkim Security Analyzer Plugin for IDEs.  Find security mistakes as the code is authored, and fix them with a mouse click.",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
 	"version": "0.0.0-placeholder",
@@ -66,31 +66,30 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "devskim.scanWorkspace",
+				"command": "MS-CST-E.vscode-devskim.scanWorkspace",
 				"category": "DevSkim",
 				"title": "Scan all files in the workspace"
 			}
 		],
 		"configuration": {
-			"type": "object",
-			"title": "DevSkim configuration",
+			"title": "DevSkim",
 			"properties": {
-				"devskim.enableManualReviewRules": {
+				"MS-CST-E.vscode-devskim.rules.enableManualReviewRules": {
 					"type": "boolean",
 					"default": false,
 					"description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
 				},
-				"devskim.enableBestPracticeRules": {
+				"MS-CST-E.vscode-devskim.rules.enableBestPracticeRules": {
 					"type": "boolean",
 					"default": false,
 					"description": "Turn on the rules of severity \"Best-Practice\". These rules either flag issues that are typically of a lower severity, or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities."
 				},
-				"devskim.suppressionDurationInDays": {
+				"MS-CST-E.vscode-devskim.suppressions.suppressionDurationInDays": {
 					"type": "number",
 					"default": 30,
 					"description": "DevSkim allows for findings to be suppressed for a temporary period of time. The default is 30 days.  Set to 0 to disable temporary suppressions."
 				},
-				"devskim.suppressionCommentStyle": {
+				"MS-CST-E.vscode-devskim.suppressions.suppressionCommentStyle": {
 					"type": "string",
 					"enum": [
 						"line",
@@ -99,17 +98,17 @@
 					"default": "line",
 					"description": "When DevSkim inserts a suppression comment it defaults to using single line comments for every language that has them.  Setting this to block will instead use block comments for the languages that support them.  Block comments are suggested if regularly adding explanations for why a finding was suppressed"
 				},
-				"devskim.manualReviewerName": {
+				"MS-CST-E.vscode-devskim.suppressions.manualReviewerName": {
 					"type": "string",
 					"default": "",
 					"description": "If set, insert this name in inserted suppression comments."
 				},
-				"devskim.guidanceBaseURL": {
+				"MS-CST-E.vscode-devskim.guidance.guidanceBaseURL": {
 					"type": "string",
 					"default": "https://github.com/Microsoft/DevSkim/blob/main/guidance/",
 					"description": "Each finding has a guidance file that describes the issue and solutions in more detail.  By default, those files live on the DevSkim github repo however, with this setting, organizations can clone and customize that repo, and specify their own base URL for the guidance."
 				},
-				"devskim.ignoreFiles": {
+				"MS-CST-E.vscode-devskim.ignores.ignoreFiles": {
 					"type": "array",
 					"default": [
 						"\\.(exe|dll|so|dylib|bin|so\\..*)$",
@@ -129,12 +128,12 @@
 					],
 					"description": "Regular expressions to exclude files and folders from analysis. May not contain commas."
 				},
-				"devskim.ignoreRulesList": {
+				"MS-CST-E.vscode-devskim.ignores.ignoreRulesList": {
 					"type": "string",
 					"default": "",
 					"description": "Comma separated list of DevSkim Rule IDs to be ignored. "
 				},
-				"devskim.removeFindingsOnClose": {
+				"MS-CST-E.vscode-devskim.findings.removeFindingsOnClose": {
 					"type": "boolean",
 					"default": true,
 					"description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
@@ -157,14 +156,13 @@
 		"ms-dotnettools.vscode-dotnet-runtime"
 	],
 	"scripts": {
-		"clean": "npm run clean:net && npm run clean:out && npm run clean:modules && clean:vsix",
+		"clean": "npm run clean:net && npm run clean:out && npm run clean:modules && npm run clean:vsix",
 		"clean:net": "npx --quiet rimraf devskimBinaries",
-		"clean:out": "npx --quiet rimraf out client/out **/tsconfig.tsbuildinfo",
-		"clean:modules": "npx --quiet rimraf node_modules client/node_modules",
-		"clean:vsix": "npx --quiet rimraf **.vsix",
-		"build-net-dependencies": "dotnet publish -f net7.0 ../DevSkim-DotNet/Microsoft.DevSkim.LanguageServer -o devskimBinaries",
-		"net-setup": "npm run build-net-dependencies",
-		"setup": "npm run net-setup && npm i",
+		"clean:out": "npx --quiet rimraf **/out **/tsconfig.tsbuildinfo",
+		"clean:modules": "npx --quiet rimraf **/node_modules",
+		"clean:vsix": "npx --quiet rimraf *.vsix",
+		"net-setup": "dotnet publish -f net7.0 ../DevSkim-DotNet/Microsoft.DevSkim.LanguageServer -o devskimBinaries",
+		"setup": "npm install && npm run net-setup",
 		"reset": "npm run clean && npm run setup",
 		"compile": "tsc -b",
 		"watch": "tsc -b -w",
