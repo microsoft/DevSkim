@@ -3,8 +3,24 @@
 	"tasks": [
 		{
 			"type": "npm",
+			"script": "clean",
+			"label": "npm-clean",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceRoot}/DevSkim-VSCode-Plugin"
+			},
+			"presentation": {
+				"panel": "dedicated",
+				"reveal": "never"
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"type": "npm",
 			"script": "compile",
-			"label": "npm-compile",
+			"label": "npm-build",
 			"group": "build",
 			"options": {
 				"cwd": "${workspaceRoot}/DevSkim-VSCode-Plugin"
@@ -20,10 +36,14 @@
 		{
 			"type": "npm",
 			"script": "watch",
+			"label": "npm-watch",
 			"isBackground": true,
 			"group": {
 				"kind": "build",
 				"isDefault": true
+			},
+			"options": {
+				"cwd": "${workspaceRoot}/DevSkim-VSCode-Plugin"
 			},
 			"presentation": {
 				"panel": "dedicated",
@@ -32,6 +52,12 @@
 			"problemMatcher": [
 				"$tsc-watch"
 			]
+		},
+		{
+			"label": "npm-clean + npm-build",
+			"dependsOrder": "sequence",
+			"dependsOn": ["npm-clean", "npm-build"]
 		}
+		  
 	]
 }

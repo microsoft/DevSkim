@@ -9,7 +9,17 @@
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}/DevSkim-VSCode-Plugin"],
 			"sourceMaps": true,
 			"outFiles": ["${workspaceRoot}/DevSkim-VSCode-Plugin/client/out/**/*.js"],
-			"preLaunchTask": "npm-compile"
+			"preLaunchTask": "npm-build"
+		},
+		{
+			"type": "extensionHost",
+			"request": "launch",
+			"name": "Clean + Launch VSC Client",
+			"runtimeExecutable": "${execPath}",
+			"args": ["--extensionDevelopmentPath=${workspaceRoot}/DevSkim-VSCode-Plugin"],
+			"sourceMaps": true,
+			"outFiles": ["${workspaceRoot}/DevSkim-VSCode-Plugin/client/out/**/*.js"],
+			"preLaunchTask": "npm-clean + npm-build"
 		}
 	]
 }
