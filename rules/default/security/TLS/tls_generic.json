@@ -26,6 +26,20 @@
                 "modifiers" : ["i"],
                 "_comment": "Generic reference to a SSL/TLS version"
             }
+        ],
+        "conditions" : [
+            {
+                "pattern" :
+                {
+                    "pattern": "--tlsv1.3",
+                    "type": "string",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
         ]
     },
     {
@@ -220,6 +234,48 @@
                 "_comment": "mbedTLS functions that implement specific protocol versions"
             }            
         ]
+    },
+    {
+        "name": "Generic: Hard-coded SSL/TLS Protocol",
+        "id": "DS440016",
+        "description": "Curl: Hard-coded SSL/TLS Protocol",
+        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
+        "overrides": [
+            "DS440000"
+        ],
+        "does_not_apply_to": [
+            "json",
+            "yaml"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hard-Coded"
+        ],
+        "severity": "ManualReview",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "--(sslv2|sslv3|tlsv1|tlsv11|tlsv1\\.1|tlsv1\\.2)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "curl"
+            }
+        ],
+        "conditions" : [
+            {
+                "pattern" :
+                {
+                    "pattern": "--tlsv1.3",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
+        ]
     },          
     {
         "name": "Generic: Hard-coded SSL/TLS Protocol",
@@ -246,14 +302,6 @@
                     "code"
                 ],
                 "_comment": "wget"
-            },
-            {
-                "pattern": "--(sslv2|sslv3|tlsv1|tlsv11|tlsv1\\.1|tlsv1\\.2)",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "curl"
             },
             {
                 "pattern": "CURL_SSLVERSION_(MAX_)?(SSL|TLS)v[0123_]+",
