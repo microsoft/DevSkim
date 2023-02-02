@@ -71,13 +71,29 @@ export function activate(context: ExtensionContext) {
 		{
 			const workPath = path.dirname(serverModule);
 			const serverOptions: ServerOptions = {
-				run: { command: "dotnet", args: [serverModule], options: {cwd: workPath}},
-				debug: { command: "dotnet", args: [serverModule], options: {cwd: workPath}}
+				run: { 
+					command: "dotnet", 
+					args: [serverModule], 
+					options: {cwd: workPath},
+					transport: TransportKind.pipe
+				},
+				debug: { 
+					command: "dotnet", 
+					args: [serverModule], 
+					options: {cwd: workPath},
+					transport: TransportKind.pipe
+				}
 			};
 	
 			// Options to control the language client
 			const clientOptions: LanguageClientOptions = {
-				documentSelector: selectors
+				documentSelector: selectors,
+				progressOnInitialization: true,
+				synchronize: {
+					// Synchronize the setting section 'languageServerExample' to the server
+					configurationSection: "devskim",
+					//fileEvents: workspace.createFileSystemWatcher("**/*.cs"),
+				},
 			};
 	
 			client = new LanguageClient(
@@ -86,7 +102,10 @@ export function activate(context: ExtensionContext) {
 				serverOptions,
 				clientOptions
 			);
-			client.onReady().then(() => {
+			client.registerProposedFeatures();
+			const disposable = client.start();
+			
+			//client.onReady().then(() => {
 				// client.sendNotification(getSetSettings(),getDevSkimConfiguration());
 				// client.sendNotification(getDotNetPath(),dotNetPath);
 				// client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
@@ -98,16 +117,16 @@ export function activate(context: ExtensionContext) {
 					client.sendNotification(getSetSettings(),newConfig);
 					fixer.setConfig(newConfig);
 				});
-			});
+			//});
 			// Start the client. This will also launch the server
-			client.start();
+			context.subscriptions.push(disposable);
 		}
 	});
 }
 
-export function deactivate(): Thenable<void> | undefined {
-	if (!client) {
-		return undefined;
-	}
-	return client.stop();
-}
+// export function deactivate(): Thenable<void> | undefined {
+// 	if (!client) {
+// 		return undefined;
+// 	}
+// 	return client.stop();
+// }

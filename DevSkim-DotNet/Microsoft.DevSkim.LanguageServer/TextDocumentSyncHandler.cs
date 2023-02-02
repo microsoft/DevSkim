@@ -1,32 +1,41 @@
 using System.Collections.Immutable;
-using DiscUtils.Streams;
 using MediatR;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Progress;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone;
+using OmniSharp.Extensions.LanguageServer.Protocol.Workspace;
+using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
+
 
 namespace DevSkim.LanguageServer;
 
-class TextDocumentSyncHandler : ITextDocumentSyncHandler
+internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 {
-    private readonly DocumentSelector _devSkimSupportedActionDocumentSelector = DocumentSelector.ForLanguage(new[] {"csharp"});
-
+    private readonly ILogger<TextDocumentSyncHandler> _logger;
+    private readonly ILanguageServerConfiguration _configuration;
     private readonly ILanguageServerFacade _facade;
+    private readonly DocumentSelector _documentSelector = DocumentSelector.ForLanguage(new[] {"csharp"});
+    private DevSkimRuleProcessor _processor;
 
-    public TextDocumentSyncHandler(ILanguageServerFacade facade)
+    public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, Foo foo, ILanguageServerConfiguration configuration, ILanguageServerFacade facade)
     {
         _facade = facade;
+        _logger = logger;
+        _configuration = configuration;
+        foo.SayFoo();
+
         DevSkimRuleSet devSkimRuleSet =  DevSkimRuleSet.GetDefaultRuleSet();
         Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
-
         Severity severityFilter = Severity.Critical | Severity.Important | Severity.Moderate | Severity.ManualReview;
-
         Confidence confidenceFilter = Confidence.High | Confidence.Medium;
 
         // Initialize the processor
@@ -44,10 +53,15 @@ class TextDocumentSyncHandler : ITextDocumentSyncHandler
         _processor.EnableSuppressions = true;
     }
 
-    private DevSkimRuleProcessor _processor;
+    public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
     
-    public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
+    public override Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
     {
+        _logger.LogCritical("Critical");
+        _logger.LogDebug("Debug");
+        _logger.LogTrace("Trace");
+        _logger.LogInformation("Hello world!");
+
         var content = request.ContentChanges.First();
         if (content == null)
         {
@@ -80,58 +94,37 @@ class TextDocumentSyncHandler : ITextDocumentSyncHandler
         return Unit.Task;
     }
 
-    TextDocumentChangeRegistrationOptions IRegistration<TextDocumentChangeRegistrationOptions, SynchronizationCapability>.GetRegistrationOptions(SynchronizationCapability capability,
-        ClientCapabilities clientCapabilities)
+    public override async Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
     {
-        return new TextDocumentChangeRegistrationOptions()
-        {
-            DocumentSelector = _devSkimSupportedActionDocumentSelector,
-            SyncKind = TextDocumentSyncKind.Full
-        };
+        await Task.Yield();
+        _logger.LogInformation("Hello world!");
+        await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
+        return Unit.Value;
     }
-
-    public Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
-    {
-        return Unit.Task;
-    }
-
-    TextDocumentOpenRegistrationOptions IRegistration<TextDocumentOpenRegistrationOptions, SynchronizationCapability>.GetRegistrationOptions(SynchronizationCapability capability,
-        ClientCapabilities clientCapabilities)
-    {
-        return new TextDocumentOpenRegistrationOptions()
-        {
-            DocumentSelector = _devSkimSupportedActionDocumentSelector
-        };
-    }
-
-    public Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)
-    {
-        return Unit.Task;
-    }
-
-    TextDocumentCloseRegistrationOptions IRegistration<TextDocumentCloseRegistrationOptions, SynchronizationCapability>.GetRegistrationOptions(SynchronizationCapability capability,
-        ClientCapabilities clientCapabilities)
-    {
-        return new TextDocumentCloseRegistrationOptions();
-    }
-
     
-    public Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
+    public override Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)
+    {
+        if (_configuration.TryGetScopedConfiguration(request.TextDocument.Uri, out var disposable))
+        {
+            disposable.Dispose();
+        }
+
+        return Unit.Task;
+    }
+    
+    public override Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
     {
         return Unit.Task;
     }
+    
+    protected override TextDocumentSyncRegistrationOptions CreateRegistrationOptions(SynchronizationCapability capability, ClientCapabilities clientCapabilities) => new TextDocumentSyncRegistrationOptions() {
+        DocumentSelector = _documentSelector,
+        Change = Change,
+        Save = new SaveOptions() { IncludeText = false }
+    };
 
-    TextDocumentSaveRegistrationOptions IRegistration<TextDocumentSaveRegistrationOptions, SynchronizationCapability>.GetRegistrationOptions(SynchronizationCapability capability,
-        ClientCapabilities clientCapabilities)
+    public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
     {
-        return new TextDocumentSaveRegistrationOptions()
-        {
-            IncludeText = false
-        };
-    }
-
-    public TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
-    {
-        throw new NotImplementedException();
+        return new TextDocumentAttributes(uri, "csharp");
     }
 }
