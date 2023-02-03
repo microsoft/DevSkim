@@ -23,6 +23,20 @@
                 "modifiers" : ["i"],
                 "_comment": "Generic reference to a SSL/TLS version"
             }
+        ],
+        "conditions" : [
+            {
+                "pattern" :
+                {
+                    "pattern": "--tlsv1.3",
+                    "type": "string",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
         ]
     },    
     {
