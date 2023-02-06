@@ -6,7 +6,10 @@
 			"request": "launch",
 			"name": "Launch VSC Client",
 			"runtimeExecutable": "${execPath}",
-			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+			"args": [
+				"--disable-extensions",
+				"--extensionDevelopmentPath=${workspaceRoot}"
+			],
 			"sourceMaps": true,
 			"outFiles": ["${workspaceRoot}/client/out/**/*.js"],
 			"preLaunchTask": "npm-build"
@@ -16,7 +19,10 @@
 			"request": "launch",
 			"name": "Clean + Launch VSC Client",
 			"runtimeExecutable": "${execPath}",
-			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+			"args": [
+				"--disable-extensions",
+				"--extensionDevelopmentPath=${workspaceRoot}"
+			],
 			"sourceMaps": true,
 			"outFiles": ["${workspaceRoot}/client/out/**/*.js"],
 			"preLaunchTask": "npm-clean + npm-build"
