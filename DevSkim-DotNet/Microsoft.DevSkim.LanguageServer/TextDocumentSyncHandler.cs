@@ -26,12 +26,11 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     private readonly DocumentSelector _documentSelector = DocumentSelector.ForLanguage(new[] {"csharp"});
     private DevSkimRuleProcessor _processor;
 
-    public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, Foo foo, ILanguageServerConfiguration configuration, ILanguageServerFacade facade)
+    public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerConfiguration configuration, ILanguageServerFacade facade)
     {
         _facade = facade;
         _logger = logger;
         _configuration = configuration;
-        foo.SayFoo();
 
         DevSkimRuleSet devSkimRuleSet =  DevSkimRuleSet.GetDefaultRuleSet();
         Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
@@ -57,21 +56,23 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     
     public override Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
     {
-        _logger.LogCritical("Critical");
-        _logger.LogDebug("Debug");
-        _logger.LogTrace("Trace");
-        _logger.LogInformation("Hello world!");
+        _logger.LogDebug("TextDocumentSyncHandler.cs: DidChangeTextDocumentParams");
 
         var content = request.ContentChanges.First();
         if (content == null)
         {
+            _logger.LogDebug("\tNo content found");
             return Unit.Task;
         }
+
+        _logger.LogDebug($"\tProcessing document: {request.TextDocument.Uri.Path}");
+        _logger.LogDebug($"\twith content:\n{content.Text}");
         var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
 
         // Diagnostics are sent a document at a time, this example is for demonstration purposes only
         var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
 
+        _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
         foreach (var issue in issues)
         {
             diagnostics.Add(new Diagnostic()
@@ -84,6 +85,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             });
         }
 
+        _logger.LogDebug("\tPublishing diagnostics...");
         _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams() 
         {
             Diagnostics = new Container<Diagnostic>(diagnostics.ToArray()),
@@ -96,14 +98,15 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 
     public override async Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
         await Task.Yield();
-        _logger.LogInformation("Hello world!");
         await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
         return Unit.Value;
     }
     
     public override Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("TextDocumentSyncHandler.cs: DidCloseTextDocumentParams");
         if (_configuration.TryGetScopedConfiguration(request.TextDocument.Uri, out var disposable))
         {
             disposable.Dispose();
@@ -114,6 +117,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     
     public override Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("TextDocumentSyncHandler.cs: DidSaveTextDocumentParams");
         return Unit.Task;
     }
     

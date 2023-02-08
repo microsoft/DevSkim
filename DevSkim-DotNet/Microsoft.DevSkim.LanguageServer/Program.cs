@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
+using System.Diagnostics;
 
 namespace DevSkim.LanguageServer;
 
@@ -25,11 +26,11 @@ internal class Program
 
         Log.Logger = new LoggerConfiguration()
                     .Enrich.FromLogContext()
-                    .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+                    .WriteTo.File("devskim-server-log.txt", rollingInterval: RollingInterval.Day)
                     .MinimumLevel.Verbose()
                     .CreateLogger();
 
-        Log.Logger.Information("This only goes file...");
+        Log.Logger.Debug("Configuring server...");
 
         IObserver<WorkDoneProgressReport> workDone = null!;
 
@@ -42,24 +43,14 @@ internal class Program
                         x => x
                             .AddSerilog(Log.Logger)
                             .AddLanguageProtocolLogging()
-                            .SetMinimumLevel(LogLevel.Debug)
+                            // .SetMinimumLevel(LogLevel.None)
                     )
                     .WithHandler<TextDocumentSyncHandler>()
-                    .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Trace)))
+                    // The following services are passed to the TextDocumentSyncHandler constructor
+                    .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Debug)))
                     .WithServices(
                         services =>
                         {
-                            services.AddSingleton(
-                                provider =>
-                                {
-                                    var loggerFactory = provider.GetService<ILoggerFactory>();
-                                    var logger = loggerFactory.CreateLogger<Foo>();
-
-                                    logger.LogInformation("Configuring");
-
-                                    return new Foo(logger);
-                                }
-                            );
                             services.AddSingleton(
                                 new ConfigurationItem
                                 {
@@ -76,44 +67,24 @@ internal class Program
                     .OnInitialize(
                         async (server, request, token) =>
                         {
+                            Log.Logger.Debug("Server is starting...");
                             var manager = server.WorkDoneManager.For(
                                 request, new WorkDoneProgressBegin
                                 {
                                     Title = "Server is starting...",
-                                    Percentage = 10,
                                 }
                             );
                             workDone = manager;
-
-                            await Task.Delay(2000).ConfigureAwait(false);
-
-                            manager.OnNext(
-                                new WorkDoneProgressReport
-                                {
-                                    Percentage = 20,
-                                    Message = "loading in progress"
-                                }
-                            );
                         }
                     )
                     .OnInitialized(
                         async (server, request, response, token) =>
                         {
+                            Log.Logger.Debug("Server started");
                             workDone.OnNext(
                                 new WorkDoneProgressReport
                                 {
-                                    Percentage = 40,
-                                    Message = "loading almost done",
-                                }
-                            );
-
-                            await Task.Delay(2000).ConfigureAwait(false);
-
-                            workDone.OnNext(
-                                new WorkDoneProgressReport
-                                {
-                                    Message = "loading done",
-                                    Percentage = 100,
+                                    Message = "Server started",
                                 }
                             );
                             workDone.OnCompleted();
@@ -122,16 +93,10 @@ internal class Program
                     .OnStarted(
                         async (languageServer, token) =>
                         {
-                            using var manager = await languageServer.WorkDoneManager.Create(new WorkDoneProgressBegin { Title = "Doing some work..." })
-                                                                    .ConfigureAwait(false);
-
-                            manager.OnNext(new WorkDoneProgressReport { Message = "doing things..." });
-                            await Task.Delay(10000).ConfigureAwait(false);
-                            manager.OnNext(new WorkDoneProgressReport { Message = "doing things... 1234" });
-                            await Task.Delay(10000).ConfigureAwait(false);
-                            manager.OnNext(new WorkDoneProgressReport { Message = "doing things... 56789" });
-
-                            var logger = languageServer.Services.GetService<ILogger<Foo>>();
+                            Log.Logger.Debug("Beginning server routines...");
+                            using var manager = await languageServer.WorkDoneManager.Create(
+                                new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
+                            
                             var configuration = await languageServer.Configuration.GetConfiguration(
                                 new ConfigurationItem
                                 {
@@ -148,7 +113,7 @@ internal class Program
                                 baseConfig.Add(config.Key, config.Value);
                             }
 
-                            logger.LogInformation("Base Config: {@Config}", baseConfig);
+                            Log.Logger.Debug("Base Config: {@Config}", baseConfig);
 
                             var scopedConfig = new JObject();
                             foreach (var config in configuration.AsEnumerable())
@@ -156,27 +121,12 @@ internal class Program
                                 scopedConfig.Add(config.Key, config.Value);
                             }
 
-                            logger.LogInformation("Scoped Config: {@Config}", scopedConfig);
+                            Log.Logger.Debug("Scoped Config: {@Config}", scopedConfig);
+                            Log.Logger.Debug("Listening for client events...");
                         }
                     )
         ).ConfigureAwait(false);
 
         await server.WaitForExit.ConfigureAwait(false);
-    }
-}
-
-internal class Foo
-{
-    private readonly ILogger<Foo> _logger;
-
-    public Foo(ILogger<Foo> logger)
-    {
-        logger.LogInformation("inside ctor");
-        _logger = logger;
-    }
-
-    public void SayFoo()
-    {
-        _logger.LogInformation("Fooooo!");
     }
 }
