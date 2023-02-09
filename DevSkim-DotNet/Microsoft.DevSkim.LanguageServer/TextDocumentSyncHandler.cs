@@ -8,10 +8,8 @@ using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Progress;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone;
 using OmniSharp.Extensions.LanguageServer.Protocol.Workspace;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
@@ -36,6 +34,15 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
         Severity severityFilter = Severity.Critical | Severity.Important | Severity.Moderate | Severity.ManualReview;
         Confidence confidenceFilter = Confidence.High | Confidence.Medium;
+
+        _logger.LogDebug("TextDocumentSyncHandler.cs: ctor");
+        _logger.LogDebug("\tLoaded DevSkim configurations:");
+        _logger.LogDebug($"\t\tRuleSet:");
+        devSkimRuleSet.ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x?.Id + " - " + x?.Name));
+        _logger.LogDebug($"\t\tLanguages:");
+        devSkimLanguages.GetNames().ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x));
+        _logger.LogDebug($"\t\tSeverityFilter: {severityFilter}");
+        _logger.LogDebug($"\t\tConfidenceFilter: {confidenceFilter}");
 
         // Initialize the processor
         var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
@@ -69,7 +76,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger.LogDebug($"\twith content:\n{content.Text}");
         var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
 
-        // Diagnostics are sent a document at a time, this example is for demonstration purposes only
+        // Diagnostics are sent a document at a time
         var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
 
         _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
@@ -80,7 +87,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                 Code = issue.Rule.Id,
                 Severity = DiagnosticSeverity.Error,
                 Message = issue.Rule.Description,
-                Range = new OmniSharp.Extensions.LanguageServer.Protocol.Models.Range(issue.StartLocation.Line, issue.StartLocation.Column, issue.EndLocation.Line, issue.EndLocation.Column),
+                Range = new Range(issue.StartLocation.Line, issue.StartLocation.Column, issue.EndLocation.Line, issue.EndLocation.Column),
                 Source = "DevSkim Language Server"
             });
         }
