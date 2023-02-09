@@ -43,10 +43,8 @@ internal class Program
                         x => x
                             .AddSerilog(Log.Logger)
                             .AddLanguageProtocolLogging()
-                            // .SetMinimumLevel(LogLevel.None)
                     )
                     .WithHandler<TextDocumentSyncHandler>()
-                    // The following services are passed to the TextDocumentSyncHandler constructor
                     .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Debug)))
                     .WithServices(
                         services =>

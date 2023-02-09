@@ -74,9 +74,9 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 
         _logger.LogDebug($"\tProcessing document: {request.TextDocument.Uri.Path}");
         _logger.LogDebug($"\twith content:\n{content.Text}");
-        var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
 
         // Diagnostics are sent a document at a time
+        var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
         var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
 
         _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
