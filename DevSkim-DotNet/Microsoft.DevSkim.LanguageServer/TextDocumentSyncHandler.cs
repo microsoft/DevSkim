@@ -77,7 +77,6 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 
         // Diagnostics are sent a document at a time
         _logger.LogDebug($"\tProcessing document: {request.TextDocument.Uri.Path}");
-        _logger.LogDebug($"\twith content:\n{content.Text}");
         var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
         var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
 
@@ -110,6 +109,41 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
         await Task.Yield();
         await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
+
+        // var content = request.ContentChanges.First();
+        var content = request.TextDocument;
+        if (content == null)
+        {
+            _logger.LogDebug("\tNo content found");
+            return Unit.Value;
+        }
+
+        // Diagnostics are sent a document at a time
+        _logger.LogDebug($"\tProcessing document: {request.TextDocument.Uri.Path}");
+        var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
+        var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
+
+        _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
+        foreach (var issue in issues)
+        {
+            diagnostics.Add(new Diagnostic()
+            {
+                Code = issue.Rule.Id,
+                Severity = DiagnosticSeverity.Error,
+                Message = issue.Rule.Description,
+                Range = new Range(issue.StartLocation.Line-1, issue.StartLocation.Column, issue.EndLocation.Line-1, issue.EndLocation.Column),
+                Source = "DevSkim Language Server"
+            });
+        }
+
+        _logger.LogDebug("\tPublishing diagnostics...");
+        _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams() 
+        {
+            Diagnostics = new Container<Diagnostic>(diagnostics.ToArray()),
+            Uri = request.TextDocument.Uri,
+            Version = request.TextDocument.Version
+        });
+        
         return Unit.Value;
     }
     
