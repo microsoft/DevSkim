@@ -35,14 +35,17 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         Severity severityFilter = Severity.Critical | Severity.Important | Severity.Moderate | Severity.ManualReview;
         Confidence confidenceFilter = Confidence.High | Confidence.Medium;
 
-        _logger.LogDebug("TextDocumentSyncHandler.cs: ctor");
-        _logger.LogDebug("\tLoaded DevSkim configurations:");
-        _logger.LogDebug($"\t\tRuleSet:");
-        devSkimRuleSet.ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x?.Id + " - " + x?.Name));
-        _logger.LogDebug($"\t\tLanguages:");
-        devSkimLanguages.GetNames().ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x));
-        _logger.LogDebug($"\t\tSeverityFilter: {severityFilter}");
-        _logger.LogDebug($"\t\tConfidenceFilter: {confidenceFilter}");
+        // To avoid enumerating rules and languages in release configurations
+        #if DEBUG
+            _logger.LogDebug("TextDocumentSyncHandler.cs: ctor");
+            _logger.LogDebug("\tLoaded DevSkim configurations:");
+            _logger.LogDebug($"\t\tRuleSet:");
+            devSkimRuleSet.ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x?.Id + " - " + x?.Name));
+            _logger.LogDebug($"\t\tLanguages:");
+            devSkimLanguages.GetNames().ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x));
+            _logger.LogDebug($"\t\tSeverityFilter: {severityFilter}");
+            _logger.LogDebug($"\t\tConfidenceFilter: {confidenceFilter}");
+        #endif
 
         // Initialize the processor
         var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
