@@ -19,11 +19,11 @@ internal class Program
     private static async Task MainAsync(string[] args)
     {
         #if DEBUG
-            Debugger.Launch();
-            while (!Debugger.IsAttached)
-            {
-                await Task.Delay(100);
-            }
+            // Debugger.Launch();
+            // while (!Debugger.IsAttached)
+            // {
+            //     await Task.Delay(100);
+            // }
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
