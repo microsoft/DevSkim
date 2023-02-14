@@ -161,8 +161,10 @@
 		"clean:out": "npx --quiet rimraf **/out **/tsconfig.tsbuildinfo",
 		"clean:modules": "npx --quiet rimraf **/node_modules",
 		"clean:vsix": "npx --quiet rimraf *.vsix",
-		"net-setup": "dotnet publish -f net7.0 ../DevSkim-DotNet/Microsoft.DevSkim.LanguageServer -o devskimBinaries",
+		"net-setup": "dotnet publish -c Debug -f net7.0 ../DevSkim-DotNet/Microsoft.DevSkim.LanguageServer -o devskimBinaries",
+		"net-setup:release": "dotnet publish -c Release -f net7.0 ../DevSkim-DotNet/Microsoft.DevSkim.LanguageServer -o devskimBinaries",
 		"setup": "npm install && npm run net-setup",
+		"setup:release": "npm install && npm run net-setup:release",
 		"reset": "npm run clean && npm run setup",
 		"compile": "tsc -b",
 		"build": "npm run setup && npm run compile",
@@ -173,7 +175,7 @@
 		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-		"pack-ext": "npm run clean:out && npm run setup && node ./scripts/setPackageVersion.js && vsce package && node ./scripts/resetPackageVersion.js"
+		"pack-ext": "npm run clean:out && npm run setup:release && node ./scripts/setPackageVersion.js && vsce package && node ./scripts/resetPackageVersion.js"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",
