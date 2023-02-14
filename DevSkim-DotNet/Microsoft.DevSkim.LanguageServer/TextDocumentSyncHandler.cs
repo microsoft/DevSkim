@@ -72,10 +72,9 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             return Unit.Task;
         }
 
+        // Diagnostics are sent a document at a time
         _logger.LogDebug($"\tProcessing document: {request.TextDocument.Uri.Path}");
         _logger.LogDebug($"\twith content:\n{content.Text}");
-
-        // Diagnostics are sent a document at a time
         var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
         var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
 
@@ -87,7 +86,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                 Code = issue.Rule.Id,
                 Severity = DiagnosticSeverity.Error,
                 Message = issue.Rule.Description,
-                Range = new Range(issue.StartLocation.Line, issue.StartLocation.Column, issue.EndLocation.Line, issue.EndLocation.Column),
+                Range = new Range(issue.StartLocation.Line-1, issue.StartLocation.Column, issue.EndLocation.Line-1, issue.EndLocation.Column),
                 Source = "DevSkim Language Server"
             });
         }
