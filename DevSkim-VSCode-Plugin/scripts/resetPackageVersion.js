@@ -1,2 +1,2 @@
-var nbgv = require('nerdbank-gitversioning');
-nbgv.resetPackageVersionPlaceholder()
+import * as nbgv from 'nerdbank-gitversioning';
+nbgv.resetPackageVersionPlaceholder();

@@ -1,2 +1,2 @@
-var nbgv = require('nerdbank-gitversioning');
-nbgv.setPackageVersion()
+import * as nbgv from 'nerdbank-gitversioning';
+nbgv.setPackageVersion();
