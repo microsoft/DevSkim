@@ -10,12 +10,13 @@ async function isPreRelease() {
 	return true;
 };
 
+// This script exits with a 0 return code if a pre-release version is detected, or a non-zero exit code if release version is detected.
 if (await isPreRelease())
 {
-	console.log("Building Pre-Release");
+	console.log("Detected Pre-Release");
 	exit(0);
 }
 else{
-	console.log("Building Release");
+	console.log("Detected Release");
 	exit(-1);
 }
