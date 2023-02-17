@@ -4,7 +4,7 @@
 	"description": "Detect security mistakes as you type, and get real time details and fix suggestions",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
-	"version": "0.0.1",
+	"version": "0.0.0-placeholder",
 	"publisher": "MS-CST-E",
 	"repository": {
 		"type": "git",
