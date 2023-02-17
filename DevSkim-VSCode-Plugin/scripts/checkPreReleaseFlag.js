@@ -1,11 +1,21 @@
 import * as nbgv from 'nerdbank-gitversioning';
+import { exit } from 'process';
 
-var versionInfo = await nbgv.getVersion();
-const version = versionInfo.assemblyInformationalVersion;
+async function isPreRelease() {
+	var versionInfo = await nbgv.getVersion();
+	const prereleaseTag = versionInfo.prereleaseVersionNoLeadingHyphen;
+	if (!prereleaseTag) {
+		return false;
+	} 
+	return true;
+};
 
-if (version.indexOf("alpha") > -1 ) {
-	console.log("alpha version");
-} 
-else {
-	console.log("not alpha version");
+if (await isPreRelease())
+{
+	console.log("Building Pre-Release");
+	exit(0);
+}
+else{
+	console.log("Building Release");
+	exit(-1);
 }

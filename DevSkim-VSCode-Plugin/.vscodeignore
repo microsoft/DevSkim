@@ -5,5 +5,4 @@
 .eslintignore
 .gitignore
 **/tsconfig.tsbuildinfo
-resetPackageVersion.js
-setPackageVersion.js
+scripts/*
