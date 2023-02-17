@@ -158,6 +158,14 @@ trigger: none
 #       inputs:
 #         targetType: 'inline'
 #         script: |
-#           $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-#           vsce publish --packagePath $packPath --pat $(VS_Token)
+#             $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+#             node ./DevSkim-VSCode-Plugin/scripts/checkPreReleaseFlag.js
+#             if ($?)
+#             {
+#               vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
+#             }
+#             else
+#             {
+#               vsce publish --packagePath $packPath --pat $(VS_Token)
+#             }
 #         workingDirectory: '$(Build.StagingDirectory)'
