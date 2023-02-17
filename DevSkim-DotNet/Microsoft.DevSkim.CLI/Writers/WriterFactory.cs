@@ -7,7 +7,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 {
     public class WriterFactory
     {
-        public static Writer GetWriter(string writerName, string format, TextWriter output, string? outputPath = null, GitInformation gitInformation = null)
+        public static Writer GetWriter(string writerName, string format, TextWriter output, string? outputPath = null, GitInformation? gitInformation = null)
         {
             if (string.IsNullOrEmpty(writerName))
                 writerName = "_dummy";
@@ -32,10 +32,10 @@ namespace Microsoft.DevSkim.CLI.Writers
         }
     }
 
-    public class GitInformation
+    public record GitInformation
     {
-        public Uri RepositoryUri { get; set; }
-        public string CommitHash { get; set; }
-        public string Branch { get; set; }
+        public Uri? RepositoryUri { get; set; }
+        public string CommitHash { get; set; } = string.Empty;
+        public string Branch { get; set; } = string.Empty;
     }
 }

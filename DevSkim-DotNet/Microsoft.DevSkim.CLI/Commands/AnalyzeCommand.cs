@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CommandLine;
 using LibGit2Sharp;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
@@ -48,6 +49,8 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             IEnumerable<FileEntry> fileListing;
             var extractor = new Extractor();
+            var extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
+            // Analysing a single file
             if (!Directory.Exists(fp))
             {
                 if (opts.RespectGitIgnore)
@@ -59,10 +62,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                             Console.WriteLine("The file specified was ignored by gitignore.");
                             return (int)ExitCode.CriticalError;
                         }
-                        else
-                        {
-                            fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
-                        }
+
+                        fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
                     }
                     else
                     {
@@ -72,9 +73,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 else
                 {
-                    fileListing = extractor.Extract(fp, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs});
+                    fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
                 }
             }
+            // Analyzing a directory
             else
             {
                 if (opts.RespectGitIgnore)
@@ -86,7 +88,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                             .Where(fileName => !IsGitIgnored(fileName));
                         foreach (var notIgnoredFileName in files)
                         {
-                            innerList.AddRange(extractor.Extract(notIgnoredFileName, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
+                            innerList.AddRange(
+                                FilePathToFileEntries(opts, notIgnoredFileName, extractor, extractorOpts));
                         }
 
                         fileListing = innerList;
@@ -103,14 +106,59 @@ namespace Microsoft.DevSkim.CLI.Commands
                     var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                     {
-                        innerList.AddRange(extractor.Extract(file, new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs}));
+                        innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
                     }
 
-                    fileListing = innerList;                }
+                    fileListing = innerList;                
+                }
             }
-            return RunFileEntries(fileListing);
+
+            Languages? languages = null;
+            if (!string.IsNullOrEmpty(opts.CommentsPath) || !string.IsNullOrEmpty(opts.LanguagesPath))
+            {
+                if (string.IsNullOrEmpty(opts.CommentsPath) || string.IsNullOrEmpty(opts.LanguagesPath))
+                {
+                    Console.Error.WriteLine("When either comments or languages are specified both must be specified.");
+                    return (int)ExitCode.ArgumentParsingError;
+                }
+
+                try
+                {
+                    languages = DevSkimLanguages.FromFiles(opts.CommentsPath, opts.LanguagesPath);
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine($"Either the Comments or Languages file was not able to be read. ({e.Message})");
+                    return (int)ExitCode.ArgumentParsingError;
+                }
+            }
+            languages ??= DevSkimLanguages.LoadEmbedded();
+            return RunFileEntries(fileListing, languages);
         }
 
+        /// <summary>
+        /// Based on the options, return an enumeration of the files from the path.  For example, if crawl archives is set, will crawl into archives if possible, otherwise just returns the file itself in a FileEntry wrapper
+        /// </summary>
+        /// <param name="opts"></param>
+        /// <param name="file"></param>
+        /// <param name="extractor"></param>
+        /// <param name="extractorOptions"></param>
+        /// <returns></returns>
+        private static IEnumerable<FileEntry> FilePathToFileEntries(AnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
+        {
+            if (opts.CrawlArchives)
+            {
+                return extractor.Extract(file,extractorOptions);
+            }
+
+            return extractorOptions.FileNamePasses(file) ? FilenameToFileEntryArray(file) : Array.Empty<FileEntry>();
+        }
+
+        /// <summary>
+        /// Checks if the file path is ignored by git
+        /// </summary>
+        /// <param name="fp"></param>
+        /// <returns></returns>
         private static bool IsGitIgnored(string fp)
         {
             var process = Process.Start(new ProcessStartInfo("git")
@@ -124,6 +172,10 @@ namespace Microsoft.DevSkim.CLI.Commands
             return process?.ExitCode == 0 && stdOut?.Length > 0;
         }
 
+        /// <summary>
+        /// Checks if git is available on the path
+        /// </summary>
+        /// <returns></returns>
         private static bool IsGitPresent()
         {
             var process = Process.Start(new ProcessStartInfo("git")
@@ -158,10 +210,9 @@ namespace Microsoft.DevSkim.CLI.Commands
             return childPath;
         }
 
-        public int RunFileEntries(IEnumerable<FileEntry> fileListing, StreamWriter? outputStreamWriter = null)
+        private int RunFileEntries(IEnumerable<FileEntry> fileListing, Languages devSkimLanguages)
         {
             DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
-            Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
             if (opts.Rules.Any())
             {
                 foreach (var path in opts.Rules)
@@ -181,6 +232,16 @@ namespace Microsoft.DevSkim.CLI.Commands
                     Debug.WriteLine("Error: Rules failed validation. ");
                     return (int)ExitCode.CriticalError;
                 }
+            }
+
+            if (opts.RuleIds.Any())
+            {
+                devSkimRuleSet = devSkimRuleSet.WithIds(opts.RuleIds);
+            }
+
+            if (opts.IgnoreRuleIds.Any())
+            {
+                devSkimRuleSet = devSkimRuleSet.WithoutIds(opts.IgnoreRuleIds);
             }
             
             if (!devSkimRuleSet.Any())
@@ -217,18 +278,17 @@ namespace Microsoft.DevSkim.CLI.Commands
             GitInformation? information = GenerateGitInformation(Path.GetFullPath(opts.Path));
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,
-                                                           (outputStreamWriter is null)?(string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile)):outputStreamWriter,
-                                                           (outputStreamWriter is null)?opts.OutputFile:null,
+                                                           string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile),
+                                                           opts.OutputFile,
                                                            information);
 
             int filesAnalyzed = 0;
             int filesSkipped = 0;
             int filesAffected = 0;
             int issuesCount = 0;
-            var Languages = new Languages();
             void parseFileEntry(FileEntry fileEntry)
             {
-                Languages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
+                devSkimLanguages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
 
                 // Skip files written in unknown language
                 if (string.IsNullOrEmpty(languageInfo.Name))
@@ -348,14 +408,22 @@ namespace Microsoft.DevSkim.CLI.Commands
             return null;
         }
 
-        private IEnumerable<FileEntry> FilenameToFileEntryArray(string x)
+        /// <summary>
+        /// Open a read stream for the given file name and return a collection with a single file entry representing that file, or an empty collection if the file could not be read
+        /// </summary>
+        /// <param name="pathToFile"></param>
+        /// <returns></returns>
+        private static ICollection<FileEntry> FilenameToFileEntryArray(string pathToFile)
         {
             try
             {
-                var fs = new FileStream(x, FileMode.Open, FileAccess.Read);
-                return new FileEntry[] { new FileEntry(x, fs, null, true) };
+                var fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read);
+                return new FileEntry[] { new FileEntry(pathToFile, fs, null, true) };
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                Debug.WriteLine("The file located at {0} could not be read", pathToFile);
+            }
             return Array.Empty<FileEntry>();
         }
 
