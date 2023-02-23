@@ -1,0 +1,21 @@
+﻿namespace DevSkim.LanguageServer
+{
+    using Microsoft.ApplicationInspector.RulesEngine;
+    using Microsoft.DevSkim;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    internal static class StaticScannerSettings
+    {
+        internal static bool ScanOnOpen { get; set; }
+        internal static bool ScanOnSave { get; set; }
+        internal static bool ScanOnChange { get; set; }
+        internal static DevSkimRuleSet RuleSet { get; set; } = DevSkimRuleSet.GetDefaultRuleSet();
+        internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = new DevSkimRuleProcessorOptions();
+        internal static ICollection<string> IgnoreRuleIds { get; set; } = Array.Empty<string>();
+        internal static ICollection<string> IgnoreFiles { get; set; } = Array.Empty<string>();
+    }
+}

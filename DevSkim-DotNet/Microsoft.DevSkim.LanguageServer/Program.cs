@@ -1,11 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.ApplicationInspector.RulesEngine;
+using Microsoft.DevSkim;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DevSkim.LanguageServer;
 
@@ -14,6 +18,41 @@ internal class Program
     public static void Main(string[] args)
     {
         MainAsync(args).Wait();
+    }
+
+    private static DevSkimRuleProcessorOptions OptionsFromConfiguration(IConfiguration configuration)
+    {
+        var languagesPath = configuration.GetValue<string>("MS-CST-E.vscode-devskim.rules.customLanguagesPath");
+        var commentsPath = configuration.GetValue<string>("MS-CST-E.vscode-devskim.rules.customCommentsPath");
+        var severityFilter = Severity.Moderate | Severity.Critical | Severity.Important;
+        if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim.rules.enableManualReviewRules"))
+        {
+            severityFilter |= Severity.ManualReview;
+        }
+        if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim.rules.enableBestPracticeRules"))
+        {
+            severityFilter |= Severity.BestPractice;
+        }
+        if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim.rules.enableUnspecifiedSeverityRules"))
+        {
+            severityFilter |= Severity.Unspecified;
+        }
+        var confidenceFilter = Confidence.Medium | Confidence.High;
+        if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim.rules.enableUnspecifiedConfidenceRules"))
+        {
+            confidenceFilter |= Confidence.Unspecified;
+        }
+        if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim.rules.enableLowConfidenceRules"))
+        {
+            confidenceFilter |= Confidence.Low;
+        }
+        return new DevSkimRuleProcessorOptions()
+        {
+            Languages = (string.IsNullOrEmpty(languagesPath) || string.IsNullOrEmpty(commentsPath)) ? DevSkimLanguages.LoadEmbedded() : DevSkimLanguages.FromFiles(commentsPath, languagesPath),
+            SeverityFilter = severityFilter,
+            ConfidenceFilter = confidenceFilter,
+            LoggerFactory = NullLoggerFactory.Instance
+        };
     }
 
     private static async Task MainAsync(string[] args)
@@ -97,17 +136,22 @@ internal class Program
                             Log.Logger.Debug("Beginning server routines...");
                             using var manager = await languageServer.WorkDoneManager.Create(
                                 new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
+
                             
-                            var configuration = await languageServer.Configuration.GetConfiguration(
+                            IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
                                 new ConfigurationItem
                                 {
-                                    Section = "typescript",
-                                }, new ConfigurationItem
-                                {
-                                    Section = "terminal",
+                                    Section = "MS-CST-E.vscode-devskim"
                                 }
                             ).ConfigureAwait(false);
+                            StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);
+                            StaticScannerSettings.IgnoreRuleIds = configuration.GetValue<string[]>("MS-CST-E.vscode-devskim.ignores.ignoreRuleList");
+                            StaticScannerSettings.IgnoreFiles = configuration.GetValue<string[]>("MS-CST-E.vscode-devskim.ignores.ignoreFiles");
+                            StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>("MS-CST-E.vscode-devskim.triggers.scanOnOpen");
+                            StaticScannerSettings.ScanOnSave = configuration.GetValue<bool>("MS-CST-E.vscode-devskim.triggers.scanOnSave");
+                            StaticScannerSettings.ScanOnChange = configuration.GetValue<bool>("MS-CST-E.vscode-devskim.triggers.scanOnChange");
 
+                            // TODO: Do we need these base and scoped objects?
                             var baseConfig = new JObject();
                             foreach (var config in languageServer.Configuration.AsEnumerable())
                             {

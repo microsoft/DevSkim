@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using MediatR;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
@@ -30,35 +31,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger = logger;
         _configuration = configuration;
 
-        DevSkimRuleSet devSkimRuleSet =  DevSkimRuleSet.GetDefaultRuleSet();
-        Languages devSkimLanguages = DevSkimLanguages.LoadEmbedded();
-        Severity severityFilter = Severity.Critical | Severity.Important | Severity.Moderate | Severity.ManualReview;
-        Confidence confidenceFilter = Confidence.High | Confidence.Medium;
-
-        // To avoid enumerating rules and languages in release configurations
-        #if DEBUG
-            _logger.LogDebug("TextDocumentSyncHandler.cs: ctor");
-            _logger.LogDebug("\tLoaded DevSkim configurations:");
-            _logger.LogDebug($"\t\tRuleSet:");
-            devSkimRuleSet.ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x?.Id + " - " + x?.Name));
-            _logger.LogDebug($"\t\tLanguages:");
-            devSkimLanguages.GetNames().ToList().ForEach(x => _logger.LogDebug("\t\t\t" + x));
-            _logger.LogDebug($"\t\tSeverityFilter: {severityFilter}");
-            _logger.LogDebug($"\t\tConfidenceFilter: {confidenceFilter}");
-        #endif
-
-        // Initialize the processor
-        var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
-        {
-            Languages = devSkimLanguages,
-            AllowAllTagsInBuildFiles = true,
-            LoggerFactory = NullLoggerFactory.Instance,
-            Parallel = true,
-            SeverityFilter = severityFilter,
-            ConfidenceFilter = confidenceFilter,
-        };
-
-        _processor = new DevSkimRuleProcessor(devSkimRuleSet, devSkimRuleProcessorOptions);
+        _processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions);
         _processor.EnableSuppressions = true;
     }
 
@@ -67,14 +40,17 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     public override async Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
     {
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidChangeTextDocumentParams");
-
-        var content = request.ContentChanges.First();
-        if (content == null)
+        if (StaticScannerSettings.ScanOnChange)
         {
-            _logger.LogDebug("\tNo content found");
-            return Unit.Value;
+            var content = request.ContentChanges.First();
+            if (content == null)
+            {
+                _logger.LogDebug("\tNo content found");
+                return Unit.Value;
+            }
+            return await GenerateDiagnosticsForTextDocument(content.Text, request.TextDocument.Version, request.TextDocument.Uri);
         }
-        return await GenerateDiagnosticsForTextDocument(content.Text, request.TextDocument.Version, request.TextDocument.Uri);
+        return Unit.Value;            
     }
 
     private async Task<Unit> GenerateDiagnosticsForTextDocument(string text, int? version, DocumentUri path)
@@ -133,13 +109,16 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     public override async Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
     {
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
-        await Task.Yield();
-        await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
+        if (StaticScannerSettings.ScanOnOpen)
+        {
+            await Task.Yield();
+            await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
 
-        // var content = request.ContentChanges.First();
-        var content = request.TextDocument;
-        return await GenerateDiagnosticsForTextDocument(content.Text, content.Version, request.TextDocument.Uri);
-        
+            // var content = request.ContentChanges.First();
+            var content = request.TextDocument;
+            return await GenerateDiagnosticsForTextDocument(content.Text, content.Version, request.TextDocument.Uri);
+        }
+        return Unit.Value;        
     }
     
     public override Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)

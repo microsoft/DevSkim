@@ -85,6 +85,21 @@
 					"default": false,
 					"description": "Turn on the rules of severity \"Best-Practice\". These rules either flag issues that are typically of a lower severity, or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities."
 				},
+				"MS-CST-E.vscode-devskim.rules.enableUnspecifiedSeverityRules": {
+					"type": "boolean",
+					"default": false,
+					"description": "Turn on the rules with \"Unspecified\" severity."
+				},
+				"MS-CST-E.vscode-devskim.rules.enableLowConfidenceRules": {
+					"type": "boolean",
+					"default": false,
+					"description": "Turn on the rules of confidence \"Low\"."
+				},
+				"MS-CST-E.vscode-devskim.rules.enableUnspecifiedConfidenceRules": {
+					"type": "boolean",
+					"default": false,
+					"description": "Turn on the rules of severity \"Unspecified\"."
+				},
 				"MS-CST-E.vscode-devskim.suppressions.suppressionDurationInDays": {
 					"type": "number",
 					"default": 30,
@@ -132,12 +147,47 @@
 				"MS-CST-E.vscode-devskim.ignores.ignoreRulesList": {
 					"type": "string",
 					"default": "",
-					"description": "Comma separated list of DevSkim Rule IDs to be ignored. "
+					"description": "Comma separated list of DevSkim Rule IDs to be ignored."
 				},
 				"MS-CST-E.vscode-devskim.findings.removeFindingsOnClose": {
 					"type": "boolean",
 					"default": true,
 					"description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes"
+				},
+				"MS-CST-E.vscode-devskim.ignores.ignoreDefaultRules": {
+					"type": "boolean",
+					"default": false,
+					"description": "Disable default DevSkim rules."
+				},
+				"MS-CST-E.vscode-devskim.rules.customRulesPaths": {
+					"type": "array",
+					"default": [],
+					"description": "A list of local paths on disk to rules files for DevSkim to use in analysis."
+				},
+				"MS-CST-E.vscode-devskim.rules.customLanguagesPath": {
+					"type": "string",
+					"default": "",
+					"description": "A local path to a custom language file for analysis. Also requires customCommentsPath to be set."
+				},
+				"MS-CST-E.vscode-devskim.rules.customCommentsPath": {
+					"type": "string",
+					"default": "",
+					"description": "A local path to a custom comments file for analysis. Also requires customLanguagesPath to be set."
+				},
+				"MS-CST-E.vscode-devskim.triggers.scanOnOpen": {
+					"type": "boolean",
+					"default": true,
+					"description": "Scan files on open."
+				},
+				"MS-CST-E.vscode-devskim.triggers.scanOnSave": {
+					"type": "boolean",
+					"default": true,
+					"description": "Scan files on save."
+				},				
+				"MS-CST-E.vscode-devskim.triggers.scanOnChange": {
+					"type": "boolean",
+					"default": true,
+					"description": "Scan files on change."
 				},
 				"MS-CST-E.vscode-devskim.trace.server": {
 					"scope": "window",
