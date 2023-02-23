@@ -94,21 +94,24 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
         foreach (var issue in issues)
         {
-            var diag = new Diagnostic()
+            if (!issue.IsSuppressionInfo)
             {
-                Code = $"MS-CST-E.vscode-devskim: {issue.Rule.Id}",
-                Severity = DiagnosticSeverity.Error,
-                Message = $"{issue.Rule.Id}: {issue.Rule.Description ?? string.Empty}",
-                Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
-                Source = $"DevSkim Language Server: [{issue.Rule.Id}]"
-            };
-            diagnostics.Add(diag);
-            for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
-            {
-                CodeFix fix = issue.Rule.Fixes[i];
-                if (fix.Replacement is { })
+                var diag = new Diagnostic()
                 {
-                    codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, path.ToString()));
+                    Code = $"MS-CST-E.vscode-devskim: {issue.Rule.Id}",
+                    Severity = DiagnosticSeverity.Error,
+                    Message = $"{issue.Rule.Id}: {issue.Rule.Description ?? string.Empty}",
+                    Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
+                    Source = $"DevSkim Language Server: [{issue.Rule.Id}]"
+                };
+                diagnostics.Add(diag);
+                for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
+                {
+                    CodeFix fix = issue.Rule.Fixes[i];
+                    if (fix.Replacement is { })
+                    {
+                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, path.ToString()));
+                    }
                 }
             }
         }
