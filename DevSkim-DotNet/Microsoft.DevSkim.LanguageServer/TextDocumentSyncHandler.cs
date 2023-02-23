@@ -64,7 +64,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 
     public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
     
-    public override Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
     {
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidChangeTextDocumentParams");
 
@@ -72,56 +72,23 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         if (content == null)
         {
             _logger.LogDebug("\tNo content found");
-            return Unit.Task;
+            return Unit.Value;
         }
-
-        // Diagnostics are sent a document at a time
-        _logger.LogDebug($"\tProcessing document: {request.TextDocument.Uri.Path}");
-        var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
-        var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
-
-        _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
-        foreach (var issue in issues)
-        {
-            diagnostics.Add(new Diagnostic()
-            {
-                Code = issue.Rule.Id,
-                Severity = DiagnosticSeverity.Error,
-                Message = issue.Rule.Description,
-                Range = new Range(issue.StartLocation.Line-1, issue.StartLocation.Column, issue.EndLocation.Line-1, issue.EndLocation.Column),
-                Source = "DevSkim Language Server"
-            });
-        }
-
-        _logger.LogDebug("\tPublishing diagnostics...");
-        _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams() 
-        {
-            Diagnostics = new Container<Diagnostic>(diagnostics.ToArray()),
-            Uri = request.TextDocument.Uri,
-            Version = request.TextDocument.Version
-        });
-
-        return Unit.Task;
+        return await GenerateDiagnosticsForTextDocument(content.Text, request.TextDocument.Version, request.TextDocument.Uri);
     }
 
-    public override async Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
+    private async Task<Unit> GenerateDiagnosticsForTextDocument(string text, int? version, DocumentUri path)
     {
-        _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
-        await Task.Yield();
-        await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
-
-        // var content = request.ContentChanges.First();
-        var content = request.TextDocument;
-        if (content == null)
+        if (text == null)
         {
             _logger.LogDebug("\tNo content found");
             return Unit.Value;
         }
 
-        var filename = request.TextDocument.Uri.Path;
+        var filename = path.Path;
         // Diagnostics are sent a document at a time
         _logger.LogDebug($"\tProcessing document: {filename}");
-        var issues = _processor.Analyze(content.Text, filename).ToList();
+        var issues = _processor.Analyze(text, filename).ToList();
         var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
         var codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
         _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
@@ -133,7 +100,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                 Severity = DiagnosticSeverity.Error,
                 Message = $"{issue.Rule.Id}: {issue.Rule.Description ?? string.Empty}",
                 Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
-                Source = "DevSkim Language Server"
+                Source = $"DevSkim Language Server: [{issue.Rule.Id}]"
             };
             diagnostics.Add(diag);
             for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
@@ -141,24 +108,35 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                 CodeFix fix = issue.Rule.Fixes[i];
                 if (fix.Replacement is { })
                 {
-                    codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, request.TextDocument.Uri.ToString()));
+                    codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, path.ToString()));
                 }
             }
         }
 
         _logger.LogDebug("\tPublishing diagnostics...");
-        _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams() 
+        _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
         {
             Diagnostics = new Container<Diagnostic>(diagnostics.ToArray()),
-            Uri = request.TextDocument.Uri,
-            Version = request.TextDocument.Version
+            Uri = path,
+            Version = version
         });
-        foreach(var codeFixMapping in codeFixes.ToArray())
+        foreach (var codeFixMapping in codeFixes.ToArray())
         {
             _facade.TextDocument.SendNotification("devskim/codefixmapping", codeFixMapping);
         }
 
         return Unit.Value;
+    }
+    public override async Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
+        await Task.Yield();
+        await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
+
+        // var content = request.ContentChanges.First();
+        var content = request.TextDocument;
+        return await GenerateDiagnosticsForTextDocument(content.Text, content.Version, request.TextDocument.Uri);
+        
     }
     
     public override Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)
