@@ -4,13 +4,13 @@
 
     public class CodeFixMapping
     {
-        private Diagnostic diagnostic;
-        private string replacement;
-        private string filename;
-        public CodeFixMapping(Diagnostic diagnostic, string replacement, string filename) {
+        public Diagnostic diagnostic { get; }
+        public string replacement { get; }
+        public string fileName { get; }
+        public CodeFixMapping(Diagnostic diagnostic, string replacement, string fileName) {
             this.diagnostic = diagnostic;
             this.replacement = replacement;
-            this.filename = filename;
+            this.fileName = fileName;
         }
     }
 }

@@ -129,9 +129,9 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         {
             var diag = new Diagnostic()
             {
-                Code = issue.Rule.Id,
+                Code = $"MS-CST-E.vscode-devskim: {issue.Rule.Id}",
                 Severity = DiagnosticSeverity.Error,
-                Message = issue.Rule.Description ?? string.Empty,
+                Message = $"{issue.Rule.Id}: {issue.Rule.Description ?? string.Empty}",
                 Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
                 Source = "DevSkim Language Server"
             };
@@ -141,7 +141,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                 CodeFix fix = issue.Rule.Fixes[i];
                 if (fix.Replacement is { })
                 {
-                    codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, filename));
+                    codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, request.TextDocument.Uri.ToString()));
                 }
             }
         }
