@@ -105,19 +105,19 @@ export function activate(context: ExtensionContext) {
 			client.registerProposedFeatures();
 			const disposable = client.start();
 			
-			//client.onReady().then(() => {
+			client.onReady().then(() => 
 				// client.sendNotification(getSetSettings(),getDevSkimConfiguration());
 				// client.sendNotification(getDotNetPath(),dotNetPath);
-				// client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
-				// {
-				// 	fixer.ensureMapHasMapping(mapping);
-				// });
-				vscode.workspace.onDidChangeConfiguration(e => {
-					const newConfig = getDevSkimConfiguration();
-					client.sendNotification(getSetSettings(),newConfig);
-					fixer.setConfig(newConfig);
-				});
-			//});
+				client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
+				{
+				 	fixer.ensureMapHasMapping(mapping);
+				})
+			);
+			vscode.workspace.onDidChangeConfiguration(e => {
+				const newConfig = getDevSkimConfiguration();
+				client.sendNotification(getSetSettings(),newConfig);
+				fixer.setConfig(newConfig);
+			});
 			// Start the client. This will also launch the server
 			context.subscriptions.push(disposable);
 		}

@@ -118,22 +118,32 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             return Unit.Value;
         }
 
+        var filename = request.TextDocument.Uri.Path;
         // Diagnostics are sent a document at a time
-        _logger.LogDebug($"\tProcessing document: {request.TextDocument.Uri.Path}");
-        var issues = _processor.Analyze(content.Text, request.TextDocument.Uri.Path).ToList();
+        _logger.LogDebug($"\tProcessing document: {filename}");
+        var issues = _processor.Analyze(content.Text, filename).ToList();
         var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
-
+        var codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
         _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
         foreach (var issue in issues)
         {
-            diagnostics.Add(new Diagnostic()
+            var diag = new Diagnostic()
             {
                 Code = issue.Rule.Id,
                 Severity = DiagnosticSeverity.Error,
-                Message = issue.Rule.Description,
-                Range = new Range(issue.StartLocation.Line-1, issue.StartLocation.Column, issue.EndLocation.Line-1, issue.EndLocation.Column),
+                Message = issue.Rule.Description ?? string.Empty,
+                Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
                 Source = "DevSkim Language Server"
-            });
+            };
+            diagnostics.Add(diag);
+            for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
+            {
+                CodeFix fix = issue.Rule.Fixes[i];
+                if (fix.Replacement is { })
+                {
+                    codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, filename));
+                }
+            }
         }
 
         _logger.LogDebug("\tPublishing diagnostics...");
@@ -143,7 +153,11 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             Uri = request.TextDocument.Uri,
             Version = request.TextDocument.Version
         });
-        
+        foreach(var codeFixMapping in codeFixes.ToArray())
+        {
+            _facade.TextDocument.SendNotification("devskim/codefixmapping", codeFixMapping);
+        }
+
         return Unit.Value;
     }
     
