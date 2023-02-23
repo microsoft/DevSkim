@@ -88,22 +88,6 @@ internal class Program
                     )
                     .WithHandler<TextDocumentSyncHandler>()
                     .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Debug)))
-                    .WithServices(
-                        services =>
-                        {
-                            services.AddSingleton(
-                                new ConfigurationItem
-                                {
-                                    Section = "typescript",
-                                }
-                            ).AddSingleton(
-                                new ConfigurationItem
-                                {
-                                    Section = "terminal",
-                                }
-                            );
-                        }
-                    )
                     .OnInitialize(
                         async (server, request, token) =>
                         {
@@ -150,23 +134,6 @@ internal class Program
                             StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>("MS-CST-E.vscode-devskim.triggers.scanOnOpen");
                             StaticScannerSettings.ScanOnSave = configuration.GetValue<bool>("MS-CST-E.vscode-devskim.triggers.scanOnSave");
                             StaticScannerSettings.ScanOnChange = configuration.GetValue<bool>("MS-CST-E.vscode-devskim.triggers.scanOnChange");
-
-                            // TODO: Do we need these base and scoped objects?
-                            var baseConfig = new JObject();
-                            foreach (var config in languageServer.Configuration.AsEnumerable())
-                            {
-                                baseConfig.Add(config.Key, config.Value);
-                            }
-
-                            Log.Logger.Debug("Base Config: {@Config}", baseConfig);
-
-                            var scopedConfig = new JObject();
-                            foreach (var config in configuration.AsEnumerable())
-                            {
-                                scopedConfig.Add(config.Key, config.Value);
-                            }
-
-                            Log.Logger.Debug("Scoped Config: {@Config}", scopedConfig);
                             Log.Logger.Debug("Listening for client events...");
                         }
                     )

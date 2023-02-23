@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.IO;
 using MediatR;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
@@ -36,24 +38,9 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     }
 
     public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
-    
-    public override async Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
-    {
-        _logger.LogDebug("TextDocumentSyncHandler.cs: DidChangeTextDocumentParams");
-        if (StaticScannerSettings.ScanOnChange)
-        {
-            var content = request.ContentChanges.First();
-            if (content == null)
-            {
-                _logger.LogDebug("\tNo content found");
-                return Unit.Value;
-            }
-            return await GenerateDiagnosticsForTextDocument(content.Text, request.TextDocument.Version, request.TextDocument.Uri);
-        }
-        return Unit.Value;            
-    }
 
-    private async Task<Unit> GenerateDiagnosticsForTextDocument(string text, int? version, DocumentUri path)
+
+    private async Task<Unit> GenerateDiagnosticsForTextDocument(string text, int? version, DocumentUri uri)
     {
         if (text == null)
         {
@@ -61,7 +48,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             return Unit.Value;
         }
 
-        var filename = path.Path;
+        var filename = uri.Path;
         // Diagnostics are sent a document at a time
         _logger.LogDebug($"\tProcessing document: {filename}");
         var issues = _processor.Analyze(text, filename).ToList();
@@ -76,7 +63,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                 {
                     Code = $"MS-CST-E.vscode-devskim: {issue.Rule.Id}",
                     Severity = DiagnosticSeverity.Error,
-                    Message = $"{issue.Rule.Id}: {issue.Rule.Description ?? string.Empty}",
+                    Message = $"{issue.Rule.Description ?? string.Empty}",
                     Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
                     Source = $"DevSkim Language Server: [{issue.Rule.Id}]"
                 };
@@ -86,7 +73,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     CodeFix fix = issue.Rule.Fixes[i];
                     if (fix.Replacement is { })
                     {
-                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, path.ToString()));
+                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToString()));
                     }
                 }
             }
@@ -96,7 +83,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
         {
             Diagnostics = new Container<Diagnostic>(diagnostics.ToArray()),
-            Uri = path,
+            Uri = uri,
             Version = version
         });
         foreach (var codeFixMapping in codeFixes.ToArray())
@@ -106,15 +93,29 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 
         return Unit.Value;
     }
+
+    public override async Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("TextDocumentSyncHandler.cs: DidChangeTextDocumentParams");
+        if (StaticScannerSettings.ScanOnChange)
+        {
+            var content = request.ContentChanges.FirstOrDefault();
+            if (content is null)
+            {
+                _logger.LogDebug("\tNo content found");
+                return Unit.Value;
+            }
+            return await GenerateDiagnosticsForTextDocument(content.Text, request.TextDocument.Version, request.TextDocument.Uri);
+        }
+        return Unit.Value;            
+    }
+
     public override async Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
     {
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
         if (StaticScannerSettings.ScanOnOpen)
         {
             await Task.Yield();
-            await _configuration.GetScopedConfiguration(request.TextDocument.Uri, cancellationToken).ConfigureAwait(false);
-
-            // var content = request.ContentChanges.First();
             var content = request.TextDocument;
             return await GenerateDiagnosticsForTextDocument(content.Text, content.Version, request.TextDocument.Uri);
         }
@@ -128,14 +129,19 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         {
             disposable.Dispose();
         }
+        // TODO: Possibly need to clear diagnostics here based on the settings to clear issues on close. However, the request doesn't contain a "version" for the document, so not clear how to populate the version number for the published empty diagnostics
 
         return Unit.Task;
     }
     
-    public override Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
     {
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidSaveTextDocumentParams");
-        return Unit.Task;
+        if (StaticScannerSettings.ScanOnSave)
+        {
+            // This type of request doesn't contain the file contents, unclear how to scan based on this request
+        }
+        return Unit.Value;
     }
     
     protected override TextDocumentSyncRegistrationOptions CreateRegistrationOptions(SynchronizationCapability capability, ClientCapabilities clientCapabilities) => new TextDocumentSyncRegistrationOptions() {
@@ -146,6 +152,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 
     public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
     {
+        // TODO: This should return the correct language based on the uri
         return new TextDocumentAttributes(uri, "csharp");
     }
 }

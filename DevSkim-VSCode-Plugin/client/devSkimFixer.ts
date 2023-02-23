@@ -19,7 +19,7 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 
 	createMapKeyForDiagnostic(diagnostic: vscode.Diagnostic, fileName: string) : string
 	{
-		return `${fileName}: ${diagnostic.message}, ${diagnostic.code?.valueOf()}, ${diagnostic.range.start.line}, ${diagnostic.range.start.character}, ${diagnostic.range.end.line}, ${diagnostic.range.end.character}`;
+		return `${fileName}: ${diagnostic.message}, ${String(diagnostic.code)}, ${diagnostic.range.start.line}, ${diagnostic.range.start.character}, ${diagnostic.range.end.line}, ${diagnostic.range.end.character}`;
 	}
 	
 	ensureMapHasMapping(mapping: CodeFixMapping)
