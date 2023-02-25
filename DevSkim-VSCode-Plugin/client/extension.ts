@@ -9,6 +9,7 @@ import * as path from 'path';
 import { workspace, ExtensionContext } from 'vscode';
 import { CodeFixMapping } from './common/codeFixMapping';
 import {
+	DidChangeConfigurationNotification,
 	LanguageClient,
 	LanguageClientOptions,
 	ServerOptions,
@@ -36,8 +37,14 @@ async function resolveDotNetPath(): Promise<string> {
 
 function getDevSkimConfiguration(section='MS-CST-E.vscode-devskim' ): DevSkimSettings {
 	const settings: DevSkimSettings = new DevSkimSettingsObject();
-	settings.enableBestPracticeRules = vscode.workspace.getConfiguration(section).get('rules.enableBestPracticeRules', false);
 	settings.enableManualReviewRules = vscode.workspace.getConfiguration(section).get('rules.enableManualReviewRules', false);
+	settings.enableBestPracticeRules = vscode.workspace.getConfiguration(section).get('rules.enableBestPracticeRules', false);
+	settings.enableUnspecifiedSeverityRules = vscode.workspace.getConfiguration(section).get('rules.enableUnspecifiedSeverityRules', false);
+	settings.enableLowConfidenceRules = vscode.workspace.getConfiguration(section).get('rules.enableLowConfidenceRules', false);
+	settings.enableUnspecifiedConfidenceRules = vscode.workspace.getConfiguration(section).get('rules.enableUnspecifiedConfidenceRules', false);
+	settings.customRulesPaths = vscode.workspace.getConfiguration(section).get('rules.customRulesPath', []);
+	settings.customLanguagesPath = vscode.workspace.getConfiguration(section).get('rules.customLanguagesPath', "");
+	settings.customCommentsPath = vscode.workspace.getConfiguration(section).get('rules.customCommentsPath', "");
 	settings.suppressionDurationInDays = vscode.workspace.getConfiguration(section).get('suppressions.suppressionDurationInDays', 30);
 	settings.suppressionCommentStyle = vscode.workspace.getConfiguration(section).get('suppressions.suppressionCommentStyle', 'line');
 	settings.manualReviewerName = vscode.workspace.getConfiguration(section).get('suppressions.manualReviewerName', '');
@@ -45,14 +52,11 @@ function getDevSkimConfiguration(section='MS-CST-E.vscode-devskim' ): DevSkimSet
 	settings.ignoreFiles = vscode.workspace.getConfiguration(section).get('ignores.ignoreFiles',
 		[ "out/.*", "bin/.*", "node_modules/.*", ".vscode/.*", "yarn.lock", "logs/.*", ".log", ".git" ]);
 	settings.ignoreRulesList = vscode.workspace.getConfiguration(section).get('ignores.ignoreRulesList', "");
-	settings.removeFindingsOnClose = vscode.workspace.getConfiguration(section).get('findings.removeFindingsOnClose', false);
 	settings.ignoreDefaultRules = vscode.workspace.getConfiguration(section).get('ignores.ignoreDefaultRules', false);
-	settings.customRulesPaths = vscode.workspace.getConfiguration(section).get('rules.customRulesPath', []);
-	settings.customLanguagesPath = vscode.workspace.getConfiguration(section).get('rules.customLanguagesPath', "");
-	settings.customCommentsPath = vscode.workspace.getConfiguration(section).get('rules.customCommentsPath', "");
-	settings.scanOnOpen = vscode.workspace.getConfiguration(section).get('ignores.scanOnOpen', false);
-	settings.scanOnSave = vscode.workspace.getConfiguration(section).get('ignores.scanOnSave', false);
-	settings.scanOnChange = vscode.workspace.getConfiguration(section).get('ignores.scanOnChange', false);
+	settings.removeFindingsOnClose = vscode.workspace.getConfiguration(section).get('findings.removeFindingsOnClose', false);
+	settings.scanOnOpen = vscode.workspace.getConfiguration(section).get('triggers.scanOnOpen', false);
+	settings.scanOnSave = vscode.workspace.getConfiguration(section).get('triggers.scanOnSave', false);
+	settings.scanOnChange = vscode.workspace.getConfiguration(section).get('triggers.scanOnChange', false);
 	settings.traceServer = vscode.workspace.getConfiguration(section).get('trace.server', false);
 	return settings;
 
@@ -67,13 +71,15 @@ export function activate(context: ExtensionContext) {
 			providedCodeActionKinds: DevSkimFixer.providedCodeActionKinds
 		})
 	);
+
 	// The server bridge is implemented in .NET
 	const serverModule = context.asAbsolutePath(path.join('devskimBinaries', 'Microsoft.DevSkim.LanguageServer.dll'));
 	resolveDotNetPath().then((dotNetPath) =>
 	{
 		if (dotNetPath == undefined || dotNetPath == null)
 		{
-			// Error Can't start Extension
+			// Error, can't start extension
+			// TODO: Notify user
 		}
 		else
 		{
@@ -96,12 +102,7 @@ export function activate(context: ExtensionContext) {
 			// Options to control the language client
 			const clientOptions: LanguageClientOptions = {
 				documentSelector: selectors,
-				progressOnInitialization: true,
-				synchronize: {
-					// Synchronize the setting section 'languageServerExample' to the server
-					configurationSection: "devskim",
-					//fileEvents: workspace.createFileSystemWatcher("**/*.cs"),
-				},
+				progressOnInitialization: true
 			};
 	
 			client = new LanguageClient(
@@ -119,20 +120,22 @@ export function activate(context: ExtensionContext) {
 				 	fixer.ensureMapHasMapping(mapping);
 				})
 			);
+
 			vscode.workspace.onDidChangeConfiguration(e => {
-				const newConfig = getDevSkimConfiguration();
-				client.sendNotification(getSetSettings(),newConfig);
-				fixer.setConfig(newConfig);
+				if (e.affectsConfiguration("MS-CST-E.vscode-devskim"))
+				{
+					// Update client-side fixer config
+					const newConfig = getDevSkimConfiguration();
+					fixer.setConfig(newConfig);
+
+					// Triggers server to query for client config.
+					// Hacky, but vscode insists a pull model should be used over a push model for transmitting settings.
+					client.sendNotification(DidChangeConfigurationNotification.type, { settings: "" });
+				}
 			});
+
 			// Start the client. This will also launch the server
 			context.subscriptions.push(disposable);
 		}
 	});
 }
-
-// export function deactivate(): Thenable<void> | undefined {
-// 	if (!client) {
-// 		return undefined;
-// 	}
-// 	return client.stop();
-// }

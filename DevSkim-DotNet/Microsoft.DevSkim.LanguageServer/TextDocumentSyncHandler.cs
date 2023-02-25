@@ -1,19 +1,13 @@
-using System;
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.IO;
 using MediatR;
-using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
-using OmniSharp.Extensions.LanguageServer.Protocol.Workspace;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 
@@ -22,23 +16,20 @@ namespace DevSkim.LanguageServer;
 internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 {
     private readonly ILogger<TextDocumentSyncHandler> _logger;
-    private readonly ILanguageServerConfiguration _configuration;
     private readonly ILanguageServerFacade _facade;
     private readonly DocumentSelector _documentSelector = DocumentSelector.ForLanguage(new[] {"csharp"});
     private DevSkimRuleProcessor _processor;
 
-    public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerConfiguration configuration, ILanguageServerFacade facade)
+    public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerFacade facade)
     {
         _facade = facade;
         _logger = logger;
-        _configuration = configuration;
 
         _processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions);
         _processor.EnableSuppressions = true;
     }
 
     public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
-
 
     private async Task<Unit> GenerateDiagnosticsForTextDocument(string text, int? version, DocumentUri uri)
     {
@@ -125,10 +116,6 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     public override Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)
     {
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidCloseTextDocumentParams");
-        if (_configuration.TryGetScopedConfiguration(request.TextDocument.Uri, out var disposable))
-        {
-            disposable.Dispose();
-        }
         // TODO: Possibly need to clear diagnostics here based on the settings to clear issues on close. However, the request doesn't contain a "version" for the document, so not clear how to populate the version number for the published empty diagnostics
 
         return Unit.Task;
@@ -147,6 +134,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     protected override TextDocumentSyncRegistrationOptions CreateRegistrationOptions(SynchronizationCapability capability, ClientCapabilities clientCapabilities) => new TextDocumentSyncRegistrationOptions() {
         DocumentSelector = _documentSelector,
         Change = Change,
+        // TODO: Set to true and see if it provides us the text to scan on save
         Save = new SaveOptions() { IncludeText = false }
     };
 

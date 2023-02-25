@@ -5,6 +5,9 @@
 export interface DevSkimSettings {
     enableManualReviewRules: boolean;
     enableBestPracticeRules: boolean;
+    enableUnspecifiedSeverityRules: boolean;
+    enableLowConfidenceRules: boolean;
+    enableUnspecifiedConfidenceRules: boolean;
     suppressionDurationInDays: number;
     suppressionCommentStyle: string;
     manualReviewerName: string;
@@ -25,6 +28,9 @@ export interface DevSkimSettings {
 export class DevSkimSettingsObject implements DevSkimSettings {
     enableBestPracticeRules: boolean = false;
     enableManualReviewRules: boolean = false;
+    enableUnspecifiedSeverityRules: boolean = false;
+    enableLowConfidenceRules: boolean = false;
+    enableUnspecifiedConfidenceRules: boolean = false;
     suppressionDurationInDays: number = 30;
     suppressionCommentStyle: string = "line";
     manualReviewerName: string = "";
