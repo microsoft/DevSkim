@@ -106,7 +106,6 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
         if (StaticScannerSettings.ScanOnOpen)
         {
-            await Task.Yield();
             var content = request.TextDocument;
             return await GenerateDiagnosticsForTextDocument(content.Text, content.Version, request.TextDocument.Uri);
         }
