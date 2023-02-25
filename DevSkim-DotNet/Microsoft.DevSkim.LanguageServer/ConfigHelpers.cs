@@ -7,40 +7,41 @@ namespace DevSkim.LanguageServer;
 
 internal class ConfigHelpers
 {
+	internal static readonly string Section = "MS-CST-E.vscode-devskim";
 	internal static void SetScannerSettings(IConfiguration configuration)
 	{
 		StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);
-		StaticScannerSettings.IgnoreRuleIds = configuration.GetValue<string[]>("MS-CST-E.vscode-devskim:ignores:ignoreRuleList");
-		StaticScannerSettings.IgnoreFiles = configuration.GetValue<string[]>("MS-CST-E.vscode-devskim:ignores:ignoreFiles");
-		StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:findings:removeFindingsOnClose");
-		StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:triggers:scanOnOpen");
-		StaticScannerSettings.ScanOnSave = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:triggers:scanOnSave");
-		StaticScannerSettings.ScanOnChange = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:triggers:scanOnChange");
+		StaticScannerSettings.IgnoreRuleIds = configuration.GetValue<string[]>($"{Section}:ignores:ignoreRuleList");
+		StaticScannerSettings.IgnoreFiles = configuration.GetValue<string[]>($"{Section}:ignores:ignoreFiles");
+		StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>($"{Section}:findings:removeFindingsOnClose");
+		StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>($"{Section}:triggers:scanOnOpen");
+		StaticScannerSettings.ScanOnSave = configuration.GetValue<bool>($"{Section}:triggers:scanOnSave");
+		StaticScannerSettings.ScanOnChange = configuration.GetValue<bool>($"{Section}:triggers:scanOnChange");
 	}
 
 	private static DevSkimRuleProcessorOptions OptionsFromConfiguration(IConfiguration configuration)
 	{
-		var languagesPath = configuration.GetValue<string>("MS-CST-E.vscode-devskim:rules:customLanguagesPath");
-		var commentsPath = configuration.GetValue<string>("MS-CST-E.vscode-devskim:rules:customCommentsPath");
+		var languagesPath = configuration.GetValue<string>($"{Section}:rules:customLanguagesPath");
+		var commentsPath = configuration.GetValue<string>($"{Section}:rules:customCommentsPath");
 		var severityFilter = Severity.Moderate | Severity.Critical | Severity.Important;
-		if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim:rules:enableManualReviewRules"))
+		if (configuration.GetValue<bool>($"{Section}:rules:enableManualReviewRules"))
 		{
 			severityFilter |= Severity.ManualReview;
 		}
-		if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim:rules:enableBestPracticeRules"))
+		if (configuration.GetValue<bool>($"{Section}:rules:enableBestPracticeRules"))
 		{
 			severityFilter |= Severity.BestPractice;
 		}
-		if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim:rules:enableUnspecifiedSeverityRules"))
+		if (configuration.GetValue<bool>($"{Section}:rules:enableUnspecifiedSeverityRules"))
 		{
 			severityFilter |= Severity.Unspecified;
 		}
 		var confidenceFilter = Confidence.Medium | Confidence.High;
-		if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim:rules:enableUnspecifiedConfidenceRules"))
+		if (configuration.GetValue<bool>($"{Section}:rules:enableUnspecifiedConfidenceRules"))
 		{
 			confidenceFilter |= Confidence.Unspecified;
 		}
-		if (configuration.GetValue<bool>("MS-CST-E.vscode-devskim:rules:enableLowConfidenceRules"))
+		if (configuration.GetValue<bool>($"{Section}:rules:enableLowConfidenceRules"))
 		{
 			confidenceFilter |= Confidence.Low;
 		}

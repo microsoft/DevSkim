@@ -50,7 +50,7 @@ internal class Program
 					.WithHandler<TextDocumentSyncHandler>()
 					.WithHandler<DidChangeConfigurationHandler>()
 					.WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Debug)))
-					.WithConfigurationSection("MS-CST-E.vscode-devskim")
+					.WithConfigurationSection(ConfigHelpers.Section)
 					.OnInitialize(
 						async (server, request, token) =>
 						{
@@ -88,7 +88,7 @@ internal class Program
 							IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
 								new ConfigurationItem
 								{
-									Section = "MS-CST-E.vscode-devskim"
+									Section = ConfigHelpers.Section
 								}
 							).ConfigureAwait(false);
 							ConfigHelpers.SetScannerSettings(configuration);

@@ -52,7 +52,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             {
                 var diag = new Diagnostic()
                 {
-                    Code = $"MS-CST-E.vscode-devskim: {issue.Rule.Id}",
+                    Code = $"{ConfigHelpers.Section}: {issue.Rule.Id}",
                     Severity = DiagnosticSeverity.Error,
                     Message = $"{issue.Rule.Description ?? string.Empty}",
                     Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
