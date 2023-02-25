@@ -9,6 +9,7 @@
         internal static bool ScanOnOpen { get; set; }
         internal static bool ScanOnSave { get; set; }
         internal static bool ScanOnChange { get; set; }
+        internal static bool RemoveFindingsOnClose { get; set; }
         internal static DevSkimRuleSet RuleSet { get; set; } = DevSkimRuleSet.GetDefaultRuleSet();
         internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = new DevSkimRuleProcessorOptions();
         internal static ICollection<string> IgnoreRuleIds { get; set; } = Array.Empty<string>();

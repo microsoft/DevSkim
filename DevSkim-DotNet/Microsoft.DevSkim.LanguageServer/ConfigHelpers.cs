@@ -12,6 +12,7 @@ internal class ConfigHelpers
 		StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);
 		StaticScannerSettings.IgnoreRuleIds = configuration.GetValue<string[]>("MS-CST-E.vscode-devskim:ignores:ignoreRuleList");
 		StaticScannerSettings.IgnoreFiles = configuration.GetValue<string[]>("MS-CST-E.vscode-devskim:ignores:ignoreFiles");
+		StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:findings:removeFindingsOnClose");
 		StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:triggers:scanOnOpen");
 		StaticScannerSettings.ScanOnSave = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:triggers:scanOnSave");
 		StaticScannerSettings.ScanOnChange = configuration.GetValue<bool>("MS-CST-E.vscode-devskim:triggers:scanOnChange");

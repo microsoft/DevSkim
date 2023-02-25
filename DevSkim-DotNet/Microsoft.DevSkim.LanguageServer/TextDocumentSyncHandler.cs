@@ -116,8 +116,15 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     public override Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)
     {
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidCloseTextDocumentParams");
-        // TODO: Possibly need to clear diagnostics here based on the settings to clear issues on close. However, the request doesn't contain a "version" for the document, so not clear how to populate the version number for the published empty diagnostics
-
+        if (StaticScannerSettings.RemoveFindingsOnClose)
+        {
+            _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
+            {
+                Diagnostics = new Container<Diagnostic>(),
+                Uri = request.TextDocument.Uri,
+                Version = null
+            });
+        }
         return Unit.Task;
     }
     
