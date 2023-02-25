@@ -126,7 +126,12 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidSaveTextDocumentParams");
         if (StaticScannerSettings.ScanOnSave)
         {
-            // This type of request doesn't contain the file contents, unclear how to scan based on this request
+            if (request.Text is null)
+            {
+                _logger.LogDebug("\tNo content found");
+                return Unit.Value;
+            }
+            return await GenerateDiagnosticsForTextDocument(request.Text, null, request.TextDocument.Uri);
         }
         return Unit.Value;
     }
@@ -134,8 +139,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     protected override TextDocumentSyncRegistrationOptions CreateRegistrationOptions(SynchronizationCapability capability, ClientCapabilities clientCapabilities) => new TextDocumentSyncRegistrationOptions() {
         DocumentSelector = _documentSelector,
         Change = Change,
-        // TODO: Set to true and see if it provides us the text to scan on save
-        Save = new SaveOptions() { IncludeText = false }
+        Save = new SaveOptions() { IncludeText = true }
     };
 
     public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
