@@ -2,6 +2,7 @@ using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Text.RegularExpressions;
 
 namespace DevSkim.LanguageServer;
 
@@ -41,9 +42,7 @@ internal class ConfigHelpers
         StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
 		StaticScannerSettings.CustomRulePaths = GetStringList(configuration, "rules:customRulesPaths");
 		StaticScannerSettings.IgnoreRuleIds = GetStringList(configuration, "ignores:ignoreRuleList");
-
-		// TODO: TextDocumentSyncHandler should ignore these
-        StaticScannerSettings.IgnoreFiles = GetStringList(configuration, "ignores:ignoreFiles");
+        StaticScannerSettings.IgnoreFiles = GetStringList(configuration, "ignores:ignoreFiles").Select(x => new Regex(x)).ToList();
 
         StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>($"{Section}:findings:removeFindingsOnClose");
 		StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>($"{Section}:triggers:scanOnOpen");

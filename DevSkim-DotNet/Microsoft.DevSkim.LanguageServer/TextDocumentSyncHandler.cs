@@ -36,18 +36,23 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             return Unit.Value;
         }
 
-        var filename = uri.Path;
+        string filename = uri.Path;
+        if (StaticScannerSettings.IgnoreFiles.Any(x => x.IsMatch(filename)))
+        {
+            _logger.LogDebug($"\t{filename} was excluded due to matching IgnoreFiles setting");
+            return Unit.Value;
+        }
         // Diagnostics are sent a document at a time
         _logger.LogDebug($"\tProcessing document: {filename}");
-        var issues = _processor.Analyze(text, filename).ToList();
-        var diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
-        var codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
+        List<Issue> issues = _processor.Analyze(text, filename).ToList();
+        ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
+        ImmutableArray<CodeFixMapping>.Builder codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
         _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
-        foreach (var issue in issues)
+        foreach (Issue issue in issues)
         {
             if (!issue.IsSuppressionInfo)
             {
-                var diag = new Diagnostic()
+                Diagnostic diag = new Diagnostic()
                 {
                     Code = $"{ConfigHelpers.Section}: {issue.Rule.Id}",
                     Severity = DiagnosticSeverity.Error,
@@ -74,7 +79,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
             Uri = uri,
             Version = version
         });
-        foreach (var codeFixMapping in codeFixes.ToArray())
+        foreach (CodeFixMapping codeFixMapping in codeFixes.ToArray())
         {
             _facade.TextDocument.SendNotification("devskim/codefixmapping", codeFixMapping);
         }
@@ -87,7 +92,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidChangeTextDocumentParams");
         if (StaticScannerSettings.ScanOnChange)
         {
-            var content = request.ContentChanges.FirstOrDefault();
+            TextDocumentContentChangeEvent? content = request.ContentChanges.FirstOrDefault();
             if (content is null)
             {
                 _logger.LogDebug("\tNo content found");
@@ -103,7 +108,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         _logger.LogDebug("TextDocumentSyncHandler.cs: DidOpenTextDocumentParams");
         if (StaticScannerSettings.ScanOnOpen)
         {
-            var content = request.TextDocument;
+            TextDocumentItem content = request.TextDocument;
             return await GenerateDiagnosticsForTextDocument(content.Text, content.Version, request.TextDocument.Uri);
         }
         return Unit.Value;        
