@@ -53,7 +53,7 @@ public class DefaultRulesTests
   ""id"": ""CODEJAVA000000"",
   ""description"": ""Java 17 maven configuration"",
   ""applies_to"": [
-    ""pom.xml""
+    ""xml""
   ],
   ""tags"": [
     ""Code.Java.17""
@@ -74,10 +74,10 @@ public class DefaultRulesTests
     }
   ]
 }]";
-        var deSkimRuleSet = new DevSkimRuleSet();
-        deSkimRuleSet.AddString(rule, "testRules");
-        var analyzer = new DevSkimRuleProcessor(deSkimRuleSet, new DevSkimRuleProcessorOptions());
-        var analysis = analyzer.Analyze(content, "pom.xml");
+        var devSkimRuleSet = new DevSkimRuleSet();
+        devSkimRuleSet.AddString(rule, "testRules");
+        var analyzer = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions());
+        var analysis = analyzer.Analyze(content, "thing.xml");
         Assert.AreEqual(1, analysis.Count());
     }
 }
