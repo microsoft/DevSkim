@@ -7,6 +7,7 @@ namespace Microsoft.DevSkim
         public DevSkimRuleProcessorOptions()
         {
             AllowAllTagsInBuildFiles = true;
+            Languages = DevSkimLanguages.LoadEmbedded();
         }
     }
 }
