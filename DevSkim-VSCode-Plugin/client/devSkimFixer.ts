@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { integer } from 'vscode-languageclient';
 import { CodeFixMapping } from './common/codeFixMapping';
 import { DevSkimSettings, DevSkimSettingsObject } from './common/devskimSettings';
 import { ExtensionToCodeCommentStyle } from './common/languagesAccess';
@@ -28,7 +29,7 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		const keyVal = this.fixMapping.get(key);
 		if(keyVal != undefined)
 		{
-			if (!keyVal.find(x => x = mapping.replacement))
+			if (!keyVal.find(x => x == mapping.replacement))
 			{
 				this.fixMapping.set(key, keyVal.concat(mapping.replacement));
 			}
@@ -46,36 +47,46 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 			this.fixMapping.get(this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace("%3A", ":")))?.forEach(codeFix => {
 				output.push(this.createFix(document, filteredDiagnostic.range, codeFix));
 			});
-			const suppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic);
+			const suppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic, false);
 			if (suppression != null)
 			{
 				output.push(suppression);
+			}
+			if (this.config.suppressionDurationInDays > 0)
+			{
+				const durationSuppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic, true);
+				if (durationSuppression != null)
+				{
+					output.push(durationSuppression);
+				}
 			}
 		});
 
 		return output;
 	}
 
-	private createSuppression(document: vscode.TextDocument, range: vscode.Range, diagnostic: vscode.Diagnostic): vscode.CodeAction | null
+	private createSuppression(document: vscode.TextDocument, range: vscode.Range, diagnostic: vscode.Diagnostic, withDate: boolean): vscode.CodeAction | null
 	{
-		const issueNum = diagnostic.source?.split(new RegExp('[\\[\\]]'))[1];
+		const issueNum = diagnostic.source?.split(new RegExp('[\\[\\]]'))[1]; 
 		if (issueNum != undefined)
 		{
 			const extension = document.uri.path.split('.').pop()?.toLowerCase() ?? '';
 			const commentStyle = ExtensionToCodeCommentStyle(extension);
 			if (commentStyle != undefined)
 			{
-				const fix = new vscode.CodeAction(`Suppress ${issueNum} finding`, vscode.CodeActionKind.QuickFix);
+				const duration = withDate ? ` until ${new Date(new Date().getTime() + (this.config.suppressionDurationInDays * 86400000)).toISOString().slice(0, 10)}` : ''
+				const fix = new vscode.CodeAction(`Suppress ${issueNum} finding${duration}`, vscode.CodeActionKind.QuickFix);
 				fix.edit = new vscode.WorkspaceEdit();
 				const text = document.lineAt(range.end.line);
 				const reviewer = this.config.manualReviewerName != '' ? ` by ${this.config.manualReviewerName}` : '';
+				// Number of milliseconds in a day
 				if (this.config.suppressionCommentStyle == "block" && commentStyle.prefix != undefined && commentStyle.suffix != undefined)
 				{
-					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.prefix} DevSkim: Ignore ${issueNum}${reviewer} ${commentStyle.suffix}`);
+					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.prefix} DevSkim: Ignore ${issueNum}${reviewer}${duration} ${commentStyle.suffix}`);
 				}
 				else
 				{
-					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.inline} DevSkim: Ignore ${issueNum}${reviewer}`);
+					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.inline} DevSkim: Ignore ${issueNum}${reviewer}${duration}`);
 				}
 				return fix;
 			}

@@ -17,6 +17,6 @@
         internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = new DevSkimRuleProcessorOptions();
         internal static ICollection<string> IgnoreRuleIds { get; set; } = Array.Empty<string>();
         internal static ICollection<Regex> IgnoreFiles { get; set; } = Array.Empty<Regex>();
-        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(new DevSkimRuleSet(), new DevSkimRuleProcessorOptions());
+        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(new DevSkimRuleSet(), new DevSkimRuleProcessorOptions()) { EnableSuppressions = true };
     }
 }

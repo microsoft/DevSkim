@@ -75,7 +75,7 @@ internal class ConfigHelpers
         }
 		ruleSet = ruleSet.WithoutIds(StaticScannerSettings.IgnoreRuleIds);
 		StaticScannerSettings.RuleSet = ruleSet;
-		StaticScannerSettings.Processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions);
+		StaticScannerSettings.Processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions) { EnableSuppressions = true };
 	}
 
 	private static DevSkimRuleProcessorOptions OptionsFromConfiguration(IConfiguration configuration)
