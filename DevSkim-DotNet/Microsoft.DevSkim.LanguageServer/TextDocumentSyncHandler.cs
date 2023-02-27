@@ -18,15 +18,12 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     private readonly ILogger<TextDocumentSyncHandler> _logger;
     private readonly ILanguageServerFacade _facade;
     private readonly DocumentSelector _documentSelector = DocumentSelector.ForLanguage(new[] {"csharp"});
-    private DevSkimRuleProcessor _processor;
+    private DevSkimRuleProcessor _processor => StaticScannerSettings.Processor;
 
     public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerFacade facade)
     {
         _facade = facade;
         _logger = logger;
-
-        _processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions);
-        _processor.EnableSuppressions = true;
     }
 
     public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
