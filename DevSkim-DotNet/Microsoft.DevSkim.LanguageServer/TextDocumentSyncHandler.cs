@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using MediatR;
+using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol;
@@ -17,7 +18,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 {
     private readonly ILogger<TextDocumentSyncHandler> _logger;
     private readonly ILanguageServerFacade _facade;
-    private readonly DocumentSelector _documentSelector = DocumentSelector.ForLanguage(new[] {"csharp"});
+    private readonly DocumentSelector _documentSelector = DocumentSelector.ForLanguage(StaticScannerSettings.RuleProcessorOptions.Languages.GetNames());
     private DevSkimRuleProcessor _processor => StaticScannerSettings.Processor;
 
     public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerFacade facade)
@@ -153,6 +154,10 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
     {
         // TODO: This should return the correct language based on the uri
-        return new TextDocumentAttributes(uri, "csharp");
+        if (StaticScannerSettings.RuleProcessorOptions.Languages.FromFileNameOut(uri.GetFileSystemPath(), out LanguageInfo Info))
+        {
+            return new TextDocumentAttributes(uri, Info.Name);
+        }
+        return new TextDocumentAttributes(uri, "unknown");
     }
 }
