@@ -16,6 +16,8 @@ interface LanguageEntry
 	extensions: string[];
 }
 
+// TODO: This is reading from an extra copy of the languages and comments spec files, rather than the exact ones being used by the language server/devskim
+// Can these be loaded by the server and then sent to the client with a custom notifcation instead?
 import languageList from './languages.json';
 import commentsList from './comments.json';
 

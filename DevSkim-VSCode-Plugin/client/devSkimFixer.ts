@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { integer } from 'vscode-languageclient';
 import { CodeFixMapping } from './common/codeFixMapping';
 import { DevSkimSettings, DevSkimSettingsObject } from './common/devskimSettings';
 import { ExtensionToCodeCommentStyle } from './common/languagesAccess';
@@ -44,14 +43,17 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		// for each diagnostic entry that has the matching `code`, create a code action command
 		const output : vscode.CodeAction[] = [];
 		context.diagnostics.filter(diagnostic => String(diagnostic.code).startsWith("MS-CST-E.vscode-devskim")).forEach((filteredDiagnostic : vscode.Diagnostic) => {
+			// The ToString method on URI in node swaps ':' into '%3A', but the C# one does not, but we need them to match.
 			this.fixMapping.get(this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace("%3A", ":")))?.forEach(codeFix => {
 				output.push(this.createFix(document, filteredDiagnostic.range, codeFix));
 			});
+			// Create the perpetual suppression option
 			const suppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic, false);
 			if (suppression != null)
 			{
 				output.push(suppression);
 			}
+			// Create the timed suppression option
 			if (this.config.suppressionDurationInDays > 0)
 			{
 				const durationSuppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic, true);
@@ -71,6 +73,7 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		if (issueNum != undefined)
 		{
 			const extension = document.uri.path.split('.').pop()?.toLowerCase() ?? '';
+			// TODO: This is reading from an extra copy of the languages and comments spec files, rather than the exact ones being used by the language server/devskim etc.
 			const commentStyle = ExtensionToCodeCommentStyle(extension);
 			if (commentStyle != undefined)
 			{
