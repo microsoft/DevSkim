@@ -15,20 +15,20 @@ internal class ConfigHelpers
 	/// <param name="configuration"></param>
 	/// <param name="subSection"></param>
 	/// <returns></returns>
-	internal static ICollection<string> GetStringList(IConfiguration configuration, string subSection)
+	internal static ICollection<T> CompileList<T>(IConfiguration configuration, string subSection)
 	{
-		var toReturn = new List<string>();
+		var toReturn = new List<T>();
 		int i = 0;
 		while (true)
 		{
-			string nextIgnoreRuleId = configuration.GetValue<string>($"{Section}:{subSection}:{i}");
-            if (nextIgnoreRuleId == null)
+			T nextItem = configuration.GetValue<T>($"{Section}:{subSection}:{i}");
+            if (nextItem == null)
 			{
 				break;
 			}
 			else
 			{
-                toReturn.Add(nextIgnoreRuleId);
+                toReturn.Add(nextItem);
 				i++;
 			}
 		}
@@ -40,9 +40,9 @@ internal class ConfigHelpers
 	{
 		StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);
         StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
-		StaticScannerSettings.CustomRulePaths = GetStringList(configuration, "rules:customRulesPaths");
-		StaticScannerSettings.IgnoreRuleIds = GetStringList(configuration, "ignores:ignoreRuleList");
-        StaticScannerSettings.IgnoreFiles = GetStringList(configuration, "ignores:ignoreFiles").Select(x => new Regex(x)).ToList();
+		StaticScannerSettings.CustomRulePaths = CompileList<string>(configuration, "rules:customRulesPaths");
+		StaticScannerSettings.IgnoreRuleIds = CompileList<string>(configuration, "ignores:ignoreRuleList");
+        StaticScannerSettings.IgnoreFiles = CompileList<string>(configuration, "ignores:ignoreFiles").Select(x => new Regex(x)).ToList();
 
         StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>($"{Section}:findings:removeFindingsOnClose");
 		StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>($"{Section}:triggers:scanOnOpen");
