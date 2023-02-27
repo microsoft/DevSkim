@@ -17,7 +17,7 @@ internal class ConfigHelpers
 	/// <returns></returns>
 	internal static ICollection<T> CompileList<T>(IConfiguration configuration, string subSection)
 	{
-		var toReturn = new List<T>();
+        List<T> toReturn = new List<T>();
 		int i = 0;
 		while (true)
 		{
@@ -49,8 +49,8 @@ internal class ConfigHelpers
 		StaticScannerSettings.ScanOnSave = configuration.GetValue<bool>($"{Section}:triggers:scanOnSave");
 		StaticScannerSettings.ScanOnChange = configuration.GetValue<bool>($"{Section}:triggers:scanOnChange");
 
-		var ruleSet = StaticScannerSettings.IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
-		foreach (var path in StaticScannerSettings.CustomRulePaths)
+        DevSkimRuleSet ruleSet = StaticScannerSettings.IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
+		foreach (string path in StaticScannerSettings.CustomRulePaths)
 		{
 			ruleSet.AddPath(path);
 		}
@@ -61,9 +61,9 @@ internal class ConfigHelpers
 
 	private static DevSkimRuleProcessorOptions OptionsFromConfiguration(IConfiguration configuration)
 	{
-		var languagesPath = configuration.GetValue<string>($"{Section}:rules:customLanguagesPath");
-		var commentsPath = configuration.GetValue<string>($"{Section}:rules:customCommentsPath");
-		var severityFilter = Severity.Moderate | Severity.Critical | Severity.Important;
+        string languagesPath = configuration.GetValue<string>($"{Section}:rules:customLanguagesPath");
+        string commentsPath = configuration.GetValue<string>($"{Section}:rules:customCommentsPath");
+        Severity severityFilter = Severity.Moderate | Severity.Critical | Severity.Important;
 		if (configuration.GetValue<bool>($"{Section}:rules:enableManualReviewRules"))
 		{
 			severityFilter |= Severity.ManualReview;
@@ -76,7 +76,7 @@ internal class ConfigHelpers
 		{
 			severityFilter |= Severity.Unspecified;
 		}
-		var confidenceFilter = Confidence.Medium | Confidence.High;
+        Confidence confidenceFilter = Confidence.Medium | Confidence.High;
 		if (configuration.GetValue<bool>($"{Section}:rules:enableUnspecifiedConfidenceRules"))
 		{
 			confidenceFilter |= Confidence.Unspecified;
