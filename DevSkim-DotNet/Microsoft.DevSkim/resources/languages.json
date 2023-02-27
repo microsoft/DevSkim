@@ -142,5 +142,9 @@
   {
     "name": "json",
     "extensions": [ ".json" ]
+  },
+  {
+    "name": "xml",
+    "extensions": [ ".xml" ]
   }
 ]
