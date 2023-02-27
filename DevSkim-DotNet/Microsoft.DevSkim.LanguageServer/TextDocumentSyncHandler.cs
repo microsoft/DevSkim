@@ -155,7 +155,6 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
 
     public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
     {
-        // TODO: This should return the correct language based on the uri
         if (StaticScannerSettings.RuleProcessorOptions.Languages.FromFileNameOut(uri.GetFileSystemPath(), out LanguageInfo Info))
         {
             return new TextDocumentAttributes(uri, Info.Name);
