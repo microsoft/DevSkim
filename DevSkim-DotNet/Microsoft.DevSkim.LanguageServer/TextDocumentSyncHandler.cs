@@ -58,6 +58,8 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     Code = $"{ConfigHelpers.Section}: {issue.Rule.Id}",
                     Severity = DiagnosticSeverity.Error,
                     Message = $"{issue.Rule.Description ?? string.Empty}",
+                    // DevSkim/Application Inspector line numbers are one-indexed, but column numbers are zero-indexed
+                    // To get the diagnostic to appear on the correct line, we must subtract 1 from the line number
                     Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
                     Source = $"DevSkim Language Server: [{issue.Rule.Id}]"
                 };
