@@ -9,19 +9,19 @@ namespace DevSkim.LanguageServer;
 internal class ConfigHelpers
 {
 	/// <summary>
-	/// Lists are presented in the configuration as a number of items with the name of the list appended with ':0' where 0 is the index of the item from the list.
+	/// Lists are presented in the configuration as a number of items with the name of the list appended with ':i' where i is the index of the item from the list.
 	/// This method compacts those back to a Collection for convenience.
 	/// </summary>
 	/// <param name="configuration"></param>
-	/// <param name="subSection"></param>
+	/// <param name="valueName"></param>
 	/// <returns></returns>
-	internal static ICollection<T> CompileList<T>(IConfiguration configuration, string subSection)
+	internal static ICollection<T> CompileList<T>(IConfiguration configuration, string valueName)
 	{
         List<T> toReturn = new List<T>();
 		int i = 0;
 		while (true)
 		{
-			T nextItem = configuration.GetValue<T>($"{Section}:{subSection}:{i}");
+			T nextItem = configuration.GetValue<T>($"{Section}:{valueName}:{i}");
             if (nextItem == null)
 			{
 				break;
@@ -42,7 +42,19 @@ internal class ConfigHelpers
         StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
 		StaticScannerSettings.CustomRulePaths = CompileList<string>(configuration, "rules:customRulesPaths");
 		StaticScannerSettings.IgnoreRuleIds = CompileList<string>(configuration, "ignores:ignoreRuleList");
-        StaticScannerSettings.IgnoreFiles = CompileList<string>(configuration, "ignores:ignoreFiles").Select(x => new Regex(x)).ToList();
+		List<Regex> fileIgnoreRegexes = new();
+		foreach(string potentialRegex in CompileList<string>(configuration, "ignores:ignoreFiles"))
+		{
+            try
+            {
+				fileIgnoreRegexes.Add(new Regex(potentialRegex));
+            }
+            catch (Exception e)
+            {
+                // TODO: Log issue with provided regex
+            }
+        }
+		StaticScannerSettings.IgnoreFiles = fileIgnoreRegexes;
 
         StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>($"{Section}:findings:removeFindingsOnClose");
 		StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>($"{Section}:triggers:scanOnOpen");
@@ -52,8 +64,15 @@ internal class ConfigHelpers
         DevSkimRuleSet ruleSet = StaticScannerSettings.IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
 		foreach (string path in StaticScannerSettings.CustomRulePaths)
 		{
-			ruleSet.AddPath(path);
-		}
+			try
+			{
+                ruleSet.AddPath(path);
+            }
+			catch(Exception e)
+			{
+				// TODO: Log issue with provided path
+			}
+        }
 		ruleSet = ruleSet.WithoutIds(StaticScannerSettings.IgnoreRuleIds);
 		StaticScannerSettings.RuleSet = ruleSet;
 		StaticScannerSettings.Processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions);
@@ -63,25 +82,37 @@ internal class ConfigHelpers
 	{
         string languagesPath = configuration.GetValue<string>($"{Section}:rules:customLanguagesPath");
         string commentsPath = configuration.GetValue<string>($"{Section}:rules:customCommentsPath");
-        Severity severityFilter = Severity.Moderate | Severity.Critical | Severity.Important;
-		if (configuration.GetValue<bool>($"{Section}:rules:enableManualReviewRules"))
+		Severity severityFilter = Severity.Unspecified;
+        if (configuration.GetValue<bool>($"{Section}:rules:enableCriticalSeverityRules"))
+        {
+            severityFilter |= Severity.Critical;
+        }
+        if (configuration.GetValue<bool>($"{Section}:rules:enableImportantSeverityRules"))
+        {
+            severityFilter |= Severity.Important;
+        }
+        if (configuration.GetValue<bool>($"{Section}:rules:enableModerateSeverityRules"))
+        {
+            severityFilter |= Severity.Moderate;
+        }
+        if (configuration.GetValue<bool>($"{Section}:rules:enableManualReviewSeverityRules"))
 		{
 			severityFilter |= Severity.ManualReview;
 		}
-		if (configuration.GetValue<bool>($"{Section}:rules:enableBestPracticeRules"))
+		if (configuration.GetValue<bool>($"{Section}:rules:enableBestPracticeSeverityRules"))
 		{
 			severityFilter |= Severity.BestPractice;
 		}
-		if (configuration.GetValue<bool>($"{Section}:rules:enableUnspecifiedSeverityRules"))
-		{
-			severityFilter |= Severity.Unspecified;
-		}
-        Confidence confidenceFilter = Confidence.Medium | Confidence.High;
-		if (configuration.GetValue<bool>($"{Section}:rules:enableUnspecifiedConfidenceRules"))
-		{
-			confidenceFilter |= Confidence.Unspecified;
-		}
-		if (configuration.GetValue<bool>($"{Section}:rules:enableLowConfidenceRules"))
+		Confidence confidenceFilter = Confidence.Unspecified;
+        if (configuration.GetValue<bool>($"{Section}:rules:enableHighConfidenceRules"))
+        {
+            confidenceFilter |= Confidence.High;
+        }
+        if (configuration.GetValue<bool>($"{Section}:rules:enableMediumConfidenceRules"))
+        {
+            confidenceFilter |= Confidence.Medium;
+        }
+        if (configuration.GetValue<bool>($"{Section}:rules:enableLowConfidenceRules"))
 		{
 			confidenceFilter |= Confidence.Low;
 		}

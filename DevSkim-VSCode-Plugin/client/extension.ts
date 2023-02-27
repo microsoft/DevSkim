@@ -37,11 +37,14 @@ async function resolveDotNetPath(): Promise<string> {
 
 function getDevSkimConfiguration(section='MS-CST-E.vscode-devskim' ): DevSkimSettings {
 	const settings: DevSkimSettings = new DevSkimSettingsObject();
-	settings.enableManualReviewRules = vscode.workspace.getConfiguration(section).get('rules.enableManualReviewRules', false);
-	settings.enableBestPracticeRules = vscode.workspace.getConfiguration(section).get('rules.enableBestPracticeRules', false);
-	settings.enableUnspecifiedSeverityRules = vscode.workspace.getConfiguration(section).get('rules.enableUnspecifiedSeverityRules', false);
+	settings.enableCriticalSeverityRules = vscode.workspace.getConfiguration(section).get('rules.enableCriticalSeverityRules', true);
+	settings.enableImportantSeverityRules = vscode.workspace.getConfiguration(section).get('rules.enableImportantSeverityRules', true);
+	settings.enableModerateSeverityRules = vscode.workspace.getConfiguration(section).get('rules.enableModerateSeverityRules', true);
+	settings.enableManualReviewSeverityRules = vscode.workspace.getConfiguration(section).get('rules.enableManualReviewSeverityRules', false);
+	settings.enableBestPracticeSeverityRules = vscode.workspace.getConfiguration(section).get('rules.enableBestPracticeSeverityRules', false);
+	settings.enableHighConfidenceRules = vscode.workspace.getConfiguration(section).get('rules.enableHighConfidenceRules', true);
+	settings.enableMediumConfidenceRules = vscode.workspace.getConfiguration(section).get('rules.enableMediumConfidenceRules', true);
 	settings.enableLowConfidenceRules = vscode.workspace.getConfiguration(section).get('rules.enableLowConfidenceRules', false);
-	settings.enableUnspecifiedConfidenceRules = vscode.workspace.getConfiguration(section).get('rules.enableUnspecifiedConfidenceRules', false);
 	settings.customRulesPaths = vscode.workspace.getConfiguration(section).get('rules.customRulesPath', []);
 	settings.customLanguagesPath = vscode.workspace.getConfiguration(section).get('rules.customLanguagesPath', "");
 	settings.customCommentsPath = vscode.workspace.getConfiguration(section).get('rules.customCommentsPath', "");
@@ -56,7 +59,7 @@ function getDevSkimConfiguration(section='MS-CST-E.vscode-devskim' ): DevSkimSet
 	settings.removeFindingsOnClose = vscode.workspace.getConfiguration(section).get('findings.removeFindingsOnClose', false);
 	settings.scanOnOpen = vscode.workspace.getConfiguration(section).get('triggers.scanOnOpen', false);
 	settings.scanOnSave = vscode.workspace.getConfiguration(section).get('triggers.scanOnSave', false);
-	settings.scanOnChange = vscode.workspace.getConfiguration(section).get('triggers.scanOnChange', false);
+	settings.scanOnChange = vscode.workspace.getConfiguration(section).get('triggers.scanOnChange', true);
 	settings.traceServer = vscode.workspace.getConfiguration(section).get('trace.server', false);
 	return settings;
 

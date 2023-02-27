@@ -79,35 +79,50 @@
 				"id": "MS-CST-E.vscode-devskim.rules",
 				"title": "Rules",
 				"properties": {
-					"MS-CST-E.vscode-devskim.rules.enableManualReviewRules": {
+					"MS-CST-E.vscode-devskim.rules.enableCriticalSeverityRules": {
+						"type": "boolean",
+						"default": true,
+						"description": "Turn on the rules with severity \"Critical\"."
+					},
+					"MS-CST-E.vscode-devskim.rules.enableImportantSeverityRules": {
+						"type": "boolean",
+						"default": true,
+						"description": "Turn on the rules with severity \"Important\"."
+					},
+					"MS-CST-E.vscode-devskim.rules.enableModerateSeverityRules": {
+						"type": "boolean",
+						"default": true,
+						"description": "Turn on the rules with severity \"Moderate\"."
+					},
+					"MS-CST-E.vscode-devskim.rules.enableManualReviewSeverityRules": {
 						"type": "boolean",
 						"default": false,
 						"description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
 					},
-					"MS-CST-E.vscode-devskim.rules.enableBestPracticeRules": {
+					"MS-CST-E.vscode-devskim.rules.enableBestPracticeSeverityRules": {
 						"type": "boolean",
 						"default": false,
 						"description": "Turn on the rules of severity \"Best-Practice\". These rules either flag issues that are typically of a lower severity, or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities."
 					},
-					"MS-CST-E.vscode-devskim.rules.enableUnspecifiedSeverityRules": {
+					"MS-CST-E.vscode-devskim.rules.enableHighConfidenceRules": {
 						"type": "boolean",
-						"default": false,
-						"description": "Turn on the rules with \"Unspecified\" severity."
+						"default": true,
+						"description": "Turn on the rules of confidence \"High\"."
+					},
+					"MS-CST-E.vscode-devskim.rules.enableMediumConfidenceRules": {
+						"type": "boolean",
+						"default": true,
+						"description": "Turn on the rules of confidence \"Medium\"."
 					},
 					"MS-CST-E.vscode-devskim.rules.enableLowConfidenceRules": {
 						"type": "boolean",
 						"default": false,
 						"description": "Turn on the rules of confidence \"Low\"."
 					},
-					"MS-CST-E.vscode-devskim.rules.enableUnspecifiedConfidenceRules": {
-						"type": "boolean",
-						"default": false,
-						"description": "Turn on the rules of severity \"Unspecified\"."
-					},
 					"MS-CST-E.vscode-devskim.rules.customRulesPaths": {
 						"type": "array",
 						"default": [],
-						"description": "A list of local paths on disk to rules files for DevSkim to use in analysis."
+						"description": "A list of local paths on disk to rules files or folders containing rule files, for DevSkim to use in analysis."
 					},
 					"MS-CST-E.vscode-devskim.rules.customLanguagesPath": {
 						"type": "string",

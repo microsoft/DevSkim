@@ -3,11 +3,14 @@
 // Licensed under the MIT License.
 
 export interface DevSkimSettings {
-    enableManualReviewRules: boolean;
-    enableBestPracticeRules: boolean;
-    enableUnspecifiedSeverityRules: boolean;
+    enableCriticalSeverityRules: boolean;
+    enableImportantSeverityRules: boolean;
+    enableModerateSeverityRules: boolean;
+    enableManualReviewSeverityRules: boolean;
+    enableBestPracticeSeverityRules: boolean;
+    enableHighConfidenceRules: boolean;
+    enableMediumConfidenceRules: boolean;
     enableLowConfidenceRules: boolean;
-    enableUnspecifiedConfidenceRules: boolean;
     suppressionDurationInDays: number;
     suppressionCommentStyle: string;
     manualReviewerName: string;
@@ -26,11 +29,14 @@ export interface DevSkimSettings {
 }
 
 export class DevSkimSettingsObject implements DevSkimSettings {
-    enableBestPracticeRules: boolean = false;
-    enableManualReviewRules: boolean = false;
-    enableUnspecifiedSeverityRules: boolean = false;
+    enableCriticalSeverityRules: boolean = true;
+    enableImportantSeverityRules: boolean = true;
+    enableModerateSeverityRules: boolean = true;
+    enableManualReviewSeverityRules: boolean = true;
+    enableBestPracticeSeverityRules: boolean = true;
+    enableHighConfidenceRules: boolean = true;
+    enableMediumConfidenceRules: boolean = true;
     enableLowConfidenceRules: boolean = false;
-    enableUnspecifiedConfidenceRules: boolean = false;
     suppressionDurationInDays: number = 30;
     suppressionCommentStyle: string = "line";
     manualReviewerName: string = "";
