@@ -67,21 +67,6 @@ stages:
         PathtoPublish: '$(Build.StagingDirectory)'
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
-    - task: PowerShell@2
-      displayName: Test pre-release check
-      inputs:
-        targetType: 'inline'
-        script: |
-            $v = nbgv get-version -v AssemblyInformationalVersion
-            if ($? -and $v.Contains("-"))
-            {
-                echo "Would publish --pre-release"
-            }
-            else
-            {
-                echo "Would publish official release"
-            }
-        workingDir: 'DevSkim-VSCode-Plugin/'
 
 - stage: Release
   dependsOn:
@@ -168,19 +153,21 @@ stages:
       inputs:
         command: 'custom'
         customCommand: 'install -g vsce'
-#     - task: PowerShell@2
-#       displayName: Deploy to VS Marketplace
-#       inputs:
-#         targetType: 'inline'
-#         script: |
-#             $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-#             node ./DevSkim-VSCode-Plugin/scripts/checkPreReleaseFlag.js
-#             if ($?)
-#             {
+    - task: PowerShell@2
+      displayName: Test pre-release check
+      inputs:
+        targetType: 'inline'
+        script: |
+#           $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+            $v = nbgv get-version -v AssemblyInformationalVersion
+            if ($? -and $v.Contains("-"))
+            {
+                echo "Publishing as --pre-release"
 #               vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
-#             }
-#             else
-#             {
+            }
+            else
+            {
+                echo "Publishing as official release"
 #               vsce publish --packagePath $packPath --pat $(VS_Token)
-#             }
-#         workingDirectory: '$(Build.StagingDirectory)'
+            }
+        workingDir: 'DevSkim-VSCode-Plugin/'
