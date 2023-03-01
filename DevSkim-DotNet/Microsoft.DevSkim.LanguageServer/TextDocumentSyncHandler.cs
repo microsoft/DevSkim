@@ -62,7 +62,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     // DevSkim/Application Inspector line numbers are one-indexed, but column numbers are zero-indexed
                     // To get the diagnostic to appear on the correct line, we must subtract 1 from the line number
                     Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
-                    Source = $"DevSkim Language Server: [{issue.Rule.Id}]"
+                    Source = $"DevSkim Language Server"
                 };
                 diagnostics.Add(diag);
                 for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
