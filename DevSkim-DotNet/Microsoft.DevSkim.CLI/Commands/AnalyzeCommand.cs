@@ -271,10 +271,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                 Parallel = !opts.DisableParallel,
                 SeverityFilter = severityFilter,
                 ConfidenceFilter = confidenceFilter,
+                EnableSuppressions = !opts.DisableSuppression
             };
 
             DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, devSkimRuleProcessorOptions);
-            processor.EnableSuppressions = !opts.DisableSuppression;
             GitInformation? information = GenerateGitInformation(Path.GetFullPath(opts.Path));
             Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
                                                            opts.OutputTextFormat,

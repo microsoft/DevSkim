@@ -45,63 +45,23 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		context.diagnostics.filter(diagnostic => String(diagnostic.code).startsWith("MS-CST-E.vscode-devskim")).forEach((filteredDiagnostic : vscode.Diagnostic) => {
 			// The ToString method on URI in node swaps ':' into '%3A', but the C# one does not, but we need them to match.
 			this.fixMapping.get(this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace("%3A", ":")))?.forEach(codeFix => {
-				output.push(this.createFix(document, filteredDiagnostic.range, codeFix));
+				output.push(this.createFix(document, filteredDiagnostic, codeFix));
 			});
-			// Create the perpetual suppression option
-			const suppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic, false);
-			if (suppression != null)
-			{
-				output.push(suppression);
-			}
-			// Create the timed suppression option
-			if (this.config.suppressionDurationInDays > 0)
-			{
-				const durationSuppression = this.createSuppression(document, filteredDiagnostic.range, filteredDiagnostic, true);
-				if (durationSuppression != null)
-				{
-					output.push(durationSuppression);
-				}
-			}
 		});
 
 		return output;
 	}
 
-	private createSuppression(document: vscode.TextDocument, range: vscode.Range, diagnostic: vscode.Diagnostic, withDate: boolean): vscode.CodeAction | null
+	private createFix(document: vscode.TextDocument, diagnostic: vscode.Diagnostic, codeFix: string): vscode.CodeAction 
 	{
-		const issueNum = diagnostic.source?.split(new RegExp('[\\[\\]]'))[1]; 
-		if (issueNum != undefined)
-		{
-			const extension = document.uri.path.split('.').pop()?.toLowerCase() ?? '';
-			// TODO: This is reading from an extra copy of the languages and comments spec files, rather than the exact ones being used by the language server/devskim etc.
-			const commentStyle = ExtensionToCodeCommentStyle(extension);
-			if (commentStyle != undefined)
-			{
-				const duration = withDate ? ` until ${new Date(new Date().getTime() + (this.config.suppressionDurationInDays * 86400000)).toISOString().slice(0, 10)}` : ''
-				const fix = new vscode.CodeAction(`Suppress ${issueNum} finding${duration}`, vscode.CodeActionKind.QuickFix);
-				fix.edit = new vscode.WorkspaceEdit();
-				const text = document.lineAt(range.end.line);
-				const reviewer = this.config.manualReviewerName != '' ? ` by ${this.config.manualReviewerName}` : '';
-				// Number of milliseconds in a day
-				if (this.config.suppressionCommentStyle == "block" && commentStyle.prefix != undefined && commentStyle.suffix != undefined)
-				{
-					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.prefix} DevSkim: Ignore ${issueNum}${reviewer}${duration} ${commentStyle.suffix}`);
-				}
-				else
-				{
-					fix.edit.insert(document.uri, new vscode.Position(range.end.line, text.range.end.character), ` ${commentStyle.inline} DevSkim: Ignore ${issueNum}${reviewer}${duration}`);
-				}
-				return fix;
-			}
-		}
-		return null;
-	}
-
-	private createFix(document: vscode.TextDocument, range: vscode.Range, codeFix: string): vscode.CodeAction 
-	{
-		const fix = new vscode.CodeAction(`Replace with ${codeFix}`, vscode.CodeActionKind.QuickFix);
+		// If DevSkim ignore is in the line, this appears to be a suppression
+		const index = codeFix.indexOf("DevSkim: ignore ");
+		// DevSkim: Ignore is 16 characters
+		// Give the user the correct action message depending on if this is a suppression or fix
+		const fixString = (index > -1) ? `Suppress ${codeFix.substring(index+16)}` : `Replace with ${codeFix}`
+		const fix = new vscode.CodeAction(fixString, vscode.CodeActionKind.QuickFix);
 		fix.edit = new vscode.WorkspaceEdit();
-		fix.edit.replace(document.uri, range, codeFix);
+		fix.edit.replace(document.uri, diagnostic.range, codeFix);
 		return fix;
 	}
 }

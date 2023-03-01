@@ -149,10 +149,10 @@
 					"MS-CST-E.vscode-devskim.suppressions.suppressionCommentStyle": {
 						"type": "string",
 						"enum": [
-							"line",
-							"block"
+							"Line",
+							"Block"
 						],
-						"default": "line",
+						"default": "Line",
 						"description": "When DevSkim inserts a suppression comment it defaults to using single line comments for every language that has them.  Setting this to block will instead use block comments for the languages that support them.  Block comments are suggested if regularly adding explanations for why a finding was suppressed"
 					},
 					"MS-CST-E.vscode-devskim.suppressions.manualReviewerName": {

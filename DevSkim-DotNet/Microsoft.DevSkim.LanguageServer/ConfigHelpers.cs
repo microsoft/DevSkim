@@ -39,45 +39,47 @@ internal class ConfigHelpers
 	internal static void SetScannerSettings(IConfiguration configuration)
 	{
 		StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);
-        StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
+		StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
 		StaticScannerSettings.CustomRulePaths = CompileList<string>(configuration, "rules:customRulesPaths");
 		StaticScannerSettings.IgnoreRuleIds = CompileList<string>(configuration, "ignores:ignoreRuleList");
 		List<Regex> fileIgnoreRegexes = new();
-		foreach(string potentialRegex in CompileList<string>(configuration, "ignores:ignoreFiles"))
+		foreach (string potentialRegex in CompileList<string>(configuration, "ignores:ignoreFiles"))
 		{
-            try
-            {
+			try
+			{
 				fileIgnoreRegexes.Add(new Regex(potentialRegex));
-            }
-            catch (Exception e)
-            {
-                // TODO: Log issue with provided regex
-            }
-        }
+			}
+			catch (Exception e)
+			{
+				// TODO: Log issue with provided regex
+			}
+		}
 		StaticScannerSettings.IgnoreFiles = fileIgnoreRegexes;
 
-        StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>($"{Section}:findings:removeFindingsOnClose");
+		StaticScannerSettings.RemoveFindingsOnClose = configuration.GetValue<bool>($"{Section}:findings:removeFindingsOnClose");
 		StaticScannerSettings.ScanOnOpen = configuration.GetValue<bool>($"{Section}:triggers:scanOnOpen");
 		StaticScannerSettings.ScanOnSave = configuration.GetValue<bool>($"{Section}:triggers:scanOnSave");
 		StaticScannerSettings.ScanOnChange = configuration.GetValue<bool>($"{Section}:triggers:scanOnChange");
+		StaticScannerSettings.SuppressionDuration = configuration.GetValue<int>($"{Section}:suppressions:suppressionDurationInDays");
+        StaticScannerSettings.SuppressionStyle = configuration.GetValue<SuppressionStyle>($"{Section}:suppressions:suppressionCommentStyle");
+		StaticScannerSettings.ReviewerName = configuration.GetValue<string>($"{Section}:suppressions:manualReviewerName");
 
         DevSkimRuleSet ruleSet = StaticScannerSettings.IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
 		foreach (string path in StaticScannerSettings.CustomRulePaths)
 		{
 			try
 			{
-                ruleSet.AddPath(path);
-            }
-			catch(Exception e)
+				ruleSet.AddPath(path);
+			}
+			catch (Exception e)
 			{
 				// TODO: Log issue with provided path
 			}
-        }
+		}
 		ruleSet = ruleSet.WithoutIds(StaticScannerSettings.IgnoreRuleIds);
 		StaticScannerSettings.RuleSet = ruleSet;
-		StaticScannerSettings.Processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions) { EnableSuppressions = true };
+		StaticScannerSettings.Processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions);
 	}
-
 	private static DevSkimRuleProcessorOptions OptionsFromConfiguration(IConfiguration configuration)
 	{
         string languagesPath = configuration.GetValue<string>($"{Section}:rules:customLanguagesPath");
