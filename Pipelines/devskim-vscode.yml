@@ -73,7 +73,7 @@ stages:
         targetType: 'inline'
         script: |
             $v = nbgv get-version -v AssemblyInformationalVersion
-            if ($? && $v.Contains("-"))
+            if ($? -and $v.Contains("-"))
             {
                 echo "Would publish --pre-release"
             }
