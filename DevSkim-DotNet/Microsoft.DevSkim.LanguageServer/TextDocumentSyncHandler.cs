@@ -76,6 +76,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                 // Add suppression options
                 if (StaticScannerSettings.RuleProcessorOptions.EnableSuppressions)
                 {
+                    // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
                     string proposedSuppression = GenerateSuppression(filename, issue.Rule.Id);
                     codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedSuppression}", uri.ToString()));
 
