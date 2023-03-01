@@ -70,20 +70,22 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     CodeFix fix = issue.Rule.Fixes[i];
                     if (fix.Replacement is { })
                     {
-                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToString()));
+                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToString(), $"Replace with {fix.Replacement}"));
                     }
                 }
                 // Add suppression options
                 if (StaticScannerSettings.RuleProcessorOptions.EnableSuppressions)
                 {
                     // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
+                    // TODO: Handle multiple suppressions on one line?
                     string proposedSuppression = GenerateSuppression(filename, issue.Rule.Id);
-                    codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedSuppression}", uri.ToString()));
+                    codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedSuppression}", uri.ToString(), $"Suppress {issue.Rule.Id}"));
 
                     if (StaticScannerSettings.SuppressionDuration > -1)
                     {
-                        string proposedTimedSuppression = GenerateSuppression(filename, issue.Rule.Id, StaticScannerSettings.SuppressionDuration);
-                        codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedTimedSuppression}", uri.ToString()));
+                        DateTime expiration = DateTime.Now.AddDays(StaticScannerSettings.SuppressionDuration);
+                        string proposedTimedSuppression = GenerateSuppression(filename, issue.Rule.Id, expiration);
+                        codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedTimedSuppression}", uri.ToString(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}"));
                     }
                 }
             }
@@ -104,7 +106,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         return Unit.Value;
     }
 
-    private string GenerateSuppression(string filename, string issueId, int numDays = -1)
+    private string GenerateSuppression(string filename, string issueId, DateTime? until = null)
     {
         StaticScannerSettings.RuleProcessorOptions.Languages.FromFileNameOut(filename, out LanguageInfo languageInfo);
         string commentInline = StaticScannerSettings.RuleProcessorOptions.Languages.GetCommentInline(languageInfo.Name);
@@ -116,9 +118,9 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         if ((StaticScannerSettings.SuppressionStyle == SuppressionStyle.Line && !string.IsNullOrEmpty(commentInline)) || (!string.IsNullOrEmpty(commentPrefix) && !string.IsNullOrEmpty(commentSuffix)))
         {
             StringBuilder proposedSuppression = new($"{commentInline} DevSkim: ignore {issueId}");
-            if(numDays > 0)
+            if (until is { })
             {
-                proposedSuppression.Append($" until {DateTime.Now.AddDays(numDays).ToString("yyyy-MM-dd")}");
+                proposedSuppression.Append($" until {until.Value.ToString("yyyy-MM-dd")}");
             }
             return proposedSuppression.ToString();
         }
@@ -127,9 +129,9 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         else if ((StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block && (!string.IsNullOrEmpty(commentPrefix) && !string.IsNullOrEmpty(commentSuffix))) || !string.IsNullOrEmpty(commentInline))
         {
             StringBuilder proposedSuppression = new($"{commentPrefix} DevSkim: ignore {issueId}");
-            if (numDays > 0)
+            if (until is { })
             {
-                proposedSuppression.Append($" until {DateTime.Now.AddDays(numDays).ToString("yyyy-MM-dd")}");
+                proposedSuppression.Append($" until {until.Value.ToString("yyyy-MM-dd")}");
             }
             proposedSuppression.Append($" {commentSuffix}");
             return proposedSuppression.ToString();

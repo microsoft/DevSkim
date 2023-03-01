@@ -3,7 +3,7 @@ import { CodeFixMapping } from './common/codeFixMapping';
 
 export class DevSkimFixer implements vscode.CodeActionProvider {
 
-	fixMapping = new Map<string, string[]>();
+	fixMapping = new Map<string, CodeFixMapping[]>();
 	public static readonly providedCodeActionKinds = [
 		vscode.CodeActionKind.QuickFix
 	];
@@ -19,14 +19,14 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		const keyVal = this.fixMapping.get(key);
 		if(keyVal != undefined)
 		{
-			if (!keyVal.find(x => x == mapping.replacement))
+			if (!keyVal.find(x => x.replacement == mapping.replacement))
 			{
-				this.fixMapping.set(key, keyVal.concat(mapping.replacement));
+				this.fixMapping.set(key, keyVal.concat(mapping));
 			}
 		}
 		else
 		{
-			this.fixMapping.set(key, [mapping.replacement]);
+			this.fixMapping.set(key, [mapping]);
 		}
 	}
 
@@ -43,17 +43,11 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		return output;
 	}
 
-	private createFix(document: vscode.TextDocument, diagnostic: vscode.Diagnostic, codeFix: string): vscode.CodeAction 
+	private createFix(document: vscode.TextDocument, diagnostic: vscode.Diagnostic, codeFix: CodeFixMapping): vscode.CodeAction 
 	{
-		// TODO: There's a better way to distinguish these, can send a bool over from the server to help distinguish more easily
-		// If DevSkim ignore is in the line, this appears to be a suppression
-		const index = codeFix.indexOf("DevSkim: ignore ");
-		// DevSkim: Ignore is 16 characters
-		// Give the user the correct action message depending on if this is a suppression or fix
-		const fixString = (index > -1) ? `Suppress ${codeFix.substring(index+16)}` : `Replace with ${codeFix}`
-		const fix = new vscode.CodeAction(fixString, vscode.CodeActionKind.QuickFix);
+		const fix = new vscode.CodeAction(codeFix.friendlyString, vscode.CodeActionKind.QuickFix);
 		fix.edit = new vscode.WorkspaceEdit();
-		fix.edit.replace(document.uri, diagnostic.range, codeFix);
+		fix.edit.replace(document.uri, diagnostic.range, codeFix.replacement);
 		return fix;
 	}
 }

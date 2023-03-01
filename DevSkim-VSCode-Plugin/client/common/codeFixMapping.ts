@@ -4,10 +4,12 @@ export class CodeFixMapping
 	diagnostic: any;
 	replacement: string;
 	fileName: string;
-	constructor(diagnostic: any, replacement: string, fileName: string)
+	friendlyString: string;
+	constructor(diagnostic: any, replacement: string, fileName: string, friendlyString: string)
 	{
 		this.diagnostic = diagnostic;
 		this.replacement = replacement;
 		this.fileName = fileName;
+		this.friendlyString = friendlyString;
 	}
 }
