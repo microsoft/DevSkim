@@ -54,6 +54,7 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 
 	private createFix(document: vscode.TextDocument, diagnostic: vscode.Diagnostic, codeFix: string): vscode.CodeAction 
 	{
+		// TODO: There's a better way to distinguish these, can send a bool over from the server to help distinguish more easily
 		// If DevSkim ignore is in the line, this appears to be a suppression
 		const index = codeFix.indexOf("DevSkim: ignore ");
 		// DevSkim: Ignore is 16 characters
