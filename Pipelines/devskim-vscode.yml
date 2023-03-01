@@ -68,20 +68,20 @@ stages:
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
     - task: PowerShell@2
-          displayName: Test pre-release check
-          inputs:
-            targetType: 'inline'
-            script: |
-                node ./DevSkim-VSCode-Plugin/scripts/checkPreReleaseFlag.js
-                if ($?)
-                {
-                    echo "Would publish --pre-release"
-                }
-                else
-                {
-                    echo "Would publish official release
-                }
-            workingDirectory: '$(Build.StagingDirectory)'
+      displayName: Test pre-release check
+      inputs:
+        targetType: 'inline'
+        script: |
+            node ./DevSkim-VSCode-Plugin/scripts/checkPreReleaseFlag.js
+            if ($?)
+            {
+                echo "Would publish --pre-release"
+            }
+            else
+            {
+                echo "Would publish official release
+            }
+        workingDirectory: '$(Build.StagingDirectory)'
 
 - stage: Release
   dependsOn:
