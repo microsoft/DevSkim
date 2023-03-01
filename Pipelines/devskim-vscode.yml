@@ -72,8 +72,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-            node ./scripts/checkPreReleaseFlag.js
-            if ($?)
+            $v = nbgv get-version -v AssemblyInformationalVersion
+            if ($? && $v.Contains("-"))
             {
                 echo "Would publish --pre-release"
             }
