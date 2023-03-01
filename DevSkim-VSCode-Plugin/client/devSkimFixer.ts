@@ -6,16 +6,9 @@ import { ExtensionToCodeCommentStyle } from './common/languagesAccess';
 export class DevSkimFixer implements vscode.CodeActionProvider {
 
 	fixMapping = new Map<string, string[]>();
-	config = new DevSkimSettingsObject();
 	public static readonly providedCodeActionKinds = [
 		vscode.CodeActionKind.QuickFix
 	];
-
-	setConfig(config: DevSkimSettings)
-	{
-		this.config = config;
-		this.fixMapping = new Map<string, string[]>();
-	}
 
 	createMapKeyForDiagnostic(diagnostic: vscode.Diagnostic, fileName: string) : string
 	{

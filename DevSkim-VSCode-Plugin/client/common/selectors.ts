@@ -1,3 +1,4 @@
+// TODO: This shoud be dynamically updated by the Languages loaded by the language server
 export const selectors = [{ scheme: 'file', language: 'c' },
 { scheme: 'file', language: 'clojure' },
 { scheme: 'file', language: 'coffeescript' },

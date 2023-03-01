@@ -6,7 +6,7 @@
 import { ExtensionToCodeCommentStyle } from './common/languagesAccess';
 
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { ExtensionContext } from 'vscode';
 import { CodeFixMapping } from './common/codeFixMapping';
 import {
 	DidChangeConfigurationNotification,
@@ -18,7 +18,7 @@ import {
 
 import * as vscode from 'vscode';
 import { DevSkimSettings, DevSkimSettingsObject } from './common/devskimSettings';
-import { getCodeFixMapping, getDevSkimPath, getDotNetPath, getSetSettings } from './common/notificationNames';
+import { getCodeFixMapping } from './common/notificationNames';
 import { selectors } from './common/selectors';
 import { DevSkimFixer } from './devSkimFixer';
 
@@ -68,7 +68,6 @@ function getDevSkimConfiguration(section='MS-CST-E.vscode-devskim' ): DevSkimSet
 export function activate(context: ExtensionContext) {
 	const config = getDevSkimConfiguration();
 	const fixer = new DevSkimFixer();
-	fixer.setConfig(config);
 	context.subscriptions.push(
 		vscode.languages.registerCodeActionsProvider(selectors, fixer, {
 			providedCodeActionKinds: DevSkimFixer.providedCodeActionKinds
@@ -127,10 +126,6 @@ export function activate(context: ExtensionContext) {
 			vscode.workspace.onDidChangeConfiguration(e => {
 				if (e.affectsConfiguration("MS-CST-E.vscode-devskim"))
 				{
-					// Update client-side fixer config
-					const newConfig = getDevSkimConfiguration();
-					fixer.setConfig(newConfig);
-
 					// Triggers server to query for client config.
 					// Hacky, but vscode insists a pull model should be used over a push model for transmitting settings.
 					client.sendNotification(DidChangeConfigurationNotification.type, { settings: "" });
