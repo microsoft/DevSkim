@@ -79,7 +79,7 @@ stages:
             }
             else
             {
-                echo "Would publish official release
+                echo "Would publish official release"
             }
         workingDirectory: '$(Build.StagingDirectory)'
 
