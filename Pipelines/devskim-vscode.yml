@@ -72,7 +72,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-            node ./DevSkim-VSCode-Plugin/scripts/checkPreReleaseFlag.js
+            node ./scripts/checkPreReleaseFlag.js
             if ($?)
             {
                 echo "Would publish --pre-release"
@@ -81,7 +81,7 @@ stages:
             {
                 echo "Would publish official release"
             }
-        workingDirectory: '$(Build.StagingDirectory)'
+        workingDir: 'DevSkim-VSCode-Plugin/'
 
 - stage: Release
   dependsOn:
