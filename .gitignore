@@ -1,4 +1,5 @@
 ﻿*.vsix
 DevSkim-DotNet/Microsoft.DevSkim.sln.DotSettings.user
 DevSkim-DotNet/Microsoft.DevSkim.CLI/output.json
+DevSkim-VSCode-Plugin/client/dist/*
 DevSkim-VSCode-Plugin/devskimBinaries/*

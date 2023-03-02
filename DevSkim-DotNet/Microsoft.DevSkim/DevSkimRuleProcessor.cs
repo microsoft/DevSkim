@@ -28,38 +28,39 @@ namespace Microsoft.DevSkim
                 TextContainer textContainer = new TextContainer(text, info.Name, _languages);
                 // Get AI Issues
                 // -1 NumLinesContext disables all sample gathering
-                var matchRecords = _aiProcessor.AnalyzeFile(textContainer, new FileEntry(fileName, new MemoryStream()),
+                List<MatchRecord> matchRecords = _aiProcessor.AnalyzeFile(textContainer, new FileEntry(fileName, new MemoryStream()),
                     info, null, numLinesContext: -1);
                 // Apply suppressions
-                foreach (var matchRecord in matchRecords)
+                foreach (MatchRecord matchRecord in matchRecords)
                 {
-                    // TODO: Code smell. We shouldn't have any rules that aren't DevSkim rules but this theoretically could throw if the Rule returned is somehow an AI Rule and not a DevSkimRule object.
-                    var issue = new Issue(Boundary: matchRecord.Boundary,
-                        StartLocation: textContainer.GetLocation(matchRecord.Boundary.Index),
-                        EndLocation:
-                        textContainer.GetLocation(matchRecord.Boundary.Index + matchRecord.Boundary.Length),
-                        Rule: (DevSkimRule)matchRecord.Rule);
-                    if (EnableSuppressions)
+                    if (matchRecord.Rule is DevSkimRule devSkimRule)
                     {
-                        var supp = new Suppression(textContainer, issue.StartLocation.Line);
-                        var supissue = supp.GetSuppressedIssue(issue.Rule.Id);
-                        if (supissue is null)
+                        Issue issue = new Issue(Boundary: matchRecord.Boundary,
+                        StartLocation: textContainer.GetLocation(matchRecord.Boundary.Index),
+                        EndLocation: textContainer.GetLocation(matchRecord.Boundary.Index + matchRecord.Boundary.Length),
+                        Rule: devSkimRule);
+                        if (_processorOptions.EnableSuppressions)
+                        {
+                            Suppression supp = new(textContainer, issue.StartLocation.Line);
+                            SuppressedIssue? supissue = supp.GetSuppressedIssue(issue.Rule.Id);
+                            if (supissue is null)
+                            {
+                                resultsList.Add(issue);
+                            }
+                            //Otherwise add the suppression info instead
+                            else
+                            {
+                                issue.IsSuppressionInfo = true;
+
+                                if (!resultsList.Any(x =>
+                                        x.Rule.Id == issue.Rule.Id && x.Boundary.Index == issue.Boundary.Index))
+                                    resultsList.Add(issue);
+                            }
+                        }
+                        else
                         {
                             resultsList.Add(issue);
                         }
-                        //Otherwise add the suppression info instead
-                        else
-                        {
-                            issue.IsSuppressionInfo = true;
-
-                            if (!resultsList.Any(x =>
-                                    x.Rule.Id == issue.Rule.Id && x.Boundary.Index == issue.Boundary.Index))
-                                resultsList.Add(issue);
-                        }
-                    }
-                    else
-                    {
-                        resultsList.Add(issue);
                     }
                 }
             }
@@ -89,7 +90,5 @@ namespace Microsoft.DevSkim
 
             return result;
         }
-        
-        public bool EnableSuppressions { get; set; }
     }
 }

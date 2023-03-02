@@ -10,27 +10,14 @@
 		"type": "git",
 		"url": "https://github.com/Microsoft/devskim.git"
 	},
-	"bugs": {
-		"url": "https://github.com/Microsoft/devskim/issues"
-	},
 	"engines": {
-		"vscode": "^1.45.0"
-	},
-	"scripts": {
-		"clean": "npx --ignore-existing --quiet rimraf node_modules dist out"
-	},
-	"devDependencies": {
-		"@types/jest": "^24.9.1",
-		"@types/node": "^11.15.7",
-		"@types/semver": "^6.2.1",
-		"@types/vscode": "^1.45.1",
-		"rimraf": "^2.6.2",
-		"shx": "^0.3.2",
-		"ts-loader": "^6.2.1",
-		"typescript": "^3.8.3"
+		"vscode": "^1.52.0"
 	},
 	"dependencies": {
-		"node-dir": "^0.1.17",
-		"vscode-languageclient": "^6.1.1"
+		"vscode-languageclient": "^7.0.0"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.52.0",
+		"@vscode/test-electron": "^1.6.1"
 	}
 }

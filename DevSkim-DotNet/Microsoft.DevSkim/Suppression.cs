@@ -85,6 +85,20 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
+        /// Check if the suppression has expired
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <returns></returns>
+        public bool IsExpired
+        {
+            get
+            {
+                bool doesItExists = (Index >= 0 && _issues.Count > 0);
+                return (doesItExists && DateTime.Now > _expirationDate);
+            }
+        }
+
+        /// <summary>
         ///     Test if given rule Id is being suppressed
         /// </summary>
         /// <param name="issueId"> Rule ID </param>

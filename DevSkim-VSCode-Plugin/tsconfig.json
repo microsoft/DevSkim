@@ -1,19 +1,20 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es6",
-		"outDir": "out",
-		"lib": [ "es6" ],
-		"sourceMap": true
+		"target": "es2019",
+		"lib": [
+			"ES2019"
+		],
+		"rootDir": "client",
+		"noEmit": true,
+		"sourceMap": true,
+		"strict": true,
+		"strictNullChecks": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true
 	},
-	"include": [
-		"src"
-	],
-	"exclude": [
-		"node_modules"
-	],
+	"exclude": [ ".vscode", "node_modules", "scripts" ],
 	"references": [
-		{ "path": "./client" },
-		{ "path": "./server" }
+		{ "path": "./client" }
 	]
 }

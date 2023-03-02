@@ -1,16 +1,26 @@
 {
-	"compilerOptions": {
+    "compilerOptions": {
 		"module": "commonjs",
-		"target": "es6",
+		"target": "es2019",
+		"lib": [
+			"ES2019"
+		],
 		"outDir": "out",
-		"rootDir": "src",
-		"lib": ["es6"],
+		"rootDir": ".",
 		"sourceMap": true,
-      	"noUnusedLocals": false,
-		"noUnusedParameters": false,
-		"noImplicitAny": false,
-		"noImplicitReturns": true
-	},
-	"include": ["src"],
-	"exclude": ["node_modules", "**/__mocks__/*"]
+		"strict": true,
+		"strictNullChecks": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+        "composite": true
+    },
+    "exclude": [ "node_modules" ],
+    "files": [
+        "./common/codeFixMapping.ts",
+		"./common/devskimSettings.ts",
+		"./common/notificationNames.ts",
+		"./common/selectors.ts",
+        "devskimFixer.ts",
+        "extension.ts"
+    ]
 }
