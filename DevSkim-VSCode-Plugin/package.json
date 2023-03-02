@@ -61,7 +61,8 @@
 		"onLanguage:powershell",
 		"onLanguage:coffeescript",
 		"onLanguage:plaintext",
-		"onLanguage:python"
+		"onLanguage:python",
+		"onLanguage:json"
 	],
 	"main": "./client/out/extension",
 	"contributes": {
