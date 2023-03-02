@@ -68,106 +68,106 @@ stages:
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
 
-- stage: Release
-  dependsOn:
-  - SDL
-  - Build
-  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
-  jobs:
-  - job: sign_hash_release
-    displayName: Code Sign, Generate Hashes, Publish Public Release
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: DownloadBuildArtifacts@0
-      displayName: Retrieve Unsigned Artifact 
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: 'Unsigned_Plugin\*.vsix'
-        downloadPath: '$(Build.BinariesDirectory)'
-    - task: AntiMalware@3
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Warning'
-    - task: EsrpCodeSigning@1
-      displayName: Code Sign VSCode Plugin
-      inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
-        Pattern: '*.vsix'
-        signConfigType: 'inlineSignParams'
-        inlineOperation: |
-          [
-                  {
-                      "KeyCode" : "CP-233016",
-                      "OperationCode" : "OpcSign",
-                      "Parameters" : {
-                          "FileDigest" : "/fd SHA256"
-                      },
-                      "ToolName" : "sign",
-                      "ToolVersion" : "1.0"
-                  },
-                  {
-                      "KeyCode" : "CP-233016",
-                      "OperationCode" : "OpcVerify",
-                      "Parameters" : {},
-                      "ToolName" : "sign",
-                      "ToolVersion" : "1.0"
-                  }
-              ]
-        SessionTimeout: '60'
-        MaxConcurrency: '50'
-        MaxRetryAttempts: '5'
-    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
-      displayName: 'Delete Code Sign Summaries'
-    - task: PowerShell@2
-      displayName: Move Plugin File
-      inputs:
-        targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
-    - task: PowerShell@2
-      displayName: Generate Hashes
-      inputs:
-        targetType: 'inline'
-        script: |
-          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
-            $name = $_.Name
-            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
-            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
-          }
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Signed Artifact to Pipeline
-      inputs:
-        targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Signed_Plugin'
-    - task: Npm@1
-      displayName: Install vsce
-      inputs:
-        command: 'custom'
-        customCommand: 'install -g vsce'
-    - task: PowerShell@2
-      displayName: Test pre-release check
-      inputs:
-        targetType: 'inline'
-        script: |
-#           $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-            $v = nbgv get-version -v AssemblyInformationalVersion
-            if ($? -and $v.Contains("-"))
-            {
-                echo "Publishing as --pre-release"
-#               vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
-            }
-            else
-            {
-                echo "Publishing as official release"
-#               vsce publish --packagePath $packPath --pat $(VS_Token)
-            }
-        workingDir: 'DevSkim-VSCode-Plugin/'
+# - stage: Release
+#   dependsOn:
+#   - SDL
+#   - Build
+#   condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+#   jobs:
+#   - job: sign_hash_release
+#     displayName: Code Sign, Generate Hashes, Publish Public Release
+#     pool:
+#       vmImage: 'windows-latest'
+#     steps:
+#     - task: DownloadBuildArtifacts@0
+#       displayName: Retrieve Unsigned Artifact 
+#       inputs:
+#         buildType: 'current'
+#         downloadType: 'specific'
+#         itemPattern: 'Unsigned_Plugin\*.vsix'
+#         downloadPath: '$(Build.BinariesDirectory)'
+#     - task: AntiMalware@3
+#       displayName: Anti-Malware Scan
+#       inputs:
+#         InputType: 'Basic'
+#         ScanType: 'CustomScan'
+#         FileDirPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
+#         EnableServices: true
+#         SupportLogOnError: false
+#         TreatSignatureUpdateFailureAs: 'Warning'
+#         SignatureFreshness: 'UpToDate'
+#         TreatStaleSignatureAs: 'Warning'
+#     - task: EsrpCodeSigning@1
+#       displayName: Code Sign VSCode Plugin
+#       inputs:
+#         ConnectedServiceName: 'Devskim_CodeSign'
+#         FolderPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
+#         Pattern: '*.vsix'
+#         signConfigType: 'inlineSignParams'
+#         inlineOperation: |
+#           [
+#                   {
+#                       "KeyCode" : "CP-233016",
+#                       "OperationCode" : "OpcSign",
+#                       "Parameters" : {
+#                           "FileDigest" : "/fd SHA256"
+#                       },
+#                       "ToolName" : "sign",
+#                       "ToolVersion" : "1.0"
+#                   },
+#                   {
+#                       "KeyCode" : "CP-233016",
+#                       "OperationCode" : "OpcVerify",
+#                       "Parameters" : {},
+#                       "ToolName" : "sign",
+#                       "ToolVersion" : "1.0"
+#                   }
+#               ]
+#         SessionTimeout: '60'
+#         MaxConcurrency: '50'
+#         MaxRetryAttempts: '5'
+#     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+#       displayName: 'Delete Code Sign Summaries'
+#     - task: PowerShell@2
+#       displayName: Move Plugin File
+#       inputs:
+#         targetType: 'inline'
+#         script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
+#     - task: PowerShell@2
+#       displayName: Generate Hashes
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+#             $name = $_.Name
+#             $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+#             Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+#           }
+#     - task: PublishPipelineArtifact@1
+#       displayName: Publish Signed Artifact to Pipeline
+#       inputs:
+#         targetPath: '$(Build.StagingDirectory)'
+#         artifact: 'Signed_Plugin'
+#     - task: Npm@1
+#       displayName: Install vsce
+#       inputs:
+#         command: 'custom'
+#         customCommand: 'install -g vsce'
+#     - task: PowerShell@2
+#       displayName: Test pre-release check
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+# #           $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+#             $v = nbgv get-version -v AssemblyInformationalVersion
+#             if ($? -and $v.Contains("-"))
+#             {
+#                 echo "Publishing as --pre-release"
+# #               vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
+#             }
+#             else
+#             {
+#                 echo "Publishing as official release"
+# #               vsce publish --packagePath $packPath --pat $(VS_Token)
+#             }
+#         workingDir: 'DevSkim-VSCode-Plugin/'
