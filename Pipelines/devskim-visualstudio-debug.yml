@@ -3,35 +3,33 @@
 
 # name: DevSkim_VisualStudio_Debug_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 # trigger: none
-# trigger:
-#   batch: true
-#   branches:
-#     include:
-#     - main
-#   paths:
-#     include:
-#     - DevSkim-DotNet/Microsoft.DevSkim/*
-#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-#     - rules/*
 # pr:
 #   branches:
 #     include:
 #     - main
 #   paths:
 #     include:
-#     - Pipelines
+#     - Pipelines/devskim-visualstudio-debug.yml
 #     - DevSkim-DotNet/Microsoft.DevSkim/*
 #     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
 #     - rules/*
 
+# resources:
+#   repositories:
+#     - repository: templates
+#       type: git
+#       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+
 # stages:
 # - stage: SDL
+#   dependsOn: []
 #   jobs:
-#   - template: templates/sdl-job.yml
+#   - template: sdl-job.yml@templates
 #     parameters:
 #       serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
 
 # - stage: Build
+#   dependsOn: []
 #   jobs:
 #   - job: build_extension
 #     displayName: Build Visual Studio Extension
