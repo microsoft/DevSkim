@@ -2,22 +2,14 @@
 # https://aka.ms/yaml
 
 name: DevSkim_VSCode_Debug_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-trigger:
-  batch: true
-  branches:
-    include:
-    - main
-  paths:
-    include:
-    - DevSkim-VSCode-Plugin/*
-    - rules/*
+trigger: none
 pr:
   branches:
     include:
     - main
   paths:
     include:
-    - Pipelines
+    - Pipelines/devskim-vscode-debug.yml
     - DevSkim-VSCode-Plugin/*
     - rules/*
 
