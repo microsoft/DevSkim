@@ -2,6 +2,7 @@
 # https://aka.ms/yaml
 
 name: DevSkim_CLI_Debug_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger: none
 pr:
   branches:
     include:
