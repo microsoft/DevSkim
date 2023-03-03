@@ -1,0 +1,75 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VSCode_Debug_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - DevSkim-VSCode-Plugin/*
+    - rules/*
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - Pipelines
+    - DevSkim-VSCode-Plugin/*
+    - rules/*
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+
+stages:
+- stage: SDL
+  jobs:
+  - template: sdl-job.yml@templates
+    parameters:
+      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
+
+- stage: Build
+  jobs:
+  - job: build_vscode_plugin
+    displayName: Build VSCode Plugin
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: Npm@1
+      displayName: npm install
+      inputs:
+        command: 'install'
+        workingDir: 'DevSkim-VSCode-Plugin/'
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        workingDir: 'DevSkim-VSCode-Plugin/'
+        customCommand: 'run pack-ext'
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: 'DevSkim-VSCode-Plugin/'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Warning'
+    - task: PowerShell@2
+      displayName: Move Plugin File
+      inputs:
+        targetType: 'inline'
+        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Unsigned Artifact
+      inputs:
+        PathtoPublish: '$(Build.StagingDirectory)'
+        ArtifactName: 'Unsigned_Plugin'
+        publishLocation: 'Container'

@@ -1,8 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-# name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-# trigger: none
+# name: DevSkim_VisualStudio_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 # trigger:
 #   batch: true
 #   branches:
@@ -10,16 +9,6 @@
 #     - main
 #   paths:
 #     include:
-#     - DevSkim-DotNet/Microsoft.DevSkim/*
-#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-#     - rules/*
-# pr:
-#   branches:
-#     include:
-#     - main
-#   paths:
-#     include:
-#     - Pipelines
 #     - DevSkim-DotNet/Microsoft.DevSkim/*
 #     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
 #     - rules/*

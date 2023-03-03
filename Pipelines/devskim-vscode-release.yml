@@ -1,7 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_VSCode_CI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: DevSkim_VSCode_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   batch: true
   branches:
@@ -11,20 +11,17 @@ trigger:
     include:
     - DevSkim-VSCode-Plugin/*
     - rules/*
-pr:
-  branches:
-    include:
-    - main
-  paths:
-    include:
-    - Pipelines
-    - DevSkim-VSCode-Plugin/*
-    - rules/*
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
 
 stages:
 - stage: SDL
   jobs:
-  - template: templates/sdl-job.yml
+  - template: sdl-job.yml@templates
     parameters:
       serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
 

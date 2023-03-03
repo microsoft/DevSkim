@@ -1,7 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_CLI_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: DevSkim_CLI_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
   batch: true
   branches:
@@ -11,36 +11,34 @@ trigger:
     include:
     - DevSkim-DotNet/*
     - rules/*
-pr:
-  branches:
-    include:
-    - main
-  paths:
-    include:
-    - Pipelines
-    - DevSkim-DotNet/*
-    - rules/*
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
 
 stages:
 - stage: Test
   jobs:
-  - template: templates/dotnet-test-job.yml
+  - template: dotnet-test-job.yml@templates
     parameters:
       jobName: 'dotnet_test_windows'
       dotnetVersion: 7.0.x
       dotnetVersionLTS: 6.0.x
       testImage: 'windows-latest'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
-  - template: templates/dotnet-test-job.yml
+  - template: dotnet-test-job.yml@templates
     parameters:
       jobName: 'dotnet_test_ubuntu'
       dotnetVersion: 7.0.x
       dotnetVersionLTS: 6.0.x
       testImage: 'ubuntu-latest'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+      
 - stage: SDL
   jobs:
-  - template: templates/sdl-job.yml
+  - template: sdl-job.yml@templates
     parameters:
       serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
 
@@ -48,27 +46,27 @@ stages:
   dependsOn:
   - Test
   jobs:
-  - template: templates/dotnet-publish-linux-mac-job.yml
+  - template: dotnet-publish-linux-mac-job.yml@templates
     parameters:
       dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim'
       preBuild:
-      - template: templates/nbgv-set-version-steps.yml
-  - template: templates/dotnet-publish-win-netcore-job.yml
+      - template: nbgv-set-version-steps.yml@templates
+  - template: templates/dotnet-publish-win-netcore-job.yml@templates
     parameters:
       dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim'
       preBuild:
-      - template: templates/nbgv-set-version-steps.yml
-  - template: templates/nuget-build-job.yml
+      - template: nbgv-set-version-steps.yml@templates
+  - template: nuget-build-job.yml@templates
     parameters:
       jobName: 'pack_lib'
       dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
-  - template: templates/nuget-build-job-framework.yml
+  - template: nuget-build-job-framework.yml@templates
     parameters:
       jobName: 'pack_cli'
       dotnetVersion: '7.0.x'
@@ -76,11 +74,27 @@ stages:
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
 
-- stage: Release
+- stage: ReleaseValidation
   dependsOn:
   - SDL
   - Build
-  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+  jobs:
+  - job: AwaitValidation
+    displayName: Release Validation
+    pool: server
+    timeoutInMinutes: 4321 # job times out in 3 days
+    steps:
+    - task: ManualValidation@0
+      displayName: Manual Validation
+      timeoutInMinutes: 4320 # task times out in 3 days
+      inputs:
+        notifyUsers: 'cstesectools@microsoft.com'
+        instructions: 'This step performs a release to GitHub and NuGet. Proceed?'
+        onTimeout: 'reject'
+
+- stage: Release
+  dependsOn: ReleaseValidation
+  condition: succeeded()
   jobs:
   - job: sign_hash_release
     displayName: Code Sign, Generate Hashes, Publish Public Releases
@@ -91,7 +105,7 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '7.0.x'
-    - template: templates/nbgv-set-version-steps.yml
+    - template: nbgv-set-version-steps.yml@templates
     - task: DownloadBuildArtifacts@0
       displayName: Download Unsigned Archives
       inputs:
