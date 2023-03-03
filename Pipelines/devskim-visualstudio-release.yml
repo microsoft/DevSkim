@@ -13,14 +13,22 @@
 #     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
 #     - rules/*
 
+# resources:
+#   repositories:
+#     - repository: templates
+#       type: git
+#       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+
 # stages:
 # - stage: SDL
+#   dependsOn: []
 #   jobs:
-#   - template: templates/sdl-job.yml
+#   - template: sdl-job.yml@templates
 #     parameters:
 #       serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
 
 # - stage: Build
+#   dependsOn: []
 #   jobs:
 #   - job: build_extension
 #     displayName: Build Visual Studio Extension
@@ -68,12 +76,29 @@
 #         PathtoPublish: '$(Build.StagingDirectory)'
 #         ArtifactName: 'Unsigned_Extension'
 #         publishLocation: 'Container'
-
-# - stage: Release
+#
+# - stage: ReleaseValidation
 #   dependsOn:
 #   - SDL
 #   - Build
-#   condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+#   jobs:
+#   - job: AwaitValidation
+#     displayName: Release Validation
+#     pool: server
+#     timeoutInMinutes: 4321 # job times out in 3 days
+#     steps:
+#     - task: ManualValidation@0
+#       displayName: Manual Validation
+#       timeoutInMinutes: 4320 # task times out in 3 days
+#       inputs:
+#        notifyUsers: 'cstesectools@microsoft.com'
+#        instructions: 'This step performs a release to the VS Marketplace. Proceed?'
+#        onTimeout: 'reject'
+#
+# - stage: Release
+#   dependsOn:
+#   - ReleaseValidation
+#   condition: succeeded()
 #   jobs:
 #   - job: sign_hash_release
 #     displayName: Code Sign, Generate Hashes, Publish Public Release
