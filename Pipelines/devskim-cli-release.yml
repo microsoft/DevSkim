@@ -35,8 +35,9 @@ stages:
       dotnetVersionLTS: 6.0.x
       testImage: 'ubuntu-latest'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
-      
+
 - stage: SDL
+  dependsOn: []
   jobs:
   - template: sdl-job.yml@templates
     parameters:
