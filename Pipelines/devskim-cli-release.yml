@@ -142,8 +142,8 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '2.1.804'
-    - task: EsrpCodeSigning@1
+        version: '6.x'
+    - task: EsrpCodeSigning@2
       displayName: Code Sign Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -176,7 +176,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@2
       displayName: Code Sign MacOS
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -209,7 +209,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@2
       displayName: Code Sign Windows
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -242,7 +242,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@2
       displayName: Code Sign .NET Core App
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -275,7 +275,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@2
       displayName: Code Sign Nuget Packages
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
