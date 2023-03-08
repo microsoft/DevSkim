@@ -30,10 +30,11 @@ stages:
   dependsOn: []
   jobs:
   - job: build_vscode_plugin
-    displayName: Build VSCode Plugin
+    displayName: Build VS Code Plugin
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: CodeQL3000Init@0
     - task: Npm@1
       displayName: npm install
       inputs:
@@ -44,6 +45,7 @@ stages:
         command: 'custom'
         workingDir: 'DevSkim-VSCode-Plugin/'
         customCommand: 'run pack-ext'
+    - task: CodeQL3000Finalize@0
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
@@ -66,3 +68,29 @@ stages:
         PathtoPublish: '$(Build.StagingDirectory)'
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
+    - task: PowerShell@2
+      displayName: Mkdir for Manifests
+      inputs:
+        targetType: 'inline'
+        script: mkdir sbom/vscode/
+        workingDirectory: '$(Build.StagingDirectory)'
+    # - task: ManifestGeneratorTask@0
+    #   displayName: Generate VS Code Plugin Manifest
+    #   inputs:
+    #     BuildDropPath: '$(Build.StagingDirectory)/bin/fixme/'
+    #     ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
+    #     PackageName: 'DevSkim VS Code Plugin'
+    #     PackageVersion: '$(ReleaseVersion)'
+    # - task: ArchiveFiles@2
+    #   displayName: Archive Manifests
+    #   inputs:
+    #     rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_VSCode_Manifests.zip'
+    #     replaceExistingArchive: true
+    # - task: PublishBuildArtifacts@1
+    #   displayName: Pipeline Publish Manifest Archive
+    #   inputs:
+    #     PathtoPublish: '$(Build.StagingDirectory)/Manifests'
+    #     ArtifactName: 'Manifests'

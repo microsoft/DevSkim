@@ -57,7 +57,7 @@ stages:
       exePath: 'devskim'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
-  - template: templates/dotnet-publish-win-netcore-job.yml@templates
+  - template: dotnet-publish-win-netcore-job.yml@templates
     parameters:
       buildConfiguration: 'Release'
       dotnetVersion: '7.0.x'

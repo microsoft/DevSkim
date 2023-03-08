@@ -93,7 +93,7 @@
 #       timeoutInMinutes: 4320 # task times out in 3 days
 #       inputs:
 #        notifyUsers: 'cstesectools@microsoft.com'
-#        instructions: 'This step performs a release to the VS Marketplace. Proceed?'
+#        instructions: 'This step performs a DevSkim VS extension release to the VS Marketplace. Proceed?'
 #        onTimeout: 'reject'
 #
 # - stage: Release
