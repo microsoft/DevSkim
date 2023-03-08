@@ -72,6 +72,8 @@ stages:
       dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
   - template: nuget-build-job-framework.yml@templates
     parameters:
       jobName: 'pack_cli'
@@ -80,3 +82,5 @@ stages:
       publishFramework: 'net7.0'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
