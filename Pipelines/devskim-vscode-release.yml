@@ -11,6 +11,7 @@ trigger:
     include:
     - DevSkim-VSCode-Plugin/*
     - rules/*
+pr: none
 
 resources:
   repositories:
