@@ -143,12 +143,13 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '6.x'
+    # First party code signing
     - task: EsrpCodeSigning@2
-      displayName: Code Sign Linux
+      displayName: First Party Code Sign - Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
-        Pattern: 'devskim.dll, Microsoft.DevSkim.dll'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [
@@ -177,11 +178,11 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - task: EsrpCodeSigning@2
-      displayName: Code Sign MacOS
+      displayName: First Party Code Sign - MacOS
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
-        Pattern: 'devskim.dll, Microsoft.DevSkim.dll'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [
@@ -210,11 +211,11 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - task: EsrpCodeSigning@2
-      displayName: Code Sign Windows
+      displayName: First Party Code Sign - Windows
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
-        Pattern: 'devskim.exe, devskim.dll, Microsoft.DevSkim.dll'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [
@@ -243,11 +244,11 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     - task: EsrpCodeSigning@2
-      displayName: Code Sign .NET Core App
+      displayName: First Party Code Sign - .NET Core App
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
         FolderPath: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
-        Pattern: 'devskim.exe, devskim.dll, Microsoft.DevSkim.dll'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [
@@ -266,6 +267,139 @@ stages:
                   },
                   {
                       "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    # Third party code signing
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - Linux
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - MacOS
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - Windows
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - .NET Core App
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
                       "OperationCode" : "SigntoolVerify",
                       "Parameters" : {},
                       "ToolName" : "sign",
