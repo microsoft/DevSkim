@@ -49,31 +49,39 @@ stages:
   jobs:
   - template: dotnet-publish-linux-mac-job.yml@templates
     parameters:
+      buildConfiguration: 'Release'
       dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
-      projectName: 'DevSkim'
+      projectName: 'DevSkim_CLI'
+      exePath: 'devskim'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
   - template: templates/dotnet-publish-win-netcore-job.yml@templates
     parameters:
+      buildConfiguration: 'Release'
       dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
-      projectName: 'DevSkim'
+      projectName: 'DevSkim_CLI'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
   - template: nuget-build-job.yml@templates
     parameters:
       jobName: 'pack_lib'
+      buildConfiguration: 'Release'
       dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
-  - template: nuget-build-job-framework.yml@templates
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+  - template: nuget-build-job.yml@templates
     parameters:
       jobName: 'pack_cli'
+      buildConfiguration: 'Release'
       dotnetVersion: '7.0.x'
-      publishFramework: 'net7.0'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
 
 - stage: ReleaseValidation
   dependsOn:
@@ -83,14 +91,14 @@ stages:
   - job: AwaitValidation
     displayName: Release Validation
     pool: server
-    timeoutInMinutes: 4321 # job times out in 3 days
+    timeoutInMinutes: 4321 # job times out in 3 days (must be greater than the task within)
     steps:
     - task: ManualValidation@0
       displayName: Manual Validation
       timeoutInMinutes: 4320 # task times out in 3 days
       inputs:
         notifyUsers: 'cstesectools@microsoft.com'
-        instructions: 'This step performs a release to GitHub and NuGet. Proceed?'
+        instructions: 'This step performs a DevSkim CLI / Lib release to GitHub and NuGet. Proceed?'
         onTimeout: 'reject'
 
 - stage: Release
@@ -120,7 +128,7 @@ stages:
         archiveFilePatterns: '$(Build.BinariesDirectory)\Unsigned_Binaries\*.zip'
         destinationFolder: '$(Build.BinariesDirectory)'
         cleanDestinationFolder: false
-    - task: AntiMalware@3
+    - task: AntiMalware@4
       displayName: Anti-Malware Scan
       inputs:
         InputType: 'Basic'
@@ -139,7 +147,7 @@ stages:
       displayName: Code Sign Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/linux/DevSkim_linux_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
         Pattern: 'devskim.dll, Microsoft.DevSkim.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -172,7 +180,7 @@ stages:
       displayName: Code Sign MacOS
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/macos/DevSkim_macos_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
         Pattern: 'devskim.dll, Microsoft.DevSkim.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -205,7 +213,7 @@ stages:
       displayName: Code Sign Windows
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/win/DevSkim_win_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
         Pattern: 'devskim.exe, devskim.dll, Microsoft.DevSkim.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -238,7 +246,7 @@ stages:
       displayName: Code Sign .NET Core App
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_netcoreapp_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
         Pattern: 'devskim.exe, devskim.dll, Microsoft.DevSkim.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -271,7 +279,7 @@ stages:
       displayName: Code Sign Nuget Packages
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)'
+        FolderPath: '$(Build.BinariesDirectory)/packages'
         Pattern: '*.nupkg, *.snupkg'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -299,34 +307,34 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Linux
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/linux/DevSkim_linux_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)/DevSkim_linux_$(ReleaseVersion).zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_linux_$(ReleaseVersion).zip'
         replaceExistingArchive: true
     - task: ArchiveFiles@2
       displayName: Archive Artifact - MacOS
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/macos/DevSkim_macos_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)/DevSkim_macos_$(ReleaseVersion).zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_macos_$(ReleaseVersion).zip'
         replaceExistingArchive: true
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Windows
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/win/DevSkim_win_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)/DevSkim_win_$(ReleaseVersion).zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_win_$(ReleaseVersion).zip'
         replaceExistingArchive: true
     - task: ArchiveFiles@2
       displayName: Archive Artifact - .NET Core App
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_netcoreapp_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)/DevSkim_netcoreapp_$(ReleaseVersion).zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_netcoreapp_$(ReleaseVersion).zip'
         replaceExistingArchive: true
     - task: PowerShell@2
       displayName: Generate Hashes
@@ -343,8 +351,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          mv $env:BUILD_BINARIESDIRECTORY/*.nupkg $env:BUILD_STAGINGDIRECTORY/
-          mv $env:BUILD_BINARIESDIRECTORY/*.snupkg $env:BUILD_STAGINGDIRECTORY/
+          mv $env:BUILD_BINARIESDIRECTORY/packages/*.nupkg $env:BUILD_STAGINGDIRECTORY/
+          mv $env:BUILD_BINARIESDIRECTORY/packages/*.snupkg $env:BUILD_STAGINGDIRECTORY/
     - task: PublishPipelineArtifact@1
       displayName: Publish Signed Artifacts to Pipeline
       inputs:
@@ -373,3 +381,50 @@ stages:
         nuGetFeedType: 'external'
         publishFeedCredentials: 'CST-E Nuget CI'
         verbosityPush: 'Normal'
+    - task: PowerShell@2
+      displayName: Mkdir for Manifests
+      inputs:
+        targetType: 'inline'
+        script: mkdir sbom/win/ ; mkdir sbom/netcoreapp/ ; mkdir sbom/linux ; mkdir sbom/macos
+        workingDirectory: '$(Build.StagingDirectory)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate Windows Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/win/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/win/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate NetCoreApp Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/netcoreapp/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/netcoreapp/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate Linux Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/linux/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/linux/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate MacOS Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/macos/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/macos/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ArchiveFiles@2
+      displayName: Archive Manifests
+      inputs:
+        rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_CLI_Release_Manifests_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: PublishBuildArtifacts@1
+      displayName: Pipeline Publish Manifest Archive
+      inputs:
+        PathtoPublish: '$(Build.StagingDirectory)/Manifests'
+        ArtifactName: 'Release Manifests'
