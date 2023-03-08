@@ -32,7 +32,8 @@
                 "type": "substring",
                 "scopes": [
                     "code"
-                ]
+                ],
+                "_comment": "The --tlsv1.3 argument for Curl sets a minimum version, not a specific version"
             },
             "negate_finding": true,
             "search_in": "same-line"
@@ -178,6 +179,53 @@
                     "code"
                 ]
             }
+        ]
+    },
+    {
+        "name": ".RUST - Failure to specify a minimum version of TLS defaults to allowing TLS 1.0.",
+        "id": "DS440030",
+        "description": ".RUST - Failure to specify a minimum version of TLS defaults to allowing TLS 1.0",
+        "recommendation": "Recommend specifying a minimum version with .min_protocol_version API.",
+        "applies_to": [
+            "rust"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS.Hardcoded"
+        ],
+        "severity": "important",
+        "rule_info": "DS440000.md",
+        "patterns": [
+            {
+                "pattern": "native_tls::TlsAcceptor::builder(.*)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions" : [
+            {
+                "pattern" :
+                {
+                    "pattern": ".min_protocol_version\\s*\\(\\s*Some\\(\\s*Protocol::Tlsv1[2-9]\\s*\\)\\s*\\)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "Supplying Tlsv12 or later will disable using earlier versions of TLS"
+                },
+                "negate_finding": true,
+                "search_in": "finding-region(0, 1)"
+            }
+        ],
+        "must-match" : [
+            "let acceptor = native_tls::TlsAcceptor::builder(identity);",
+            "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv10))\n\t.build()?;",
+            "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv11))\n\t.build()?;"
+        ],
+        "must-not-match" : [
+            "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv12))\n\t.build()?;",
+            "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv13))\n\t.build()?;"
         ]
     },
     {

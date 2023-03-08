@@ -6,7 +6,8 @@
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "does_not_apply_to": [
             "json",
-            "yaml"
+            "yaml",
+            "rust"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
