@@ -8,12 +8,10 @@ pr:
     include:
     - main
   paths:
-    exclude:
-    - Pipelines/*
     include:
-    - Pipelines/vscode/pr/*
-    - DevSkim-VSCode-Plugin/*
-    - rules/*
+    - Pipelines/vscode/pr
+    - DevSkim-VSCode-Plugin
+    - rules
 
 resources:
   repositories:
