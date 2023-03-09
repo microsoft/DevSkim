@@ -118,6 +118,6 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Pipeline Publish Unsigned Artifact
       inputs:
-        PathtoPublish: '$(Build.StagingDirectory)/packages/*.vsix'
+        PathtoPublish: '$(Build.StagingDirectory)/packages/'
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
