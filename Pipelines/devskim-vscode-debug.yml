@@ -42,7 +42,7 @@ stages:
         workingDir: 'DevSkim-VSCode-Plugin/'     
         customCommand: 'run build'
     - task: CodeQL3000Finalize@0
-    - task: AntiMalware@3
+    - task: AntiMalware@4
       displayName: Anti-Malware Scan
       inputs:
         InputType: 'Basic'
@@ -94,7 +94,7 @@ stages:
         command: 'custom'
         workingDir: 'DevSkim-VSCode-Plugin/'
         customCommand: 'run pack-ext'
-    - task: AntiMalware@3
+    - task: AntiMalware@4
       displayName: Anti-Malware Scan
       inputs:
         InputType: 'Basic'

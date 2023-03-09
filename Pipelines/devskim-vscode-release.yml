@@ -46,7 +46,7 @@ stages:
         workingDir: 'DevSkim-VSCode-Plugin/'
         customCommand: 'run pack-ext'
     - task: CodeQL3000Finalize@0
-    - task: AntiMalware@3
+    - task: AntiMalware@4
       displayName: Anti-Malware Scan
       inputs:
         InputType: 'Basic'
@@ -130,7 +130,7 @@ stages:
 #         downloadType: 'specific'
 #         itemPattern: 'Unsigned_Plugin\*.vsix'
 #         downloadPath: '$(Build.BinariesDirectory)'
-#     - task: AntiMalware@3
+#     - task: AntiMalware@4
 #       displayName: Anti-Malware Scan
 #       inputs:
 #         InputType: 'Basic'
