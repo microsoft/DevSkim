@@ -34,6 +34,11 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: UseDotNet@2
+      displayName: Install Dotnet SDK
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.x'
     - task: CodeQL3000Init@0
     - task: Npm@1
       displayName: Build VS Code Plugin
