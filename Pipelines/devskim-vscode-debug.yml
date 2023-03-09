@@ -34,6 +34,10 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+    - task: NuGetToolInstaller@1
+      displayName: Install Nuget Tool
+      inputs:
+        versionSpec: '6.x'
     - task: CodeQL3000Init@0
     - task: Npm@1
       displayName: Build VS Code Plugin
@@ -88,6 +92,12 @@ stages:
         PathtoPublish: '$(Build.StagingDirectory)/Manifests'
         ArtifactName: 'Manifests'
         publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Dotnet Restore
+      inputs:
+        command: 'restore'
+        projects: 'DevSkim-DotNet/Microsoft.DevSkim.LanguageServer/Microsoft.DevSkim.LanguageServer.csproj'
+        verbosityRestore: 'Normal'
     - task: Npm@1
       displayName: Package VS Code Plugin
       inputs:
