@@ -9,7 +9,7 @@
 #     - main
 #   paths:
 #     include:
-#     - Pipelines/vs
+#     - Pipelines/vs/devskim-visualstudio-pr.yml
 #     - DevSkim-DotNet/Microsoft.DevSkim
 #     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension
 #     - rules

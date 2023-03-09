@@ -9,7 +9,7 @@ pr:
     - main
   paths:
     include:
-    - Pipelines/cli
+    - Pipelines/cli/devskim-cli-pr.yml
     - DevSkim-DotNet
     - rules
 
