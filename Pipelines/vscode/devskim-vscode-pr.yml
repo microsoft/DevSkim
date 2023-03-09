@@ -9,7 +9,7 @@ pr:
     - main
   paths:
     include:
-    - Pipelines/vscode/pr
+    - Pipelines/vscode
     - DevSkim-VSCode-Plugin
     - rules
 

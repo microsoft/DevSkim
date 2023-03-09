@@ -9,9 +9,9 @@
 #     - main
 #   paths:
 #     include:
-#     - DevSkim-DotNet/Microsoft.DevSkim/*
-#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-#     - rules/*
+#     - DevSkim-DotNet/Microsoft.DevSkim
+#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension
+#     - rules
 # pr: none
 
 # resources:

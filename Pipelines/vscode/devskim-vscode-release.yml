@@ -9,8 +9,8 @@ trigger:
     - main
   paths:
     include:
-    - DevSkim-VSCode-Plugin/*
-    - rules/*
+    - DevSkim-VSCode-Plugin
+    - rules
 pr: none
 
 resources:

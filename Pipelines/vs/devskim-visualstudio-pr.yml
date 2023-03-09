@@ -9,10 +9,10 @@
 #     - main
 #   paths:
 #     include:
-#     - Pipelines/vs/pr/*
-#     - DevSkim-DotNet/Microsoft.DevSkim/*
-#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-#     - rules/*
+#     - Pipelines/vs
+#     - DevSkim-DotNet/Microsoft.DevSkim
+#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension
+#     - rules
 
 # resources:
 #   repositories:
