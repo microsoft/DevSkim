@@ -8,6 +8,8 @@ pr:
     include:
     - main
   paths:
+    exclude:
+    - Pipelines/*
     include:
     - Pipelines/cli/pr/*
     - DevSkim-DotNet/*
