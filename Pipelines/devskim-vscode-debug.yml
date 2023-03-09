@@ -36,16 +36,64 @@ stages:
     steps:
     - task: CodeQL3000Init@0
     - task: Npm@1
-      displayName: npm install
+      displayName: Build VS Code Plugin
       inputs:
-        command: 'install'
-        workingDir: 'DevSkim-VSCode-Plugin/'
+        command: 'custom'
+        workingDir: 'DevSkim-VSCode-Plugin/'     
+        customCommand: 'run build'
+    - task: CodeQL3000Finalize@0
+    - task: AntiMalware@3
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: 'DevSkim-VSCode-Plugin/'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Warning'
+    - template: nbgv-set-version-steps.yml@templates
+    - task: PowerShell@2
+      displayName: Mkdir for Manifests
+      inputs:
+        targetType: 'inline'
+        script: mkdir sbom/vscode/ ; mkdir sbom/langserver/
+        workingDirectory: '$(Build.StagingDirectory)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate VS Code Plugin Manifest
+      inputs:
+        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/client/out/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
+        PackageName: 'DevSkim VS Code Plugin'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate DevSkim Language Server Manifest
+      inputs:
+        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/devskimBinaries/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/langserver/'
+        PackageName: 'DevSkim Language Server'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ArchiveFiles@2
+      displayName: Archive Manifests
+      inputs:
+        rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_VSCode_Manifests.zip'
+        replaceExistingArchive: true
+    - task: PublishBuildArtifacts@1
+      displayName: Pipeline Publish Manifest Archive
+      inputs:
+        PathtoPublish: '$(Build.StagingDirectory)/Manifests'
+        ArtifactName: 'Manifests'
+        publishLocation: 'Container'
     - task: Npm@1
+      displayName: Package VS Code Plugin
       inputs:
         command: 'custom'
         workingDir: 'DevSkim-VSCode-Plugin/'
         customCommand: 'run pack-ext'
-    - task: CodeQL3000Finalize@0
     - task: AntiMalware@3
       displayName: Anti-Malware Scan
       inputs:
@@ -61,36 +109,10 @@ stages:
       displayName: Move Plugin File
       inputs:
         targetType: 'inline'
-        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY'
+        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/packages'
     - task: PublishBuildArtifacts@1
-      displayName: Publish Unsigned Artifact
+      displayName: Pipeline Publish Unsigned Artifact
       inputs:
-        PathtoPublish: '$(Build.StagingDirectory)'
+        PathtoPublish: '$(Build.StagingDirectory)/packages'
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
-    - task: PowerShell@2
-      displayName: Mkdir for Manifests
-      inputs:
-        targetType: 'inline'
-        script: mkdir sbom/vscode/
-        workingDirectory: '$(Build.StagingDirectory)'
-    # - task: ManifestGeneratorTask@0
-    #   displayName: Generate VS Code Plugin Manifest
-    #   inputs:
-    #     BuildDropPath: '$(Build.StagingDirectory)/bin/fixme/'
-    #     ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
-    #     PackageName: 'DevSkim VS Code Plugin'
-    #     PackageVersion: '$(ReleaseVersion)'
-    # - task: ArchiveFiles@2
-    #   displayName: Archive Manifests
-    #   inputs:
-    #     rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_VSCode_Manifests.zip'
-    #     replaceExistingArchive: true
-    # - task: PublishBuildArtifacts@1
-    #   displayName: Pipeline Publish Manifest Archive
-    #   inputs:
-    #     PathtoPublish: '$(Build.StagingDirectory)/Manifests'
-    #     ArtifactName: 'Manifests'
