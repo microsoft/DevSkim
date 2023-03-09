@@ -1,7 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_VSCode_Debug_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: DevSkim_VSCode_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger: none
 pr:
   branches:
@@ -9,7 +9,7 @@ pr:
     - main
   paths:
     include:
-    - Pipelines/devskim-vscode-debug.yml
+    - Pipelines/vscode/pr/*
     - DevSkim-VSCode-Plugin/*
     - rules/*
 
