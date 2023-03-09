@@ -42,7 +42,7 @@
 #         version: '7.0.x'
 #     - task: NuGetToolInstaller@1
 #       inputs:
-#         versionSpec: '5.x'
+#         versionSpec: '6.x'
 #     - task: NuGetCommand@2
 #       inputs:
 #         command: 'restore'
