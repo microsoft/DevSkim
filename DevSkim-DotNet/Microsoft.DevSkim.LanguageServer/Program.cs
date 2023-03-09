@@ -23,11 +23,11 @@ internal class Program
 	{
 		if (usePipes)
 		{
-			var stdInPipeName = @"input";
-            var stdOutPipeName = @"output";
-			var readerPipe = new NamedPipeClientStream(stdInPipeName);
-            var writerPipe = new NamedPipeClientStream(stdOutPipeName);
-			return (readerPipe, writerPipe);
+			var stdInPipeName = @"devskim-language-server-input";
+            var stdOutPipeName = @"devskim-language-server-output";
+			var readerPipe = new NamedPipeClientStream(".", stdInPipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+            var writerPipe = new NamedPipeClientStream(".", stdOutPipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+            return (readerPipe, writerPipe);
 		}
 		else
 		{

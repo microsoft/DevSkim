@@ -10,8 +10,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.LanguageServer", "Microsoft.DevSkim.LanguageServer\Microsoft.DevSkim.LanguageServer.csproj", "{1668F782-FE09-4106-8393-9A9D9823E027}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.VS.2022", "MockLanguageExtension\Microsoft.DevSkim.VS.2022.csproj", "{65D2B23F-8049-4415-B8AC-6249A626E419}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.VisualStudio", "Microsoft.DevSkim.VisualStudio\Microsoft.DevSkim.VisualStudio.csproj", "{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}"
 EndProject
 Global
@@ -90,28 +88,6 @@ Global
 		{1668F782-FE09-4106-8393-9A9D9823E027}.Release|x64.Build.0 = Release|Any CPU
 		{1668F782-FE09-4106-8393-9A9D9823E027}.Release|x86.ActiveCfg = Release|Any CPU
 		{1668F782-FE09-4106-8393-9A9D9823E027}.Release|x86.Build.0 = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|arm64.Build.0 = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|x64.Build.0 = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|x64.Deploy.0 = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|x86.Build.0 = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Debug|x86.Deploy.0 = Debug|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|Any CPU.Build.0 = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|arm64.ActiveCfg = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|arm64.Build.0 = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|x64.ActiveCfg = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|x64.Build.0 = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|x64.Deploy.0 = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|x86.ActiveCfg = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|x86.Build.0 = Release|Any CPU
-		{65D2B23F-8049-4415-B8AC-6249A626E419}.Release|x86.Deploy.0 = Release|Any CPU
 		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Debug|arm64.ActiveCfg = Debug|arm64

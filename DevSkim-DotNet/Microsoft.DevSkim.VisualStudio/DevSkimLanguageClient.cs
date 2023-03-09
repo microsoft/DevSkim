@@ -15,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using Task = System.Threading.Tasks.Task;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 using System.ComponentModel.Composition;
+using Microsoft.Build.Framework.XamlTypes;
 
 namespace Microsot.DevSkim.LanguageClient
 {
@@ -77,8 +78,8 @@ namespace Microsot.DevSkim.LanguageClient
             info.WorkingDirectory = Path.GetDirectoryName(programPath);
             info.CreateNoWindow = true;
             info.Arguments = "-p";
-            var stdInPipeName = @"output";
-            var stdOutPipeName = @"input";
+            var stdInPipeName = @"devskim-language-server-output";
+            var stdOutPipeName = @"devskim-language-server-input";
 
             var pipeAccessRule = new PipeAccessRule("Everyone", PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow);
             var pipeSecurity = new PipeSecurity();
