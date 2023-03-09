@@ -60,10 +60,10 @@ stages:
         TreatStaleSignatureAs: 'Warning'
     - template: nbgv-set-version-steps.yml@templates
     - task: PowerShell@2
-      displayName: Mkdir for Manifests
+      displayName: Mkdir for Manifests and Packages
       inputs:
         targetType: 'inline'
-        script: mkdir sbom/vscode/ ; mkdir sbom/langserver/
+        script: mkdir sbom/vscode/ ; mkdir sbom/langserver/ ; mkdir packages
         workingDirectory: '$(Build.StagingDirectory)'
     - task: ManifestGeneratorTask@0
       displayName: Generate VS Code Plugin Manifest
