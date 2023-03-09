@@ -76,6 +76,7 @@ namespace Microsot.DevSkim.LanguageClient
             info.FileName = programPath;
             info.WorkingDirectory = Path.GetDirectoryName(programPath);
             info.CreateNoWindow = true;
+            info.Arguments = "-p";
             var stdInPipeName = @"output";
             var stdOutPipeName = @"input";
 
