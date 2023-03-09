@@ -109,10 +109,10 @@ stages:
       displayName: Move Plugin File
       inputs:
         targetType: 'inline'
-        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/packages'
+        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/packages/'
     - task: PublishBuildArtifacts@1
       displayName: Pipeline Publish Unsigned Artifact
       inputs:
-        PathtoPublish: '$(Build.StagingDirectory)/packages'
+        PathtoPublish: '$(Build.StagingDirectory)/packages/*.vsix'
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
