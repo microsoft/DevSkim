@@ -5,6 +5,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
 using System.Diagnostics;
+using System.IO.Pipes;
 
 namespace DevSkim.LanguageServer;
 
@@ -13,6 +14,22 @@ internal class Program
 	public static void Main(string[] args)
 	{
 		MainAsync(args).Wait();
+	}
+
+	private static (Stream, Stream) GetStreams(bool usePipes)
+	{
+		//if (usePipes)
+		//{
+            var stdInPipeName = @"input";
+            var stdOutPipeName = @"output";
+			var readerPipe = new NamedPipeClientStream(stdInPipeName);
+            var writerPipe = new NamedPipeClientStream(stdOutPipeName);
+			return (readerPipe, writerPipe);
+		//      }
+		//else
+		//{
+		//	return (Console.OpenStandardInput(),  Console.OpenStandardOutput());
+		//}
 	}
 
 	private static async Task MainAsync(string[] args)
@@ -29,10 +46,12 @@ internal class Program
 			.WriteTo.File("devskim-server-log.txt", rollingInterval: RollingInterval.Day)
 			.MinimumLevel.Verbose()
 			.CreateLogger();
-    #else
+#else
             // Creates a "silent" logger
             Log.Logger = new LoggerConfiguration().CreateLogger();
-    #endif
+#endif
+
+		(Stream input, Stream output) = GetStreams(args[2] == "-p");
 
 		Log.Logger.Debug("Configuring server...");
 		IObserver<WorkDoneProgressReport> workDone = null!;
@@ -40,8 +59,8 @@ internal class Program
 		var server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(
 			options =>
 				options
-					.WithInput(Console.OpenStandardInput())
-					.WithOutput(Console.OpenStandardOutput())
+					.WithInput(input)
+					.WithOutput(output)
 					.ConfigureLogging(
 						x => x
 							.AddSerilog(Log.Logger)

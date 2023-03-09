@@ -16,19 +16,19 @@ using Task = System.Threading.Tasks.Task;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 using System.ComponentModel.Composition;
 
-namespace MockLanguageExtension
+namespace Microsot.DevSkim.LanguageClient
 {
     [ContentType("code")]
     [Export(typeof(ILanguageClient))]
     [RunOnContext(RunningContext.RunOnHost)]
-    public class FooLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
+    public class DevSkimLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
     {
-        public FooLanguageClient()
+        public DevSkimLanguageClient()
         {
             Instance = this;
         }
 
-        internal static FooLanguageClient Instance
+        internal static DevSkimLanguageClient Instance
         {
             get;
             set;
@@ -76,29 +76,26 @@ namespace MockLanguageExtension
             info.FileName = programPath;
             info.WorkingDirectory = Path.GetDirectoryName(programPath);
             info.CreateNoWindow = true;
-            info.RedirectStandardOutput = true;
-            info.RedirectStandardInput = true;
-            info.UseShellExecute = false;
-            //var stdInPipeName = @"output";
-            //var stdOutPipeName = @"input";
+            var stdInPipeName = @"output";
+            var stdOutPipeName = @"input";
 
-            //var pipeAccessRule = new PipeAccessRule("Everyone", PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow);
-            //var pipeSecurity = new PipeSecurity();
-            //pipeSecurity.AddAccessRule(pipeAccessRule);
+            var pipeAccessRule = new PipeAccessRule("Everyone", PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow);
+            var pipeSecurity = new PipeSecurity();
+            pipeSecurity.AddAccessRule(pipeAccessRule);
 
-            //var bufferSize = 256;
-            //var readerPipe = new NamedPipeServerStream(stdInPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
-            //var writerPipe = new NamedPipeServerStream(stdOutPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
+            var bufferSize = 256;
+            var readerPipe = new NamedPipeServerStream(stdInPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
+            var writerPipe = new NamedPipeServerStream(stdOutPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
 
             Process process = new Process();
             process.StartInfo = info;
             
             if (process.Start())
             {
-                //await readerPipe.WaitForConnectionAsync(token);
-                //await writerPipe.WaitForConnectionAsync(token);
+                await readerPipe.WaitForConnectionAsync(token);
+                await writerPipe.WaitForConnectionAsync(token);
 
-                return new Connection(process.StandardOutput.BaseStream, process.StandardInput.BaseStream);
+                return new Connection(readerPipe, writerPipe);
             }
 
             return null;
