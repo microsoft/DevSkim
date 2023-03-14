@@ -123,3 +123,19 @@ stages:
         PathtoPublish: '$(Build.StagingDirectory)/packages/'
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
+    - task: PowerShell@2
+      displayName: Test pre-release check
+      inputs:
+        targetType: 'inline'
+        script: |
+            $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\packages\*.vsix
+            if ($(ReleaseVersion).Contains("-"))
+            {
+                echo "Publishing as --pre-release = $(ReleaseVersion)"
+                echo $packPath
+            }
+            else
+            {
+                echo "Publishing as official release = $(ReleaseVersion)"
+                echo $packPath
+            }
