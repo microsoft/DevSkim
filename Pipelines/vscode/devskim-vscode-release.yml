@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.0
+      ref: refs/tags/v1.0.1
 
 stages:
 - stage: SDL
@@ -33,7 +33,8 @@ stages:
   - job: build_vscode_plugin
     displayName: Build VS Code Plugin
     pool:
-      vmImage: 'windows-latest'
+      name: 'OSS-Tools-1ESPool'
+      vmImage: 'oss-tools-win2022_1es-managed'
     steps:
     - task: UseDotNet@2
       displayName: Install Dotnet SDK
@@ -149,7 +150,8 @@ stages:
   - job: sign_hash_release
     displayName: Code Sign, Generate Hashes, Publish Public Release
     pool:
-      vmImage: 'windows-latest'
+      name: 'OSS-Tools-1ESPool'
+      vmImage: 'oss-tools-win2022_1es-managed'
     steps:
     - task: DownloadBuildArtifacts@0
       displayName: Retrieve Unsigned Artifact 
@@ -225,11 +227,12 @@ stages:
             if ($(ReleaseVersion).Contains("-"))
             {
                 echo "Publishing as --pre-release = $(ReleaseVersion)"
-#               vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
             }
             else
             {
                 echo "Publishing as official release = $(ReleaseVersion)"
-#               vsce publish --packagePath $packPath --pat $(VS_Token)
             }
 
+# disabled and removed from script until version check is confirmed to work
+#               vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
+#               vsce publish --packagePath $packPath --pat $(VS_Token)

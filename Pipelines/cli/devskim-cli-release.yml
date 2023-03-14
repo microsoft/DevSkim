@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.0
+      ref: refs/tags/v1.0.1
 
 stages:
 - stage: Test
@@ -28,14 +28,14 @@ stages:
       jobName: 'dotnet_test_windows'
       dotnetVersion: 7.0.x
       dotnetVersionLTS: 6.0.x
-      testImage: 'windows-latest'
+      vmImage: 'oss-tools-win2022_1es-managed'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
   - template: dotnet-test-job.yml@templates
     parameters:
       jobName: 'dotnet_test_ubuntu'
       dotnetVersion: 7.0.x
       dotnetVersionLTS: 6.0.x
-      testImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-22.04-image-base'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
 
 - stage: SDL
@@ -110,7 +110,8 @@ stages:
   - job: sign_hash_release
     displayName: Code Sign, Generate Hashes, Publish Public Releases
     pool:
-      vmImage: 'windows-latest'
+      name: 'OSS-Tools-1ESPool'
+      vmImage: 'oss-tools-win2022_1es-managed'
     steps:
     - task: UseDotNet@2
       inputs:

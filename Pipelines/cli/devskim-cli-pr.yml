@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: da/add-custom-pools
+      ref: refs/tags/v1.0.1
 
 stages:
 - stage: Test

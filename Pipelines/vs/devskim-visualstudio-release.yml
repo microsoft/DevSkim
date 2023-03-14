@@ -19,7 +19,7 @@
 #     - repository: templates
 #       type: git
 #       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-#       ref: refs/tags/v1.0.0
+#       ref: refs/tags/v1.0.1
 
 # stages:
 # - stage: SDL
@@ -35,6 +35,7 @@
 #   - job: build_extension
 #     displayName: Build Visual Studio Extension
 #     pool:
+#       name: 'OSS-Tools-1ESPool'
 #       vmImage: 'windows-latest'
 #     steps:
 #     - task: UseDotNet@2
@@ -105,6 +106,7 @@
 #   - job: sign_hash_release
 #     displayName: Code Sign, Generate Hashes, Publish Public Release
 #     pool:
+#       name: 'OSS-Tools-1ESPool'
 #       vmImage: 'windows-latest'
 #     steps:
 #     - task: DownloadBuildArtifacts@0

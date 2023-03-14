@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.0
+      ref: refs/tags/v1.0.1
 
 stages:
 - stage: SDL
@@ -33,7 +33,8 @@ stages:
   - job: build_vscode_plugin
     displayName: Build VS Code Plugin
     pool:
-      vmImage: 'windows-latest'
+      name: 'OSS-Tools-1ESPool'
+      vmImage: 'oss-tools-win2022_1es-managed'
     steps:
     - task: UseDotNet@2
       displayName: Install Dotnet SDK
