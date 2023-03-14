@@ -219,20 +219,18 @@ stages:
         customCommand: 'install -g vsce'
     - template: nbgv-set-version-steps.yml@templates
     - task: PowerShell@2
-      displayName: Test pre-release check
+      displayName: Publish Pre-Release / Release
       inputs:
         targetType: 'inline'
         script: |
             $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix
-            if ($(ReleaseVersion).Contains("-"))
+            if ("$(ReleaseVersion)".Contains("-"))
             {
                 echo "Publishing as --pre-release = $(ReleaseVersion)"
+                vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
             }
             else
             {
                 echo "Publishing as official release = $(ReleaseVersion)"
+                vsce publish --packagePath $packPath --pat $(VS_Token)
             }
-
-# disabled and removed from script until version check is confirmed to work
-#               vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
-#               vsce publish --packagePath $packPath --pat $(VS_Token)
