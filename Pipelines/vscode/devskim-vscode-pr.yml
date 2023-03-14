@@ -129,7 +129,7 @@ stages:
         targetType: 'inline'
         script: |
             $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\packages\*.vsix
-            if ($(ReleaseVersion).Contains("-"))
+            if ("$(ReleaseVersion)".Contains("-"))
             {
                 echo "Publishing as --pre-release = $(ReleaseVersion)"
                 echo $packPath
