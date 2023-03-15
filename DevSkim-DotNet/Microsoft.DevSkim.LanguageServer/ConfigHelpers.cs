@@ -35,13 +35,13 @@ internal class ConfigHelpers
 		return toReturn;
 	}
 
-	internal static readonly string Section = "MS-CST-E.vscode-devskim";
+    internal static readonly string Section = "MS-CST-E.vscode-devskim";
 	internal static void SetScannerSettings(IConfiguration configuration)
 	{
 		StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);
 		StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
 		StaticScannerSettings.CustomRulePaths = CompileList<string>(configuration, "rules:customRulesPaths");
-		StaticScannerSettings.IgnoreRuleIds = configuration.GetValue<string>($"{Section}:ignores:ignoreRulesList").Split(',');
+		StaticScannerSettings.IgnoreRuleIds = CompileList<string>(configuration, "ignores:ignoreRulesList");
 		List<Regex> fileIgnoreRegexes = new();
 		foreach (string potentialRegex in CompileList<string>(configuration, "ignores:ignoreFiles"))
 		{
@@ -80,7 +80,8 @@ internal class ConfigHelpers
 		StaticScannerSettings.RuleSet = ruleSet;
 		StaticScannerSettings.Processor = new DevSkimRuleProcessor(StaticScannerSettings.RuleSet, StaticScannerSettings.RuleProcessorOptions);
 	}
-	private static DevSkimRuleProcessorOptions OptionsFromConfiguration(IConfiguration configuration)
+
+    private static DevSkimRuleProcessorOptions OptionsFromConfiguration(IConfiguration configuration)
 	{
         string languagesPath = configuration.GetValue<string>($"{Section}:rules:customLanguagesPath");
         string commentsPath = configuration.GetValue<string>($"{Section}:rules:customCommentsPath");
