@@ -17,22 +17,21 @@ internal class Program
 
 	private static async Task MainAsync(string[] args)
 	{
-    #if DEBUG
-		// Debugger.Launch();
-		// while (!Debugger.IsAttached)
-		// {
-		//     await Task.Delay(100);
-		// }
 
+#if DEBUG
+		//while (!Debugger.IsAttached)
+		//{
+		//	await Task.Delay(100);
+		//}
 		Log.Logger = new LoggerConfiguration()
 			.Enrich.FromLogContext()
 			.WriteTo.File("devskim-server-log.txt", rollingInterval: RollingInterval.Day)
 			.MinimumLevel.Verbose()
 			.CreateLogger();
-    #else
-            // Creates a "silent" logger
-            Log.Logger = new LoggerConfiguration().CreateLogger();
-    #endif
+#else
+        // Creates a "silent" logger
+        Log.Logger = new LoggerConfiguration().CreateLogger();
+#endif
 
 		Log.Logger.Debug("Configuring server...");
 		IObserver<WorkDoneProgressReport> workDone = null!;
