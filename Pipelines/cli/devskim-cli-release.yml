@@ -1,0 +1,567 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_CLI_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - DevSkim-DotNet
+    - rules
+pr: none
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      ref: refs/tags/v1.0.1
+
+stages:
+- stage: Test
+  jobs:
+  - template: dotnet-test-job.yml@templates
+    parameters:
+      jobName: 'dotnet_test_windows'
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
+      vmImage: 'oss-tools-win2022_1es-managed'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+  - template: dotnet-test-job.yml@templates
+    parameters:
+      jobName: 'dotnet_test_ubuntu'
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
+      vmImage: 'ubuntu-22.04-image-base'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+
+- stage: SDL
+  dependsOn: []
+  jobs:
+  - template: sdl-job.yml@templates
+    parameters:
+      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
+
+- stage: Build
+  dependsOn:
+  - Test
+  jobs:
+  - template: dotnet-publish-linux-mac-job.yml@templates
+    parameters:
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+      projectName: 'DevSkim_CLI'
+      exePath: 'devskim'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+  - template: dotnet-publish-win-netcore-job.yml@templates
+    parameters:
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+      projectName: 'DevSkim_CLI'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+  - template: nuget-build-job.yml@templates
+    parameters:
+      jobName: 'pack_lib'
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
+      projectName: 'DevSkim_Lib'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+  - template: nuget-build-job.yml@templates
+    parameters:
+      jobName: 'pack_cli'
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+      projectName: 'DevSkim_CLI'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+
+- stage: ReleaseValidation
+  dependsOn:
+  - SDL
+  - Build
+  jobs:
+  - job: AwaitValidation
+    displayName: Release Validation
+    pool: server
+    timeoutInMinutes: 4321 # job times out in 3 days (must be greater than the task within)
+    steps:
+    - task: ManualValidation@0
+      displayName: Manual Validation
+      timeoutInMinutes: 4320 # task times out in 3 days
+      inputs:
+        notifyUsers: 'cstesectools@microsoft.com'
+        instructions: 'This step performs a DevSkim CLI / Lib release to GitHub and NuGet. Proceed?'
+        onTimeout: 'reject'
+
+- stage: Release
+  dependsOn: ReleaseValidation
+  condition: succeeded()
+  jobs:
+  - job: sign_hash_release
+    displayName: Code Sign, Generate Hashes, Publish Public Releases
+    pool:
+      name: 'OSS-Tools-1ESPool'
+      vmImage: 'oss-tools-win2022_1es-managed'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.x'
+    - template: nbgv-set-version-steps.yml@templates
+    - task: DownloadBuildArtifacts@0
+      displayName: Download Unsigned Archives
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        itemPattern: 'Unsigned_Binaries/*.zip'
+        downloadPath: '$(Build.BinariesDirectory)'
+    - task: ExtractFiles@1
+      displayName: Extract Artifacts for Signing
+      inputs:
+        archiveFilePatterns: '$(Build.BinariesDirectory)\Unsigned_Binaries\*.zip'
+        destinationFolder: '$(Build.BinariesDirectory)'
+        cleanDestinationFolder: false
+    - task: AntiMalware@4
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(Build.BinariesDirectory)'
+        EnableServices: true
+        SupportLogOnError: true
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Warning'
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '6.x'
+    # First party code signing
+    - task: EsrpCodeSigning@2
+      displayName: First Party Code Sign - Linux
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: First Party Code Sign - MacOS
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: First Party Code Sign - Windows
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: First Party Code Sign - .NET Core App
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
+        Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-230012",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    # Third party code signing
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - Linux
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - MacOS
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - Windows
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: Third Party Code Sign - .NET Core App
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
+        Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolSign",
+                      "Parameters" : {
+                          "OpusName" : "Microsoft",
+                          "OpusInfo" : "http://www.microsoft.com",
+                          "FileDigest" : "/fd \"SHA256\"",
+                          "PageHash" : "/NPH",
+                          "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                      },
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-231522",
+                      "OperationCode" : "SigntoolVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - task: EsrpCodeSigning@2
+      displayName: Code Sign Nuget Packages
+      inputs:
+        ConnectedServiceName: 'Devskim_CodeSign'
+        FolderPath: '$(Build.BinariesDirectory)/packages'
+        Pattern: '*.nupkg, *.snupkg'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+                  {
+                      "KeyCode" : "CP-401405",
+                      "OperationCode" : "NuGetSign",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  },
+                  {
+                      "KeyCode" : "CP-401405",
+                      "OperationCode" : "NuGetVerify",
+                      "Parameters" : {},
+                      "ToolName" : "sign",
+                      "ToolVersion" : "1.0"
+                  }
+              ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+    - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+      displayName: 'Delete Code Sign Summaries'
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - Linux
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_linux_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - MacOS
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_macos_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - Windows
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_win_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: ArchiveFiles@2
+      displayName: Archive Artifact - .NET Core App
+      inputs:
+        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_netcoreapp_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: PowerShell@2
+      displayName: Generate Hashes
+      inputs:
+        targetType: 'inline'
+        script: |
+          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+            $name = $_.Name
+            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+          }
+    - task: PowerShell@2
+      displayName: Move NuGet Packages
+      inputs:
+        targetType: 'inline'
+        script: |
+          mv $env:BUILD_BINARIESDIRECTORY/packages/*.nupkg $env:BUILD_STAGINGDIRECTORY/
+          mv $env:BUILD_BINARIESDIRECTORY/packages/*.snupkg $env:BUILD_STAGINGDIRECTORY/
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Signed Artifacts to Pipeline
+      inputs:
+        targetPath: '$(Build.StagingDirectory)'
+        artifact: 'Signed_Binaries'
+    - task: GitHubRelease@1
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: 'DevSkim'
+        repositoryName: 'microsoft/DevSkim'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecifiedTag'
+        tag: 'v$(ReleaseVersion)'
+        title: 'DevSkim CLI v$(ReleaseVersion)'
+        assets: |
+          $(Build.StagingDirectory)/*.zip
+          $(Build.StagingDirectory)/HASHES.txt
+        changeLogCompareToRelease: 'lastNonDraftRelease'
+        changeLogType: 'commitBased'
+    - task: NuGetCommand@2
+      displayName: Publish NuGet Packages
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'CST-E Nuget CI'
+        verbosityPush: 'Normal'
+    - task: PowerShell@2
+      displayName: Mkdir for Manifests
+      inputs:
+        targetType: 'inline'
+        script: mkdir sbom/win/ ; mkdir sbom/netcoreapp/ ; mkdir sbom/linux ; mkdir sbom/macos
+        workingDirectory: '$(Build.StagingDirectory)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate Windows Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/win/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/win/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate NetCoreApp Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/netcoreapp/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/netcoreapp/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate Linux Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/linux/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/linux/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate MacOS Manifest
+      inputs:
+        BuildDropPath: '$(Build.BinariesDirectory)/bin/macos/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/macos/'
+        PackageName: 'DevSkim_CLI'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ArchiveFiles@2
+      displayName: Archive Manifests
+      inputs:
+        rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_CLI_Release_Manifests_$(ReleaseVersion).zip'
+        replaceExistingArchive: true
+    - task: PublishBuildArtifacts@1
+      displayName: Pipeline Publish Manifest Archive
+      inputs:
+        PathtoPublish: '$(Build.StagingDirectory)/Manifests'
+        ArtifactName: 'Release Manifests'

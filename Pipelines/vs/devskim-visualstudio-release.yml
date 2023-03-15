@@ -1,8 +1,7 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-# name: DevSkim_VisualStudio_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-# trigger: none
+# name: DevSkim_VisualStudio_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 # trigger:
 #   batch: true
 #   branches:
@@ -10,32 +9,33 @@
 #     - main
 #   paths:
 #     include:
-#     - DevSkim-DotNet/Microsoft.DevSkim/*
-#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-#     - rules/*
-# pr:
-#   branches:
-#     include:
-#     - main
-#   paths:
-#     include:
-#     - Pipelines
-#     - DevSkim-DotNet/Microsoft.DevSkim/*
-#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension/*
-#     - rules/*
+#     - DevSkim-DotNet/Microsoft.DevSkim
+#     - DevSkim-DotNet/Microsoft.DevSkim.VSExtension
+#     - rules
+# pr: none
+
+# resources:
+#   repositories:
+#     - repository: templates
+#       type: git
+#       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+#       ref: refs/tags/v1.0.1
 
 # stages:
 # - stage: SDL
+#   dependsOn: []
 #   jobs:
-#   - template: templates/sdl-job.yml
+#   - template: sdl-job.yml@templates
 #     parameters:
 #       serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
 
 # - stage: Build
+#   dependsOn: []
 #   jobs:
 #   - job: build_extension
 #     displayName: Build Visual Studio Extension
 #     pool:
+#       name: 'OSS-Tools-1ESPool'
 #       vmImage: 'windows-latest'
 #     steps:
 #     - task: UseDotNet@2
@@ -44,7 +44,7 @@
 #         version: '7.0.x'
 #     - task: NuGetToolInstaller@1
 #       inputs:
-#         versionSpec: '5.x'
+#         versionSpec: '6.x'
 #     - task: NuGetCommand@2
 #       inputs:
 #         command: 'restore'
@@ -79,16 +79,34 @@
 #         PathtoPublish: '$(Build.StagingDirectory)'
 #         ArtifactName: 'Unsigned_Extension'
 #         publishLocation: 'Container'
-
-# - stage: Release
+#
+# - stage: ReleaseValidation
 #   dependsOn:
 #   - SDL
 #   - Build
-#   condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+#   jobs:
+#   - job: AwaitValidation
+#     displayName: Release Validation
+#     pool: server
+#     timeoutInMinutes: 4321 # job times out in 3 days
+#     steps:
+#     - task: ManualValidation@0
+#       displayName: Manual Validation
+#       timeoutInMinutes: 4320 # task times out in 3 days
+#       inputs:
+#        notifyUsers: 'cstesectools@microsoft.com'
+#        instructions: 'This step performs a DevSkim VS extension release to the VS Marketplace. Proceed?'
+#        onTimeout: 'reject'
+#
+# - stage: Release
+#   dependsOn:
+#   - ReleaseValidation
+#   condition: succeeded()
 #   jobs:
 #   - job: sign_hash_release
 #     displayName: Code Sign, Generate Hashes, Publish Public Release
 #     pool:
+#       name: 'OSS-Tools-1ESPool'
 #       vmImage: 'windows-latest'
 #     steps:
 #     - task: DownloadBuildArtifacts@0
