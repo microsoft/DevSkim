@@ -203,7 +203,7 @@
 						"items": {
 							"type": "string"
 						},
-						"description": "Regular expressions to exclude files and folders from analysis. May not contain commas."
+						"description": "Regular expressions to exclude files and folders from analysis."
 					},
 					"MS-CST-E.vscode-devskim.ignores.ignoreRulesList": {
 						"type": "array",
@@ -211,12 +211,12 @@
 						"items": {
 							"type": "string"
 						},
-						"description": "Comma separated list of DevSkim Rule IDs to be ignored."
+						"description": "DevSkim Rule IDs to ignore."
 					},
 					"MS-CST-E.vscode-devskim.ignores.ignoreDefaultRules": {
 						"type": "boolean",
 						"default": false,
-						"description": "Disable default DevSkim rules."
+						"description": "Disable all default DevSkim rules."
 					}
 				}
 			},
