@@ -73,7 +73,7 @@
                 "pattern" :
                 {
                     "pattern": "http://localhost",
-                    "type": "regex",
+                    "type": "substring",
                     "scopes": [
                         "code"
                     ]
@@ -116,6 +116,7 @@
             "blah 'http://blah'"
         ],
         "must-not-match": [
+            "let resp = client\n.get(\"http://127.0.0.1:8080/infra/ready\")",
             "http://localhost",
             "http://127.0.0.1",
             "<html xmlns=\"http://www.w3.org/1999/xhtml\">",
