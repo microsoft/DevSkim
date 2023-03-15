@@ -41,7 +41,7 @@ internal class ConfigHelpers
 		StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);
 		StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
 		StaticScannerSettings.CustomRulePaths = CompileList<string>(configuration, "rules:customRulesPaths");
-		StaticScannerSettings.IgnoreRuleIds = CompileList<string>(configuration, "ignores:ignoreRuleList");
+		StaticScannerSettings.IgnoreRuleIds = configuration.GetValue<string>($"{Section}:ignores:ignoreRulesList").Split(',');
 		List<Regex> fileIgnoreRegexes = new();
 		foreach (string potentialRegex in CompileList<string>(configuration, "ignores:ignoreFiles"))
 		{
