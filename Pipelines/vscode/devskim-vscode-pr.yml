@@ -21,22 +21,6 @@ resources:
       ref: refs/tags/v1.0.1
 
 stages:
-- stage: ReleaseValidation
-  dependsOn: []
-  jobs:
-  - job: AwaitValidation
-    displayName: Release Validation Fix Test (Temp)
-    pool: server
-    timeoutInMinutes: 4321 # job times out in 3 days
-    steps:
-    - task: ManualValidation@0
-      displayName: Manual Validation
-      timeoutInMinutes: 4320 # task times out in 3 days
-      inputs:
-        notifyUsers: 'daalcant@microsoft.com'
-        instructions: 'This is a test. Proceed?'
-        onTimeout: 'reject'
-
 - stage: SDL
   jobs:
   - template: sdl-job.yml@templates
