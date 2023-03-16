@@ -122,7 +122,10 @@
 					"MS-CST-E.vscode-devskim.rules.customRulesPaths": {
 						"type": "array",
 						"default": [],
-						"description": "A list of local paths on disk to rules files or folders containing rule files, for DevSkim to use in analysis."
+						"description": "A list of local paths on disk to rules files or folders containing rule files, for DevSkim to use in analysis.",
+						"items": {
+							"type": "string"
+						}
 					},
 					"MS-CST-E.vscode-devskim.rules.customLanguagesPath": {
 						"type": "string",
@@ -197,17 +200,23 @@
 							"\\.(py[cod])$",
 							"(^|/)__pycache__/"
 						],
-						"description": "Regular expressions to exclude files and folders from analysis. May not contain commas."
+						"items": {
+							"type": "string"
+						},
+						"description": "Regular expressions to exclude files and folders from analysis."
 					},
 					"MS-CST-E.vscode-devskim.ignores.ignoreRulesList": {
-						"type": "string",
-						"default": "",
-						"description": "Comma separated list of DevSkim Rule IDs to be ignored."
+						"type": "array",
+						"default": [],
+						"items": {
+							"type": "string"
+						},
+						"description": "DevSkim Rule IDs to ignore."
 					},
 					"MS-CST-E.vscode-devskim.ignores.ignoreDefaultRules": {
 						"type": "boolean",
 						"default": false,
-						"description": "Disable default DevSkim rules."
+						"description": "Disable all default DevSkim rules."
 					}
 				}
 			},
