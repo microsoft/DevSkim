@@ -26,13 +26,27 @@
         ],
         "conditions" : [
             {
-                "pattern" :
+                "pattern": 
                 {
                     "pattern": "--tlsv1.3",
-                    "type": "string",
+                    "type": "substring",
                     "scopes": [
                         "code"
-                    ]
+                    ],
+                    "_comment": "The --tlsv1.3 argument for Curl sets a minimum version, not a specific version"
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            },
+            {
+                "pattern" :
+                {
+                    "pattern": "LS0tLS",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "A base 64 encoded cert will start with `LS0tLS`"
                 },
                 "negate_finding": true,
                 "search_in": "same-line"
