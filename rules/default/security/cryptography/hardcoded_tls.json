@@ -13,6 +13,7 @@
         ],
         "severity": "important",
         "rule_info": "DS440000.md",
+        "must-not-match": ["LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCg==", "curl --tlsv1.3"],
         "patterns": [
             {
                 "pattern": "(SSL|D?TLS)[_v]*[123]([123_\\.])*",
@@ -37,8 +38,21 @@
             },
             "negate_finding": true,
             "search_in": "same-line"
+        },
+        {
+            "pattern" :
+            {
+                "pattern": "LS0tLS",
+                "type": "substring",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "A base 64 encoded cert will start with `LS0tLS`"
+            },
+            "negate_finding": true,
+            "search_in": "same-line"
         }
-    ]
+        ]
     },    
     {
         "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
