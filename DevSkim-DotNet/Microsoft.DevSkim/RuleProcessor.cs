@@ -122,22 +122,11 @@ namespace Microsoft.DevSkim
 
             foreach (var capture in analyzer.GetCaptures(rules, textContainer))
             {
-                // If we have within captures it means we had conditions, and we only want the conditioned captures
-                var withinCaptures = capture.Captures.Where(x => x.Clause is WithinClause);
-                if (withinCaptures.Any())
+                // We dont want the within captures
+                var regularCaptures = capture.Captures.Where(x => x.Clause is ScopedRegexClause);
+                foreach (var boundary in regularCaptures)
                 {
-                    foreach (var cap in withinCaptures)
-                    {
-                        ProcessBoundary(cap);
-                    }
-                }
-                // Otherwise we can use all the captures
-                else
-                {
-                    foreach (var cap in capture.Captures)
-                    {
-                        ProcessBoundary(cap);
-                    }
+                    ProcessBoundary(boundary);
                 }
 
                 void ProcessBoundary(ClauseCapture cap)

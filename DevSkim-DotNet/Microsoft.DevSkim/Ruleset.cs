@@ -214,12 +214,12 @@ namespace Microsoft.DevSkim
                 {
                     if (condition.SearchIn is null || condition.SearchIn.Equals("finding-only", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        clauses.Add(new WithinClause()
-                        {
+                        clauses.Add(new WithinClause(new ScopedRegexClause(condition.Pattern.Scopes ?? Array.Empty<PatternScope>()){
                             Data = new List<string>() { condition.Pattern.Pattern },
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                        }){
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
-                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                             FindingOnly = true,
                         });
                         expression.Append(" AND ");
@@ -246,12 +246,12 @@ namespace Microsoft.DevSkim
                         }
                         if (argList.Count == 2)
                         {
-                            clauses.Add(new WithinClause()
-                            {
+                            clauses.Add(new WithinClause(new ScopedRegexClause(condition.Pattern.Scopes ?? Array.Empty<PatternScope>()){
                                 Data = new List<string>() { condition.Pattern.Pattern },
+                                Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                            }){
                                 Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                                 Invert = condition.NegateFinding,
-                                Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                                 Before = argList[0],
                                 After = argList[1]
                             });
@@ -262,12 +262,12 @@ namespace Microsoft.DevSkim
                     }
                     else if (condition.SearchIn.Equals("same-line", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        clauses.Add(new WithinClause()
-                        {
+                        clauses.Add(new WithinClause(new ScopedRegexClause(condition.Pattern.Scopes ?? Array.Empty<PatternScope>()){
                             Data = new List<string>() { condition.Pattern.Pattern },
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                        }){
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
-                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                             SameLineOnly = true
                         });
                         expression.Append(" AND ");
@@ -276,12 +276,12 @@ namespace Microsoft.DevSkim
                     }
                     else if (condition.SearchIn.Equals("same-file", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        clauses.Add(new WithinClause()
-                        {
+                        clauses.Add(new WithinClause(new ScopedRegexClause(condition.Pattern.Scopes ?? Array.Empty<PatternScope>()){
                             Data = new List<string>() { condition.Pattern.Pattern },
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                        }){
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
-                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                             SameFile = true
                         });
                         expression.Append(" AND ");
@@ -290,12 +290,12 @@ namespace Microsoft.DevSkim
                     }
                     else if (condition.SearchIn.Equals("only-before", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        clauses.Add(new WithinClause()
-                        {
+                        clauses.Add(new WithinClause(new ScopedRegexClause(condition.Pattern.Scopes ?? Array.Empty<PatternScope>()){
                             Data = new List<string>() { condition.Pattern.Pattern },
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                        }){
                             Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
                             Invert = condition.NegateFinding,
-                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                             OnlyBefore = true
                         });
                         expression.Append(" AND ");
@@ -304,12 +304,12 @@ namespace Microsoft.DevSkim
                     }
                     else if (condition.SearchIn.Equals("only-after", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        clauses.Add(new WithinClause()
-                        {
+                        clauses.Add(new WithinClause(new ScopedRegexClause(condition.Pattern.Scopes ?? Array.Empty<PatternScope>()){
                             Data = new List<string>() { condition.Pattern.Pattern },
-                            Label = clauseNumber.ToString(CultureInfo.InvariantCulture),
+                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>()
+                        }){
+                            Data = new List<string>() { condition.Pattern.Pattern },
                             Invert = condition.NegateFinding,
-                            Arguments = condition.Pattern.Modifiers?.ToList() ?? new List<string>(),
                             OnlyAfter = true
                         });
                         expression.Append(" AND ");

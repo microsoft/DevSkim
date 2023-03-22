@@ -33,7 +33,7 @@ namespace Microsoft.DevSkim
                     regexOpts |= RegexOptions.Multiline;
                 }
                 var boundaries = new List<Boundary>();
-                var target = tc.Target;
+                var target = state2 is Boundary b ? tc.GetBoundaryText(b) : tc.Target;
                 if (Analyzer != null)
                 {
                     foreach (var pattern in src.Data.Select(x => regexEngine.StringToRegex(x, regexOpts)))
@@ -48,7 +48,7 @@ namespace Microsoft.DevSkim
                                     Boundary translatedBoundary = new Boundary()
                                     {
                                         Length = m.Length,
-                                        Index = m.Index + tc.GetLineBoundary(tc.LineNumber).Index
+                                        Index = m.Index + tc.GetLineBoundary().Index
                                     };
                                     // Should return only scoped matches
                                     if (tc.ScopeMatch(src.Scopes, translatedBoundary))
