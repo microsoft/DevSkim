@@ -5,10 +5,11 @@ using System;
 
 namespace Microsoft.DevSkim
 {
-    internal class WithinClause : Clause
+    public class WithinClause : Clause
     {
-        public WithinClause(string? field = null) : base(Operation.Custom, field)
+        public WithinClause(Clause subClause, string? field = null) : base(Operation.Custom, field)
         {
+            SubClause = subClause;
             CustomOperation = "Within";
         }
 
@@ -18,7 +19,8 @@ namespace Microsoft.DevSkim
         public bool OnlyAfter { get; set; }
         public bool SameFile { get; set; }
         public bool FindingOnly { get; set; }
-        public bool SameLineOnly { get; internal set; }
-        public PatternScope[] Scopes { get; } = Array.Empty<PatternScope>();
+        public bool SameLineOnly { get; set; }
+        public bool FindingRegion { get; set; }
+        public Clause SubClause { get; }
     }
 }
