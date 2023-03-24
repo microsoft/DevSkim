@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.1
+      ref: refs/tags/v1.0.3
 
 stages:
 - stage: Test
@@ -90,18 +90,9 @@ stages:
   - SDL
   - Build
   jobs:
-  - job: AwaitValidation
-    displayName: Release Validation
-    pool: server
-    timeoutInMinutes: 4321 # job times out in 3 days (must be greater than the task within)
-    steps:
-    - task: ManualValidation@0
-      displayName: Manual Validation
-      timeoutInMinutes: 4320 # task times out in 3 days
-      inputs:
-        notifyUsers: 'cstesectools@microsoft.com'
-        instructions: 'This step performs a DevSkim CLI / Lib release to GitHub and NuGet. Proceed?'
-        onTimeout: 'reject'
+  - template: manual-validation-job.yml@templates
+    parameters:
+      instructions: 'This step performs a DevSkim CLI / Lib release to GitHub and NuGet. Proceed?'
 
 - stage: Release
   dependsOn: ReleaseValidation
