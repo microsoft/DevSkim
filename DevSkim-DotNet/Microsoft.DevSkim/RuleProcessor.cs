@@ -123,7 +123,31 @@ namespace Microsoft.DevSkim
             foreach (var capture in analyzer.GetCaptures(rules, textContainer))
             {
                 // We dont want the within captures
-                var regularCaptures = capture.Captures.Where(x => x.Clause is ScopedRegexClause);
+                List<TypedClauseCapture<List<Boundary>>> regularCaptures = new List<TypedClauseCapture<List<Boundary>>>();
+                List<TypedClauseCapture<List<Boundary>>> withinCaptures = new List<TypedClauseCapture<List<Boundary>>>();
+                foreach (var regularCapture in capture.Captures)
+                {
+                    if (regularCapture.Clause is ScopedRegexClause)
+                    {
+                        if (regularCapture is TypedClauseCapture<List<Boundary>> typedClauseCapture)
+                        {
+                            regularCaptures.Add(typedClauseCapture);
+                        }
+                    }
+
+                    if (regularCapture.Clause is WithinClause)
+                    {
+                        if (regularCapture is TypedClauseCapture<List<Boundary>> typedClauseCapture)
+                        {
+                            withinCaptures.Add(typedClauseCapture);
+                        }
+                    }
+                }
+                // Filter out boundaries that did not match all conditions.
+                foreach (var regexCapture in regularCaptures)
+                {
+                    regexCapture.Result = regexCapture.Result.Where(boundary => withinCaptures.All(withinCap => withinCap.Result.Contains(boundary))).ToList();
+                }
                 foreach (var boundary in regularCaptures)
                 {
                     ProcessBoundary(boundary);
