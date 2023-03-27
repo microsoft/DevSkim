@@ -19,9 +19,9 @@ using Microsoft.Build.Framework.XamlTypes;
 
 namespace Microsot.DevSkim.LanguageClient
 {
-    [ContentType("code")]
+    [ContentType("csharp")]
     [Export(typeof(ILanguageClient))]
-    [RunOnContext(RunningContext.RunOnHost)]
+    //[RunOnContext(RunningContext.RunOnHost)]
     public class DevSkimLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
     {
         public DevSkimLanguageClient()
@@ -44,15 +44,9 @@ namespace Microsot.DevSkim.LanguageClient
         public event AsyncEventHandler<EventArgs> StartAsync;
         public event AsyncEventHandler<EventArgs> StopAsync;
 
-        public string Name => "Foo Language Extension";
+        public string Name => "DevSkim Language Extension";
 
-        public IEnumerable<string> ConfigurationSections
-        {
-            get
-            {
-                yield return "foo";
-            }
-        }
+        public IEnumerable<string> ConfigurationSections => null;
 
         public object InitializationOptions => null;
 
@@ -72,33 +66,58 @@ namespace Microsot.DevSkim.LanguageClient
         {
             // Debugger.Launch();
 
+            await Task.Yield();
+
             ProcessStartInfo info = new ProcessStartInfo();
-            var programPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Server", @"Microsoft.DevSkim.LanguageServer.exe");
-            info.FileName = programPath;
-            info.WorkingDirectory = Path.GetDirectoryName(programPath);
+            info.FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Server", @"Microsoft.DevSkim.LanguageServer.exe");
+            //info.Arguments = "bar";
+            info.RedirectStandardInput = true;
+            info.RedirectStandardOutput = true;
+            info.UseShellExecute = false;
             info.CreateNoWindow = true;
-            info.Arguments = "-p";
-            var stdInPipeName = @"devskim-language-server-output";
-            var stdOutPipeName = @"devskim-language-server-input";
-
-            var pipeAccessRule = new PipeAccessRule("Everyone", PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow);
-            var pipeSecurity = new PipeSecurity();
-            pipeSecurity.AddAccessRule(pipeAccessRule);
-
-            var bufferSize = 256;
-            var readerPipe = new NamedPipeServerStream(stdInPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
-            var writerPipe = new NamedPipeServerStream(stdOutPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
 
             Process process = new Process();
             process.StartInfo = info;
-            
+
             if (process.Start())
             {
-                await readerPipe.WaitForConnectionAsync(token);
-                await writerPipe.WaitForConnectionAsync(token);
-
-                return new Connection(readerPipe, writerPipe);
+                return new Connection(process.StandardOutput.BaseStream, process.StandardInput.BaseStream);
             }
+
+            //ProcessStartInfo info = new ProcessStartInfo();
+            //info.FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Server", @"MockLanguageServer.exe");
+            //info.Arguments = "bar";
+            //info.RedirectStandardInput = true;
+            //info.RedirectStandardOutput = true;
+            //info.UseShellExecute = false;
+            //info.CreateNoWindow = true;
+            //ProcessStartInfo info = new ProcessStartInfo();
+            //var programPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Server", @"Microsoft.DevSkim.LanguageServer.exe");
+            //info.FileName = programPath;
+            //info.WorkingDirectory = Path.GetDirectoryName(programPath);
+            //info.CreateNoWindow = true;
+            //info.Arguments = "-p";
+            //var stdInPipeName = @"devskim-language-server-output";
+            //var stdOutPipeName = @"devskim-language-server-input";
+
+            //var pipeAccessRule = new PipeAccessRule("Everyone", PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow);
+            //var pipeSecurity = new PipeSecurity();
+            //pipeSecurity.AddAccessRule(pipeAccessRule);
+
+            //var bufferSize = 256;
+            //var readerPipe = new NamedPipeServerStream(stdInPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
+            //var writerPipe = new NamedPipeServerStream(stdOutPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
+
+            //Process process = new Process();
+            //process.StartInfo = info;
+
+            //if (process.Start())
+            //{
+            //    await readerPipe.WaitForConnectionAsync(token);
+            //    await writerPipe.WaitForConnectionAsync(token);
+
+            //    return new Connection(readerPipe, writerPipe);
+            //}
 
             return null;
         }
