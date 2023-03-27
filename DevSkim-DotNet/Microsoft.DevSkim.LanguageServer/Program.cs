@@ -1,14 +1,9 @@
 ﻿using CommandLine;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
-using System.Diagnostics;
-using System.IO.Pipes;
-using YamlDotNet.Core;
 
 namespace DevSkim.LanguageServer;
 
@@ -19,30 +14,10 @@ internal class Program
 		MainAsync(args).Wait();
 	}
 
-	private static (Stream, Stream) GetStreams(bool usePipes)
-	{
-		if (usePipes)
-		{
-			var stdInPipeName = @"devskim-language-server-input";
-            var stdOutPipeName = @"devskim-language-server-output";
-			var readerPipe = new NamedPipeClientStream(".", stdInPipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
-            var writerPipe = new NamedPipeClientStream(".", stdOutPipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
-            return (readerPipe, writerPipe);
-		}
-		else
-		{
-			return (Console.OpenStandardInput(),  Console.OpenStandardOutput());
-		}
-	}
-
     public class Options
-    {
-        [Option('p', "use pipes", Required = false, HelpText = "If set, will use pipes, if not set will use stdin/stdout.")]
-        public bool UsePipes { get; set; }
+	{
     }
-
-
-        private static async Task MainAsync(string[] args)
+    private static async Task MainAsync(string[] args)
 	{
     #if DEBUG
 		// Debugger.Launch();
@@ -66,7 +41,7 @@ internal class Program
                {
 				   _opts = o;
                });
-        (Stream input, Stream output) = GetStreams(_opts.UsePipes);
+        (Stream input, Stream output) = (Console.OpenStandardInput(), Console.OpenStandardOutput());
 
 		Log.Logger.Debug("Configuring server...");
 		IObserver<WorkDoneProgressReport> workDone = null!;
@@ -119,13 +94,16 @@ internal class Program
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
 
-							IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
-								new ConfigurationItem
-								{
-									Section = ConfigHelpers.Section
-								}
-							).ConfigureAwait(false);
-							ConfigHelpers.SetScannerSettings(configuration);
+							// This calls "workspace/configuration" over jsonrpc to the language client
+							//		The Visual Studio client doesn't understand this, so temporarily commented out until it can listen and respond with the right configuration
+
+							//IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
+							//	new ConfigurationItem
+							//	{
+							//		Section = ConfigHelpers.Section
+							//	}
+							//).ConfigureAwait(false);
+							//ConfigHelpers.SetScannerSettings(configuration);
 							Log.Logger.Debug("Listening for client events...");
 						}
 					)
