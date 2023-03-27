@@ -100,6 +100,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         });
         foreach (CodeFixMapping codeFixMapping in codeFixes.ToArray())
         {
+            // TODO: Need to listen for this on the VS Extension
             _facade.TextDocument.SendNotification("devskim/codefixmapping", codeFixMapping);
         }
 

@@ -94,6 +94,7 @@ internal class Program
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
 
+							// TODO
 							// This calls "workspace/configuration" over jsonrpc to the language client
 							//		The Visual Studio client doesn't understand this, so temporarily commented out until it can listen and respond with the right configuration
 
