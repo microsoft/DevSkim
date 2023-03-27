@@ -4,16 +4,16 @@
     using Microsoft.VisualStudio.Utilities;
     using System.ComponentModel.Composition;
 
-    public class CSharp
+    public class JsonContentType
     {
         [Export]
-        [Name("csharp")]
+        [Name("json")]
         [BaseDefinition(CodeRemoteContentDefinition.CodeRemoteContentTypeName)]
-        internal static ContentTypeDefinition BarContentTypeDefinition;
+        internal static ContentTypeDefinition JsonContentTypeDefinition;
 
         [Export]
-        [FileExtension(".cs")]
-        [ContentType("csharp")]
-        internal static FileExtensionToContentTypeDefinition BarFileExtensionDefinition;
+        [FileExtension(".json")]
+        [ContentType("json")]
+        internal static FileExtensionToContentTypeDefinition JsonFileExtensionDefinition;
     }
 }

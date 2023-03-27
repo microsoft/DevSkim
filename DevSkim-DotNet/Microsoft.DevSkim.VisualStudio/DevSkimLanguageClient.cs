@@ -19,10 +19,10 @@ using Microsoft.Build.Framework.XamlTypes;
 
 namespace Microsot.DevSkim.LanguageClient
 {
-    [ContentType("csharp")]
+    // TODO: Test if code type also covers things like .json
+    [ContentType("code")]
     [Export(typeof(ILanguageClient))]
-    //[RunOnContext(RunningContext.RunOnHost)]
-    public class DevSkimLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
+    public class DevSkimLanguageClient : ILanguageClient
     {
         public DevSkimLanguageClient()
         {
@@ -52,25 +52,13 @@ namespace Microsot.DevSkim.LanguageClient
 
         public IEnumerable<string> FilesToWatch => null;
 
-        public object MiddleLayer
-        {
-            get;
-            set;
-        }
-
-        public object CustomMessageTarget => null;
-
         public bool ShowNotificationOnInitializeFailed => true;
 
         public async Task<Connection> ActivateAsync(CancellationToken token)
         {
-            // Debugger.Launch();
-
             await Task.Yield();
-
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Server", @"Microsoft.DevSkim.LanguageServer.exe");
-            //info.Arguments = "bar";
             info.RedirectStandardInput = true;
             info.RedirectStandardOutput = true;
             info.UseShellExecute = false;
@@ -83,41 +71,6 @@ namespace Microsot.DevSkim.LanguageClient
             {
                 return new Connection(process.StandardOutput.BaseStream, process.StandardInput.BaseStream);
             }
-
-            //ProcessStartInfo info = new ProcessStartInfo();
-            //info.FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Server", @"MockLanguageServer.exe");
-            //info.Arguments = "bar";
-            //info.RedirectStandardInput = true;
-            //info.RedirectStandardOutput = true;
-            //info.UseShellExecute = false;
-            //info.CreateNoWindow = true;
-            //ProcessStartInfo info = new ProcessStartInfo();
-            //var programPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Server", @"Microsoft.DevSkim.LanguageServer.exe");
-            //info.FileName = programPath;
-            //info.WorkingDirectory = Path.GetDirectoryName(programPath);
-            //info.CreateNoWindow = true;
-            //info.Arguments = "-p";
-            //var stdInPipeName = @"devskim-language-server-output";
-            //var stdOutPipeName = @"devskim-language-server-input";
-
-            //var pipeAccessRule = new PipeAccessRule("Everyone", PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow);
-            //var pipeSecurity = new PipeSecurity();
-            //pipeSecurity.AddAccessRule(pipeAccessRule);
-
-            //var bufferSize = 256;
-            //var readerPipe = new NamedPipeServerStream(stdInPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
-            //var writerPipe = new NamedPipeServerStream(stdOutPipeName, PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous, bufferSize, bufferSize, pipeSecurity);
-
-            //Process process = new Process();
-            //process.StartInfo = info;
-
-            //if (process.Start())
-            //{
-            //    await readerPipe.WaitForConnectionAsync(token);
-            //    await writerPipe.WaitForConnectionAsync(token);
-
-            //    return new Connection(readerPipe, writerPipe);
-            //}
 
             return null;
         }
@@ -152,7 +105,7 @@ namespace Microsot.DevSkim.LanguageClient
 
         public Task<InitializationFailureContext> OnServerInitializeFailedAsync(ILanguageClientInitializationInfo initializationState)
         {
-            string message = "Oh no! Foo Language Client failed to activate, now we can't test LSP! :(";
+            string message = "DevSkim Language Client failed to activate.";
             string exception = initializationState.InitializationException?.ToString() ?? string.Empty;
             message = $"{message}\n {exception}";
 
