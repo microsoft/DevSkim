@@ -5,6 +5,11 @@
     public class CodeFixMapping
     {
         /// <summary>
+        /// Reported version of the document the diagnostic applies to
+        /// </summary>
+        public int? version;
+
+        /// <summary>
         /// The diagnostic to attach the fix to
         /// </summary>
         public Diagnostic diagnostic { get; }
@@ -27,8 +32,9 @@
         /// <param name="replacement"></param>
         /// <param name="fileName"></param>
         /// <param name="friendlyString"></param>
-        public CodeFixMapping(Diagnostic diagnostic, string replacement, string fileName, string friendlyString)
+        public CodeFixMapping(Diagnostic diagnostic, string replacement, string fileName, string friendlyString, int? version = null)
         {
+            this.version = version;
             this.diagnostic = diagnostic;
             this.replacement = replacement;
             this.fileName = fileName;

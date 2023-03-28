@@ -55,7 +55,7 @@ namespace Microsot.DevSkim.LanguageClient
 
         object ILanguageClientCustomMessage2.MiddleLayer => _middleLayer;
 
-        public object CustomMessageTarget => _middleLayer;
+        public object CustomMessageTarget => new DevSkimFixMessageTarget();
 
         public async Task<Connection> ActivateAsync(CancellationToken token)
         {

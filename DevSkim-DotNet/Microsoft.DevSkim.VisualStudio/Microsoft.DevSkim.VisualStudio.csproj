@@ -45,6 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ContentTypes.cs" />
+    <Compile Include="DevSkimFixMessageTarget.cs" />
     <Compile Include="DevSkimLanguageClient.cs" />
     <Compile Include="RuleOptionPageGrid.cs">
       <SubType>Component</SubType>
