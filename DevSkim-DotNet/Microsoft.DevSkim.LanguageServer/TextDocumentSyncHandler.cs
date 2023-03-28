@@ -3,6 +3,7 @@ using System.Text;
 using MediatR;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
+using Microsoft.DevSkim.LanguageProtoInterop;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
@@ -100,7 +101,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         });
         foreach (CodeFixMapping codeFixMapping in codeFixes.ToArray())
         {
-            _facade.TextDocument.SendNotification("devskim/codefixmapping", codeFixMapping);
+            _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, codeFixMapping);
         }
 
         return Unit.Value;

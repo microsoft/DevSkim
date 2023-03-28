@@ -16,23 +16,19 @@ using Task = System.Threading.Tasks.Task;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 using System.ComponentModel.Composition;
 using Microsoft.Build.Framework.XamlTypes;
+using Microsoft.DevSkim.LanguageProtoInterop;
 
 namespace Microsot.DevSkim.LanguageClient
 {
     // TODO: Test if code type also covers things like .json
     [ContentType("code")]
     [Export(typeof(ILanguageClient))]
-    public class DevSkimLanguageClient : ILanguageClient
+    public class DevSkimLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
     {
+        [ImportingConstructor]
         public DevSkimLanguageClient()
         {
-            Instance = this;
-        }
-
-        internal static DevSkimLanguageClient Instance
-        {
-            get;
-            set;
+            _middleLayer = new DevSkimMiddleLayer();   
         }
 
         internal JsonRpc Rpc
@@ -40,6 +36,9 @@ namespace Microsot.DevSkim.LanguageClient
             get;
             set;
         }
+
+        public object MiddleLayer = _middleLayer;
+        private static object _middleLayer;
 
         public event AsyncEventHandler<EventArgs> StartAsync;
         public event AsyncEventHandler<EventArgs> StopAsync;
@@ -53,6 +52,10 @@ namespace Microsot.DevSkim.LanguageClient
         public IEnumerable<string> FilesToWatch => null;
 
         public bool ShowNotificationOnInitializeFailed => true;
+
+        object ILanguageClientCustomMessage2.MiddleLayer => _middleLayer;
+
+        public object CustomMessageTarget => _middleLayer;
 
         public async Task<Connection> ActivateAsync(CancellationToken token)
         {
@@ -117,11 +120,12 @@ namespace Microsot.DevSkim.LanguageClient
             return Task.FromResult(failureContext);
         }
 
-        internal class FooMiddleLayer : ILanguageClientMiddleLayer
+        internal class DevSkimMiddleLayer : ILanguageClientMiddleLayer
         {
             public bool CanHandle(string methodName)
             {
-                return methodName == Methods.TextDocumentCompletionName;
+                var isOurs = methodName == DevSkimMessages.CodeFixMapping;
+                return isOurs;
             }
 
             public Task HandleNotificationAsync(string methodName, JToken methodParam, Func<JToken, Task> sendNotification)

@@ -85,6 +85,12 @@
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim.LanguageProtoInterop\Microsoft.DevSkim.LanguageProtoInterop.csproj">
+      <Project>{774e78f3-b48a-4d01-b70b-9cfb03a55663}</Project>
+      <Name>Microsoft.DevSkim.LanguageProtoInterop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">
     <Exec Command="dotnet publish -f net7.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x86 --sc" />

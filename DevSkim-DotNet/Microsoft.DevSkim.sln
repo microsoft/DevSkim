@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.LanguageS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.VisualStudio", "Microsoft.DevSkim.VisualStudio\Microsoft.DevSkim.VisualStudio.csproj", "{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.LanguageProtoInterop", "Microsoft.DevSkim.LanguageProtoInterop\Microsoft.DevSkim.LanguageProtoInterop.csproj", "{774E78F3-B48A-4D01-B70B-9CFB03A55663}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,22 @@ Global
 		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Release|x64.Build.0 = Release|Any CPU
 		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Release|x86.ActiveCfg = Release|x86
 		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Release|x86.Build.0 = Release|x86
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|arm64.Build.0 = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|x64.Build.0 = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|x86.Build.0 = Debug|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|Any CPU.Build.0 = Release|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|arm64.ActiveCfg = Release|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|arm64.Build.0 = Release|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|x64.ActiveCfg = Release|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|x64.Build.0 = Release|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|x86.ActiveCfg = Release|Any CPU
+		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

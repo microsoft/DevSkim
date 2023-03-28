@@ -1,4 +1,4 @@
-﻿namespace DevSkim.LanguageServer
+﻿namespace Microsoft.DevSkim.LanguageProtoInterop
 {
     using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
