@@ -84,13 +84,13 @@ internal class Program
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
 
-							IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
-								new ConfigurationItem
-								{
-									Section = ConfigHelpers.Section
-								}
-							).ConfigureAwait(false);
-							ConfigHelpers.SetScannerSettings(configuration);
+							//IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
+							//	new ConfigurationItem
+							//	{
+							//		Section = ConfigHelpers.Section
+							//	}
+							//).ConfigureAwait(false);
+							//ConfigHelpers.SetScannerSettings(configuration);
 							Log.Logger.Debug("Listening for client events...");
 						}
 					)
