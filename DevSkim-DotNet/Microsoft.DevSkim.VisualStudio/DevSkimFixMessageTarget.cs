@@ -1,8 +1,6 @@
 ﻿namespace Microsot.DevSkim.LanguageClient
 {
     using Microsoft.DevSkim.LanguageProtoInterop;
-    using Microsoft.VisualStudio.Telemetry;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using StreamJsonRpc;
     using System.Collections.Concurrent;
@@ -11,16 +9,30 @@
 
     public class DevSkimFixMessageTarget
     {
-        private HashSet<CodeFixMapping> _mappings = new HashSet<CodeFixMapping>();
+        // TODO: This probably should be a circular queue of some kind to allow expired ones to eventually fall out
+        private ConcurrentDictionary<string, ConcurrentDictionary<int?, HashSet<CodeFixMapping>>> _mappings = new ConcurrentDictionary<string, ConcurrentDictionary<int?, HashSet<CodeFixMapping>>>();
         public DevSkimFixMessageTarget()
         {
         }
 
+        // Mark the method with the JSONRPC call this will parse
         [JsonRpcMethod(DevSkimMessages.CodeFixMapping)]
-        public Task HandleTelemetryEventAsync(JToken jToken)
+        public Task CodeFixMappingEventAsync(JToken jToken)
         {
-            var mapping = jToken.ToObject<CodeFixMapping>();
-            _mappings.Add(mapping);
+            CodeFixMapping mapping = jToken.ToObject<CodeFixMapping>();
+            _mappings.AddOrUpdate(mapping.fileName, 
+                // Add
+                () => { new ConcurrentDictionary<int?, HashSet<CodeFixMapping>>(new Dictionary<int?, HashSet<CodeFixMapping>>() { { mapping.version, new HashSet<CodeFixMapping>() { mapping } } }); }, 
+                // Update
+                (key, oldValue) =>
+                {
+                    oldValue.AddOrUpdate(mapping.version, 
+                        // Add
+                        () => { new HashSet<CodeFixMapping>() { mapping }; },
+                        // Update
+                        (versionKey, oldSet) => { oldSet.Add(mapping); return oldSet; });
+                    return oldValue;
+                });
             return Task.CompletedTask;
         }
 

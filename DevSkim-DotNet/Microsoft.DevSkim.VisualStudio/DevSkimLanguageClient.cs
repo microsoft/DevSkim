@@ -28,7 +28,6 @@ namespace Microsot.DevSkim.LanguageClient
         [ImportingConstructor]
         public DevSkimLanguageClient()
         {
-            _middleLayer = new DevSkimMiddleLayer();   
         }
 
         internal JsonRpc Rpc
@@ -53,9 +52,13 @@ namespace Microsot.DevSkim.LanguageClient
 
         public bool ShowNotificationOnInitializeFailed => true;
 
-        object ILanguageClientCustomMessage2.MiddleLayer => _middleLayer;
+        // This handles modifying outgoing messages to the language server
+        object ILanguageClientCustomMessage2.MiddleLayer => null;
 
-        public object CustomMessageTarget => new DevSkimFixMessageTarget();
+        private DevSkimFixMessageTarget DevSkimTarget = new DevSkimFixMessageTarget();
+
+        // This handles incoming messages to the language client
+        public object CustomMessageTarget => DevSkimTarget;
 
         public async Task<Connection> ActivateAsync(CancellationToken token)
         {
@@ -118,26 +121,6 @@ namespace Microsot.DevSkim.LanguageClient
             };
 
             return Task.FromResult(failureContext);
-        }
-
-        internal class DevSkimMiddleLayer : ILanguageClientMiddleLayer
-        {
-            public bool CanHandle(string methodName)
-            {
-                var isOurs = methodName == DevSkimMessages.CodeFixMapping;
-                return isOurs;
-            }
-
-            public Task HandleNotificationAsync(string methodName, JToken methodParam, Func<JToken, Task> sendNotification)
-            {
-                throw new NotImplementedException();
-            }
-
-            public async Task<JToken> HandleRequestAsync(string methodName, JToken methodParam, Func<JToken, Task<JToken>> sendRequest)
-            {
-                var result = await sendRequest(methodParam);
-                return result;
-            }
         }
     }
 }
