@@ -9,8 +9,8 @@
 
     public class DevSkimFixMessageTarget
     {
-        // TODO: This probably should be a circular queue of some kind to allow expired ones to eventually fall out
-        private ConcurrentDictionary<string, ConcurrentDictionary<int?, HashSet<CodeFixMapping>>> _mappings = new ConcurrentDictionary<string, ConcurrentDictionary<int?, HashSet<CodeFixMapping>>>();
+        // Maps file name to a dictionary of file versions to a deduplicated set of CodeFixMappings
+        public ConcurrentDictionary<string, ConcurrentDictionary<int?, HashSet<CodeFixMapping>>> _mappings = new ConcurrentDictionary<string, ConcurrentDictionary<int?, HashSet<CodeFixMapping>>>();
         public DevSkimFixMessageTarget()
         {
         }
@@ -22,20 +22,18 @@
             CodeFixMapping mapping = jToken.ToObject<CodeFixMapping>();
             _mappings.AddOrUpdate(mapping.fileName, 
                 // Add
-                () => { new ConcurrentDictionary<int?, HashSet<CodeFixMapping>>(new Dictionary<int?, HashSet<CodeFixMapping>>() { { mapping.version, new HashSet<CodeFixMapping>() { mapping } } }); }, 
+                (string _) => new ConcurrentDictionary<int?, HashSet<CodeFixMapping>>(new Dictionary<int?, HashSet<CodeFixMapping>>() { { mapping.version, new HashSet<CodeFixMapping>() { mapping } } }),
                 // Update
                 (key, oldValue) =>
                 {
                     oldValue.AddOrUpdate(mapping.version, 
                         // Add
-                        () => { new HashSet<CodeFixMapping>() { mapping }; },
+                        (int? _) => new HashSet<CodeFixMapping>() { mapping },
                         // Update
                         (versionKey, oldSet) => { oldSet.Add(mapping); return oldSet; });
                     return oldValue;
                 });
             return Task.CompletedTask;
         }
-
-        public ICollection<CodeFixMapping> Mappings { get { return _mappings; } }
     }
 }
