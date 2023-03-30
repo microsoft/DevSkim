@@ -59,7 +59,7 @@ namespace Microsot.DevSkim.LanguageClient
 
         // This handles incoming messages to the language client
         public object CustomMessageTarget => DevSkimTarget;
-
+        private Process _languageServerProcess;
         public async Task<Connection> ActivateAsync(CancellationToken token)
         {
             await Task.Yield();
@@ -75,9 +75,9 @@ namespace Microsot.DevSkim.LanguageClient
 
             if (process.Start())
             {
+                _languageServerProcess = process;
                 return new Connection(process.StandardOutput.BaseStream, process.StandardInput.BaseStream);
             }
-
             return null;
         }
 
@@ -91,6 +91,8 @@ namespace Microsot.DevSkim.LanguageClient
 
         public async Task StopServerAsync()
         {
+            _languageServerProcess.Kill();
+            _languageServerProcess.Dispose();
             if (StopAsync != null)
             {
                 await StopAsync.InvokeAsync(this, EventArgs.Empty);

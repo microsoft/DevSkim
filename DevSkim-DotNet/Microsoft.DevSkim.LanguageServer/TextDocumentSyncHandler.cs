@@ -71,7 +71,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     CodeFix fix = issue.Rule.Fixes[i];
                     if (fix.Replacement is { })
                     {
-                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToString(), $"Replace with {fix.Replacement}", version));
+                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToUri(), $"Replace with {fix.Replacement}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length));
                     }
                 }
                 // Add suppression options
@@ -80,13 +80,13 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
                     // TODO: Handle multiple suppressions on one line?
                     string proposedSuppression = GenerateSuppression(filename, issue.Rule.Id);
-                    codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedSuppression}", uri.ToString(), $"Suppress {issue.Rule.Id}", version));
+                    codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length));
 
                     if (StaticScannerSettings.SuppressionDuration > -1)
                     {
                         DateTime expiration = DateTime.Now.AddDays(StaticScannerSettings.SuppressionDuration);
                         string proposedTimedSuppression = GenerateSuppression(filename, issue.Rule.Id, expiration);
-                        codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedTimedSuppression}", uri.ToString(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version));
+                        codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length));
                     }
                 }
             }

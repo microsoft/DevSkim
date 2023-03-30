@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Microsoft.DevSkim.VisualStudio
 {
@@ -42,8 +43,19 @@ namespace Microsoft.DevSkim.VisualStudio
 
         public IEnumerable<SuggestedActionSet> GetSuggestedActions(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
-            var res = TryGetWordUnderCaret(out TextExtent wordExtent);
-
+            List<ISuggestedAction> suggestedActions = new List<ISuggestedAction>();
+            if (TryGetWordUnderCaret(out TextExtent wordExtent) && wordExtent.IsSignificant)
+            {
+                if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out var dictForFile))
+                {
+                    var potentialFixesForFile = dictForFile[wordExtent.Span.Snapshot.Version.VersionNumber];
+                    var filteredFixes = potentialFixesForFile.Where(codeFixMapping => (wordExtent.Span.Start.Position == codeFixMapping.start && wordExtent.Span.End.Position == codeFixMapping.end));
+                    foreach (var filtered in filteredFixes)
+                    {
+                        suggestedActions.Add(new DevSkimSuggestedAction(wordExtent.Span, filtered));
+                    }
+                }
+            }
             // Code from DevSkim 0.7
             //if (error != null && error.Actionable)
             //{
@@ -82,8 +94,12 @@ namespace Microsoft.DevSkim.VisualStudio
             //    else
             //        return new SuggestedActionSet[] { new SuggestedActionSet(suppActions) };
             //}
+            yield return new SuggestedActionSet(suggestedActions);
+        }
 
-            return Enumerable.Empty<SuggestedActionSet>();
+        private bool Intersects(int start, int end, SnapshotSpan span)
+        {
+            return (span.Start.Position == start && span.End.Position == end);
         }
 
         // Map FileName to Mapping of FileVersion to Potential fixes

@@ -1,6 +1,8 @@
 ﻿namespace Microsoft.DevSkim.LanguageProtoInterop
 {
     using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+    using System;
+    using Microsoft.DevSkim;
 
     public class CodeFixMapping
     {
@@ -20,11 +22,22 @@
         /// <summary>
         /// The Filename this fix should apply to
         /// </summary>
-        public string fileName { get; }
+        public Uri fileName { get; }
         /// <summary>
         /// The description for the CodeFix in the IDE
         /// </summary>
         public string friendlyString { get; }
+
+        /// <summary>
+        /// The absolute character index for the start (used by Visual Studio Extension)
+        /// </summary>
+        public int start { get; }
+
+        /// <summary>
+        /// The absolute character index for the end (used by Visual Studio Extension)
+        /// </summary>
+        public int end { get; }
+
         /// <summary>
         /// Create a codefixmapping to send to the IDE
         /// </summary>
@@ -32,13 +45,15 @@
         /// <param name="replacement"></param>
         /// <param name="fileName"></param>
         /// <param name="friendlyString"></param>
-        public CodeFixMapping(Diagnostic diagnostic, string replacement, string fileName, string friendlyString, int? version = null)
+        public CodeFixMapping(Diagnostic diagnostic, string replacement, Uri fileName, string friendlyString, int? version, int start, int end)
         {
             this.version = version;
             this.diagnostic = diagnostic;
             this.replacement = replacement;
             this.fileName = fileName;
             this.friendlyString = friendlyString;
+            this.start = start;
+            this.end = end;
         }
     }
 }
