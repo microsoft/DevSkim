@@ -27,16 +27,10 @@ namespace Microsoft.DevSkim.VisualStudio
             _span = span;
             _snapshot = span.Snapshot;
             _mapping = mapping;
-            _display = mapping.friendlyString;
+            DisplayText = mapping.friendlyString;
         }
 
-        public string DisplayText
-        {
-            get
-            {
-                return _display;
-            }
-        }
+        public string DisplayText { get; }
 
         public bool HasActionSets
         {
@@ -91,7 +85,7 @@ namespace Microsoft.DevSkim.VisualStudio
         {
             ITextSnapshotLine line = _snapshot.GetLineFromPosition(_span.Start.Position);
 
-            var textBlock = new TextBlock();
+            TextBlock textBlock = new TextBlock();
             textBlock.Padding = new Thickness(5);
             textBlock.Inlines.Add(new Run() { Text = _mapping.replacement, Foreground = new SolidColorBrush(Color.FromRgb(0x34, 0xAF, 0x00)) });
             return Task.FromResult<object>(textBlock);
@@ -103,8 +97,15 @@ namespace Microsoft.DevSkim.VisualStudio
             {
                 return;
             }
-
-            _span.Snapshot.TextBuffer.Replace(_span, _mapping.replacement);
+            if (!_mapping.isSuppression)
+            {
+                _span.Snapshot.TextBuffer.Replace(new Microsoft.VisualStudio.Text.Span(_mapping.matchStart, _mapping.replacement.Length), _mapping.replacement);
+            }
+            else
+            {
+                var line = _span.Snapshot.GetLineFromLineNumber(_mapping.diagnostic.Range.End.Line);
+                _span.Snapshot.TextBuffer.Insert(line.End.Position, _mapping.replacement);
+            }
         }
 
         public bool TryGetTelemetryId(out Guid telemetryId)
@@ -114,7 +115,6 @@ namespace Microsoft.DevSkim.VisualStudio
         }
 
         private readonly CodeFixMapping _mapping;
-        private readonly string _display;
         private readonly ITextSnapshot _snapshot;
         private readonly SnapshotSpan _span;
     }

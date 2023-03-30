@@ -49,7 +49,7 @@ namespace Microsoft.DevSkim.VisualStudio
                 if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out var dictForFile))
                 {
                     var potentialFixesForFile = dictForFile[wordExtent.Span.Snapshot.Version.VersionNumber];
-                    var filteredFixes = potentialFixesForFile.Where(codeFixMapping => (wordExtent.Span.Start.Position == codeFixMapping.start && wordExtent.Span.End.Position == codeFixMapping.end));
+                    var filteredFixes = potentialFixesForFile.Where(codeFixMapping => Intersects(codeFixMapping, wordExtent));
                     foreach (var filtered in filteredFixes)
                     {
                         suggestedActions.Add(new DevSkimSuggestedAction(wordExtent.Span, filtered));
@@ -95,6 +95,21 @@ namespace Microsoft.DevSkim.VisualStudio
             //        return new SuggestedActionSet[] { new SuggestedActionSet(suppActions) };
             //}
             yield return new SuggestedActionSet(suggestedActions);
+        }
+
+        private bool Intersects(CodeFixMapping codeFixMapping, TextExtent wordExtent)
+        {
+            // Extent start is inside mapping
+            if (wordExtent.Span.Start >= codeFixMapping.matchStart && wordExtent.Span.Start <= codeFixMapping.matchEnd)
+            {
+                return true;
+            }
+            // Extend end is inside mapping
+            if (wordExtent.Span.End >= codeFixMapping.matchStart && wordExtent.Span.End <= codeFixMapping.matchEnd)
+            {
+                return true;
+            }
+            return false;
         }
 
         private bool Intersects(int start, int end, SnapshotSpan span)

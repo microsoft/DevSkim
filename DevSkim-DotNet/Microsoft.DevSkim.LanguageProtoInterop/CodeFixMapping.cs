@@ -31,12 +31,17 @@
         /// <summary>
         /// The absolute character index for the start (used by Visual Studio Extension)
         /// </summary>
-        public int start { get; }
+        public int matchStart { get; }
 
         /// <summary>
-        /// The absolute character index for the end (used by Visual Studio Extension)
+        /// The absolute character index for the start (used by Visual Studio Extension)
         /// </summary>
-        public int end { get; }
+        public int matchEnd { get; }
+
+        /// <summary>
+        /// The absolute character index for the start (used by Visual Studio Extension)
+        /// </summary>
+        public bool isSuppression { get; }
 
         /// <summary>
         /// Create a codefixmapping to send to the IDE
@@ -45,15 +50,16 @@
         /// <param name="replacement"></param>
         /// <param name="fileName"></param>
         /// <param name="friendlyString"></param>
-        public CodeFixMapping(Diagnostic diagnostic, string replacement, Uri fileName, string friendlyString, int? version, int start, int end)
+        public CodeFixMapping(Diagnostic diagnostic, string replacement, Uri fileName, string friendlyString, int? version, int matchStart, int matchEnd, bool isSuppression)
         {
             this.version = version;
             this.diagnostic = diagnostic;
             this.replacement = replacement;
             this.fileName = fileName;
             this.friendlyString = friendlyString;
-            this.start = start;
-            this.end = end;
+            this.matchStart = matchStart;
+            this.matchEnd = matchEnd;
+            this.isSuppression = isSuppression;
         }
     }
 }
