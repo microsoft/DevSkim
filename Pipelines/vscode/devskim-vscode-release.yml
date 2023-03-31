@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.1
+      ref: refs/tags/v1.0.4
 
 stages:
 - stage: SDL
@@ -129,18 +129,9 @@ stages:
   - SDL
   - Build
   jobs:
-  - job: AwaitValidation
-    displayName: Release Validation
-    pool: server
-    timeoutInMinutes: 4321 # job times out in 3 days
-    steps:
-    - task: ManualValidation@0
-      displayName: Manual Validation
-      timeoutInMinutes: 4320 # task times out in 3 days
-      inputs:
-        notifyUsers: 'cstesectools@microsoft.com'
-        instructions: 'This step performs a DevSkim VS Code plugin release to the VS Marketplace. Proceed?'
-        onTimeout: 'reject'
+  - template: manual-validation-job.yml@templates
+    parameters:
+      instructions: 'This step performs a DevSkim VS Code Extension release to GitHub and the VS Marketplace. Proceed?'
 
 - stage: Release
   dependsOn:
@@ -234,3 +225,17 @@ stages:
                 echo "Publishing as official release = $(ReleaseVersion)"
                 vsce publish --packagePath $packPath --pat $(VS_Token)
             }
+    - task: GitHubRelease@1
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: 'DevSkim'
+        repositoryName: 'microsoft/DevSkim'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecifiedTag'
+        tag: 'v$(ReleaseVersion)'
+        title: 'DevSkim VS Code Extension v$(ReleaseVersion)'
+        assets: |
+          $(Build.StagingDirectory)/*.vsix
+        changeLogCompareToRelease: 'lastNonDraftRelease'
+        changeLogType: 'commitBased'
