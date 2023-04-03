@@ -6,7 +6,7 @@ trigger:
   batch: true
   branches:
     include:
-    - main
+    - v/0.6
   paths:
     include:
     - DevSkim-DotNet
@@ -26,14 +26,14 @@ stages:
   - template: dotnet-test-job.yml@templates
     parameters:
       jobName: 'dotnet_test_windows'
-      dotnetVersion: 7.0.x
+      dotnetVersion: 6.0.x
       dotnetVersionLTS: 6.0.x
       vmImage: 'oss-tools-win2022_1es-managed'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
   - template: dotnet-test-job.yml@templates
     parameters:
       jobName: 'dotnet_test_ubuntu'
-      dotnetVersion: 7.0.x
+      dotnetVersion: 6.0.x
       dotnetVersionLTS: 6.0.x
       vmImage: 'ubuntu-22.04-image-base'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
@@ -52,38 +52,44 @@ stages:
   - template: dotnet-publish-linux-mac-job.yml@templates
     parameters:
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       exePath: 'devskim'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
   - template: dotnet-publish-win-netcore-job.yml@templates
     parameters:
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
   - template: nuget-build-job.yml@templates
     parameters:
       jobName: 'pack_lib'
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
       preBuild:
-      - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
   - template: nuget-build-job.yml@templates
     parameters:
       jobName: 'pack_cli'
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
-      - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
 
 - stage: ReleaseValidation
   dependsOn:
@@ -107,7 +113,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '7.0.x'
+        version: '6.0.x'
     - template: nbgv-set-version-steps.yml@templates
     - task: DownloadBuildArtifacts@0
       displayName: Download Unsigned Archives
