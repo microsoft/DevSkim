@@ -6,7 +6,7 @@ trigger: none
 pr:
   branches:
     include:
-    - main
+    - v/0.6
   paths:
     include:
     - Pipelines/cli/devskim-cli-pr.yml
@@ -52,34 +52,39 @@ stages:
   - template: dotnet-publish-linux-mac-job.yml@templates
     parameters:
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       exePath: 'devskim'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
   - template: dotnet-publish-win-netcore-job.yml@templates
     parameters:
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
   - template: nuget-build-job.yml@templates
     parameters:
       jobName: 'pack_lib'
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
       preBuild:
-      - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
   - template: nuget-build-job.yml@templates
     parameters:
       jobName: 'pack_cli'
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '6.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
