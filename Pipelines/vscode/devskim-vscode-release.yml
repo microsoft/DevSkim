@@ -36,18 +36,21 @@ stages:
       name: 'OSS-Tools-1ESPool'
       vmImage: 'oss-tools-win2022_1es-managed'
     steps:
-    - task: UseDotNet@2
-      displayName: Install Dotnet SDK
+    - task: NodeTool@0
       inputs:
-        packageType: 'sdk'
-        version: '7.0.x'
+        versionSource: 'spec'
+        versionSpec: '16.x'
     - task: CodeQL3000Init@0
     - task: Npm@1
-      displayName: Build VS Code Plugin
+      displayName: npm install
+      inputs:
+        command: 'install'
+        workingDir: 'DevSkim-VSCode-Plugin/'
+    - task: Npm@1
       inputs:
         command: 'custom'
-        workingDir: 'DevSkim-VSCode-Plugin/'     
-        customCommand: 'run build'
+        workingDir: 'DevSkim-VSCode-Plugin/'
+        customCommand: 'run pack-ext'
     - task: CodeQL3000Finalize@0
     - task: AntiMalware@4
       displayName: Anti-Malware Scan
@@ -95,23 +98,6 @@ stages:
         PathtoPublish: '$(Build.StagingDirectory)/Manifests'
         ArtifactName: 'Manifests'
         publishLocation: 'Container'
-    - task: Npm@1
-      displayName: Package VS Code Plugin
-      inputs:
-        command: 'custom'
-        workingDir: 'DevSkim-VSCode-Plugin/'
-        customCommand: 'run pack-ext'
-    - task: AntiMalware@4
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: 'DevSkim-VSCode-Plugin/'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Warning'
     - task: PowerShell@2
       displayName: Move Plugin File
       inputs:
