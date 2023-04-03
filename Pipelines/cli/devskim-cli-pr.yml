@@ -88,4 +88,5 @@ stages:
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
-      - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
