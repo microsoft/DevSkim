@@ -1,0 +1,125 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VSCode_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger: none
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - Pipelines/vscode/devskim-vscode-pr.yml
+    - DevSkim-VSCode-Plugin
+    - rules
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      ref: refs/tags/v1.0.4
+
+stages:
+- stage: SDL
+  jobs:
+  - template: sdl-job.yml@templates
+    parameters:
+      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
+
+- stage: Build
+  dependsOn: []
+  jobs:
+  - job: build_vscode_plugin
+    displayName: Build VS Code Plugin
+    pool:
+      name: 'OSS-Tools-1ESPool'
+      vmImage: 'oss-tools-win2022_1es-managed'
+    steps:
+    - task: UseDotNet@2
+      displayName: Install Dotnet SDK
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.x'
+    - task: CodeQL3000Init@0
+    - task: Npm@1
+      displayName: Build VS Code Plugin
+      inputs:
+        command: 'custom'
+        workingDir: 'DevSkim-VSCode-Plugin/'     
+        customCommand: 'run build'
+    - task: CodeQL3000Finalize@0
+    - task: AntiMalware@4
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: 'DevSkim-VSCode-Plugin/'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Warning'
+    - template: nbgv-set-version-steps.yml@templates
+    - task: PowerShell@2
+      displayName: Mkdir for Manifests and Packages
+      inputs:
+        targetType: 'inline'
+        script: mkdir sbom/vscode/ ; mkdir sbom/langserver/ ; mkdir packages
+        workingDirectory: '$(Build.StagingDirectory)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate VS Code Plugin Manifest
+      inputs:
+        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/client/out/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
+        PackageName: 'DevSkim VS Code Plugin'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ManifestGeneratorTask@0
+      displayName: Generate DevSkim Language Server Manifest
+      inputs:
+        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/devskimBinaries/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/langserver/'
+        PackageName: 'DevSkim Language Server'
+        PackageVersion: '$(ReleaseVersion)'
+    - task: ArchiveFiles@2
+      displayName: Archive Manifests
+      inputs:
+        rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_VSCode_Manifests.zip'
+        replaceExistingArchive: true
+    - task: PublishBuildArtifacts@1
+      displayName: Pipeline Publish Manifest Archive
+      inputs:
+        PathtoPublish: '$(Build.StagingDirectory)/Manifests'
+        ArtifactName: 'Manifests'
+        publishLocation: 'Container'
+    - task: Npm@1
+      displayName: Package VS Code Plugin
+      inputs:
+        command: 'custom'
+        workingDir: 'DevSkim-VSCode-Plugin/'
+        customCommand: 'run pack-ext'
+    - task: AntiMalware@4
+      displayName: Anti-Malware Scan
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: 'DevSkim-VSCode-Plugin/'
+        EnableServices: true
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Warning'
+    - task: PowerShell@2
+      displayName: Move Plugin File
+      inputs:
+        targetType: 'inline'
+        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/packages/'
+    - task: PublishBuildArtifacts@1
+      displayName: Pipeline Publish Unsigned Artifact
+      inputs:
+        PathtoPublish: '$(Build.StagingDirectory)/packages/'
+        ArtifactName: 'Unsigned_Plugin'
+        publishLocation: 'Container'

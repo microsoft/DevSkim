@@ -1,0 +1,86 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_CLI_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger: none
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - Pipelines/cli/devskim-cli-pr.yml
+    - DevSkim-DotNet
+    - rules
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      ref: refs/tags/v1.0.4
+
+stages:
+- stage: Test
+  jobs:
+  - template: dotnet-test-job.yml@templates
+    parameters:
+      jobName: 'dotnet_test_windows'
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
+      vmImage: 'oss-tools-win2022_1es-managed'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+  - template: dotnet-test-job.yml@templates
+    parameters:
+      jobName: 'dotnet_test_ubuntu'
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
+      vmImage: 'ubuntu-22.04-image-base'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+      
+- stage: SDL
+  dependsOn: []
+  jobs:
+  - template: sdl-job.yml@templates
+    parameters:
+      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
+
+- stage: Build
+  dependsOn:
+  - Test
+  jobs:
+  - template: dotnet-publish-linux-mac-job.yml@templates
+    parameters:
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+      projectName: 'DevSkim_CLI'
+      exePath: 'devskim'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+  - template: dotnet-publish-win-netcore-job.yml@templates
+    parameters:
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+      projectName: 'DevSkim_CLI'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+  - template: nuget-build-job.yml@templates
+    parameters:
+      jobName: 'pack_lib'
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
+      projectName: 'DevSkim_Lib'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+  - template: nuget-build-job.yml@templates
+    parameters:
+      jobName: 'pack_cli'
+      buildConfiguration: 'Release'
+      dotnetVersion: '7.0.x'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+      projectName: 'DevSkim_CLI'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
