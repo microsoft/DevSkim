@@ -45,3 +45,21 @@ stages:
       - template: nbgv-set-version-steps.yml@templates
       - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
         displayName: 'Pack DevSkim Rules'
+      onEnd:
+      - task: PowerShell@2
+        displayName: Mkdir for Extension
+        inputs:
+          targetType: 'inline'
+          script: mkdir extension
+          workingDirectory: '$(Build.StagingDirectory)'
+      - task: PowerShell@2
+        displayName: Move Extension File
+        inputs:
+          targetType: 'inline'
+          script: 'mv $env:BUILD_STAGINGDIRECTORY/bin/dotnetapp/DevSkim_VS_dotnetapp_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY/extension'
+      - task: PublishBuildArtifacts@1
+        displayName: Pipeline Publish Extension
+        inputs:
+          PathtoPublish: '$(Build.StagingDirectory)/extension'
+          ArtifactName: 'Unsigned_Extension'
+          publishLocation: 'Container'
