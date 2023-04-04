@@ -19,7 +19,8 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.4
+      ref: da/msbuild-option
+      #ref: refs/tags/v1.0.4
 
 stages:
 - stage: SDL
@@ -32,57 +33,15 @@ stages:
 - stage: Build
   dependsOn: []
   jobs:
-  - job: build_extension
-    displayName: Build Visual Studio Extension
-    pool:
-      name: 'OSS-Tools-1ESPool'
-      vmImage: 'oss-tools-win2022_1es-managed'
-    steps:
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '6.0.x'
-    - task: NuGetToolInstaller@1
-      inputs:
-        versionSpec: '6.x'
-    - task: NuGetCommand@2
-      inputs:
-        command: 'restore'
-        restoreSolution: 'DevSkim-DotNet/Microsoft.DevSkim.sln'
-        feedsToUse: 'select'
-    - task: CodeQL3000Init@0
-    - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
-      displayName: 'Pack DevSkim Rules'
-    - template: nbgv-set-version-steps.yml@templates
-    - task: MSBuild@1
-      displayName: MSBuild VSExtension
-      inputs:
-        solution: 'DevSkim-DotNet/Microsoft.DevSkim.VSExtension'
-        msbuildArguments: '/p:Configuration=Release /p:OutputPath=$(Build.BinariesDirectory)/visualstudio/DevSkim_$(ReleaseVersion) /p:DebugType=None'
-        restoreNugetPackages: false
-        msbuildVersion: 'latest'
-    - task: CodeQL3000Finalize@0
-    - task: AntiMalware@3
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: '$(Build.BinariesDirectory)'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Warning'
-    - task: PowerShell@2
-      displayName: Move Extension File
-      inputs:
-        targetType: 'inline'
-        script: 'mv $env:BUILD_BINARIESDIRECTORY/visualstudio/DevSkim_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY'
-    - task: PublishBuildArtifacts@1
-      displayName: Publish Unsigned Artifact
-      inputs:
-        PathtoPublish: '$(Build.StagingDirectory)'
-        ArtifactName: 'Unsigned_Extension'
-        publishLocation: 'Container'
-# need Maniests
-# need BinSkim
+  - template: dotnet-build-netcore-job.yml@templates
+    parameters:
+      buildTool: 'msbuild'
+      buildConfiguration: 'Release'
+      dotnetVersion: '6.0.x'
+      publishFramework: 'net47'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Microsoft.DevSkim.VSExtension.csproj'
+      projectName: 'DevSkim_VS'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
