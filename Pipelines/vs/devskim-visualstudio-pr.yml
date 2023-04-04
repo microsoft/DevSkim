@@ -33,7 +33,7 @@ stages:
 - stage: Build
   dependsOn: []
   jobs:
-  - template: dotnet-build-netcore-job.yml@templates
+  - template: dotnet-build-job.yml@templates
     parameters:
       buildTool: 'msbuild'
       buildConfiguration: 'Release'
