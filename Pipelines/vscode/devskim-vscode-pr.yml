@@ -72,18 +72,18 @@ stages:
         script: mkdir sbom/vscode/ ; mkdir sbom/langserver/ ; mkdir packages
         workingDirectory: '$(Build.StagingDirectory)'
     - task: ManifestGeneratorTask@0
-      displayName: Generate VS Code Plugin Manifest
+      displayName: Generate VS Code Plugin Client Manifest
       inputs:
-        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/client/out/'
+        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/client/dist/'
         ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
-        PackageName: 'DevSkim VS Code Plugin'
+        PackageName: 'DevSkim VS Code Plugin Client'
         PackageVersion: '$(ReleaseVersion)'
     - task: ManifestGeneratorTask@0
-      displayName: Generate DevSkim Language Server Manifest
+      displayName: Generate VS Code Plugin Server Manifest
       inputs:
-        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/devskimBinaries/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/langserver/'
-        PackageName: 'DevSkim Language Server'
+        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/server/dist/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/server/'
+        PackageName: 'DevSkim VS Code Plugin Server'
         PackageVersion: '$(ReleaseVersion)'
     - task: ArchiveFiles@2
       displayName: Archive Manifests
