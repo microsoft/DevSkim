@@ -126,7 +126,7 @@ stages:
   condition: succeeded()
   jobs:
   - job: sign_hash_release
-    displayName: Code Sign, Generate Hashes, Publish Public Release
+    displayName: Code Sign, Publish Public Release
     pool:
       name: 'OSS-Tools-1ESPool'
       vmImage: 'oss-tools-win2022_1es-managed'
