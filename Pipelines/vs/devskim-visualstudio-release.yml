@@ -78,7 +78,7 @@ stages:
   condition: succeeded()
   jobs:
   - job: sign_hash_release
-    displayName: Code Sign, Publish Public Release
+    displayName: Code Sign, Generate Hashes, Publish Public Release
     pool:
       name: 'OSS-Tools-1ESPool'
       vmImage: 'oss-tools-win2022_1es-managed'
@@ -132,6 +132,16 @@ stages:
         MaxRetryAttempts: '5'
     - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
       displayName: 'Delete Code Sign Summaries'
+    - task: PowerShell@2
+      displayName: Generate Hashes
+      inputs:
+        targetType: 'inline'
+        script: |
+          Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+            $name = $_.Name
+            $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+            Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+          }
     - task: PowerShell@2
       displayName: Move Extension File
       inputs:
