@@ -498,73 +498,73 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Binaries'
-    - task: GitHubRelease@1
-      displayName: Release to GitHub
-      inputs:
-        gitHubConnection: 'DevSkim'
-        repositoryName: 'microsoft/DevSkim'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'userSpecifiedTag'
-        tag: 'v$(ReleaseVersion)'
-        title: 'DevSkim CLI v$(ReleaseVersion)'
-        assets: |
-          $(Build.StagingDirectory)/*.zip
-          $(Build.StagingDirectory)/HASHES.txt
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
-    - task: NuGetCommand@2
-      displayName: Publish NuGet Packages
-      inputs:
-        command: 'push'
-        packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'CST-E Nuget CI'
-        verbosityPush: 'Normal'
-    - task: PowerShell@2
-      displayName: Mkdir for Manifests
-      inputs:
-        targetType: 'inline'
-        script: mkdir sbom/win/ ; mkdir sbom/netcoreapp/ ; mkdir sbom/linux ; mkdir sbom/macos
-        workingDirectory: '$(Build.StagingDirectory)'
-    - task: ManifestGeneratorTask@0
-      displayName: Generate Windows Manifest
-      inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/win/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/win/'
-        PackageName: 'DevSkim_CLI'
-        PackageVersion: '$(ReleaseVersion)'
-    - task: ManifestGeneratorTask@0
-      displayName: Generate NetCoreApp Manifest
-      inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/netcoreapp/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/netcoreapp/'
-        PackageName: 'DevSkim_CLI'
-        PackageVersion: '$(ReleaseVersion)'
-    - task: ManifestGeneratorTask@0
-      displayName: Generate Linux Manifest
-      inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/linux/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/linux/'
-        PackageName: 'DevSkim_CLI'
-        PackageVersion: '$(ReleaseVersion)'
-    - task: ManifestGeneratorTask@0
-      displayName: Generate MacOS Manifest
-      inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/macos/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/macos/'
-        PackageName: 'DevSkim_CLI'
-        PackageVersion: '$(ReleaseVersion)'
-    - task: ArchiveFiles@2
-      displayName: Archive Manifests
-      inputs:
-        rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_CLI_Release_Manifests_$(ReleaseVersion).zip'
-        replaceExistingArchive: true
-    - task: PublishBuildArtifacts@1
-      displayName: Pipeline Publish Manifest Archive
-      inputs:
-        PathtoPublish: '$(Build.StagingDirectory)/Manifests'
-        ArtifactName: 'Release Manifests'
+    # - task: GitHubRelease@1
+    #   displayName: Release to GitHub
+    #   inputs:
+    #     gitHubConnection: 'DevSkim'
+    #     repositoryName: 'microsoft/DevSkim'
+    #     action: 'create'
+    #     target: '$(Build.SourceVersion)'
+    #     tagSource: 'userSpecifiedTag'
+    #     tag: 'v$(ReleaseVersion)'
+    #     title: 'DevSkim CLI v$(ReleaseVersion)'
+    #     assets: |
+    #       $(Build.StagingDirectory)/*.zip
+    #       $(Build.StagingDirectory)/HASHES.txt
+    #     changeLogCompareToRelease: 'lastNonDraftRelease'
+    #     changeLogType: 'commitBased'
+    # - task: NuGetCommand@2
+    #   displayName: Publish NuGet Packages
+    #   inputs:
+    #     command: 'push'
+    #     packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
+    #     nuGetFeedType: 'external'
+    #     publishFeedCredentials: 'CST-E Nuget CI'
+    #     verbosityPush: 'Normal'
+    # - task: PowerShell@2
+    #   displayName: Mkdir for Manifests
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: mkdir sbom/win/ ; mkdir sbom/netcoreapp/ ; mkdir sbom/linux ; mkdir sbom/macos
+    #     workingDirectory: '$(Build.StagingDirectory)'
+    # - task: ManifestGeneratorTask@0
+    #   displayName: Generate Windows Manifest
+    #   inputs:
+    #     BuildDropPath: '$(Build.BinariesDirectory)/bin/win/'
+    #     ManifestDirPath: '$(Build.StagingDirectory)/sbom/win/'
+    #     PackageName: 'DevSkim_CLI'
+    #     PackageVersion: '$(ReleaseVersion)'
+    # - task: ManifestGeneratorTask@0
+    #   displayName: Generate NetCoreApp Manifest
+    #   inputs:
+    #     BuildDropPath: '$(Build.BinariesDirectory)/bin/netcoreapp/'
+    #     ManifestDirPath: '$(Build.StagingDirectory)/sbom/netcoreapp/'
+    #     PackageName: 'DevSkim_CLI'
+    #     PackageVersion: '$(ReleaseVersion)'
+    # - task: ManifestGeneratorTask@0
+    #   displayName: Generate Linux Manifest
+    #   inputs:
+    #     BuildDropPath: '$(Build.BinariesDirectory)/bin/linux/'
+    #     ManifestDirPath: '$(Build.StagingDirectory)/sbom/linux/'
+    #     PackageName: 'DevSkim_CLI'
+    #     PackageVersion: '$(ReleaseVersion)'
+    # - task: ManifestGeneratorTask@0
+    #   displayName: Generate MacOS Manifest
+    #   inputs:
+    #     BuildDropPath: '$(Build.BinariesDirectory)/bin/macos/'
+    #     ManifestDirPath: '$(Build.StagingDirectory)/sbom/macos/'
+    #     PackageName: 'DevSkim_CLI'
+    #     PackageVersion: '$(ReleaseVersion)'
+    # - task: ArchiveFiles@2
+    #   displayName: Archive Manifests
+    #   inputs:
+    #     rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_CLI_Release_Manifests_$(ReleaseVersion).zip'
+    #     replaceExistingArchive: true
+    # - task: PublishBuildArtifacts@1
+    #   displayName: Pipeline Publish Manifest Archive
+    #   inputs:
+    #     PathtoPublish: '$(Build.StagingDirectory)/Manifests'
+    #     ArtifactName: 'Release Manifests'
