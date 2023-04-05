@@ -9,8 +9,9 @@ trigger:
     - v/0.6
   paths:
     include:
-    - DevSkim-DotNet
-    - rules
+    - DevSkim-DotNet/Microsoft.DevSkim.CLI/*
+    - DevSkim-DotNet/Microsoft.DevSkim/*
+    - rules/*
 pr: none
 
 resources:
@@ -18,7 +19,8 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.4
+      ref: da/msbuild-option
+      #ref: refs/tags/v1.0.4
 
 stages:
 - stage: Test

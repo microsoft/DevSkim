@@ -10,9 +10,8 @@ pr:
   paths:
     include:
     - Pipelines/vs/devskim-visualstudio-pr.yml
-    - DevSkim-DotNet/Microsoft.DevSkim
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension
-    - rules
+    - DevSkim-DotNet/*
+    - rules/*
 
 resources:
   repositories:
