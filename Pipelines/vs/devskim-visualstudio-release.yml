@@ -37,7 +37,7 @@ stages:
       buildTool: 'msbuild'
       buildConfiguration: 'Release'
       dotnetVersion: '6.0.x'
-      publishFramework: 'net47'
+      targetFramework: 'net47'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Microsoft.DevSkim.VSExtension.csproj'
       projectName: 'DevSkim_VS'
       preBuild:
