@@ -66,16 +66,16 @@ stages:
         TreatStaleSignatureAs: 'Warning'
     - template: nbgv-set-version-steps.yml@templates
     - task: PowerShell@2
-      displayName: Mkdir for Manifests and Packages
+      displayName: Mkdir for Manifests
       inputs:
         targetType: 'inline'
-        script: mkdir sbom/vscode/ ; mkdir sbom/langserver/ ; mkdir packages
+        script: mkdir sbom/client/ ; mkdir sbom/server/
         workingDirectory: '$(Build.StagingDirectory)'
     - task: ManifestGeneratorTask@0
       displayName: Generate VS Code Plugin Client Manifest
       inputs:
         BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/client/dist/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
+        ManifestDirPath: '$(Build.StagingDirectory)/sbom/client/'
         PackageName: 'DevSkim VS Code Plugin Client'
         PackageVersion: '$(ReleaseVersion)'
     - task: ManifestGeneratorTask@0
