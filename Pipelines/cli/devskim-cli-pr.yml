@@ -61,6 +61,7 @@ stages:
     parameters:
       buildConfiguration: 'Release'
       dotnetVersion: '6.0.x'
+      publishFramework: 'net6.0'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       exePath: 'devskim'
@@ -72,6 +73,7 @@ stages:
     parameters:
       buildConfiguration: 'Release'
       dotnetVersion: '6.0.x'
+      publishFramework: 'net6.0'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
