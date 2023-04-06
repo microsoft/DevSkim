@@ -425,7 +425,7 @@ stages:
       displayName: Code Sign Nuget Packages
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/packages'
+        FolderPath: '$(Build.BinariesDirectory)'
         Pattern: '*.nupkg, *.snupkg'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
