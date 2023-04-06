@@ -55,7 +55,7 @@ stages:
         displayName: Move Extension File
         inputs:
           targetType: 'inline'
-          script: 'mv $env:BUILD_STAGINGDIRECTORY/dotnetapp/DevSkim_VS_dotnetapp_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY/extension'
+          script: 'mv $env:BUILD_STAGINGDIRECTORY/bin/dotnetapp/DevSkim_VS_dotnetapp_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY/extension'
       - task: PublishBuildArtifacts@1
         displayName: Pipeline Publish Extension
         inputs:
