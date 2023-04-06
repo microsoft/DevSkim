@@ -149,7 +149,7 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Warning'
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@3
       displayName: Code Sign VSCode Plugin
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
