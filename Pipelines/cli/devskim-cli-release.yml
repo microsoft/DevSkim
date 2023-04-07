@@ -497,8 +497,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          mv $env:BUILD_BINARIESDIRECTORY/packages/*.nupkg $env:BUILD_STAGINGDIRECTORY/
-          mv $env:BUILD_BINARIESDIRECTORY/packages/*.snupkg $env:BUILD_STAGINGDIRECTORY/
+          mv $env:BUILD_BINARIESDIRECTORY/*.nupkg $env:BUILD_STAGINGDIRECTORY/
+          mv $env:BUILD_BINARIESDIRECTORY/*.snupkg $env:BUILD_STAGINGDIRECTORY/
     - task: PublishPipelineArtifact@1
       displayName: Publish Signed Artifacts to Pipeline
       inputs:
