@@ -83,7 +83,7 @@ internal class Program
 							using var manager = await languageServer.WorkDoneManager.Create(
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
-
+							// Intentionally disabled until configuration is implemented for Visual Studio
 							//IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
 							//	new ConfigurationItem
 							//	{
