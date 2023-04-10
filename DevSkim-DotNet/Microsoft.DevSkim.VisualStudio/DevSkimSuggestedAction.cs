@@ -99,7 +99,7 @@ namespace Microsoft.DevSkim.VisualStudio
             }
             if (!_mapping.isSuppression)
             {
-                _span.Snapshot.TextBuffer.Replace(new Microsoft.VisualStudio.Text.Span(_mapping.matchStart, _mapping.replacement.Length), _mapping.replacement);
+                _span.Snapshot.TextBuffer.Replace(new Microsoft.VisualStudio.Text.Span(_mapping.matchStart, _mapping.matchEnd - _mapping.matchStart), _mapping.replacement);
             }
             else
             {
