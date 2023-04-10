@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Microsoft.DevSkim.VisualStudio")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Visual Studio extension for DevSkim")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Microsoft Corporation")]
 [assembly: AssemblyProduct("Microsoft.DevSkim.VisualStudio")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Microsoft Corporation. See LICENSE file in the project root for full license information.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

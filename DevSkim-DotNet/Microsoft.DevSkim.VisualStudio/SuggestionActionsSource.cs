@@ -56,44 +56,6 @@ namespace Microsoft.DevSkim.VisualStudio
                     }
                 }
             }
-            // Code from DevSkim 0.7
-            //if (error != null && error.Actionable)
-            //{
-            //    List<ISuggestedAction> fixActions = new List<ISuggestedAction>();
-            //    var line = error.Span.Snapshot.GetLineFromPosition(error.Span.Start);
-
-            //    ITrackingSpan errorSpan = error.ErrorTrackingSpan;
-
-            //    // Create list of fixes if the rule has them..
-            //    if (error.Rule.Fixes != null)
-            //    {
-            //        fixActions.AddRange(error.Rule.Fixes.Select(fix => new FixSuggestedAction(errorSpan, error.Rule, fix)));
-            //    }
-
-            //    int suppressDays = Settings.GetSettings().SuppressDays;
-
-            //    List<ISuggestedAction> suppActions = new List<ISuggestedAction>();
-            //    var lineSpan = error.LineTrackingSpan;
-
-            //    suppActions.Add(new SuppressSuggestedAction(error, suppressDays));
-            //    suppActions.Add(new SuppressSuggestedAction(error));
-
-            //    // If there is multiple issues on the line, offer "Suppress all"
-            //    if (SkimShim.HasMultipleProblems(lineSpan.GetText(range.Snapshot),
-            //        lineSpan.TextBuffer.ContentType.TypeName))
-            //    {
-            //        suppActions.Add(new SuppressSuggestedAction(error, suppressDays, true));
-            //        suppActions.Add(new SuppressSuggestedAction(error, suppressAll: true));
-            //    }
-
-            //    VSPackage.LogEvent(string.Format("Lightbulb invoked on {0} {1}", error.Rule.Id, error.Rule.Name));
-
-            //    // We don't want empty group and spacer in the pop-up menu
-            //    if (fixActions.Count > 0)
-            //        return new SuggestedActionSet[] { new SuggestedActionSet(fixActions), new SuggestedActionSet(suppActions) };
-            //    else
-            //        return new SuggestedActionSet[] { new SuggestedActionSet(suppActions) };
-            //}
             yield return new SuggestedActionSet(suggestedActions);
         }
 
@@ -126,13 +88,15 @@ namespace Microsoft.DevSkim.VisualStudio
             return Task.Factory.StartNew(() =>
             {
                 var res = TryGetWordUnderCaret(out TextExtent wordExtent);
-                return true;
-                // Check that the extent isn't whitespace
-                // And that there are any code fix mappings filename given for the version of that document given
-                //return (wordExtent.IsSignificant &&
-                //    _bucket_o_suggestions[fileName]
-                //        .Any(x => x[wordExtent.Span.Snapshot.Version.VersionNumber]
-                //            .Any(y => wordExtent.Span.IntersectsWith(y.diagnostic.Range))));
+                if (res && wordExtent.IsSignificant)
+                {
+                    if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out var dictForFile))
+                    {
+                        var potentialFixesForFile = dictForFile[wordExtent.Span.Snapshot.Version.VersionNumber];
+                        return potentialFixesForFile.Any(codeFixMapping => Intersects(codeFixMapping, wordExtent));
+                    }
+                }
+                return false;
             });
         }
 
