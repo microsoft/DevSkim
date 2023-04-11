@@ -2,6 +2,7 @@
 
 using Microsoft.DevSkim.LanguageProtoInterop;
 using Microsoft.Internal.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Experimentation;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -48,11 +49,9 @@ namespace Microsoft.DevSkim.VisualStudio
             {
                 if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out var dictForFile))
                 {
-                    var potentialFixesForFile = dictForFile[wordExtent.Span.Snapshot.Version.VersionNumber];
-                    var filteredFixes = potentialFixesForFile.Where(codeFixMapping => Intersects(codeFixMapping, wordExtent));
-                    foreach (var filtered in filteredFixes)
+                    if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out HashSet<CodeFixMapping> fixes))
                     {
-                        suggestedActions.Add(new DevSkimSuggestedAction(wordExtent.Span, filtered));
+                        suggestedActions.AddRange(fixes.Where(codeFixMapping => Intersects(codeFixMapping, wordExtent)).Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping)));
                     }
                 }
             }
@@ -87,8 +86,10 @@ namespace Microsoft.DevSkim.VisualStudio
                 {
                     if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out var dictForFile))
                     {
-                        var potentialFixesForFile = dictForFile[wordExtent.Span.Snapshot.Version.VersionNumber];
-                        return potentialFixesForFile.Any(codeFixMapping => Intersects(codeFixMapping, wordExtent));
+                        if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out HashSet<CodeFixMapping> fixes))
+                        {
+                            return fixes.Any(codeFixMapping => Intersects(codeFixMapping, wordExtent));
+                        }
                     }
                 }
                 return false;
