@@ -98,25 +98,16 @@
   </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="dotnet publish -f net7.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x86 --sc" />
-  </Target>
-  <!-- Include the published language server binaries for Release -->
-  <Target Name="IncludeLanguageServer" BeforeTargets="GetVsixSourceItems" Condition=" '$(Configuration)' == 'Release' ">
-    <ItemGroup>
-      <Content Include="..\Microsoft.DevSkim.LanguageServer\bin\Release\net7.0\win-x86\publish\*.*" Visible="false">
-        <IncludeInVSIX>true</IncludeInVSIX>
-        <VsixSubPath>Server</VsixSubPath>
-      </Content>
-    </ItemGroup>
+    <Exec Command="dotnet publish -f net7.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
   </Target>
   <!-- Publish the language server binaries for Debug -->
-  <Target Name="BuildLanguageServerDebug" BeforeTargets="IncludeLanguageServerDebug" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command="dotnet publish -f net7.0 -c Debug ..\Microsoft.DevSkim.LanguageServer -r win-x86 --sc" />
+  <Target Name="BuildLanguageServerDebug" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Debug' ">
+    <Exec Command="dotnet publish -f net7.0 -c Debug ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
   </Target>
-  <!-- Include the published language server binaries for Debug -->
-  <Target Name="IncludeLanguageServerDebug" BeforeTargets="GetVsixSourceItems" Condition=" '$(Configuration)' == 'Debug' ">
+  <!-- Include the published language server binaries -->
+  <Target Name="IncludeLanguageServer" BeforeTargets="GetVsixSourceItems">
     <ItemGroup>
-      <Content Include="..\Microsoft.DevSkim.LanguageServer\bin\Debug\net7.0\win-x86\publish\*.*" Visible="false">
+      <Content Include="generatedLanguageServerBinaries\*.*" Visible="false">
         <IncludeInVSIX>true</IncludeInVSIX>
         <VsixSubPath>Server</VsixSubPath>
       </Content>
