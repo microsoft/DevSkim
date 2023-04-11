@@ -3,7 +3,7 @@
     <Metadata>
         <Identity Id="Microsoft.DevSkim.VisualStudio.d1769410-aa48-48f6-b157-da14546b6c28" Version="1.0" Language="en-US" Publisher="Gabe Stocco" />
         <DisplayName>Microsoft.DevSkim.VisualStudio</DisplayName>
-        <Description>Empty VSIX Project.</Description>
+        <Description>DevSkim Visual Studio 2022 Extension</Description>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
