@@ -3,6 +3,7 @@ using System.Text;
 using MediatR;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim;
+using Microsoft.DevSkim.LanguageProtoInterop;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
@@ -70,7 +71,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     CodeFix fix = issue.Rule.Fixes[i];
                     if (fix.Replacement is { })
                     {
-                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToString(), $"Replace with {fix.Replacement}"));
+                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToUri(), $"Replace with {fix.Replacement}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, false));
                     }
                 }
                 // Add suppression options
@@ -79,13 +80,13 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
                     // TODO: Handle multiple suppressions on one line?
                     string proposedSuppression = GenerateSuppression(filename, issue.Rule.Id);
-                    codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedSuppression}", uri.ToString(), $"Suppress {issue.Rule.Id}"));
+                    codeFixes.Add(new CodeFixMapping(diag, $" {proposedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
 
                     if (StaticScannerSettings.SuppressionDuration > -1)
                     {
                         DateTime expiration = DateTime.Now.AddDays(StaticScannerSettings.SuppressionDuration);
                         string proposedTimedSuppression = GenerateSuppression(filename, issue.Rule.Id, expiration);
-                        codeFixes.Add(new CodeFixMapping(diag, $"{text[issue.Boundary.Index..(issue.Boundary.Index + issue.Boundary.Length)]} {proposedTimedSuppression}", uri.ToString(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}"));
+                        codeFixes.Add(new CodeFixMapping(diag, $" {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
                     }
                 }
             }
@@ -100,7 +101,7 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
         });
         foreach (CodeFixMapping codeFixMapping in codeFixes.ToArray())
         {
-            _facade.TextDocument.SendNotification("devskim/codefixmapping", codeFixMapping);
+            _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, codeFixMapping);
         }
 
         return Unit.Value;

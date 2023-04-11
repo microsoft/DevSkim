@@ -15,13 +15,13 @@
         internal static string ReviewerName { get; set; } = string.Empty;
         // Suppression duration in days
         internal static int SuppressionDuration { get; set; } = 30;
-        internal static bool IgnoreDefaultRuleSet { get; set; }
-        internal static bool ScanOnOpen { get; set; }
-        internal static bool ScanOnSave { get; set; }
-        internal static bool ScanOnChange { get; set; }
-        internal static bool RemoveFindingsOnClose { get; set; }
+        internal static bool IgnoreDefaultRuleSet { get; set; } = false;
+        internal static bool ScanOnOpen { get; set; } = true;
+        internal static bool ScanOnSave { get; set; } = true;
+        internal static bool ScanOnChange { get; set; } = true;
+        internal static bool RemoveFindingsOnClose { get; set; } = true;
         internal static DevSkimRuleSet RuleSet { get; set; } = new DevSkimRuleSet();
         internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = new DevSkimRuleProcessorOptions();
-        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(new DevSkimRuleSet(), new DevSkimRuleProcessorOptions());
+        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(), new DevSkimRuleProcessorOptions());
     }
 }

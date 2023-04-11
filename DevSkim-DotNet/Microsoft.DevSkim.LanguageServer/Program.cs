@@ -83,14 +83,14 @@ internal class Program
 							using var manager = await languageServer.WorkDoneManager.Create(
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
-
-							IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
-								new ConfigurationItem
-								{
-									Section = ConfigHelpers.Section
-								}
-							).ConfigureAwait(false);
-							ConfigHelpers.SetScannerSettings(configuration);
+							// Intentionally disabled until configuration is implemented for Visual Studio
+							//IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
+							//	new ConfigurationItem
+							//	{
+							//		Section = ConfigHelpers.Section
+							//	}
+							//).ConfigureAwait(false);
+							//ConfigHelpers.SetScannerSettings(configuration);
 							Log.Logger.Debug("Listening for client events...");
 						}
 					)

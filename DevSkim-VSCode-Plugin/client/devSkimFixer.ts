@@ -47,7 +47,15 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 	{
 		const fix = new vscode.CodeAction(codeFix.friendlyString, vscode.CodeActionKind.QuickFix);
 		fix.edit = new vscode.WorkspaceEdit();
-		fix.edit.replace(document.uri, diagnostic.range, codeFix.replacement);
+		if (!codeFix.isSuppression)
+		{
+			fix.edit.replace(document.uri, diagnostic.range, codeFix.replacement);
+		}
+		else
+		{
+			const line = document.lineAt(diagnostic.range.end.line);
+			fix.edit.insert(document.uri, line.range.end, codeFix.replacement)
+		}
 		return fix;
 	}
 }

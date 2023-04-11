@@ -5,11 +5,17 @@ export class CodeFixMapping
 	replacement: string;
 	fileName: string;
 	friendlyString: string;
-	constructor(diagnostic: any, replacement: string, fileName: string, friendlyString: string)
+	matchStart: string;
+	matchEnd: string;
+	isSuppression: boolean;
+	constructor(diagnostic: any, replacement: string, fileName: string, friendlyString: string, matchStart: string, matchEnd: string, isSuppression: boolean)
 	{
 		this.diagnostic = diagnostic;
 		this.replacement = replacement;
 		this.fileName = fileName;
 		this.friendlyString = friendlyString;
+		this.matchStart = matchStart;
+		this.matchEnd = matchEnd;
+		this.isSuppression = isSuppression;
 	}
 }
