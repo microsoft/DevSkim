@@ -74,11 +74,6 @@ namespace Microsoft.DevSkim.VisualStudio
             return false;
         }
 
-        private bool Intersects(int start, int end, SnapshotSpan span)
-        {
-            return (span.Start.Position == start && span.End.Position == end);
-        }
-
         // Map FileName to Mapping of FileVersion to Potential fixes
         // This should come from DevSkimFixMessageTarget or StaticScannerSettings
         private Dictionary<string, Dictionary<int, HashSet<CodeFixMapping>>> _bucket_o_suggestions = new Dictionary<string, Dictionary<int, HashSet<CodeFixMapping>>>();
