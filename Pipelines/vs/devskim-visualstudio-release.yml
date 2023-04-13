@@ -151,37 +151,37 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Extension'
-    # - task: PowerShell@2
-    #   displayName: Move VS Marketplace Manifest
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
-    # - task: PowerShell@2
-    #   displayName: Move Readme-gallery.txt
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Content/readme-gallery.txt $env:BUILD_STAGINGDIRECTORY/'
-    # - task: PowerShell@2
-    #   displayName: Deploy to VS Marketplace
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #       Install-Module VSSetup -Force
-    #       $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
-    #       $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-    #       & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/vs-manifest.json -personalAccessToken $(VS_Token) -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
-    #     workingDirectory: '$(Build.StagingDirectory)'
-    # - task: GitHubRelease@1
-    #   displayName: Release to GitHub
-    #   inputs:
-    #     gitHubConnection: 'DevSkim'
-    #     repositoryName: 'microsoft/DevSkim'
-    #     action: 'create'
-    #     target: '$(Build.SourceVersion)'
-    #     tagSource: 'userSpecifiedTag'
-    #     tag: 'v$(ReleaseVersion)'
-    #     title: 'DevSkim VS Extension v$(ReleaseVersion)'
-    #     assets: |
-    #       $(Build.StagingDirectory)/*.vsix
-    #     changeLogCompareToRelease: 'lastNonDraftRelease'
-    #     changeLogType: 'commitBased'
+    - task: PowerShell@2
+      displayName: Move VS Marketplace Manifest
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
+    - task: PowerShell@2
+      displayName: Move Readme-gallery.txt
+      inputs:
+        targetType: 'inline'
+        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Content/readme-gallery.txt $env:BUILD_STAGINGDIRECTORY/'
+    - task: PowerShell@2
+      displayName: Deploy to VS Marketplace
+      inputs:
+        targetType: 'inline'
+        script: |
+          Install-Module VSSetup -Force
+          $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
+          $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+          & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/vs-manifest.json -personalAccessToken $(VS_Token) -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
+        workingDirectory: '$(Build.StagingDirectory)'
+    - task: GitHubRelease@1
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: 'DevSkim'
+        repositoryName: 'microsoft/DevSkim'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecifiedTag'
+        tag: 'v$(ReleaseVersion)'
+        title: 'DevSkim VS Extension v$(ReleaseVersion)'
+        assets: |
+          $(Build.StagingDirectory)/*.vsix
+        changeLogCompareToRelease: 'lastNonDraftRelease'
+        changeLogType: 'commitBased'
