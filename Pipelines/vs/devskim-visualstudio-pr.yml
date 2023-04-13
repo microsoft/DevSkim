@@ -1,0 +1,63 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VisualStudio_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger: none
+pr:
+  branches:
+    include:
+    - v/0.6
+  paths:
+    include:
+    - Pipelines/vs/devskim-visualstudio-pr.yml
+    - DevSkim-DotNet/*
+    - rules/*
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      ref: refs/tags/v1.0.5
+
+stages:
+- stage: SDL
+  dependsOn: []
+  jobs:
+  - template: sdl-job.yml@templates
+    parameters:
+      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
+
+- stage: Build
+  dependsOn: []
+  jobs:
+  - template: dotnet-build-job.yml@templates
+    parameters:
+      buildTool: 'msbuild'
+      buildConfiguration: 'Release'
+      dotnetVersion: '6.0.x'
+      targetFramework: 'net47'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Microsoft.DevSkim.VSExtension.csproj'
+      projectName: 'DevSkim_VS'
+      preBuild:
+      - template: nbgv-set-version-steps.yml@templates
+      - script: 'dotnet RulePacker/devskim.dll pack rules DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json'
+        displayName: 'Pack DevSkim Rules'
+      onEnd:
+      - task: PowerShell@2
+        displayName: Mkdir for Extension
+        inputs:
+          targetType: 'inline'
+          script: mkdir extension
+          workingDirectory: '$(Build.StagingDirectory)'
+      - task: PowerShell@2
+        displayName: Move Extension File
+        inputs:
+          targetType: 'inline'
+          script: 'mv $env:BUILD_STAGINGDIRECTORY/bin/dotnetapp/DevSkim_VS_dotnetapp_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY/extension'
+      - task: PublishBuildArtifacts@1
+        displayName: Pipeline Publish Extension
+        inputs:
+          PathtoPublish: '$(Build.StagingDirectory)/extension'
+          ArtifactName: 'Unsigned_Extension'
+          publishLocation: 'Container'
