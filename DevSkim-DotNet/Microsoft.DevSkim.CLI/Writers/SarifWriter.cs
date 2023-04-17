@@ -50,6 +50,8 @@ namespace Microsoft.DevSkim.CLI.Writers
                 if (TextWriter is StreamWriter streamWriter)
                 {
                     sarifLog.Save(streamWriter);
+                    streamWriter.Flush();
+                    streamWriter.Close();
                 }
                 else
                 {

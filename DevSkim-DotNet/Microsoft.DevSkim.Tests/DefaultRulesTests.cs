@@ -30,7 +30,8 @@ namespace Microsoft.DevSkim.Tests
             var analyzer = new Analyzer();
             analyzer.SetOperation(new ScopedRegexOperation(analyzer));
             analyzer.SetOperation(new WithinOperation(analyzer));
-            Assert.IsFalse(analyzer.EnumerateRuleIssues(rules.GetAllOatRules()).Any());
+            var issues = analyzer.EnumerateRuleIssues(rules.GetAllOatRules()).ToList();
+            Assert.AreEqual(0, issues.Count);
         }
 
         static RuleProcessor processor = new RuleProcessor(new RuleSet());

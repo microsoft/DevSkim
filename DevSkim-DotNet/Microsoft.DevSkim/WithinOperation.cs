@@ -148,17 +148,25 @@ namespace Microsoft.DevSkim
                 {
                     yield return new Violation($"Either FindingOnly, SameLineOnly or some Combination of Before and After is required", rule, clause);
                 }
-                if (!wc.Data?.Any() ?? true)
+                if (wc.SubClause is null)
                 {
-                    yield return new Violation($"Must provide some regexes as data.", rule, clause);
-                    yield break;
+                    yield return new Violation("WithinClause must have a SubClause to execute", rule, clause);
                 }
-                foreach (var datum in wc.Data ?? new List<string>())
+                else
                 {
-                    if (regexEngine.StringToRegex(datum, RegexOptions.None) is null)
+                    var subOperation = _analyzer.GetOperation(wc.SubClause.Operation, wc.SubClause.CustomOperation);
+                    if (subOperation is null)
                     {
-                        yield return new Violation($"Regex {datum} in Rule {rule.Name} Clause {clause.Label ?? rule.Clauses.IndexOf(clause).ToString(CultureInfo.InvariantCulture)} is not a valid regex.", rule, clause);
+                        yield return new Violation($"WithinClause SubOperation {wc.SubClause.Operation}:{wc.SubClause.CustomOperation} is not activated in the provided analyzer.", rule, clause);
                     }
+                    else
+                    {
+                        foreach (var violation in subOperation.ValidationDelegate(rule, wc.SubClause))
+                        {
+                            yield return violation;
+                        }
+                    }
+                    
                 }
             }
             else
