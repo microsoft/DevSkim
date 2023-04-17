@@ -23,4 +23,16 @@
       <ProjectReference Include="..\Microsoft.DevSkim\Microsoft.DevSkim.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="rules\custom\quickfix.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="rules\invalid\invalid_todo.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="rules\valid\devskim-rules.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
