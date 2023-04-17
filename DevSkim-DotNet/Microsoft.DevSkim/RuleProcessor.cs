@@ -122,22 +122,35 @@ namespace Microsoft.DevSkim
 
             foreach (var capture in analyzer.GetCaptures(rules, textContainer))
             {
-                // If we have within captures it means we had conditions, and we only want the conditioned captures
-                var withinCaptures = capture.Captures.Where(x => x.Clause is WithinClause);
-                if (withinCaptures.Any())
+                // We dont want the within captures
+                List<TypedClauseCapture<List<Boundary>>> regularCaptures = new List<TypedClauseCapture<List<Boundary>>>();
+                List<TypedClauseCapture<List<Boundary>>> withinCaptures = new List<TypedClauseCapture<List<Boundary>>>();
+                foreach (var regularCapture in capture.Captures)
                 {
-                    foreach (var cap in withinCaptures)
+                    if (regularCapture.Clause is ScopedRegexClause)
                     {
-                        ProcessBoundary(cap);
+                        if (regularCapture is TypedClauseCapture<List<Boundary>> typedClauseCapture)
+                        {
+                            regularCaptures.Add(typedClauseCapture);
+                        }
+                    }
+
+                    if (regularCapture.Clause is WithinClause)
+                    {
+                        if (regularCapture is TypedClauseCapture<List<Boundary>> typedClauseCapture)
+                        {
+                            withinCaptures.Add(typedClauseCapture);
+                        }
                     }
                 }
-                // Otherwise we can use all the captures
-                else
+                // Filter out boundaries that did not match all conditions.
+                foreach (var regexCapture in regularCaptures)
                 {
-                    foreach (var cap in capture.Captures)
-                    {
-                        ProcessBoundary(cap);
-                    }
+                    regexCapture.Result = regexCapture.Result.Where(boundary => withinCaptures.All(withinCap => withinCap.Result.Contains(boundary))).ToList();
+                }
+                foreach (var boundary in regularCaptures)
+                {
+                    ProcessBoundary(boundary);
                 }
 
                 void ProcessBoundary(ClauseCapture cap)
