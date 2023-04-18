@@ -16,7 +16,7 @@ namespace Microsoft.DevSkim.Tests
         public void ExecuteSuppressions(bool preferMultiLine)
         {
             (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;
-            http://", "c");
+            http://contoso.com", "c");
 
             var opts = new SuppressionCommandOptions
             {
@@ -42,7 +42,7 @@ namespace Microsoft.DevSkim.Tests
         [DataRow(false)]
         public void ExecuteMultipleSuppressionsInOneLine(bool preferMultiLineFormat)
         {
-            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://", "c");
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://contoso.com", "c");
 
             var opts = new SuppressionCommandOptions
             {
@@ -66,7 +66,7 @@ namespace Microsoft.DevSkim.Tests
         [DataRow(false)]
         public void ExecuteSuppressionsOnlyForSpecifiedRules(bool preferMultiLineFormat)
         {
-            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://", "c");
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://contoso.com", "c");
 
             var opts = new SuppressionCommandOptions
             {
@@ -91,7 +91,7 @@ namespace Microsoft.DevSkim.Tests
         [DataRow(false)]
         public void ExecuteSuppressionsWithExpiration(bool preferMultiLineFormat)
         {
-            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://", "c");
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;http://contoso.com", "c");
 
             var opts = new SuppressionCommandOptions
             {
@@ -180,7 +180,7 @@ namespace Microsoft.DevSkim.Tests
         {
             (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5 \
             Test;
-            http://", "c");
+            http://contoso.com", "c");
 
             var opts = new SuppressionCommandOptions
             {
