@@ -34,8 +34,8 @@
         "rule_info": "DS137138.md",
         "patterns": [
             {
-                "pattern": "http:\/\/",
-                "type": "substring",
+                "pattern": "http://[^\\s^/]+",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
@@ -59,25 +59,25 @@
                 "pattern" :
                 {
                     "pattern": "http://localhost",
-                    "type": "substring",
+                    "type": "regex",
                     "scopes": [
                         "code"
                     ]
                 },
                 "negate_finding": true,
-                "search_in": "same-line"
+                "search_in": "finding-only"
             },
             {
                 "pattern" :
                 {
                     "pattern": "http://127.0.0.1",
-                    "type": "substring",
+                    "type": "regex",
                     "scopes": [
                         "code"
                     ]
                 },
                 "negate_finding": true,
-                "search_in": "same-line"
+                "search_in": "finding-only"
             }
         ],
         "fix_its": [
