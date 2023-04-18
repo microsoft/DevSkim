@@ -74,5 +74,48 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsTrue(r.Recommendation.Contains("strcpy_s"), "Invalid replacement");
             Assert.IsTrue(r.RuleInfo.Contains(r.Id), "Invalid ruleinfo");
         }
+
+        [TestMethod]
+        public void ConditionOnlyAppliesToOneFinding()
+        {
+            RuleSet ruleSet = new RuleSet();
+            ruleSet.AddRule(new Rule("TestWithin")
+            {
+                Confidence = Confidence.Medium,
+                Severity = Severity.Critical,
+                AppliesTo = new List<string> { "csharp" },
+                Patterns = new List<SearchPattern>
+                {
+                    new SearchPattern()
+                    {
+                        Pattern = "http://[^\\^\\s]+",
+                        PatternType = PatternType.Regex
+                    }
+                },
+                Conditions = new List<SearchCondition> 
+                { 
+                    new SearchCondition() 
+                    {
+                        NegateFinding = true,
+                        Pattern = new SearchPattern()
+                        {
+                            Pattern = "http://localhost",
+                            PatternType = PatternType.Regex
+                        },
+                        SearchIn = "finding-only"
+                    } 
+                }
+            });
+            RuleProcessor processor = new RuleProcessor(ruleSet);
+            string testString = 
+@"http://localhost
+http://contoso.com";
+
+            Issue[] issues = processor.Analyze(testString, "csharp");
+            Assert.AreEqual(1, issues.Length, "Only one finding should be flagged");
+            Issue i = issues[0];
+            Assert.AreEqual(2, i.StartLocation.Line);
+            Assert.AreEqual(1, i.StartLocation.Column);
+        }
     }
 }
