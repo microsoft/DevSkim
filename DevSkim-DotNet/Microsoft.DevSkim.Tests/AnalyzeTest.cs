@@ -21,7 +21,7 @@ namespace Microsoft.DevSkim.Tests
             var basePath = Path.GetTempPath();
             var oneUpPath = Directory.GetParent(basePath).FullName;
             using var file = File.Open(tempFileName, FileMode.Create);
-            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://\n"));
+            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://contoso.com\n"));
             file.Close();
 
             var opts = new AnalyzeCommandOptions()
@@ -200,7 +200,7 @@ namespace Microsoft.DevSkim.Tests
             // GetTempFileName actually makes the file
             File.Delete(outFileName);
             using var file = File.Open(tempFileName, FileMode.Create);
-            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://\n"));
+            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://contoso.com\n"));
             file.Close();
 
             var opts = new AnalyzeCommandOptions()
@@ -230,7 +230,7 @@ namespace Microsoft.DevSkim.Tests
             // GetTempFileName actually makes the file
             File.Delete(outFileName);
             using var file = File.Open(tempFileName, FileMode.Create);
-            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://\n"));
+            file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://contoso.com\n"));
             file.Close();
 
             var opts = new AnalyzeCommandOptions()
