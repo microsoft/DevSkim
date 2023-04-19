@@ -97,7 +97,8 @@ namespace Microsoft.DevSkim
 
 
         /// <summary>
-        ///     Generate suppression text for a given rule ID and language
+        ///     Generate suppression text for a given rule ID and language. 
+        ///     If the comment style for the language is not specified, returns null.
         /// </summary>
         /// <param name="sourceLanguage">The target language (to choose the right comment style)</param>
         /// <param name="rulesId">The ID for the rule to suppress</param>
@@ -105,32 +106,36 @@ namespace Microsoft.DevSkim
         /// <param name="duration">Duration in days for suppression. Default 0 (unlimited)</param>
         /// <param name="reviewerName">Optional name for the manual reviewer applying suppressions</param>
         /// <param name="languages">Optional language specifications to use</param>
-        /// <returns></returns>
+        /// <returns>A comment suppression or null if one could not be generated</returns>
         public static string GenerateSuppression(string sourceLanguage, string rulesId, bool preferMultiLine = false, int duration = 0, string? reviewerName = null, Languages? languages = null)
         {
             languages ??= DevSkimLanguages.LoadEmbedded();
             string inline = languages.GetCommentInline(sourceLanguage);
-            string expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
-            StringBuilder sb = new StringBuilder();
-            (string prefix, string suffix) = (preferMultiLine || string.IsNullOrEmpty(inline)) ?
-                (languages.GetCommentPrefix(sourceLanguage), languages.GetCommentSuffix(sourceLanguage)) :
-                (languages.GetCommentInline(sourceLanguage), string.Empty);
+            if (languages.FromFileNameOut(sourceLanguage, out LanguageInfo info))
+            {
+                string expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
+                StringBuilder sb = new StringBuilder();
+                (string prefix, string suffix) = (preferMultiLine || string.IsNullOrEmpty(inline)) ?
+                    (languages.GetCommentPrefix(info.Name), languages.GetCommentSuffix(info.Name)) :
+                    (languages.GetCommentInline(info.Name), string.Empty);
 
-            sb.Append($"{prefix} DevSkim: ignore {rulesId}");
+                sb.Append($"{prefix} DevSkim: ignore {rulesId}");
 
-            if (!string.IsNullOrEmpty(expiration))
-            {
-                sb.Append($" until {expiration}");
+                if (!string.IsNullOrEmpty(expiration))
+                {
+                    sb.Append($" until {expiration}");
+                }
+                if (!string.IsNullOrEmpty(reviewerName))
+                {
+                    sb.Append($" by {reviewerName}");
+                }
+                if (!string.IsNullOrEmpty(suffix))
+                {
+                    sb.Append($" {suffix}");
+                }
+                return sb.ToString();
             }
-            if (!string.IsNullOrEmpty(reviewerName))
-            {
-                sb.Append($" by {reviewerName}");
-            }
-            if (!string.IsNullOrEmpty(suffix))
-            {
-                sb.Append($" {suffix}");
-            }
-            return sb.ToString();
+            return string.Empty;
         }
     }
 }

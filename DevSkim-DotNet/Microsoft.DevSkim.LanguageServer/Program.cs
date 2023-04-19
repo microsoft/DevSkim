@@ -12,13 +12,12 @@ internal class Program
 {
 	static async Task Main(string[] args)
 	{
-		while (!Debugger.IsAttached)
-		{
-			await Task.Delay(100);
-		}
 #if DEBUG
-		
-		Log.Logger = new LoggerConfiguration()
+        //while (!Debugger.IsAttached)
+        //{
+        //    await Task.Delay(100);
+        //}
+        Log.Logger = new LoggerConfiguration()
 			.Enrich.FromLogContext()
 			.WriteTo.File("devskim-server-log.txt", rollingInterval: RollingInterval.Day)
 			.MinimumLevel.Verbose()

@@ -81,20 +81,22 @@ namespace Microsoft.DevSkim.CLI.Commands
                         if (issueRecord.PhysicalLocation is { })
                         {
                             Region region = issueRecord.PhysicalLocation.Region;
-                            int zbStartLine = region.StartLine - 1;
-                            bool isMultiline = theContent[zbStartLine].EndsWith(@"\");
+                            int zeroBasedStartLine = region.StartLine - 1;
+                            bool isMultiline = theContent[zeroBasedStartLine].EndsWith(@"\");
                             string ignoreComment = DevSkimRuleProcessor.GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
-
-                            foreach (string line in theContent[currLine..zbStartLine])
+                            if (!string.IsNullOrEmpty(ignoreComment))
                             {
-                                sb.Append($"{line}{Environment.NewLine}");
+                                foreach (string line in theContent[currLine..zeroBasedStartLine])
+                                {
+                                    sb.Append($"{line}{Environment.NewLine}");
+                                }
+
+                                string suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zeroBasedStartLine]}{Environment.NewLine}" :
+                                    $"{theContent[zeroBasedStartLine]} {ignoreComment}{Environment.NewLine}";
+                                sb.Append(suppressionComment);
                             }
 
-                            string suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" :
-                                $"{theContent[zbStartLine]} {ignoreComment}{Environment.NewLine}";
-                            sb.Append(suppressionComment);
-
-                            currLine = zbStartLine + 1;
+                            currLine = zeroBasedStartLine + 1;
                         }
                     }
 
