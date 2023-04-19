@@ -71,7 +71,8 @@ internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
                     CodeFix fix = issue.Rule.Fixes[i];
                     if (fix.Replacement is { })
                     {
-                        codeFixes.Add(new CodeFixMapping(diag, fix.Replacement, uri.ToUri(), $"Replace with {fix.Replacement}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, false));
+                        var potentialFix = DevSkimRuleProcessor.Fix(text.Substring(issue.Boundary.Index, issue.Boundary.Length), fix);
+                        codeFixes.Add(new CodeFixMapping(diag, potentialFix, uri.ToUri(), $"Replace with {potentialFix}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, false));
                     }
                 }
                 // Add suppression options
