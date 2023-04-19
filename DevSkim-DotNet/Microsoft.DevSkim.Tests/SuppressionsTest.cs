@@ -11,6 +11,67 @@ namespace Microsoft.DevSkim.Tests
     public class SuppressionTest
     {
         [DataTestMethod]
+        [DataRow("", 30)]
+        [DataRow("Contoso", 30)]
+        public void ExecuteSuppressionsWithReviewerNameAndDate(string reviewerName, int duration)
+        {
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;
+            http://contoso.com", "c");
+
+            SuppressionCommandOptions opts = new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true,
+                Reviewer = reviewerName,
+                Duration = duration
+            };
+            DateTime expectedExpiration = DateTime.Now.AddDays(duration);
+            int resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            string[] result = File.ReadAllLines(sourceFile);
+            Suppression firstLineSuppression = new Suppression(result[0]);
+            Assert.IsTrue(firstLineSuppression.IsInEffect);
+            Assert.AreEqual("DS126858", firstLineSuppression.GetSuppressedIds.First());
+            Assert.AreEqual(reviewerName, firstLineSuppression.Reviewer);
+            Assert.AreEqual(expectedExpiration.Date, firstLineSuppression.ExpirationDate);
+            Suppression secondLineSuppression = new Suppression(result[1]);
+            Assert.IsTrue(secondLineSuppression.IsInEffect);
+            Assert.AreEqual("DS137138", secondLineSuppression.GetSuppressedIds.First());
+            Assert.AreEqual(reviewerName, secondLineSuppression.Reviewer);
+            Assert.AreEqual(expectedExpiration.Date, secondLineSuppression.ExpirationDate);
+        }
+        
+        [DataTestMethod]
+        [DataRow("")]
+        [DataRow("Contoso")]
+        public void ExecuteSuppressionsWithReviewerName(string reviewerName)
+        {
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(@"MD5;
+            http://contoso.com", "c");
+
+            SuppressionCommandOptions opts = new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true,
+                Reviewer = reviewerName
+            };
+
+            int resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            string[] result = File.ReadAllLines(sourceFile);
+            Suppression firstLineSuppression = new Suppression(result[0]);
+            Assert.IsTrue(firstLineSuppression.IsInEffect);
+            Assert.AreEqual("DS126858", firstLineSuppression.GetSuppressedIds.First());
+            Assert.AreEqual(reviewerName, firstLineSuppression.Reviewer);
+            Suppression secondLineSuppression = new Suppression(result[1]);
+            Assert.IsTrue(secondLineSuppression.IsInEffect);
+            Assert.AreEqual("DS137138", secondLineSuppression.GetSuppressedIds.First());
+            Assert.AreEqual(reviewerName, secondLineSuppression.Reviewer);
+        }
+        
+        [DataTestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void ExecuteSuppressions(bool preferMultiLine)
