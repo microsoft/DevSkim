@@ -179,7 +179,7 @@ stages:
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: 'userSpecifiedTag'
-        tag: 'v$(ReleaseVersion)'
+        tag: 'VS v$(ReleaseVersion)'
         title: 'DevSkim VS Extension v$(ReleaseVersion)'
         assets: |
           $(Build.StagingDirectory)/*.vsix
