@@ -13,18 +13,18 @@ namespace Microsoft.DevSkim.Tests
         [TestMethod]
         public void RelativePathTest()
         {
-            var tempFileName = $"{Path.GetTempFileName()}.cs";
-            var outFileName = Path.GetTempFileName();
+            string tempFileName = $"{Path.GetTempFileName()}.cs";
+            string outFileName = Path.GetTempFileName();
             // GetTempFileName actually makes the file
             File.Delete(outFileName);
 
-            var basePath = Path.GetTempPath();
-            var oneUpPath = Directory.GetParent(basePath).FullName;
-            using var file = File.Open(tempFileName, FileMode.Create);
+            string basePath = Path.GetTempPath();
+            string oneUpPath = Directory.GetParent(basePath).FullName;
+            using FileStream file = File.Open(tempFileName, FileMode.Create);
             file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://contoso.com\n"));
             file.Close();
 
-            var opts = new AnalyzeCommandOptions()
+            AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
             {
                 Path = tempFileName,
                 OutputFile = outFileName,
@@ -33,12 +33,12 @@ namespace Microsoft.DevSkim.Tests
             };
             new AnalyzeCommand(opts).Run();
 
-            var resultsFile = SarifLog.Load(outFileName);
+            SarifLog resultsFile = SarifLog.Load(outFileName);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
             Assert.AreEqual(Path.GetFileName(tempFileName), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.ToString());
 
-            var outFileName2 = Path.GetTempFileName();
+            string outFileName2 = Path.GetTempFileName();
 
             opts = new AnalyzeCommandOptions()
             {
@@ -54,7 +54,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
             Assert.AreEqual(new Uri(tempFileName).GetFilePath(), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath());
 
-            var outFileName3 = Path.GetTempFileName();
+            string outFileName3 = Path.GetTempFileName();
             
             opts = new AnalyzeCommandOptions()
             {
@@ -70,7 +70,7 @@ namespace Microsoft.DevSkim.Tests
             // If no base path is specified, the base path is rooted in by the Path argument
             Assert.AreEqual(Path.GetFileName(tempFileName), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath());
 
-            var outFileName4 = Path.GetTempFileName();
+            string outFileName4 = Path.GetTempFileName();
 
             opts = new AnalyzeCommandOptions()
             {
@@ -147,24 +147,24 @@ namespace Microsoft.DevSkim.Tests
         [DataTestMethod]
         public void TestCustomLanguageAndComments(string commentFileContentIn, string languageFileContentIn, string ruleFileContentIn, int expectedExitCode, int expectedNumResults)
         {
-            var tempFileName = PathHelper.GetRandomTempFile("xx");
-            var languagesFileName = PathHelper.GetRandomTempFile("json");
-            var commentsFileName = PathHelper.GetRandomTempFile("json");
-            var ruleFileName = PathHelper.GetRandomTempFile("json");
-            var outFileName = PathHelper.GetRandomTempFile("sarif");
-            using var file = File.Open(tempFileName, FileMode.Create);
+            string tempFileName = PathHelper.GetRandomTempFile("xx");
+            string languagesFileName = PathHelper.GetRandomTempFile("json");
+            string commentsFileName = PathHelper.GetRandomTempFile("json");
+            string ruleFileName = PathHelper.GetRandomTempFile("json");
+            string outFileName = PathHelper.GetRandomTempFile("sarif");
+            using FileStream file = File.Open(tempFileName, FileMode.Create);
             file.Write(Encoding.UTF8.GetBytes(contentToTest));
             file.Close();
-            using var languageFile = File.Open(languagesFileName, FileMode.Create);
+            using FileStream languageFile = File.Open(languagesFileName, FileMode.Create);
             languageFile.Write(Encoding.UTF8.GetBytes(languageFileContentIn));
             languageFile.Close();
-            using var commentsFile = File.Open(commentsFileName, FileMode.Create);
+            using FileStream commentsFile = File.Open(commentsFileName, FileMode.Create);
             commentsFile.Write(Encoding.UTF8.GetBytes(commentFileContentIn));
             commentsFile.Close();
-            using var ruleFile = File.Open(ruleFileName, FileMode.Create);
+            using FileStream ruleFile = File.Open(ruleFileName, FileMode.Create);
             ruleFile.Write(Encoding.UTF8.GetBytes(ruleFileContentIn));
             ruleFile.Close();
-            var opts = new AnalyzeCommandOptions()
+            AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
             {
                 Path = tempFileName,
                 OutputFile = outFileName,
@@ -175,12 +175,12 @@ namespace Microsoft.DevSkim.Tests
                 IgnoreDefaultRules = true
             };
             new AnalyzeCommand(opts).Run();
-            
-            var resultCode = new AnalyzeCommand(opts).Run();
+
+            int resultCode = new AnalyzeCommand(opts).Run();
             Assert.AreEqual(expectedExitCode, resultCode);
             if (expectedExitCode == 0)
             {
-                var resultsFile = SarifLog.Load(outFileName);
+                SarifLog resultsFile = SarifLog.Load(outFileName);
                 Assert.AreEqual(1, resultsFile.Runs.Count);
                 Assert.AreEqual(expectedNumResults, resultsFile.Runs[0].Results.Count);
                 if (expectedNumResults > 0)
@@ -195,15 +195,15 @@ namespace Microsoft.DevSkim.Tests
         [DataRow("DS137138","DS137138")]
         public void TestFilterByIds(string idToLimitTo, string idToExpect)
         {
-            var tempFileName = $"{Path.GetTempFileName()}.cs";
-            var outFileName = Path.GetTempFileName();
+            string tempFileName = $"{Path.GetTempFileName()}.cs";
+            string outFileName = Path.GetTempFileName();
             // GetTempFileName actually makes the file
             File.Delete(outFileName);
-            using var file = File.Open(tempFileName, FileMode.Create);
+            using FileStream file = File.Open(tempFileName, FileMode.Create);
             file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://contoso.com\n"));
             file.Close();
 
-            var opts = new AnalyzeCommandOptions()
+            AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
             {
                 Path = tempFileName,
                 OutputFile = outFileName,
@@ -211,10 +211,10 @@ namespace Microsoft.DevSkim.Tests
                 RuleIds = new []{ idToLimitTo }
             };
             new AnalyzeCommand(opts).Run();
-            
-            var resultCode = new AnalyzeCommand(opts).Run();
+
+            int resultCode = new AnalyzeCommand(opts).Run();
             Assert.AreEqual(0, resultCode);
-            var resultsFile = SarifLog.Load(outFileName);
+            SarifLog resultsFile = SarifLog.Load(outFileName);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(1, resultsFile.Runs[0].Results.Count);
             Assert.AreEqual(idToExpect, resultsFile.Runs[0].Results[0].RuleId);
@@ -225,15 +225,15 @@ namespace Microsoft.DevSkim.Tests
         [DataRow("DS137138","DS126858")]
         public void TestIgnoreIds(string idToIgnore, string idToExpect)
         {
-            var tempFileName = $"{Path.GetTempFileName()}.cs";
-            var outFileName = Path.GetTempFileName();
+            string tempFileName = $"{Path.GetTempFileName()}.cs";
+            string outFileName = Path.GetTempFileName();
             // GetTempFileName actually makes the file
             File.Delete(outFileName);
-            using var file = File.Open(tempFileName, FileMode.Create);
+            using FileStream file = File.Open(tempFileName, FileMode.Create);
             file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://contoso.com\n"));
             file.Close();
 
-            var opts = new AnalyzeCommandOptions()
+            AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
             {
                 Path = tempFileName,
                 OutputFile = outFileName,
@@ -241,10 +241,10 @@ namespace Microsoft.DevSkim.Tests
                 IgnoreRuleIds = new []{ idToIgnore }
             };
             new AnalyzeCommand(opts).Run();
-            
-            var resultCode = new AnalyzeCommand(opts).Run();
+
+            int resultCode = new AnalyzeCommand(opts).Run();
             Assert.AreEqual(0, resultCode);
-            var resultsFile = SarifLog.Load(outFileName);
+            SarifLog resultsFile = SarifLog.Load(outFileName);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(1, resultsFile.Runs[0].Results.Count);
             Assert.AreEqual(idToExpect, resultsFile.Runs[0].Results[0].RuleId);

@@ -39,8 +39,8 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 return (int)ExitCode.CriticalError;
             }
-            
-            var fp = Path.GetFullPath(opts.Path);
+
+            string fp = Path.GetFullPath(opts.Path);
 
             if (string.IsNullOrEmpty(opts.BasePath))
             {
@@ -48,8 +48,8 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
 
             IEnumerable<FileEntry> fileListing;
-            var extractor = new Extractor();
-            var extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
+            Extractor extractor = new Extractor();
+            ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
             // Analysing a single file
             if (!Directory.Exists(fp))
             {
@@ -83,10 +83,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                 {
                     if (IsGitPresent())
                     {
-                        var innerList = new List<FileEntry>();
-                        var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories)
+                        List<FileEntry> innerList = new List<FileEntry>();
+                        IEnumerable<string> files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories)
                             .Where(fileName => !IsGitIgnored(fileName));
-                        foreach (var notIgnoredFileName in files)
+                        foreach (string? notIgnoredFileName in files)
                         {
                             innerList.AddRange(
                                 FilePathToFileEntries(opts, notIgnoredFileName, extractor, extractorOpts));
@@ -102,9 +102,9 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 else
                 {
-                    var innerList = new List<FileEntry>();
-                    var files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
-                    foreach (var file in files)
+                    List<FileEntry> innerList = new List<FileEntry>();
+                    IEnumerable<string> files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
+                    foreach (string file in files)
                     {
                         innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
                     }
@@ -161,14 +161,14 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <returns></returns>
         private static bool IsGitIgnored(string fp)
         {
-            var process = Process.Start(new ProcessStartInfo("git")
+            Process? process = Process.Start(new ProcessStartInfo("git")
             {
                 Arguments = $"check-ignore {fp}",
                 WorkingDirectory = Directory.GetParent(fp)?.FullName,
                 RedirectStandardOutput = true
             });
             process?.WaitForExit();
-            var stdOut = process?.StandardOutput.ReadToEnd();
+            string? stdOut = process?.StandardOutput.ReadToEnd();
             return process?.ExitCode == 0 && stdOut?.Length > 0;
         }
 
@@ -178,7 +178,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <returns></returns>
         private static bool IsGitPresent()
         {
-            var process = Process.Start(new ProcessStartInfo("git")
+            Process? process = Process.Start(new ProcessStartInfo("git")
             {
                 Arguments = "--version"
             });
@@ -215,17 +215,17 @@ namespace Microsoft.DevSkim.CLI.Commands
             DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
             if (opts.Rules.Any())
             {
-                foreach (var path in opts.Rules)
+                foreach (string path in opts.Rules)
                 {
                     devSkimRuleSet.AddPath(path);
                 }
-                var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+                DevSkimRuleVerifier devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
                 {
                     LanguageSpecs = devSkimLanguages
                     //TODO: Add logging factory to get validation errors.
                 });
 
-                var result = devSkimVerifier.Verify(devSkimRuleSet);
+                DevSkimRulesVerificationResult result = devSkimVerifier.Verify(devSkimRuleSet);
 
                 if (!result.Verified)
                 {
@@ -251,19 +251,19 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
 
             Severity severityFilter = Severity.Unspecified;
-            foreach (var severity in opts.Severities)
+            foreach (Severity severity in opts.Severities)
             {
                 severityFilter |= severity;
             }
             
             Confidence confidenceFilter = Confidence.Unspecified;
-            foreach (var confidence in opts.Confidences)
+            foreach (Confidence confidence in opts.Confidences)
             {
                 confidenceFilter |= confidence;
             }
 
             // Initialize the processor
-            var devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
+            DevSkimRuleProcessorOptions devSkimRuleProcessorOptions = new DevSkimRuleProcessorOptions()
             {
                 Languages = devSkimLanguages,
                 AllowAllTagsInBuildFiles = true,
@@ -315,7 +315,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
 
 
-                    var issues = processor.Analyze(fileText, fileEntry.Name).ToList();
+                    List<Issue> issues = processor.Analyze(fileText, fileEntry.Name).ToList();
                     // We need to make sure the issues are ordered by index, so when doing replacements we can keep a straight count of the offset caused by previous changes
                     issues.Sort((issue1, issue2) => issue1.Boundary.Index - issue2.Boundary.Index);
 
@@ -339,8 +339,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                         issue.Rule.Id,
                                                         issue.Rule.Severity,
                                                         issue.Rule.Name);
-                                
-                                var record = new DevSkim.IssueRecord(
+
+                                IssueRecord record = new DevSkim.IssueRecord(
                                     Filename: TryRelativizePath(opts.BasePath, fileEntry.FullPath),
                                     Filesize: fileText.Length,
                                     TextSample: opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
@@ -358,7 +358,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             //Iterate through all files
             if (opts.DisableParallel)
             {
-                foreach (var fileEntry in fileListing)
+                foreach (FileEntry fileEntry in fileListing)
                 {
                     parseFileEntry(fileEntry);
                 }
@@ -381,8 +381,8 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             try
             {
-                using var repo = new Repository(optsPath);
-                var info = new GitInformation()
+                using Repository repo = new Repository(optsPath);
+                GitInformation info = new GitInformation()
                 {
                     Branch = repo.Head.FriendlyName
                 };
@@ -417,12 +417,12 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             try
             {
-                var fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read);
+                FileStream fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read);
                 return new FileEntry[] { new FileEntry(pathToFile, fs, null, true) };
             }
             catch (Exception e)
             {
-                Debug.WriteLine("The file located at {0} could not be read", pathToFile);
+                Debug.WriteLine("The file located at {0} could not be read. ({1}:{2})", pathToFile, e.GetType().Name, e.Message);
             }
             return Array.Empty<FileEntry>();
         }

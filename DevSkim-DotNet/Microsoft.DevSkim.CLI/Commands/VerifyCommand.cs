@@ -27,27 +27,27 @@ namespace Microsoft.DevSkim.CLI.Commands
             
             DevSkimRuleSet devSkimRuleSet = new();
 
-            foreach (var path in _opts.Rules)
+            foreach (string path in _opts.Rules)
             {
                 devSkimRuleSet.AddPath(path);
             }
 
-            var devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+            DevSkimRuleVerifier devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
             {
                 LanguageSpecs = !string.IsNullOrEmpty(_opts.CommentsPath) && !string.IsNullOrEmpty(_opts.LanguagesPath) ? DevSkimLanguages.FromFiles(_opts.CommentsPath, _opts.LanguagesPath) : new Languages()
                 //TODO: Add logging factory to get validation errors.
             });
 
-            var result = devSkimVerifier.Verify(devSkimRuleSet);
+            DevSkimRulesVerificationResult result = devSkimVerifier.Verify(devSkimRuleSet);
 
             if (!result.Verified)
             {
                 Console.WriteLine("Error: Rules failed validation. ");
-                foreach (var status in result.DevSkimRuleStatuses)
+                foreach (RuleStatus status in result.DevSkimRuleStatuses)
                 {
                     if (!status.Verified)
                     {
-                        foreach (var error in status.Errors)
+                        foreach (string error in status.Errors)
                         {
                             Console.WriteLine(status.Errors);
                         }

@@ -23,11 +23,11 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
-            var sarifLog = SarifLog.Load(_opts.SarifInput);
+            SarifLog sarifLog = SarifLog.Load(_opts.SarifInput);
             if (sarifLog.Runs.Count > 0)
             {
-                var run = sarifLog.Runs[0];
-                var groupedResults = run.Results.GroupBy(x => x.Locations[0].PhysicalLocation.ArtifactLocation.Uri);
+                Run run = sarifLog.Runs[0];
+                System.Collections.Generic.IEnumerable<IGrouping<Uri, Result>> groupedResults = run.Results.GroupBy(x => x.Locations[0].PhysicalLocation.ArtifactLocation.Uri);
                 if (!_opts.ApplyAllSuppression && !_opts.FilesToApplyTo.Any() && !_opts.RulesToApplyFrom.Any())
                 {
                     Console.WriteLine("Must specify either apply all suppression comments or a combination of file and rules to apply");
@@ -41,10 +41,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
 
                 groupedResults = groupedResults.ToList();
-                foreach (var resultGroup in groupedResults)
+                foreach (IGrouping<Uri, Result> resultGroup in groupedResults)
                 {
-                    var fileName = resultGroup.Key;
-                    var potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
+                    Uri fileName = resultGroup.Key;
+                    string potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
                     var issueRecords = resultGroup
                       .Where(result => result.Locations is { })
                       .SelectMany(result => result.Locations, (x, y) => new { x.RuleId, y.PhysicalLocation })
@@ -72,25 +72,25 @@ namespace Microsoft.DevSkim.CLI.Commands
                         Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
 
-                    var theContent = File.ReadAllLines(potentialPath);
+                    string[] theContent = File.ReadAllLines(potentialPath);
                     int currLine = 0;
-                    var sb = new StringBuilder();
+                    StringBuilder sb = new StringBuilder();
 
                     foreach (var issueRecord in distinctIssueRecords)
                     {
                         if (issueRecord.PhysicalLocation is { })
                         {
-                            var region = issueRecord.PhysicalLocation.Region;
-                            var zbStartLine = region.StartLine - 1;
-                            var isMultiline = theContent[zbStartLine].EndsWith(@"\");
-                            var ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
+                            Region region = issueRecord.PhysicalLocation.Region;
+                            int zbStartLine = region.StartLine - 1;
+                            bool isMultiline = theContent[zbStartLine].EndsWith(@"\");
+                            string ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
 
-                            foreach (var line in theContent[currLine..zbStartLine])
+                            foreach (string line in theContent[currLine..zbStartLine])
                             {
                                 sb.Append($"{line}{Environment.NewLine}");
                             }
 
-                            var suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" :
+                            string suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zbStartLine]}{Environment.NewLine}" :
                                 $"{theContent[zbStartLine]} {ignoreComment}{Environment.NewLine}";
                             sb.Append(suppressionComment);
 
@@ -100,7 +100,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                     if (currLine < theContent.Length)
                     {
-                        foreach (var line in theContent[currLine..^1])
+                        foreach (string line in theContent[currLine..^1])
                         {
                             sb.Append($"{line}{Environment.NewLine}");
                         }
@@ -123,11 +123,11 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         private string GenerateSuppression(string sourceLanguage, string rulesId, bool preferMultiLine = false, int duration = 0)
         {
-            var inline = devSkimLanguages.GetCommentInline(sourceLanguage);
-            var expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
+            string inline = devSkimLanguages.GetCommentInline(sourceLanguage);
+            string expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
             if (!preferMultiLine && !string.IsNullOrEmpty(inline))
             {
-                var sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.Append($"{inline} DevSkim: ignore {rulesId}");
                 if (!string.IsNullOrEmpty(expiration))
                 {
@@ -137,7 +137,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
             else
             {
-                var sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.Append($"{devSkimLanguages.GetCommentPrefix(sourceLanguage)} DevSkim: ignore {rulesId}");
                 if (!string.IsNullOrEmpty(expiration))
                 {

@@ -36,7 +36,7 @@ internal class Program
 		Log.Logger.Debug("Configuring server...");
 		IObserver<WorkDoneProgressReport> workDone = null!;
 
-		var server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(
+        OmniSharp.Extensions.LanguageServer.Server.LanguageServer server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(
 			options =>
 				options
 					.WithInput(Console.OpenStandardInput())
@@ -54,7 +54,7 @@ internal class Program
 						async (server, request, token) =>
 						{
 							Log.Logger.Debug("Server is starting...");
-							var manager = server.WorkDoneManager.For(
+                            OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = server.WorkDoneManager.For(
 								request, new WorkDoneProgressBegin
 								{
 									Title = "Server is starting...",
@@ -80,7 +80,7 @@ internal class Program
 						async (languageServer, token) =>
 						{
 							Log.Logger.Debug("Beginning server routines...");
-							using var manager = await languageServer.WorkDoneManager.Create(
+							using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = await languageServer.WorkDoneManager.Create(
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
 							// Intentionally disabled until configuration is implemented for Visual Studio

@@ -27,9 +27,13 @@ namespace Microsoft.DevSkim.CLI.Writers
         public SimpleTextWriter(string formatString, TextWriter writer)
         {
             if (string.IsNullOrEmpty(formatString))
+            {
                 _formatString = DefaultFormat;
+            }
             else
+            {
                 _formatString = formatString;
+            }
 
             TextWriter = writer;
         }
@@ -37,7 +41,10 @@ namespace Microsoft.DevSkim.CLI.Writers
         public override void FlushAndClose()
         {
             if (anyIssues)
+            {
                 TextWriter.WriteLine("For guidance on reported issues visit the relevant page here: https://github.com/microsoft/DevSkim/tree/main/guidance.");
+            }
+
             TextWriter.Flush();
             TextWriter.Close();
         }

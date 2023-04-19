@@ -54,7 +54,9 @@ namespace Microsoft.DevSkim
 
                                 if (!resultsList.Any(x =>
                                         x.Rule.Id == issue.Rule.Id && x.Boundary.Index == issue.Boundary.Index))
+                                {
                                     resultsList.Add(issue);
+                                }
                             }
                         }
                         else

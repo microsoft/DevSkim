@@ -117,7 +117,7 @@ namespace Microsot.DevSkim.LanguageClient
             string exception = initializationState.InitializationException?.ToString() ?? string.Empty;
             message = $"{message}\n {exception}";
 
-            var failureContext = new InitializationFailureContext()
+            InitializationFailureContext failureContext = new InitializationFailureContext()
             {
                 FailureMessage = message,
             };
