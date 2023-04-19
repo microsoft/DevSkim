@@ -21,4 +21,6 @@ public class FixCommandOptions
     public IEnumerable<string> FilesToApplyTo { get; set; } = Array.Empty<string>();
     [Option("rules", HelpText = "Comma separated list of rules to apply fixes for", Separator = ',')]
     public IEnumerable<string> RulesToApplyFrom { get; set; } = Array.Empty<string>();
+    
+    // TODO: Support Custom Languages/Comment styles
 }
