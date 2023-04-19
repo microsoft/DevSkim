@@ -33,7 +33,7 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 	provideCodeActions(document: vscode.TextDocument, range: vscode.Range | vscode.Selection, context: vscode.CodeActionContext, token: vscode.CancellationToken): vscode.CodeAction[] {
 		// for each diagnostic entry that has the matching `code`, create a code action command
 		const output : vscode.CodeAction[] = [];
-		context.diagnostics.filter(diagnostic => String(diagnostic.code).startsWith("MS-CST-E.vscode-devskim")).forEach((filteredDiagnostic : vscode.Diagnostic) => {
+		context.diagnostics.filter(diagnostic => String(diagnostic.code).startsWith("MS-CST-E.devskim-language-server")).forEach((filteredDiagnostic : vscode.Diagnostic) => {
 			// The ToString method on URI in node swaps ':' into '%3A', but the C# one does not, but we need them to match.
 			this.fixMapping.get(this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace("%3A", ":")))?.forEach(codeFix => {
 				output.push(this.createFix(document, filteredDiagnostic, codeFix));

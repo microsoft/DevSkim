@@ -10,19 +10,14 @@ namespace DevSkim.LanguageServer;
 
 internal class Program
 {
-	public static void Main(string[] args)
+	static async Task Main(string[] args)
 	{
-		MainAsync(args).Wait();
-	}
-
-	private static async Task MainAsync(string[] args)
-	{
-
+		while (!Debugger.IsAttached)
+		{
+			await Task.Delay(100);
+		}
 #if DEBUG
-		// while (!Debugger.IsAttached)
-		// {
-		// 	await Task.Delay(100);
-		// }
+		
 		Log.Logger = new LoggerConfiguration()
 			.Enrich.FromLogContext()
 			.WriteTo.File("devskim-server-log.txt", rollingInterval: RollingInterval.Day)

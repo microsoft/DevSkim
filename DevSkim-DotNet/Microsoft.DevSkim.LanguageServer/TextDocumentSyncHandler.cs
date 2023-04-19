@@ -31,84 +31,95 @@ namespace DevSkim.LanguageServer
 
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
 
-        private Task<Unit> GenerateDiagnosticsForTextDocumentAsync(string text, int? version, DocumentUri uri)
+        private async Task<Unit> GenerateDiagnosticsForTextDocumentAsync(string text, int? version, DocumentUri uri)
         {
-            return new Task<Unit>(() =>
+            if (string.IsNullOrEmpty(text))
             {
-                if (text == null)
-                {
-                    _logger.LogDebug("\tNo content found");
-                    return Unit.Value;
-                }
+                _logger.LogDebug("\tNo content found");
+                return Unit.Value;
+            }
 
-                string filename = uri.Path;
-                if (StaticScannerSettings.IgnoreFiles.Any(x => x.IsMatch(filename)))
+            string filename = uri.Path;
+            if (StaticScannerSettings.IgnoreFiles.Any(x => x.IsMatch(filename)))
+            {
+                _logger.LogDebug($"\t{filename} was excluded due to matching IgnoreFiles setting");
+                return Unit.Value;
+            }
+            // Diagnostics are sent a document at a time
+            _logger.LogDebug($"\tProcessing document: {filename}");
+            List<Issue> issues = await Task.Run(() => _processor.Analyze(text, filename).ToList());
+            ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
+            ImmutableArray<CodeFixMapping>.Builder codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
+            _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
+            foreach (Issue issue in issues)
+            {
+                if (!issue.IsSuppressionInfo)
                 {
-                    _logger.LogDebug($"\t{filename} was excluded due to matching IgnoreFiles setting");
-                    return Unit.Value;
-                }
-                // Diagnostics are sent a document at a time
-                _logger.LogDebug($"\tProcessing document: {filename}");
-                List<Issue> issues = _processor.Analyze(text, filename).ToList();
-                ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
-                ImmutableArray<CodeFixMapping>.Builder codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
-                _logger.LogDebug($"\tAdding {issues.Count} issues to diagnostics");
-                foreach (Issue issue in issues)
-                {
-                    if (!issue.IsSuppressionInfo)
+                    Diagnostic diag = new Diagnostic()
                     {
-                        Diagnostic diag = new Diagnostic()
+                        Code = $"{ConfigHelpers.Section}: {issue.Rule.Id}",
+                        Severity = DevSkimSeverityToDiagnositicSeverity(issue.Rule.Severity),
+                        Message = $"{issue.Rule.Description ?? string.Empty}",
+                        // DevSkim/Application Inspector line numbers are one-indexed, but column numbers are zero-indexed
+                        // To get the diagnostic to appear on the correct line, we must subtract 1 from the line number
+                        Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
+                        Source = "DevSkim Language Server"
+                    };
+                    diagnostics.Add(diag);
+                    for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
+                    {
+                        CodeFix fix = issue.Rule.Fixes[i];
+                        if (fix.Replacement is not null)
                         {
-                            Code = $"{ConfigHelpers.Section}: {issue.Rule.Id}",
-                            Severity = DiagnosticSeverity.Error, // TODO: There should be some mapping from DevSkim severity to the different severities here
-                            Message = $"{issue.Rule.Description ?? string.Empty}",
-                            // DevSkim/Application Inspector line numbers are one-indexed, but column numbers are zero-indexed
-                            // To get the diagnostic to appear on the correct line, we must subtract 1 from the line number
-                            Range = new Range(issue.StartLocation.Line - 1, issue.StartLocation.Column, issue.EndLocation.Line - 1, issue.EndLocation.Column),
-                            Source = $"DevSkim Language Server"
-                        };
-                        diagnostics.Add(diag);
-                        for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
-                        {
-                            CodeFix fix = issue.Rule.Fixes[i];
-                            if (fix.Replacement is { })
-                            {
-                                string potentialFix = DevSkimRuleProcessor.Fix(text.Substring(issue.Boundary.Index, issue.Boundary.Length), fix);
-                                codeFixes.Add(new CodeFixMapping(diag, potentialFix, uri.ToUri(), $"Replace with {potentialFix}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, false));
-                            }
+                            string potentialFix = DevSkimRuleProcessor.Fix(text.Substring(issue.Boundary.Index, issue.Boundary.Length), fix);
+                            codeFixes.Add(new CodeFixMapping(diag, potentialFix, uri.ToUri(), $"Replace with {potentialFix}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, false));
                         }
-                        // Add suppression options
-                        if (StaticScannerSettings.RuleProcessorOptions.EnableSuppressions)
-                        {
-                            // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
-                            // TODO: Handle multiple suppressions on one line?
-                            string proposedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id);
-                            codeFixes.Add(new CodeFixMapping(diag, $" {proposedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
+                    }
+                    // Add suppression options
+                    if (StaticScannerSettings.RuleProcessorOptions.EnableSuppressions)
+                    {
+                        // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
+                        // TODO: Handle multiple suppressions on one line?
+                        string proposedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id);
+                        codeFixes.Add(new CodeFixMapping(diag, $" {proposedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
 
-                            if (StaticScannerSettings.SuppressionDuration > -1)
-                            {
-                                DateTime expiration = DateTime.Now.AddDays(StaticScannerSettings.SuppressionDuration);
-                                string proposedTimedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id, StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block, StaticScannerSettings.SuppressionDuration);
-                                codeFixes.Add(new CodeFixMapping(diag, $" {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
-                            }
+                        if (StaticScannerSettings.SuppressionDuration > -1)
+                        {
+                            DateTime expiration = DateTime.Now.AddDays(StaticScannerSettings.SuppressionDuration);
+                            string proposedTimedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id, StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block, StaticScannerSettings.SuppressionDuration);
+                            codeFixes.Add(new CodeFixMapping(diag, $" {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
                         }
                     }
                 }
+            }
 
-                _logger.LogDebug("\tPublishing diagnostics...");
-                _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
-                {
-                    Diagnostics = new Container<Diagnostic>(diagnostics.ToArray()),
-                    Uri = uri,
-                    Version = version
-                });
-                foreach (CodeFixMapping codeFixMapping in codeFixes.ToArray())
-                {
-                    _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, codeFixMapping);
-                }
-
-                return Unit.Value;
+            _logger.LogDebug("\tPublishing diagnostics...");
+            _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
+            {
+                Diagnostics = new Container<Diagnostic>(diagnostics.ToArray()),
+                Uri = uri,
+                Version = version
             });
+            foreach (CodeFixMapping codeFixMapping in codeFixes.ToArray())
+            {
+                _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, codeFixMapping);
+            }
+
+            return Unit.Value;
+        }
+
+        private static DiagnosticSeverity DevSkimSeverityToDiagnositicSeverity(Severity ruleSeverity)
+        {
+            return ruleSeverity switch
+            {
+                Severity.Unspecified => DiagnosticSeverity.Hint,
+                Severity.Critical => DiagnosticSeverity.Error,
+                Severity.Important => DiagnosticSeverity.Error,
+                Severity.Moderate => DiagnosticSeverity.Warning,
+                Severity.BestPractice => DiagnosticSeverity.Hint,
+                Severity.ManualReview => DiagnosticSeverity.Hint,
+                _ => DiagnosticSeverity.Information
+            };
         }
 
         public override async Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
