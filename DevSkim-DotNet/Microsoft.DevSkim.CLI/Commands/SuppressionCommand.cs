@@ -83,7 +83,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             Region region = issueRecord.PhysicalLocation.Region;
                             int zbStartLine = region.StartLine - 1;
                             bool isMultiline = theContent[zbStartLine].EndsWith(@"\");
-                            string ignoreComment = GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
+                            string ignoreComment = DevSkimRuleProcessor.GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
 
                             foreach (string line in theContent[currLine..zbStartLine])
                             {
@@ -119,34 +119,6 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
 
             return (int)ExitCode.NoIssues;
-        }
-
-        private string GenerateSuppression(string sourceLanguage, string rulesId, bool preferMultiLine = false, int duration = 0)
-        {
-            string inline = devSkimLanguages.GetCommentInline(sourceLanguage);
-            string expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
-            if (!preferMultiLine && !string.IsNullOrEmpty(inline))
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append($"{inline} DevSkim: ignore {rulesId}");
-                if (!string.IsNullOrEmpty(expiration))
-                {
-                    sb.Append($" until {expiration}");
-                }
-                return sb.ToString();
-            }
-            else
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append($"{devSkimLanguages.GetCommentPrefix(sourceLanguage)} DevSkim: ignore {rulesId}");
-                if (!string.IsNullOrEmpty(expiration))
-                {
-                    sb.Append($" until {expiration}");
-                }
-
-                sb.Append($" {devSkimLanguages.GetCommentSuffix(sourceLanguage)}");
-                return sb.ToString();
-            }
         }
     }
 }

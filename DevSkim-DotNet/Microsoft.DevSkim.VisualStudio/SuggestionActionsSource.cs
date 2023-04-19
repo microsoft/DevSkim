@@ -54,8 +54,11 @@ namespace Microsoft.DevSkim.VisualStudio
                         suggestedActions.AddRange(fixes.Where(codeFixMapping => Intersects(codeFixMapping, wordExtent)).Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping)));
                     }
                 }
-                yield return new SuggestedActionSet("DevSkim Suggestions", suggestedActions, applicableToSpan: wordExtent.Span);
+                yield return new SuggestedActionSet(suggestedActions, wordExtent.Span);
+                // TODO: The above API is marked obsolete, and they want use of the below, which requires registering the category
+                //yield return new SuggestedActionSet("DevSkim Suggestions", suggestedActions, applicableToSpan: wordExtent.Span);
             }
+            yield return new SuggestedActionSet(suggestedActions);
         }
 
         private bool Intersects(CodeFixMapping codeFixMapping, TextExtent wordExtent)

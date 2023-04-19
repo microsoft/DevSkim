@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.CST.RecursiveExtractor;
@@ -91,6 +93,44 @@ namespace Microsoft.DevSkim
             }
 
             return result;
+        }
+
+
+        /// <summary>
+        ///     Generate suppression text for a given rule ID and language
+        /// </summary>
+        /// <param name="sourceLanguage">The target language (to choose the right comment style)</param>
+        /// <param name="rulesId">The ID for the rule to suppress</param>
+        /// <param name="preferMultiLine">If multiline comment style should be preferred</param>
+        /// <param name="duration">Duration in days for suppression. Default 0 (unlimited)</param>
+        /// <param name="reviewerName">Optional name for the manual reviewer applying suppressions</param>
+        /// <param name="languages">Optional language specifications to use</param>
+        /// <returns></returns>
+        public static string GenerateSuppression(string sourceLanguage, string rulesId, bool preferMultiLine = false, int duration = 0, string? reviewerName = null, Languages? languages = null)
+        {
+            languages ??= DevSkimLanguages.LoadEmbedded();
+            string inline = languages.GetCommentInline(sourceLanguage);
+            string expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
+            StringBuilder sb = new StringBuilder();
+            (string prefix, string suffix) = (preferMultiLine || string.IsNullOrEmpty(inline)) ?
+                (languages.GetCommentPrefix(sourceLanguage), languages.GetCommentSuffix(sourceLanguage)) :
+                (languages.GetCommentInline(sourceLanguage), string.Empty);
+
+            sb.Append($"{prefix} DevSkim: ignore {rulesId}");
+
+            if (!string.IsNullOrEmpty(expiration))
+            {
+                sb.Append($" until {expiration}");
+            }
+            if (!string.IsNullOrEmpty(reviewerName))
+            {
+                sb.Append($" by {reviewerName}");
+            }
+            if (!string.IsNullOrEmpty(suffix))
+            {
+                sb.Append($" {suffix}");
+            }
+            return sb.ToString();
         }
     }
 }

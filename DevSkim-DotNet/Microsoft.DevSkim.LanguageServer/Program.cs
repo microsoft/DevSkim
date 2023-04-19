@@ -19,10 +19,10 @@ internal class Program
 	{
 
 #if DEBUG
-		//while (!Debugger.IsAttached)
-		//{
-		//	await Task.Delay(100);
-		//}
+		while (!Debugger.IsAttached)
+		{
+			await Task.Delay(100);
+		}
 		Log.Logger = new LoggerConfiguration()
 			.Enrich.FromLogContext()
 			.WriteTo.File("devskim-server-log.txt", rollingInterval: RollingInterval.Day)

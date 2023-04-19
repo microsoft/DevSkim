@@ -82,13 +82,13 @@ namespace DevSkim.LanguageServer
                         {
                             // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
                             // TODO: Handle multiple suppressions on one line?
-                            string proposedSuppression = GenerateSuppression(filename, issue.Rule.Id);
+                            string proposedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id);
                             codeFixes.Add(new CodeFixMapping(diag, $" {proposedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
 
                             if (StaticScannerSettings.SuppressionDuration > -1)
                             {
                                 DateTime expiration = DateTime.Now.AddDays(StaticScannerSettings.SuppressionDuration);
-                                string proposedTimedSuppression = GenerateSuppression(filename, issue.Rule.Id, expiration);
+                                string proposedTimedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id, StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block, StaticScannerSettings.SuppressionDuration);
                                 codeFixes.Add(new CodeFixMapping(diag, $" {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
                             }
                         }
@@ -109,43 +109,6 @@ namespace DevSkim.LanguageServer
 
                 return Unit.Value;
             });
-        }
-
-        private string GenerateSuppression(string filename, string issueId, DateTime? until = null)
-        {
-            StaticScannerSettings.RuleProcessorOptions.Languages.FromFileNameOut(filename, out LanguageInfo languageInfo);
-            string commentInline = StaticScannerSettings.RuleProcessorOptions.Languages.GetCommentInline(languageInfo.Name);
-            string commentPrefix = StaticScannerSettings.RuleProcessorOptions.Languages.GetCommentPrefix(languageInfo.Name);
-            string commentSuffix = StaticScannerSettings.RuleProcessorOptions.Languages.GetCommentSuffix(languageInfo.Name);
-
-            // Either Line style is preferred, and there is such a style available
-            // Or it is not preferred but there is no multi-line style
-            if ((StaticScannerSettings.SuppressionStyle == SuppressionStyle.Line && !string.IsNullOrEmpty(commentInline)) || (!string.IsNullOrEmpty(commentPrefix) && !string.IsNullOrEmpty(commentSuffix)))
-            {
-                StringBuilder proposedSuppression = new($"{commentInline} DevSkim: ignore {issueId}");
-                if (until is { })
-                {
-                    proposedSuppression.Append($" until {until.Value.ToString("yyyy-MM-dd")}");
-                }
-                return proposedSuppression.ToString();
-            }
-            // Either Block style is preferred, and there is such a style available
-            // Or it is not preferred but there is no single-line style
-            else if ((StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block && (!string.IsNullOrEmpty(commentPrefix) && !string.IsNullOrEmpty(commentSuffix))) || !string.IsNullOrEmpty(commentInline))
-            {
-                StringBuilder proposedSuppression = new($"{commentPrefix} DevSkim: ignore {issueId}");
-                if (until is { })
-                {
-                    proposedSuppression.Append($" until {until.Value.ToString("yyyy-MM-dd")}");
-                }
-                proposedSuppression.Append($" {commentSuffix}");
-                return proposedSuppression.ToString();
-            }
-            else
-            {
-                // Couldn't find any way to make a suppression comment
-                return string.Empty;
-            }
         }
 
         public override async Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
