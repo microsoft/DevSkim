@@ -95,7 +95,27 @@ namespace Microsoft.DevSkim
             return result;
         }
 
+        /// <summary>
+        ///     Generate appropriate suppression with comment style based on the filename
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="rulesId"></param>
+        /// <param name="preferMultiLine"></param>
+        /// <param name="duration"></param>
+        /// <param name="reviewerName"></param>
+        /// <param name="languages"></param>
+        /// <returns></returns>
+        public static string GenerateSuppressionByFileName(string fileName, string rulesId, bool preferMultiLine = false, int duration = 0, string? reviewerName = null, Languages? languages = null)
+        {
+            languages ??= DevSkimLanguages.LoadEmbedded();
+            if (languages.FromFileNameOut(fileName, out LanguageInfo info))
+            {
+                return GenerateSuppressionByLanguage(info.Name, rulesId, preferMultiLine, duration, reviewerName, languages);
+            }
 
+            return string.Empty;
+        }
+        
         /// <summary>
         ///     Generate suppression text for a given rule ID and language. 
         ///     If the comment style for the language is not specified, returns null.
@@ -107,35 +127,31 @@ namespace Microsoft.DevSkim
         /// <param name="reviewerName">Optional name for the manual reviewer applying suppressions</param>
         /// <param name="languages">Optional language specifications to use</param>
         /// <returns>A comment suppression or null if one could not be generated</returns>
-        public static string GenerateSuppression(string sourceLanguage, string rulesId, bool preferMultiLine = false, int duration = 0, string? reviewerName = null, Languages? languages = null)
+        public static string GenerateSuppressionByLanguage(string sourceLanguage, string rulesId, bool preferMultiLine = false, int duration = 0, string? reviewerName = null, Languages? languages = null)
         {
             languages ??= DevSkimLanguages.LoadEmbedded();
             string inline = languages.GetCommentInline(sourceLanguage);
-            if (languages.FromFileNameOut(sourceLanguage, out LanguageInfo info))
+            string expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
+            StringBuilder sb = new StringBuilder();
+            (string prefix, string suffix) = (preferMultiLine || string.IsNullOrEmpty(inline)) ?
+                (languages.GetCommentPrefix(sourceLanguage), languages.GetCommentSuffix(sourceLanguage)) :
+                (languages.GetCommentInline(sourceLanguage), string.Empty);
+
+            sb.Append($"{prefix} DevSkim: ignore {rulesId}");
+
+            if (!string.IsNullOrEmpty(expiration))
             {
-                string expiration = duration > 0 ? DateTime.Now.AddDays(duration).ToString("yyyy-MM-dd") : string.Empty;
-                StringBuilder sb = new StringBuilder();
-                (string prefix, string suffix) = (preferMultiLine || string.IsNullOrEmpty(inline)) ?
-                    (languages.GetCommentPrefix(info.Name), languages.GetCommentSuffix(info.Name)) :
-                    (languages.GetCommentInline(info.Name), string.Empty);
-
-                sb.Append($"{prefix} DevSkim: ignore {rulesId}");
-
-                if (!string.IsNullOrEmpty(expiration))
-                {
-                    sb.Append($" until {expiration}");
-                }
-                if (!string.IsNullOrEmpty(reviewerName))
-                {
-                    sb.Append($" by {reviewerName}");
-                }
-                if (!string.IsNullOrEmpty(suffix))
-                {
-                    sb.Append($" {suffix}");
-                }
-                return sb.ToString();
+                sb.Append($" until {expiration}");
             }
-            return string.Empty;
+            if (!string.IsNullOrEmpty(reviewerName))
+            {
+                sb.Append($" by {reviewerName}");
+            }
+            if (!string.IsNullOrEmpty(suffix))
+            {
+                sb.Append($" {suffix}");
+            }
+            return sb.ToString();
         }
     }
 }

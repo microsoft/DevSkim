@@ -25,4 +25,14 @@ public class SuppressionCommandOptions
 
     [Option("duration", HelpText = "Optional duration for suppressions in days from current system time", Default = 0)]
     public int Duration { get; set; } = 0;
+
+    [Option("languages",Required = false, HelpText = "Path to custom json formatted Language file to specify languages, when specified comments must also be specified")]
+    public string LanguagesPath { get; set; } = string.Empty;
+    
+    [Option("comments",Required = false, HelpText = "Path to custom json formatted Comments file to specify languages, when specified languages must also be specified")]
+    public string CommentsPath { get; set; } = string.Empty;
+
+    [Option("reviewer", Required = false,
+        HelpText = "Set an optional reviewer name to be associated with added suppressions")]
+    public string Reviewer { get; set; } = string.Empty;
 }

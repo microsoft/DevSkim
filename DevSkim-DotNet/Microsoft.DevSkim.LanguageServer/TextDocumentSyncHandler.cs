@@ -80,7 +80,7 @@ namespace DevSkim.LanguageServer
                     {
                         // TODO: We should check if there is an existing, expired suppression to update, and if so the replacement range needs to include the old suppression
                         // TODO: Handle multiple suppressions on one line?
-                        string proposedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id);
+                        string proposedSuppression = DevSkimRuleProcessor.GenerateSuppressionByFileName(filename, issue.Rule.Id, StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block, 0, StaticScannerSettings.ReviewerName, StaticScannerSettings.RuleProcessorOptions.Languages);
                         if (!string.IsNullOrEmpty(proposedSuppression))
                         {
                             codeFixes.Add(new CodeFixMapping(diag, $" {proposedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
@@ -88,7 +88,7 @@ namespace DevSkim.LanguageServer
                             if (StaticScannerSettings.SuppressionDuration > -1)
                             {
                                 DateTime expiration = DateTime.Now.AddDays(StaticScannerSettings.SuppressionDuration);
-                                string proposedTimedSuppression = DevSkimRuleProcessor.GenerateSuppression(filename, issue.Rule.Id, StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block, StaticScannerSettings.SuppressionDuration);
+                                string proposedTimedSuppression = DevSkimRuleProcessor.GenerateSuppressionByFileName(filename, issue.Rule.Id, StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block, StaticScannerSettings.SuppressionDuration, StaticScannerSettings.ReviewerName, StaticScannerSettings.RuleProcessorOptions.Languages);
                                 if (!string.IsNullOrEmpty(proposedSuppression))
                                 {
                                         codeFixes.Add(new CodeFixMapping(diag, $" {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));

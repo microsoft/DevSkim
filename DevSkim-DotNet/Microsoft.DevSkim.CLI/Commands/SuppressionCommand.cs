@@ -18,7 +18,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         public SuppressionCommand(SuppressionCommandOptions options)
         {
             _opts = options;
-            devSkimLanguages = DevSkimLanguages.LoadEmbedded();
+            devSkimLanguages = !string.IsNullOrEmpty(options.LanguagesPath) && !string.IsNullOrEmpty(options.CommentsPath) ? DevSkimLanguages.FromFiles(options.CommentsPath, options.LanguagesPath) : DevSkimLanguages.LoadEmbedded();
         }
 
         public int Run()
@@ -83,7 +83,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             Region region = issueRecord.PhysicalLocation.Region;
                             int zeroBasedStartLine = region.StartLine - 1;
                             bool isMultiline = theContent[zeroBasedStartLine].EndsWith(@"\");
-                            string ignoreComment = DevSkimRuleProcessor.GenerateSuppression(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration);
+                            string ignoreComment = DevSkimRuleProcessor.GenerateSuppressionByLanguage(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration, _opts.Reviewer, devSkimLanguages);
                             if (!string.IsNullOrEmpty(ignoreComment))
                             {
                                 foreach (string line in theContent[currLine..zeroBasedStartLine])
