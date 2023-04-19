@@ -26,7 +26,6 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.8.5" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="System.Text.Json" Version="7.0.2" />
     </ItemGroup>
 
     <ItemGroup>

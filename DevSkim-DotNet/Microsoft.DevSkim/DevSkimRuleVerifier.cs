@@ -12,9 +12,9 @@ namespace Microsoft.DevSkim
     
         public DevSkimRulesVerificationResult Verify(DevSkimRuleSet ruleSet)
         {
-            var aiResult = _appInspectorVerifier.Verify(ruleSet);
-            var devSkimResult = new DevSkimRulesVerificationResult(aiResult);
-            foreach (var status in aiResult.RuleStatuses)
+            RulesVerifierResult aiResult = _appInspectorVerifier.Verify(ruleSet);
+            DevSkimRulesVerificationResult devSkimResult = new DevSkimRulesVerificationResult(aiResult);
+            foreach (RuleStatus status in aiResult.RuleStatuses)
             {
                 devSkimResult.DevSkimRuleStatuses.Add(status);
             }

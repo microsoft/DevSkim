@@ -21,11 +21,11 @@ namespace Microsoft.DevSkim.CLI.Commands
         // TODO Use proper logging abstractions
         public int Run()
         {
-            var sarifLog = SarifLog.Load(_opts.SarifInput);
+            SarifLog sarifLog = SarifLog.Load(_opts.SarifInput);
             if (sarifLog.Runs.Count > 0)
             {
-                var run = sarifLog.Runs[0];
-                var groupedResults = run.Results.GroupBy(x => x.Locations[0].PhysicalLocation.ArtifactLocation.Uri);
+                Run run = sarifLog.Runs[0];
+                System.Collections.Generic.IEnumerable<IGrouping<Uri, Result>> groupedResults = run.Results.GroupBy(x => x.Locations[0].PhysicalLocation.ArtifactLocation.Uri);
                 if (!_opts.ApplyAllFixes && !_opts.FilesToApplyTo.Any() && !_opts.RulesToApplyFrom.Any())
                 {
                     Console.WriteLine("Must specify either apply all fixes or a combination of file and rules to apply");
@@ -47,12 +47,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
 
                 groupedResults = groupedResults.ToList();
-                foreach (var resultGroup in groupedResults)
+                foreach (IGrouping<Uri, Result> resultGroup in groupedResults)
                 {
-                    var fileName = resultGroup.Key;
-                    var potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
+                    Uri fileName = resultGroup.Key;
+                    string potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
                     // Flatten all the replacements into a single list
-                    var listOfReplacements = resultGroup.Where(x => x.Fixes is {}).SelectMany(x =>
+                    System.Collections.Generic.List<Replacement> listOfReplacements = resultGroup.Where(x => x.Fixes is {}).SelectMany(x =>
                         x.Fixes.SelectMany(y => y.ArtifactChanges)
                             .SelectMany(z => z.Replacements)).ToList();
                     // Order the results by the character offset
@@ -60,11 +60,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                     
                     if (File.Exists(potentialPath))
                     {
-                        var theContent = File.ReadAllText(potentialPath);
+                        string theContent = File.ReadAllText(potentialPath);
                         // CurPos tracks the current position in the original string
                         int curPos = 0;
-                        var sb = new StringBuilder();
-                        foreach (var replacement in listOfReplacements)
+                        StringBuilder sb = new StringBuilder();
+                        foreach (Replacement? replacement in listOfReplacements)
                         {
                             // The replacements were sorted, so this indicates a second replacement option for the same region
                             // TODO: Improve a way to not always take the first replacement, perhaps using tags for ranking

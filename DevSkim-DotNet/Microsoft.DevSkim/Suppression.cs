@@ -13,7 +13,8 @@ namespace Microsoft.DevSkim
     /// </summary>
     public class Suppression
     {
-        public const string pattern = KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)";
+        private string _reviewer = string.Empty;
+        public const string pattern = KeywordPrefix + @"\s+" + KeywordIgnore + @"\s([a-zA-Z\d,:]+)(\s+" + KeywordUntil + @"\s\d{4}-\d{2}-\d{2}|)(\s+" + KeywordBy + @"\s([A-Za-z0-9_]+)|)";
 
         /// <summary>
         ///     Creates new instance of Supressor
@@ -42,6 +43,14 @@ namespace Microsoft.DevSkim
             ParseLine();
         }
 
+        /// <summary>
+        ///     Get the optional manual reviewer
+        /// </summary>
+        public string Reviewer
+        {
+            get { return _reviewer; }
+        }
+        
         /// <summary>
         ///     Suppression expiration date
         /// </summary>
@@ -118,6 +127,7 @@ namespace Microsoft.DevSkim
         protected const string KeywordIgnore = "ignore";
         protected const string KeywordPrefix = "DevSkim:";
         protected const string KeywordUntil = "until";
+        protected const string KeywordBy = "by";
         protected DateTime _expirationDate { get; set; } = DateTime.MaxValue;
         protected List<SuppressedIssue> _issues { get; set; } = new List<SuppressedIssue>();
         protected int _lineNumber { get; set; }
@@ -139,8 +149,14 @@ namespace Microsoft.DevSkim
                 string idString = match.Groups[1].Value.Trim();
                 IssuesListIndex = match.Groups[1].Index;
 
+                // Parse Reviewer
+                if (match.Groups.Count > 4 && !string.IsNullOrEmpty(match.Groups[4].Value))
+                {
+                    _reviewer = match.Groups[4].Value;
+                }
+                
                 // Parse date
-                if (match.Groups.Count > 2)
+                if (match.Groups.Count > 2 && !string.IsNullOrEmpty(match.Groups[2].Value))
                 {
                     string date = match.Groups[2].Value;
                     reg = new Regex(@"(\d{4}-\d{2}-\d{2})");

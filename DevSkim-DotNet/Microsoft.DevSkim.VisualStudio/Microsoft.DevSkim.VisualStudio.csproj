@@ -25,6 +25,8 @@
     <StartAction>Program</StartAction>
     <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,6 +50,14 @@
     <Compile Include="DevSkimFixMessageTarget.cs" />
     <Compile Include="DevSkimLanguageClient.cs" />
     <Compile Include="DevSkimSuggestedAction.cs" />
+    <Compile Include="ProcessTracker\IProcessTracker.cs" />
+    <Compile Include="ProcessTracker\IWindowEventsListener.cs" />
+    <Compile Include="ProcessTracker\JobObjectProcessTracker.cs" />
+    <Compile Include="ProcessTracker\NativeMethods.cs" />
+    <Compile Include="ProcessTracker\SafeObjectHandle.cs" />
+    <Compile Include="ProcessTracker\WindowEventArgs.cs" />
+    <Compile Include="ProcessTracker\WindowEventsListener.cs" />
+    <Compile Include="ProcessTracker\WindowsSystemEvents.cs" />
     <Compile Include="RuleOptionPageGrid.cs">
       <SubType>Component</SubType>
     </Compile>

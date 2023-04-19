@@ -47,13 +47,16 @@ namespace Microsoft.DevSkim.VisualStudio
             List<ISuggestedAction> suggestedActions = new List<ISuggestedAction>();
             if (TryGetWordUnderCaret(out TextExtent wordExtent) && wordExtent.IsSignificant)
             {
-                if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out var dictForFile))
+                if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out System.Collections.Concurrent.ConcurrentDictionary<int, HashSet<CodeFixMapping>> dictForFile))
                 {
                     if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out HashSet<CodeFixMapping> fixes))
                     {
                         suggestedActions.AddRange(fixes.Where(codeFixMapping => Intersects(codeFixMapping, wordExtent)).Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping)));
                     }
                 }
+                yield return new SuggestedActionSet(suggestedActions, wordExtent.Span);
+                // TODO: The above API is marked obsolete, and they want use of the below, which requires registering the category
+                //yield return new SuggestedActionSet("DevSkim Suggestions", suggestedActions, applicableToSpan: wordExtent.Span);
             }
             yield return new SuggestedActionSet(suggestedActions);
         }
@@ -78,13 +81,13 @@ namespace Microsoft.DevSkim.VisualStudio
         private Dictionary<string, Dictionary<int, HashSet<CodeFixMapping>>> _bucket_o_suggestions = new Dictionary<string, Dictionary<int, HashSet<CodeFixMapping>>>();
 
         public Task<bool> HasSuggestedActionsAsync(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
-        {  
+        {
             return Task.Factory.StartNew(() =>
             {
-                var res = TryGetWordUnderCaret(out TextExtent wordExtent);
+                bool res = TryGetWordUnderCaret(out TextExtent wordExtent);
                 if (res && wordExtent.IsSignificant)
                 {
-                    if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out var dictForFile))
+                    if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out System.Collections.Concurrent.ConcurrentDictionary<int, HashSet<CodeFixMapping>> dictForFile))
                     {
                         if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out HashSet<CodeFixMapping> fixes))
                         {
@@ -93,7 +96,7 @@ namespace Microsoft.DevSkim.VisualStudio
                     }
                 }
                 return false;
-            });
+            }, new CancellationTokenSource().Token, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         private bool TryGetWordUnderCaret(out TextExtent wordExtent)

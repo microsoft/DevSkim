@@ -64,10 +64,10 @@ namespace Microsoft.DevSkim.CLI.Writers
             else
             {
                 //Use the text writer
-                var path = Path.GetTempFileName();
+                string path = Path.GetTempFileName();
                 sarifLog.Save(path);
 
-                var sr = new StreamReader(path);
+                StreamReader sr = new StreamReader(path);
                 while (!sr.EndOfStream)
                 {
                     TextWriter.WriteLine(sr.ReadLine());
@@ -88,7 +88,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
 
             // Need to add UriBaseId = "%srcroot%" when not using absolute paths
-            var newVal = new ArtifactLocation() { Uri = new Uri(path,UriKind.Relative) };
+            ArtifactLocation newVal = new ArtifactLocation() { Uri = new Uri(path,UriKind.Relative) };
             locationCache[path] = newVal;
             return newVal;
         }
@@ -123,7 +123,9 @@ namespace Microsoft.DevSkim.CLI.Writers
             };
 
             if (issue.Issue.Rule.Fixes != null)
+            {
                 resultItem.Fixes = GetFixits(issue);
+            }
 
             resultItem.Level = DevSkimLevelToSarifLevel(issue.Issue.Rule.Severity);
             resultItem.Locations = new List<CodeAnalysis.Sarif.Location>
@@ -155,7 +157,7 @@ namespace Microsoft.DevSkim.CLI.Writers
         {
             if (!_rules.ContainsKey(devskimRule.Id))
             {
-                var helpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo); ;
+                Uri helpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo); ;
                 ReportingDescriptor sarifRule = new ReportingDescriptor();
                 sarifRule.Id = devskimRule.Id;
                 sarifRule.Name = devskimRule.Name;
@@ -203,7 +205,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                         CharLength = issue.Issue.Boundary.Length,
                     }, new ArtifactContent() { Text = DevSkimRuleProcessor.Fix(issue.TextSample, fix) }, null));
 
-                    var changes = new ArtifactChange[] 
+                    ArtifactChange[] changes = new ArtifactChange[] 
                     {
                         new ArtifactChange(
                             GetValueAndImplicitlyPopulateCache(issue.Filename),

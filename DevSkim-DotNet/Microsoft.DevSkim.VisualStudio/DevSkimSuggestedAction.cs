@@ -103,7 +103,7 @@ namespace Microsoft.DevSkim.VisualStudio
             }
             else
             {
-                var line = _span.Snapshot.GetLineFromLineNumber(_mapping.diagnostic.Range.End.Line);
+                ITextSnapshotLine line = _span.Snapshot.GetLineFromLineNumber(_mapping.diagnostic.Range.End.Line);
                 _span.Snapshot.TextBuffer.Insert(line.End.Position, _mapping.replacement);
             }
         }

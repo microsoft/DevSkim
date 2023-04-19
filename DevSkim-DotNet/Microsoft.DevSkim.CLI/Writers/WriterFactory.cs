@@ -10,7 +10,9 @@ namespace Microsoft.DevSkim.CLI.Writers
         public static Writer GetWriter(string writerName, string format, TextWriter output, string? outputPath = null, GitInformation? gitInformation = null)
         {
             if (string.IsNullOrEmpty(writerName))
+            {
                 writerName = "_dummy";
+            }
 
             switch (writerName.ToLowerInvariant())
             {

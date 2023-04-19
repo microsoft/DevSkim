@@ -6,16 +6,16 @@ public class DefaultRulesTests
     [TestMethod]
     public void ValidateDefaultRules()
     {
-        var devSkimRuleSet = DevSkim.DevSkimRuleSet.GetDefaultRuleSet();
+        DevSkimRuleSet devSkimRuleSet = DevSkim.DevSkimRuleSet.GetDefaultRuleSet();
         Assert.AreNotEqual(0, devSkimRuleSet.Count());
-        var validator = new DevSkim.DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+        DevSkimRuleVerifier validator = new DevSkim.DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
         {
             LanguageSpecs = DevSkimLanguages.LoadEmbedded()
         });
-        var result = validator.Verify(devSkimRuleSet);
-        foreach (var status in result.Errors)
+        DevSkimRulesVerificationResult result = validator.Verify(devSkimRuleSet);
+        foreach (ApplicationInspector.RulesEngine.RuleStatus status in result.Errors)
         {
-            foreach (var error in status.Errors)
+            foreach (string error in status.Errors)
             {
                 Console.WriteLine(error);
             }
@@ -31,7 +31,7 @@ public class DefaultRulesTests
     [TestMethod]
     public void DenamespacedRule()
     {
-        var content = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+        string content = @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <project xmlns=""http://maven.apache.org/POM/4.0.0"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"">
   <modelVersion>4.0.0</modelVersion>
 
@@ -48,7 +48,7 @@ public class DefaultRulesTests
   </properties>
 
 </project>";
-        var rule = @"[{
+        string rule = @"[{
   ""name"": ""Source code: Java 17"",
   ""id"": ""CODEJAVA000000"",
   ""description"": ""Java 17 maven configuration"",
@@ -74,10 +74,10 @@ public class DefaultRulesTests
     }
   ]
 }]";
-        var devSkimRuleSet = new DevSkimRuleSet();
+        DevSkimRuleSet devSkimRuleSet = new DevSkimRuleSet();
         devSkimRuleSet.AddString(rule, "testRules");
-        var analyzer = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions());
-        var analysis = analyzer.Analyze(content, "thing.xml");
+        DevSkimRuleProcessor analyzer = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions());
+        IEnumerable<Issue> analysis = analyzer.Analyze(content, "thing.xml");
         Assert.AreEqual(1, analysis.Count());
     }
 }

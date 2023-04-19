@@ -17,6 +17,7 @@ using Microsoft.VisualStudio.LanguageServer.Protocol;
 using System.ComponentModel.Composition;
 using Microsoft.Build.Framework.XamlTypes;
 using Microsoft.DevSkim.LanguageProtoInterop;
+using Microsoft.DevSkim.VisualStudio.ProcessTracker;
 
 namespace Microsot.DevSkim.LanguageClient
 {
@@ -26,8 +27,9 @@ namespace Microsot.DevSkim.LanguageClient
     public class DevSkimLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
     {
         [ImportingConstructor]
-        public DevSkimLanguageClient()
+        public DevSkimLanguageClient(IProcessTracker processTracker)
         {
+            _processTracker = processTracker;
         }
 
         internal JsonRpc Rpc
@@ -59,7 +61,8 @@ namespace Microsot.DevSkim.LanguageClient
 
         // This handles incoming messages to the language client
         public object CustomMessageTarget => DevSkimTarget;
-        private Process _languageServerProcess;
+        private readonly IProcessTracker _processTracker;
+
         public async Task<Connection> ActivateAsync(CancellationToken token)
         {
             await Task.Yield();
@@ -75,7 +78,7 @@ namespace Microsot.DevSkim.LanguageClient
 
             if (process.Start())
             {
-                _languageServerProcess = process;
+                _processTracker.AddProcess(process);
                 return new Connection(process.StandardOutput.BaseStream, process.StandardInput.BaseStream);
             }
             return null;
@@ -91,8 +94,6 @@ namespace Microsot.DevSkim.LanguageClient
 
         public async Task StopServerAsync()
         {
-            _languageServerProcess.Kill();
-            _languageServerProcess.Dispose();
             if (StopAsync != null)
             {
                 await StopAsync.InvokeAsync(this, EventArgs.Empty);
@@ -117,7 +118,7 @@ namespace Microsot.DevSkim.LanguageClient
             string exception = initializationState.InitializationException?.ToString() ?? string.Empty;
             message = $"{message}\n {exception}";
 
-            var failureContext = new InitializationFailureContext()
+            InitializationFailureContext failureContext = new InitializationFailureContext()
             {
                 FailureMessage = message,
             };

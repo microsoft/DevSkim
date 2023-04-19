@@ -47,7 +47,7 @@ namespace Microsoft.DevSkim
         /// <returns></returns>
         public DevSkimRuleSet WithIds(IEnumerable<string> ruleIds)
         {
-            var newSet = new DevSkimRuleSet();
+            DevSkimRuleSet newSet = new DevSkimRuleSet();
             newSet.AddRange(this.Where(x => ruleIds.Contains(x.Id)));
             return newSet;
         }
@@ -60,7 +60,7 @@ namespace Microsoft.DevSkim
         /// <exception cref="NotImplementedException"></exception>
         public DevSkimRuleSet WithoutIds(IEnumerable<string> optsIgnoreRuleIds)
         {
-            var newSet = new DevSkimRuleSet();
+            DevSkimRuleSet newSet = new DevSkimRuleSet();
             newSet.AddRange(this.Where(x => !optsIgnoreRuleIds.Contains(x.Id)));
             return newSet;
         }
