@@ -142,7 +142,7 @@ stages:
       displayName: First Party Code Sign - Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -175,7 +175,7 @@ stages:
       displayName: First Party Code Sign - MacOS
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -208,7 +208,7 @@ stages:
       displayName: First Party Code Sign - Windows
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/win/DevSkim_CLI_win_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -241,7 +241,7 @@ stages:
       displayName: First Party Code Sign - .NET Core App
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -275,7 +275,7 @@ stages:
       displayName: Third Party Code Sign - Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -308,7 +308,7 @@ stages:
       displayName: Third Party Code Sign - MacOS
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -341,7 +341,7 @@ stages:
       displayName: Third Party Code Sign - Windows
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/win/DevSkim_CLI_win_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -374,7 +374,7 @@ stages:
       displayName: Third Party Code Sign - .NET Core App
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
-        FolderPath: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
+        FolderPath: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
@@ -435,7 +435,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Linux
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_linux_$(ReleaseVersion).zip'
@@ -443,7 +443,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - MacOS
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_macos_$(ReleaseVersion).zip'
@@ -451,7 +451,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - Windows
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/win/DevSkim_CLI_win_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/win/DevSkim_CLI_win_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_win_$(ReleaseVersion).zip'
@@ -459,7 +459,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive Artifact - .NET Core App
       inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)/bin/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
+        rootFolderOrFile: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.StagingDirectory)/DevSkim_CLI_netcoreapp_$(ReleaseVersion).zip'
@@ -518,28 +518,28 @@ stages:
     - task: ManifestGeneratorTask@0
       displayName: Generate Windows Manifest
       inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/win/'
+        BuildDropPath: '$(Build.BinariesDirectory)/win/'
         ManifestDirPath: '$(Build.StagingDirectory)/sbom/win/'
         PackageName: 'DevSkim_CLI'
         PackageVersion: '$(ReleaseVersion)'
     - task: ManifestGeneratorTask@0
       displayName: Generate NetCoreApp Manifest
       inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/netcoreapp/'
+        BuildDropPath: '$(Build.BinariesDirectory)/netcoreapp/'
         ManifestDirPath: '$(Build.StagingDirectory)/sbom/netcoreapp/'
         PackageName: 'DevSkim_CLI'
         PackageVersion: '$(ReleaseVersion)'
     - task: ManifestGeneratorTask@0
       displayName: Generate Linux Manifest
       inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/linux/'
+        BuildDropPath: '$(Build.BinariesDirectory)/linux/'
         ManifestDirPath: '$(Build.StagingDirectory)/sbom/linux/'
         PackageName: 'DevSkim_CLI'
         PackageVersion: '$(ReleaseVersion)'
     - task: ManifestGeneratorTask@0
       displayName: Generate MacOS Manifest
       inputs:
-        BuildDropPath: '$(Build.BinariesDirectory)/bin/macos/'
+        BuildDropPath: '$(Build.BinariesDirectory)/macos/'
         ManifestDirPath: '$(Build.StagingDirectory)/sbom/macos/'
         PackageName: 'DevSkim_CLI'
         PackageVersion: '$(ReleaseVersion)'
