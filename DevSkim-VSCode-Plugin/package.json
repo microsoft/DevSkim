@@ -300,7 +300,7 @@
 		"pack-ext": "npm run clean:out && npm run clean:modules && npm run setup:release && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && npm run vsce-pack-pre) || (vsce package || npm run vsce-pack)) && node ./scripts/resetPackageVersion.js",
 		"pack-ext:debug": "npm run clean:out && npm run clean:modules && npm run setup && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && npm run vsce-pack-pre) || (vsce package || npm run vsce-pack)) && node ./scripts/resetPackageVersion.js",
 		"vsce-pack-pre": "vsce package --pre-release || echo 'Pre-Release build failed'",
-		"vsce-pack": "vsce package --pre-release || echo 'Pre-Release build failed'"
+		"vsce-pack": "vsce package || echo 'Release build failed'"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",
