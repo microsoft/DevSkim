@@ -38,7 +38,7 @@ stages:
       buildConfiguration: 'Release'
       dotnetVersion: '7.0.x'
       targetFramework: 'net47'
-      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VSExtension/Microsoft.DevSkim.VSExtension.csproj'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Microsoft.DevSkim.VisualStudio.csproj'
       projectName: 'DevSkim_VS'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
