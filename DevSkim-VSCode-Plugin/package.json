@@ -297,8 +297,10 @@
 		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-		"pack-ext": "npm run clean:out && npm run clean:modules && npm run setup:release && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && (vsce package --pre-release || echo 'Pre-Release build failed')) || (vsce package || echo 'Release build failed')) && node ./scripts/resetPackageVersion.js",
-		"pack-ext:debug": "npm run clean:out && npm run clean:modules && npm run setup && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && (vsce package --pre-release || echo 'Pre-Release build failed')) || (vsce package || echo 'Release build failed')) && node ./scripts/resetPackageVersion.js"
+		"pack-ext": "npm run clean:out && npm run clean:modules && npm run setup:release && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && npm run vsce-pack-pre) || (vsce package || npm run vsce-pack)) && node ./scripts/resetPackageVersion.js",
+		"pack-ext:debug": "npm run clean:out && npm run clean:modules && npm run setup && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && npm run vsce-pack-pre) || (vsce package || npm run vsce-pack)) && node ./scripts/resetPackageVersion.js",
+		"vsce-pack-pre": "vsce package --pre-release || echo 'Pre-Release build failed'",
+		"vsce-pack": "vsce package --pre-release || echo 'Pre-Release build failed'"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",
