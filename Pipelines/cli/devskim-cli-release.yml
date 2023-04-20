@@ -138,7 +138,7 @@ stages:
         packageType: 'sdk'
         version: '6.x'
     # First party code signing
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: First Party Code Sign - Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -171,7 +171,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: First Party Code Sign - MacOS
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -204,7 +204,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: First Party Code Sign - Windows
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -237,7 +237,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: First Party Code Sign - .NET Core App
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -271,7 +271,7 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     # Third party code signing
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: Third Party Code Sign - Linux
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -304,7 +304,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: Third Party Code Sign - MacOS
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -337,7 +337,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: Third Party Code Sign - Windows
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -370,7 +370,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: Third Party Code Sign - .NET Core App
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -403,7 +403,7 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@2
+    - task: EsrpCodeSigning@3
       displayName: Code Sign Nuget Packages
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
