@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.4
+      ref: refs/tags/v1.0.5
 
 stages:
 - stage: Test
@@ -486,29 +486,29 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Binaries'
-    - task: GitHubRelease@1
-      displayName: Release to GitHub
-      inputs:
-        gitHubConnection: 'DevSkim'
-        repositoryName: 'microsoft/DevSkim'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'userSpecifiedTag'
-        tag: 'v$(ReleaseVersion)'
-        title: 'DevSkim CLI v$(ReleaseVersion)'
-        assets: |
-          $(Build.StagingDirectory)/*.zip
-          $(Build.StagingDirectory)/HASHES.txt
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
-    - task: NuGetCommand@2
-      displayName: Publish NuGet Packages
-      inputs:
-        command: 'push'
-        packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'CST-E Nuget CI'
-        verbosityPush: 'Normal'
+    # - task: GitHubRelease@1
+    #   displayName: Release to GitHub
+    #   inputs:
+    #     gitHubConnection: 'DevSkim'
+    #     repositoryName: 'microsoft/DevSkim'
+    #     action: 'create'
+    #     target: '$(Build.SourceVersion)'
+    #     tagSource: 'userSpecifiedTag'
+    #     tag: 'v$(ReleaseVersion)'
+    #     title: 'DevSkim CLI v$(ReleaseVersion)'
+    #     assets: |
+    #       $(Build.StagingDirectory)/*.zip
+    #       $(Build.StagingDirectory)/HASHES.txt
+    #     changeLogCompareToRelease: 'lastNonDraftRelease'
+    #     changeLogType: 'commitBased'
+    # - task: NuGetCommand@2
+    #   displayName: Publish NuGet Packages
+    #   inputs:
+    #     command: 'push'
+    #     packagesToPush: '$(Build.StagingDirectory)/*.nupkg'
+    #     nuGetFeedType: 'external'
+    #     publishFeedCredentials: 'CST-E Nuget CI'
+    #     verbosityPush: 'Normal'
     - task: PowerShell@2
       displayName: Mkdir for Manifests
       inputs:
