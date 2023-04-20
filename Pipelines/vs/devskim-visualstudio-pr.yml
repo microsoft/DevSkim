@@ -11,7 +11,7 @@ pr:
     include:
     - Pipelines/vs/devskim-visualstudio-pr.yml
     - DevSkim-DotNet/Microsoft.DevSkim
-    - DevSkim-DotNet/Microsoft.DevSkim.VSExtension
+    - DevSkim-DotNet/Microsoft.DevSkim.VisualStudio
     - rules
 
 resources:
