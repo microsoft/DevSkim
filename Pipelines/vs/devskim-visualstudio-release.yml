@@ -154,7 +154,7 @@ stages:
       displayName: Move VS Marketplace Manifest
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
+        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/publish.manifest.json $env:BUILD_STAGINGDIRECTORY/'
     - task: PowerShell@2
       displayName: Move Readme-gallery.md
       inputs:
@@ -168,7 +168,7 @@ stages:
     #       Install-Module VSSetup -Force
     #       $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
     #       $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
-    #       & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/vs-manifest.json -personalAccessToken $(VS_Token) -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
+    #       & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/publish.manifest.json -personalAccessToken $(VS_Token) -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
     #     workingDirectory: '$(Build.StagingDirectory)'
     # - task: GitHubRelease@1
     #   displayName: Release to GitHub
