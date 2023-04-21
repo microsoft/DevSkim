@@ -24,7 +24,7 @@ public class AnalyzeCommandOptions
     [Option("comments",Required = false, HelpText = "Path to custom json formatted Comments file to specify languages, when specified languages must also be specified")]
     public string CommentsPath { get; set; } = string.Empty;
 
-    [Option('I',Required = true, HelpText = "Path to source code")]
+    [Option('I', "source-code",Required = true, HelpText = "Path to a directory containing files to scan or a single file to scan")]
     public string Path { get; set; } = string.Empty;
     
     [Option('O',"output-file",Required = false, HelpText = "Filename for result file, uses stdout if not set.")]
@@ -65,7 +65,7 @@ public class AnalyzeCommandOptions
     
     [Option("base-path",
         HelpText =
-            "Specify what path to root result URIs with. When not set will generate paths relative to the source directory (or directory containing the source file specified)")]
+            "Specify what path to root result URIs in Sarif results with. When not set will generate paths relative to the source directory (or directory containing the source file specified)")]
     public string BasePath { get; set; } = string.Empty;
     
     [Option("absolute-path", HelpText = "Output absolute paths (overrides --base-path).")]

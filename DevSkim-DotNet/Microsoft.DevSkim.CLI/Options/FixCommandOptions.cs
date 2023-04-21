@@ -7,10 +7,10 @@ namespace Microsoft.DevSkim.CLI.Options;
 [Verb("fix", HelpText = "Apply fixes from a Sarif")]
 public class FixCommandOptions
 {
-    [Option('I',Required = true, HelpText = "Path to source code")]
+    [Option('I', "source-code", Required = true, HelpText = "Path to the parent directory containing the source code that was scanned to produce the sarif.")]
     public string Path { get; set; } = String.Empty;
     
-    [Option('O',Required = true, HelpText = "Filename for input sarif with proposed fixes.")]
+    [Option('O', "sarif-result", Required = true, HelpText = "Filename for the output sarif from DevSkim Analyze.")]
     public string SarifInput { get; set; } = String.Empty;
     
     [Option("dry-run", HelpText = "Print information about files that would be changed without changing them.")]
