@@ -156,10 +156,10 @@ stages:
         targetType: 'inline'
         script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/vs-manifest.json $env:BUILD_STAGINGDIRECTORY/'
     - task: PowerShell@2
-      displayName: Move Readme-gallery.txt
+      displayName: Move Readme-gallery.md
       inputs:
         targetType: 'inline'
-        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Content/readme-gallery.txt $env:BUILD_STAGINGDIRECTORY/'
+        script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Content/readme-gallery.md $env:BUILD_STAGINGDIRECTORY/'
     # - task: PowerShell@2
     #   displayName: Deploy to VS Marketplace
     #   inputs:
