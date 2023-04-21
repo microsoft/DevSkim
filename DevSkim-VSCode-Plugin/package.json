@@ -1,5 +1,6 @@
 {
 	"type": "module",
+	"preview": true,
 	"name": "vscode-devskim",
 	"displayName": "DevSkim",
 	"description": "DevSkim Security Analyzer Plugin for IDEs. Find security mistakes as code is authored, and fix them with a mouse click.",
@@ -297,8 +298,16 @@
 		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-		"pack-ext": "npm run clean:out && npm run clean:modules && npm run setup:release && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && (vsce package --pre-release || echo 'Pre-Release build failed')) || (vsce package || echo 'Release build failed')) && node ./scripts/resetPackageVersion.js",
-		"pack-ext:debug": "npm run clean:out && npm run clean:modules && npm run setup && node ./scripts/setPackageVersion.js && ((node ./scripts/checkPreReleaseFlag.js && (vsce package --pre-release || echo 'Pre-Release build failed')) || (vsce package || echo 'Release build failed')) && node ./scripts/resetPackageVersion.js"
+		"pack-ext": "npm run pre-pack-clean && npm run setup:release && npm run set-version-and-pack",
+		"pack-ext:debug": "npm run pre-pack-clean && npm run setup && && npm run set-version-and-pack",
+		"pre-pack-clean": "npm run clean:out && npm run clean:modules",
+		"set-version-and-pack": "npm run set-version && npm run do-pack && npm run reset-version",
+		"do-pack": "(npm run check-pre-release && npm run vsce-pack-pre) || npm run vsce-pack",
+		"set-version": "node ./scripts/setPackageVersion.js",
+		"reset-version": "node ./scripts/resetPackageVersion.js",
+		"check-pre-release": "node ./scripts/checkPreReleaseFlag.js",
+		"vsce-pack-pre": "vsce package --pre-release || echo 'Pre-Release build failed'",
+		"vsce-pack": "vsce package || echo 'Release build failed'"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",

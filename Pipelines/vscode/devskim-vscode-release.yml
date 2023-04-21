@@ -18,7 +18,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.4
+      ref: refs/tags/v1.0.5
 
 stages:
 - stage: SDL
@@ -162,7 +162,7 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Warning'
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@3
       displayName: Code Sign VSCode Plugin
       inputs:
         ConnectedServiceName: 'Devskim_CodeSign'
@@ -233,7 +233,7 @@ stages:
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: 'userSpecifiedTag'
-        tag: 'v$(ReleaseVersion)'
+        tag: 'VSCode v$(ReleaseVersion)'
         title: 'DevSkim VS Code Extension v$(ReleaseVersion)'
         assets: |
           $(Build.StagingDirectory)/*.vsix

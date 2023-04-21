@@ -30,7 +30,7 @@ This repository contains DevSkim and its official supported plugins. Issues and 
 * DevSkim CLI
   * Location: `./DevSkim-DotNet/Microsoft.DevSkim.CLI/`
 * DevSkim Visual Studio Extension
-  * Location: `./DevSkim-DotNet/Microsoft.DevSkim.VSExtension/`
+  * Location: `./DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/`
 * DevSkim Visual Studio Code Plugin
   * Location: `./DevSkim-VSCode-Plugin/`
 * Common Rules and Guidance

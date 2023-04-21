@@ -4,12 +4,12 @@ using CommandLine;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
-[Verb("suppressions", HelpText = "Apply suppressions from a Sarif")]
+[Verb("suppress", HelpText = "Suppress issues identified in a DevSkim Sarif")]
 public class SuppressionCommandOptions
 {
-    [Option('I', Required = true, HelpText = "Path to source code")]
+    [Option('I', "source-code", Required = true, HelpText = "Path to the parent directory containing the source code that was scanned to produce the sarif.")]
     public string Path { get; set; } = String.Empty;
-    [Option('O', Required = true, HelpText = "Filename for sarif with DevSkim scan results.")]
+    [Option('O', "sarif-result", Required = true, HelpText = "Filename for the output sarif from DevSkim Analyze.")]
     public string SarifInput { get; set; } = String.Empty;
     [Option("dry-run", HelpText = "Print information about files that would be changed without changing them.")]
     public bool DryRun { get; set; }

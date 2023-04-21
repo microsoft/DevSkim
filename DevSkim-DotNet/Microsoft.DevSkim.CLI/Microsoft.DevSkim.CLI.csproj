@@ -16,7 +16,7 @@
     <ToolCommandName>devskim</ToolCommandName>
     <PackageId>Microsoft.CST.DevSkim.CLI</PackageId>
     <PackageTags>Security Linter</PackageTags>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>devskim-icon-128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
     <PackageVersion>0.0.0</PackageVersion>

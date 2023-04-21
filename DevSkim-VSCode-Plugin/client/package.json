@@ -11,13 +11,13 @@
 		"url": "https://github.com/Microsoft/devskim.git"
 	},
 	"engines": {
-		"vscode": "^1.52.0"
+		"vscode": "^1.63.0"
 	},
 	"dependencies": {
 		"vscode-languageclient": "^7.0.0"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.52.0",
+		"@types/vscode": "^1.63.0",
 		"@vscode/test-electron": "^1.6.1"
 	}
 }

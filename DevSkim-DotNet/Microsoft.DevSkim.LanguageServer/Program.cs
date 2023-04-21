@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CommandLine;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -10,6 +11,12 @@ namespace DevSkim.LanguageServer;
 
 internal class Program
 {
+	public class Options
+	{
+		[Option("visual-studio", Required = false, HelpText = "Set to use Visual Studio compatible settings handling")]
+		public bool VisualStudioMode { get; set; }
+	}
+
 	static async Task Main(string[] args)
 	{
 #if DEBUG
@@ -26,8 +33,14 @@ internal class Program
         // Creates a "silent" logger
         Log.Logger = new LoggerConfiguration().CreateLogger();
 #endif
+		Options _options = new Options();
+        Parser.Default.ParseArguments<Options>(args)
+            .WithParsed<Options>(o =>
+            {
+				_options = o;
+            });
 
-		Log.Logger.Debug("Configuring server...");
+        Log.Logger.Debug("Configuring server...");
 		IObserver<WorkDoneProgressReport> workDone = null!;
 
         OmniSharp.Extensions.LanguageServer.Server.LanguageServer server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(
@@ -77,15 +90,22 @@ internal class Program
 							using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = await languageServer.WorkDoneManager.Create(
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
-							// Intentionally disabled until configuration is implemented for Visual Studio
-							//IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
-							//	new ConfigurationItem
-							//	{
-							//		Section = ConfigHelpers.Section
-							//	}
-							//).ConfigureAwait(false);
-							//ConfigHelpers.SetScannerSettings(configuration);
-							Log.Logger.Debug("Listening for client events...");
+							// if (!_options.VisualStudioMode)
+							// {
+							// 	IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
+							// 		new ConfigurationItem
+							// 		{
+							// 			Section = ConfigHelpers.Section
+							// 		}
+							// 	).ConfigureAwait(false);
+							// 	ConfigHelpers.SetScannerSettings(configuration);
+							// }
+							// else
+							// {
+                            //     // TODO: Handle configuration for Visual Studio
+                            // }
+
+                            Log.Logger.Debug("Listening for client events...");
 						}
 					)
 		).ConfigureAwait(false);
