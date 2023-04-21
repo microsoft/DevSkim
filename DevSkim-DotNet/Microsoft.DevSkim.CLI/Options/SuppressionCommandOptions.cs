@@ -4,7 +4,7 @@ using CommandLine;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
-[Verb("suppressions", HelpText = "Apply suppressions from a Sarif")]
+[Verb("suppress", HelpText = "Suppress issues identified in a DevSkim Sarif")]
 public class SuppressionCommandOptions
 {
     [Option('I', Required = true, HelpText = "Path to source code")]
