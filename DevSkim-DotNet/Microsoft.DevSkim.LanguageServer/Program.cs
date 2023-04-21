@@ -90,20 +90,20 @@ internal class Program
 							using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = await languageServer.WorkDoneManager.Create(
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
 
-							if (!_options.VisualStudioMode)
-							{
-								IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
-									new ConfigurationItem
-									{
-										Section = ConfigHelpers.Section
-									}
-								).ConfigureAwait(false);
-								ConfigHelpers.SetScannerSettings(configuration);
-							}
-							else
-							{
-                                // TODO: Handle configuration for Visual Studio
-                            }
+							// if (!_options.VisualStudioMode)
+							// {
+							// 	IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
+							// 		new ConfigurationItem
+							// 		{
+							// 			Section = ConfigHelpers.Section
+							// 		}
+							// 	).ConfigureAwait(false);
+							// 	ConfigHelpers.SetScannerSettings(configuration);
+							// }
+							// else
+							// {
+                            //     // TODO: Handle configuration for Visual Studio
+                            // }
 
                             Log.Logger.Debug("Listening for client events...");
 						}
