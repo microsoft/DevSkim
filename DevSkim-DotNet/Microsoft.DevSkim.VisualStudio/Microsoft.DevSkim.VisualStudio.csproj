@@ -73,6 +73,10 @@
     <Compile Include="SuggestionActionsSource.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\readme-gallery.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <VSIXSubPath>Content</VSIXSubPath>
+    </None>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -110,6 +114,18 @@
       <Project>{774e78f3-b48a-4d01-b70b-9cfb03a55663}</Project>
       <Name>Microsoft.DevSkim.LanguageProtoInterop</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\devskim.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Content</VSIXSubPath>
+    </Content>
+    <Content Include="Content\License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Content</VSIXSubPath>
+    </Content>
   </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">
