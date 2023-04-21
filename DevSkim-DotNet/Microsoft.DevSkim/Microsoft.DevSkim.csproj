@@ -4,10 +4,10 @@
     <TargetFrameworks>netstandard2.1;net6.0;net7.0</TargetFrameworks>    
     <PackageId>Microsoft.CST.DevSkim</PackageId>
     <PackageVersion>0.0.0</PackageVersion>
-    <Authors>Microsoft</Authors>
     <PackageTags>Security Linter</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Microsoft</Authors>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright> 
     <Description>DevSkim is a framework and language analyzer that provides inline security analysis. This is a library package. For the Dotnet Tool package, see Microsoft.CST.DevSkim.CLI.</Description>
     <PackageIcon>devskim-icon-128.png</PackageIcon>

@@ -28,6 +28,7 @@
     <StartArguments>/rootsuffix Exp</StartArguments>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
