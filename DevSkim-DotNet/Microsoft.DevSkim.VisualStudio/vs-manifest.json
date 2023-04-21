@@ -1,6 +1,6 @@
 {
     "$schema": "http://json.schemastore.org/vsix-publish",
-    "categories": [ "coding", "programming languages", "security" ],
+    "categories": [ "linter", "static analysis", "security" ],
     "identity": {
         "internalName": "Microsoft.DevSkim.VisualStudio"
     },
