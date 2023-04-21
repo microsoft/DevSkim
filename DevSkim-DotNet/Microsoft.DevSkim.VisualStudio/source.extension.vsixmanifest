@@ -5,8 +5,8 @@
         <DisplayName>Microsoft.DevSkim.VisualStudio</DisplayName>
         <Description>DevSkim is a language analyzer that provides inline security analysis.</Description>
         <MoreInfo>https://github.com/Microsoft/DevSkim</MoreInfo>
-        <License>..\Content\LICENSE.txt</License>
-        <Icon>..\Content\devskim.ico</Icon>
+        <License>Content\LICENSE.txt</License>
+        <Icon>Content\devskim.ico</Icon>
         <!-- <PreviewImage>..\Content\devskim-icon-200.png</PreviewImage> -->
         <Tags>linter;linters;coding;security;static analysis</Tags>
     </Metadata>
