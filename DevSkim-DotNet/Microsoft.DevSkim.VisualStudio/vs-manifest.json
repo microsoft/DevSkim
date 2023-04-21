@@ -4,7 +4,7 @@
     "identity": {
         "internalName": "Microsoft.DevSkim.VisualStudio"
     },
-    "overview": "readme-gallery.txt",
+    "overview": "readme-gallery.md",
     "priceCategory": "free",
     "publisher": "MS-CST-E",
     "private": false,
