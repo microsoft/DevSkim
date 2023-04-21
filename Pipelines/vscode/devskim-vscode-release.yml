@@ -209,33 +209,33 @@ stages:
         command: 'custom'
         customCommand: 'install -g vsce'
     - template: nbgv-set-version-steps.yml@templates
-    # - task: PowerShell@2
-    #   displayName: Publish Pre-Release / Release
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #         $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix
-    #         if ("$(ReleaseVersion)".Contains("-"))
-    #         {
-    #             echo "Publishing as --pre-release = $(ReleaseVersion)"
-    #             vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
-    #         }
-    #         else
-    #         {
-    #             echo "Publishing as official release = $(ReleaseVersion)"
-    #             vsce publish --packagePath $packPath --pat $(VS_Token)
-    #         }
-    # - task: GitHubRelease@1
-    #   displayName: Release to GitHub
-    #   inputs:
-    #     gitHubConnection: 'DevSkim'
-    #     repositoryName: 'microsoft/DevSkim'
-    #     action: 'create'
-    #     target: '$(Build.SourceVersion)'
-    #     tagSource: 'userSpecifiedTag'
-    #     tag: 'VSCode v$(ReleaseVersion)'
-    #     title: 'DevSkim VS Code Extension v$(ReleaseVersion)'
-    #     assets: |
-    #       $(Build.StagingDirectory)/*.vsix
-    #     changeLogCompareToRelease: 'lastNonDraftRelease'
-    #     changeLogType: 'commitBased'
+    - task: PowerShell@2
+      displayName: Publish Pre-Release / Release
+      inputs:
+        targetType: 'inline'
+        script: |
+            $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix
+            if ("$(ReleaseVersion)".Contains("-"))
+            {
+                echo "Publishing as --pre-release = $(ReleaseVersion)"
+                vsce publish --packagePath $packPath --pat $(VS_Token) --pre-release
+            }
+            else
+            {
+                echo "Publishing as official release = $(ReleaseVersion)"
+                vsce publish --packagePath $packPath --pat $(VS_Token)
+            }
+    - task: GitHubRelease@1
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: 'DevSkim'
+        repositoryName: 'microsoft/DevSkim'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecifiedTag'
+        tag: 'VSCode v$(ReleaseVersion)'
+        title: 'DevSkim VS Code Extension v$(ReleaseVersion)'
+        assets: |
+          $(Build.StagingDirectory)/*.vsix
+        changeLogCompareToRelease: 'lastNonDraftRelease'
+        changeLogType: 'commitBased'
