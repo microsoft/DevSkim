@@ -47,6 +47,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                 opts.BasePath = fp;
             }
 
+            if (!string.IsNullOrEmpty(opts.OutputFile))
+            {
+                opts.OutputFile = Path.Combine(Environment.CurrentDirectory, opts.OutputFile);
+            }
+
             IEnumerable<FileEntry> fileListing;
             Extractor extractor = new Extractor();
             ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };

@@ -55,7 +55,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             sarifLog.Runs = new List<Run>();
             sarifLog.Runs.Add(runItem);
 
-            if (OutputPath != null)
+            if (!string.IsNullOrEmpty(OutputPath))
             {
                 TextWriter.Close();
                 File.Delete(OutputPath);

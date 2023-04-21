@@ -27,7 +27,7 @@ public class AnalyzeCommandOptions
     [Option('I',Required = true, HelpText = "Path to source code")]
     public string Path { get; set; } = string.Empty;
     
-    [Option('O',"output-file",Required = true, HelpText = "Filename for result file.")]
+    [Option('O',"output-file",Required = false, HelpText = "Filename for result file, uses stdout if not set.")]
     public string OutputFile { get; set; } = string.Empty;
     
     [Option('o', "output-format", HelpText = "Format for output text.", Default = SimpleTextWriter.DefaultFormat)]
