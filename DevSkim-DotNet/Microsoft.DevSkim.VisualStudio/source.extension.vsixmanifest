@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Microsoft.DevSkim.VisualStudio.d1769410-aa48-48f6-b157-da14546b6c28" Version="1.0" Language="en-US" Publisher="Microsoft" />
+        <Identity Id="Microsoft.DevSkim.VisualStudio.d1769410-aa48-48f6-b157-da14546b6c28" Version="0.0.0" Language="en-US" Publisher="Microsoft Corporation" />
         <DisplayName>Microsoft.DevSkim.VisualStudio</DisplayName>
-        <Description>DevSkim Visual Studio 2022 Extension</Description>
+        <Description>DevSkim is a language analyzer that provides inline security analysis.</Description>
+        <MoreInfo>https://github.com/Microsoft/DevSkim</MoreInfo>
+        <License>..\Content\LICENSE.txt</License>
+        <Icon>..\Content\devskim-icon-32.png</Icon>
+        <PreviewImage>..\Content\devskim-icon-200.png</PreviewImage>
+        <Tags>linter;linters;coding;security;static analysis</Tags>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
