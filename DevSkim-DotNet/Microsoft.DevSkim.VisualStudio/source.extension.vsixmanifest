@@ -9,7 +9,6 @@
         <Icon>Content\devskim-icon-32.png</Icon>
         <PreviewImage>Content\devskim-icon-200.png</PreviewImage>
         <Tags>linter;linters;coding;security;static analysis</Tags>
-        <Preview>true</Preview>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
