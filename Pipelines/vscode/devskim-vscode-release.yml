@@ -144,6 +144,7 @@ stages:
       name: 'OSS-Tools-1ESPool'
       vmImage: 'oss-tools-win2022_1es-managed'
     steps:
+    - template: nbgv-set-version-steps.yml@templates
     - task: DownloadBuildArtifacts@0
       displayName: Retrieve Unsigned Artifact 
       inputs:
@@ -208,7 +209,6 @@ stages:
       inputs:
         command: 'custom'
         customCommand: 'install -g vsce'
-    - template: nbgv-set-version-steps.yml@templates
     - task: PowerShell@2
       displayName: Publish Pre-Release / Release
       inputs:
