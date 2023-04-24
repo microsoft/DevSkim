@@ -1,4 +1,15 @@
-﻿*.vsix
+﻿# Compiled Binaries
+*.vsix
+*.dll
+*.pdb
+*.exe
+**/bin/
+**/obj/
+# IDE User settings
+**/.idea/
+DevSkim-DotNet/Microsoft.DevSkim.sln.DotSettings.user
+# Packed Rules
 DevSkim-DotNet/Microsoft.DevSkim/Resources/devskim-rules.json
-DevSkim-DotNet/Microsoft.DevSkim.Blazor/bin/
-DevSkim-DotNet/Microsoft.DevSkim.Blazor/obj/
+# Ignore artifacts from DevSkim 0.8+
+DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/generatedLanguageServerBinaries/
+DevSkim-VSCode-Plugin/devskimBinaries/*
