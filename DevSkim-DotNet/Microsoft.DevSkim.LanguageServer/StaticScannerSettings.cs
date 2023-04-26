@@ -1,4 +1,6 @@
-﻿namespace DevSkim.LanguageServer
+﻿using Microsoft.DevSkim.LanguageProtoInterop;
+
+namespace DevSkim.LanguageServer
 {
     using Microsoft.DevSkim;
     using System;
@@ -23,5 +25,21 @@
         internal static DevSkimRuleSet RuleSet { get; set; } = new DevSkimRuleSet();
         internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = new DevSkimRuleProcessorOptions();
         internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(), new DevSkimRuleProcessorOptions());
+
+        public static void UpdateWith(PortableScannerSettings request)
+        {
+            SuppressionStyle = Enum.Parse<SuppressionStyle>(request.SuppressionStyle);
+            CustomRulePaths = request.CustomRulePaths;
+            IgnoreRuleIds = request.IgnoreRuleIds;
+            IgnoreFiles = request.IgnoreFiles;
+            ReviewerName = request.ReviewerName;
+            SuppressionDuration = request.SuppressionDuration;
+            IgnoreDefaultRuleSet = request.IgnoreDefaultRuleSet;
+            ScanOnOpen = request.ScanOnOpen;
+            ScanOnSave = request.ScanOnSave;
+            ScanOnChange = request.ScanOnChange;
+            RemoveFindingsOnClose = request.RemoveFindingsOnClose;
+            // TODO handle languages/comments here
+        }
     }
 }

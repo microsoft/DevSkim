@@ -7,5 +7,6 @@
     public static class DevSkimMessages
     {
         public const string CodeFixMapping = "devskim/codefixmapping";
+        public const string SetServerSettings = "devskim/setSettings";
     }
 }
