@@ -22,12 +22,22 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         public override void FlushAndClose()
         {
-            SarifLog sarifLog = new SarifLog();
-            sarifLog.Version = SarifVersion.Current;
-            Run runItem = new Run();
-            runItem.Tool = new Tool();
+            SarifLog sarifLog = new SarifLog
+            {
+                Version = SarifVersion.Current
+            };
+            Run runItem = new Run
+            {
+                Tool = new Tool
+                {
+                    Driver = new ToolComponent()
+                    {
+                        Rules = _rules.Select(x => x.Value).ToList()
+                    }
+                },
+                Results = _results.ToList()
+            };
 
-            runItem.Tool.Driver = new ToolComponent();
             if (Assembly.GetEntryAssembly() is { } entryAssembly)
             {
                 runItem.Tool.Driver.Name = entryAssembly.GetName().Name;
@@ -39,9 +49,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                     .InformationalVersion;
             }
 
-            runItem.Tool.Driver.Rules = _rules.Select(x => x.Value).ToList();
-            runItem.Results = _results.ToList();
-            if (_gitInformation is { })
+            if (_gitInformation is not null)
             {
                 runItem.VersionControlProvenance = new List<VersionControlDetails>()
                 {
@@ -57,15 +65,18 @@ namespace Microsoft.DevSkim.CLI.Writers
             sarifLog.Runs = new List<Run>();
             sarifLog.Runs.Add(runItem);
 
-            string path = Path.GetTempFileName();
-            sarifLog.Save(path);
-
-            // We have to deserialize the sarif using JSON to get the raw data
-            //  Levels which were set to warning will not be populated otherwise
-            // https://github.com/microsoft/sarif-sdk/issues/2024
-            var reReadLog = JObject.Parse(File.ReadAllText(path));
+            // Begin Workaround for https://github.com/microsoft/sarif-sdk/issues/2024
+            
+            // Save the sarif log to a stream
+            var stream = new MemoryStream();
+            sarifLog.Save(stream);
+            stream.Position = 0;
+            // Read the saved log back in
+            var reReadLog = JObject.Parse(new StreamReader(stream).ReadToEnd());
+            // Find results with levels that are not set
             var resultsWithoutLevels =
                 reReadLog.SelectTokens("$.runs[*].results[*]").Where(t => t["level"] == null).ToList();
+            // For each result with no level set its level to warning
             foreach (var result in resultsWithoutLevels)
             {
                 result["level"] = "warning";
@@ -74,34 +85,28 @@ namespace Microsoft.DevSkim.CLI.Writers
             // Rules which had a default configuration of Warning will also not have the field populated
             var rulesWithoutDefaultConfiguration = reReadLog.SelectTokens("$.runs[*].tool.driver.rules[*]")
                 .Where(t => t["defaultConfiguration"] == null).ToList();
+            // For each result with no default configuration option, add one with the level warning
             foreach (var rule in rulesWithoutDefaultConfiguration)
             {
                 rule["defaultConfiguration"] = new JObject {{ "level", "warning" }};
             }
             
             // Rules with a DefaultConfiguration object, but where that object has no level also should be set
-            // This is not currently devskim behavior, but its possible we may add to the bag
+            //  DevSkim should always populate this object with a level, but potentially
             var rulesWithoutDefaultConfigurationLevel = reReadLog.SelectTokens("$.runs[*].tool.driver.rules[*].defaultConfiguration")
                 .Where(t => t["level"] == null).ToList();
+            // For each result with a default configuration object that has no level
+            //  add a level property equal to warning
             foreach (var rule in rulesWithoutDefaultConfigurationLevel)
             {
                 rule["level"] = "warning";
             }
             
-            if (!string.IsNullOrEmpty(OutputPath))
-            {
-                using var jsonWriter = new JsonTextWriter(TextWriter);
-                reReadLog.WriteTo(jsonWriter);
-                TextWriter.Flush();
-            }
-            else
-            {
-                // Output to TextWriter (which should be console)
-                using var writer = new JsonTextWriter(TextWriter);
-                reReadLog.WriteTo(writer);
-                writer.Close();
-                TextWriter.Flush();
-            }
+            using var jsonWriter = new JsonTextWriter(TextWriter);
+            reReadLog.WriteTo(jsonWriter);
+            // End Workaround
+
+            TextWriter.Flush();
         }
 
         private ConcurrentDictionary<string, ArtifactLocation> locationCache = new ConcurrentDictionary<string, ArtifactLocation>();
@@ -159,6 +164,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 loc
             };
             resultItem.SetProperty("DevSkimSeverity", issue.Issue.Rule.Severity.ToString());
+            resultItem.SetProperty("DevSkimConfidence", issue.Issue.Rule.Confidence.ToString());
             _results.Push(resultItem);
         }
 
@@ -191,12 +197,17 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.Help = new MultiformatMessageString()
                 {
-                    Text = devskimRule.Description,
+                    Text = devskimRule.Recommendation ?? devskimRule.Description,
                     Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue."
                 };
                 sarifRule.HelpUri = helpUri;
-                sarifRule.DefaultConfiguration = new ReportingConfiguration() { Enabled = true };
-                sarifRule.DefaultConfiguration.Level = DevSkimLevelToSarifLevel(devskimRule.Severity);
+                sarifRule.DefaultConfiguration = new ReportingConfiguration()
+                {
+                    Enabled = true,
+                    Level = DevSkimLevelToSarifLevel(devskimRule.Severity)
+                };
+                sarifRule.SetProperty("DevSkimSeverity", devskimRule.Severity.ToString());
+                sarifRule.SetProperty("DevSkimConfidence", devskimRule.Confidence.ToString());
 
                 _rules.TryAdd(devskimRule.Id, sarifRule);
             }
