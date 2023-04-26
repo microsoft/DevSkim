@@ -62,6 +62,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
             // We have to deserialize the sarif using JSON to get the raw data
             //  Levels which were set to warning will not be populated otherwise
+            // https://github.com/microsoft/sarif-sdk/issues/2024
             var reReadLog = JObject.Parse(File.ReadAllText(path));
             var resultsWithoutLevels =
                 reReadLog.SelectTokens("$.runs[*].results[*]").Where(t => t["level"] == null).ToList();
@@ -76,6 +77,15 @@ namespace Microsoft.DevSkim.CLI.Writers
             foreach (var rule in rulesWithoutDefaultConfiguration)
             {
                 rule["defaultConfiguration"] = new JObject {{ "level", "warning" }};
+            }
+            
+            // Rules with a DefaultConfiguration object, but where that object has no level also should be set
+            // This is not currently devskim behavior, but its possible we may add to the bag
+            var rulesWithoutDefaultConfigurationLevel = reReadLog.SelectTokens("$.runs[*].tool.driver.rules[*].defaultConfiguration")
+                .Where(t => t["level"] == null).ToList();
+            foreach (var rule in rulesWithoutDefaultConfigurationLevel)
+            {
+                rule["level"] = "warning";
             }
             
             if (!string.IsNullOrEmpty(OutputPath))
