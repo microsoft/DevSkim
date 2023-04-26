@@ -33,10 +33,10 @@ namespace Microsoft.DevSkim.CLI.Writers
                 runItem.Tool.Driver.Name = entryAssembly.GetName().Name;
 
                 runItem.Tool.Driver.FullName = entryAssembly.GetCustomAttribute<AssemblyProductAttribute>()?
-                                                     .Product;
+                    .Product;
 
                 runItem.Tool.Driver.Version = entryAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-                                                    .InformationalVersion;
+                    .InformationalVersion;
             }
 
             runItem.Tool.Driver.Rules = _rules.Select(x => x.Value).ToList();
@@ -53,24 +53,26 @@ namespace Microsoft.DevSkim.CLI.Writers
                     }
                 };
             }
-            
+
             sarifLog.Runs = new List<Run>();
             sarifLog.Runs.Add(runItem);
-            
+
             string path = Path.GetTempFileName();
             sarifLog.Save(path);
-                
+
             // We have to deserialize the sarif using JSON to get the raw data
             //  Levels which were set to warning will not be populated otherwise
             var reReadLog = JObject.Parse(File.ReadAllText(path));
-            var resultsWithoutLevels = reReadLog.SelectTokens("$.runs[*].results[*]").Where(t => t["level"] == null).ToList();
+            var resultsWithoutLevels =
+                reReadLog.SelectTokens("$.runs[*].results[*]").Where(t => t["level"] == null).ToList();
             foreach (var result in resultsWithoutLevels)
             {
                 result["level"] = "warning";
             }
-            
+
             // Rules which had a default configuration of Warning will also not have the field populated
-            var rulesWithoutDefaultConfiguration = reReadLog.SelectTokens("$.runs[*].tool.driver.rules[*]").ToList();
+            var rulesWithoutDefaultConfiguration = reReadLog.SelectTokens("$.runs[*].tool.driver.rules[*]")
+                .Where(t => t["defaultConfiguration"] == null).ToList();
             foreach (var rule in rulesWithoutDefaultConfiguration)
             {
                 rule["defaultConfiguration"] = new JObject {{ "level", "warning" }};
