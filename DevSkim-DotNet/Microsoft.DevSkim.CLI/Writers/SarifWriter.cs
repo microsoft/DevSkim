@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.ApplicationInspector.RulesEngine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.DevSkim.CLI.Writers
 {
@@ -54,27 +56,39 @@ namespace Microsoft.DevSkim.CLI.Writers
             
             sarifLog.Runs = new List<Run>();
             sarifLog.Runs.Add(runItem);
-
+            
+            string path = Path.GetTempFileName();
+            sarifLog.Save(path);
+                
+            // We have to deserialize the sarif using JSON to get the raw data
+            //  Levels which were set to warning will not be populated otherwise
+            var reReadLog = JObject.Parse(File.ReadAllText(path));
+            var resultsWithoutLevels = reReadLog.SelectTokens("$.runs[*].results[*]").Where(t => t["level"] == null).ToList();
+            foreach (var result in resultsWithoutLevels)
+            {
+                result["level"] = "warning";
+            }
+            
+            // Rules which had a default configuration of Warning will also not have the field populated
+            var rulesWithoutDefaultConfiguration = reReadLog.SelectTokens("$.runs[*].tool.driver.rules[*]").ToList();
+            foreach (var rule in rulesWithoutDefaultConfiguration)
+            {
+                rule["defaultConfiguration"] = new JObject {{ "level", "warning" }};
+            }
+            
             if (!string.IsNullOrEmpty(OutputPath))
             {
-                TextWriter.Close();
-                File.Delete(OutputPath);
-                sarifLog.Save(OutputPath);
+                using var jsonWriter = new JsonTextWriter(TextWriter);
+                reReadLog.WriteTo(jsonWriter);
+                TextWriter.Flush();
             }
             else
             {
-                //Use the text writer
-                string path = Path.GetTempFileName();
-                sarifLog.Save(path);
-
-                StreamReader sr = new StreamReader(path);
-                while (!sr.EndOfStream)
-                {
-                    TextWriter.WriteLine(sr.ReadLine());
-                }
-
+                // Output to TextWriter (which should be console)
+                using var writer = new JsonTextWriter(TextWriter);
+                reReadLog.WriteTo(writer);
+                writer.Close();
                 TextWriter.Flush();
-                TextWriter.Close();
             }
         }
 
