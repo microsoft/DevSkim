@@ -139,7 +139,7 @@ namespace Microsoft.DevSkim.CLI.Writers
         static FailureLevel DevSkimLevelToSarifLevel(Severity severity) => severity switch
         {
             var s when s.HasFlag(Severity.Critical) => FailureLevel.Error,
-            var s when s.HasFlag(Severity.Important) => FailureLevel.Warning,
+            var s when s.HasFlag(Severity.Important) => FailureLevel.Error,
             var s when s.HasFlag(Severity.Moderate) => FailureLevel.Warning,
             var s when s.HasFlag(Severity.BestPractice) => FailureLevel.Note,
             var s when s.HasFlag(Severity.ManualReview) => FailureLevel.Note,
@@ -170,22 +170,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 };
                 sarifRule.HelpUri = helpUri;
                 sarifRule.DefaultConfiguration = new ReportingConfiguration() { Enabled = true };
-                switch (devskimRule.Severity)
-                {
-                    case Severity.Critical:
-                    case Severity.Important:
-                    case Severity.Moderate:
-                        sarifRule.DefaultConfiguration.Level = FailureLevel.Error;
-                        break;
-
-                    case Severity.BestPractice:
-                        sarifRule.DefaultConfiguration.Level = FailureLevel.Warning;
-                        break;
-
-                    default:
-                        sarifRule.DefaultConfiguration.Level = FailureLevel.Note;
-                        break;
-                }
+                sarifRule.DefaultConfiguration.Level = DevSkimLevelToSarifLevel(devskimRule.Severity);
 
                 _rules.TryAdd(devskimRule.Id, sarifRule);
             }
