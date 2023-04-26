@@ -233,7 +233,7 @@ stages:
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: 'userSpecifiedTag'
-        tag: 'VSCode v$(ReleaseVersion)'
+        tag: 'VSCode_v$(ReleaseVersion)'
         title: 'DevSkim VS Code Extension v$(ReleaseVersion)'
         assets: |
           $(Build.StagingDirectory)/*.vsix
