@@ -106,7 +106,8 @@ namespace Microsot.DevSkim.LanguageClient
 
         public Task OnServerInitializedAsync()
         {
-            return SettingsNotifier.SendSettingsChangedNotificationAsync(new PortableScannerSettings() { CustomCommentsPath = "contoso.com" });
+            // Put actual settings here
+            return SettingsNotifier.SendSettingsChangedNotificationAsync(new PortableScannerSettings());
         }
 
         public Task AttachForCustomMessageAsync(JsonRpc rpc)
