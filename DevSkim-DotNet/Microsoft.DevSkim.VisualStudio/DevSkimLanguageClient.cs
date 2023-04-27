@@ -106,7 +106,7 @@ namespace Microsot.DevSkim.LanguageClient
         public Task OnServerInitializedAsync()
         {
             // This should be updated when the settings change
-            Task.Run(async () => await Rpc.InvokeAsync<bool>(DevSkimMessages.SetServerSettings, new PortableScannerSettings())).Wait();
+            //Task.Run(async () => await Rpc.InvokeAsync<bool>(DevSkimMessages.SetServerSettings, new PortableScannerSettings())).Wait();
             return Task.CompletedTask;
         }
 
