@@ -84,7 +84,6 @@ namespace Microsot.DevSkim.LanguageClient
                 _processTracker.AddProcess(process);
                 return new Connection(process.StandardOutput.BaseStream, process.StandardInput.BaseStream);
             }
-            await SettingsNotifier.SendSettingsChangedNotificationAsync(new PortableScannerSettings() { CustomCommentsPath = "contoso.com" });
             return null;
         }
 
@@ -107,7 +106,7 @@ namespace Microsot.DevSkim.LanguageClient
 
         public Task OnServerInitializedAsync()
         {
-            return Task.CompletedTask;
+            return SettingsNotifier.SendSettingsChangedNotificationAsync(new PortableScannerSettings() { CustomCommentsPath = "contoso.com" });
         }
 
         public Task AttachForCustomMessageAsync(JsonRpc rpc)
