@@ -35,7 +35,7 @@ internal class ConfigHelpers
 		return toReturn;
 	}
 
-    internal static readonly string Section = "MS-CST-E.devskim-language-server";
+    internal static readonly string Section = "MS-CST-E.vscode-devskim";
 	internal static void SetScannerSettings(IConfiguration configuration)
 	{
 		StaticScannerSettings.RuleProcessorOptions = OptionsFromConfiguration(configuration);

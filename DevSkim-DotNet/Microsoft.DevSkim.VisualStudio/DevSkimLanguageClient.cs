@@ -18,6 +18,7 @@ using System.ComponentModel.Composition;
 using Microsoft.Build.Framework.XamlTypes;
 using Microsoft.DevSkim.LanguageProtoInterop;
 using Microsoft.DevSkim.VisualStudio.ProcessTracker;
+using Microsoft.DevSkim.VisualStudio;
 
 namespace Microsot.DevSkim.LanguageClient
 {
@@ -37,6 +38,7 @@ namespace Microsot.DevSkim.LanguageClient
             get;
             set;
         }
+        public SettingsChangedNotifier SettingsNotifier { get; private set; }
 
         public object MiddleLayer = _middleLayer;
         private static object _middleLayer;
@@ -82,7 +84,7 @@ namespace Microsot.DevSkim.LanguageClient
                 _processTracker.AddProcess(process);
                 return new Connection(process.StandardOutput.BaseStream, process.StandardInput.BaseStream);
             }
-
+            await SettingsNotifier.SendSettingsChangedNotificationAsync(new PortableScannerSettings() { CustomCommentsPath = "contoso.com" });
             return null;
         }
 
@@ -105,15 +107,13 @@ namespace Microsot.DevSkim.LanguageClient
 
         public Task OnServerInitializedAsync()
         {
-            // This should be updated when the settings change
-            //Task.Run(async () => await Rpc.InvokeAsync<bool>(DevSkimMessages.SetServerSettings, new PortableScannerSettings())).Wait();
             return Task.CompletedTask;
         }
 
         public Task AttachForCustomMessageAsync(JsonRpc rpc)
         {
             this.Rpc = rpc;
-
+            this.SettingsNotifier = new SettingsChangedNotifier(this.Rpc);
             return Task.CompletedTask;
         }
 
