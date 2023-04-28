@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OptionPackage.cs" />
+    <Compile Include="SettingsChangedNotifier.cs" />
     <Compile Include="StaticData.cs" />
     <Compile Include="SuggestedActionsSourceProvider.cs" />
     <Compile Include="SuggestionActionsSource.cs" />
