@@ -65,8 +65,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                     var maybeOptionAttribute = prop.GetCustomAttributes(true)?.Where(x => x is OptionAttribute).FirstOrDefault();
                                     if (maybeOptionAttribute is OptionAttribute optionAttribute)
                                     {
-                                        // Check if hte option attributes default value differs from the value in the CLI provided options
-                                        // If the CLI provided a non-default option, override the deserialized option
+                                        // Check if the option attributes default value differs from the value in the CLI provided options
+                                        //   If the CLI provided a non-default option, override the deserialized option
                                         if (!optionAttribute.Default.Equals(value))
                                         {
                                             var selectedProp =
