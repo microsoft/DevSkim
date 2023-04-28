@@ -7,6 +7,8 @@ using Microsoft.DevSkim.CLI.Writers;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -19,7 +21,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 {
     public class AnalyzeCommand
     {
-        private AnalyzeCommandOptions opts;
+        private BaseAnalyzeCommandOptions opts;
 
         public AnalyzeCommand(AnalyzeCommandOptions options)
         {
@@ -33,12 +35,56 @@ namespace Microsoft.DevSkim.CLI.Commands
                 Console.SetError(StreamWriter.Null);
             }
 
+            // Ensure that the target to scan exists
             if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
             {
                 Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
 
                 return (int)ExitCode.CriticalError;
             }
+
+            if (opts is AnalyzeCommandOptions optsWithJson)
+            {
+                // Check if the options json is specified.
+                if (!string.IsNullOrEmpty(optsWithJson.PathToOptionsJson))
+                {
+                
+                    if (File.Exists(optsWithJson.PathToOptionsJson))
+                    {
+                        try
+                        {
+                            var deserializedOptions =
+                                JsonSerializer.Deserialize<SerializedAnalyzeCommandOptions>(File.ReadAllText(optsWithJson.PathToOptionsJson));
+                            if (deserializedOptions is { })
+                            {
+                                var serializedProperties = typeof(SerializedAnalyzeCommandOptions).GetProperties();
+                                foreach (var prop in typeof(BaseAnalyzeCommandOptions).GetProperties().Where(x => x.Name != "PathToOptionsJson"))
+                                {
+                                    var value = prop.GetValue(opts);
+                                    var maybeOptionAttribute = prop.GetCustomAttributes(true)?.Where(x => x is OptionAttribute).FirstOrDefault();
+                                    if (maybeOptionAttribute is OptionAttribute optionAttribute)
+                                    {
+                                        if (!optionAttribute.Default.Equals(value))
+                                        {
+                                            var selectedProp =
+                                                serializedProperties.FirstOrDefault(x => x.HasSameMetadataDefinitionAs(prop));
+                                            selectedProp?.SetValue(deserializedOptions, value);
+                                        }
+                                    }
+                                }
+
+                                opts = deserializedOptions;
+                            }
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("Error while parsing additional options {0}", e.Message);
+                        }
+                    }
+                }
+            }
+            
 
             string fp = Path.GetFullPath(opts.Path);
 
@@ -149,7 +195,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <param name="extractor"></param>
         /// <param name="extractorOptions"></param>
         /// <returns></returns>
-        private static IEnumerable<FileEntry> FilePathToFileEntries(AnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
+        private static IEnumerable<FileEntry> FilePathToFileEntries(BaseAnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
         {
             if (opts.CrawlArchives)
             {
@@ -321,6 +367,15 @@ namespace Microsoft.DevSkim.CLI.Commands
 
 
                     List<Issue> issues = processor.Analyze(fileText, fileEntry.Name).ToList();
+                    if (opts is SerializedAnalyzeCommandOptions serializedAnalyzeCommandOptions)
+                    {
+                        if (serializedAnalyzeCommandOptions.LanguageRuleIgnoreMap.TryGetValue(languageInfo.Name,
+                                out List<string>? maybeRulesToIgnore) && maybeRulesToIgnore is {} rulesToIgnore)
+                        {
+                            var numRemoved = issues.RemoveAll(x => !rulesToIgnore.Contains(x.Rule.Id));
+                            Debug.WriteLine($"Removed {numRemoved} results because of language rule filters.");
+                        }
+                    }
                     // We need to make sure the issues are ordered by index, so when doing replacements we can keep a straight count of the offset caused by previous changes
                     issues.Sort((issue1, issue2) => issue1.Boundary.Index - issue2.Boundary.Index);
 
