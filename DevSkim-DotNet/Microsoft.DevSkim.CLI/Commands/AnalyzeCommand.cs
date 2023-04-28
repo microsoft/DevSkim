@@ -48,7 +48,6 @@ namespace Microsoft.DevSkim.CLI.Commands
                 // Check if the options json is specified.
                 if (!string.IsNullOrEmpty(optsWithJson.PathToOptionsJson))
                 {
-                
                     if (File.Exists(optsWithJson.PathToOptionsJson))
                     {
                         try
@@ -57,13 +56,17 @@ namespace Microsoft.DevSkim.CLI.Commands
                                 JsonSerializer.Deserialize<SerializedAnalyzeCommandOptions>(File.ReadAllText(optsWithJson.PathToOptionsJson));
                             if (deserializedOptions is { })
                             {
+                                // For each property in the opts argument, if the argument is not default, override the equivalent from the deserialized options
                                 var serializedProperties = typeof(SerializedAnalyzeCommandOptions).GetProperties();
-                                foreach (var prop in typeof(BaseAnalyzeCommandOptions).GetProperties().Where(x => x.Name != "PathToOptionsJson"))
+                                foreach (var prop in typeof(BaseAnalyzeCommandOptions).GetProperties())
                                 {
                                     var value = prop.GetValue(opts);
+                                    // Get the option attribute from the property
                                     var maybeOptionAttribute = prop.GetCustomAttributes(true)?.Where(x => x is OptionAttribute).FirstOrDefault();
                                     if (maybeOptionAttribute is OptionAttribute optionAttribute)
                                     {
+                                        // Check if hte option attributes default value differs from the value in the CLI provided options
+                                        // If the CLI provided a non-default option, override the deserialized option
                                         if (!optionAttribute.Default.Equals(value))
                                         {
                                             var selectedProp =
@@ -72,7 +75,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                                         }
                                     }
                                 }
-
+                                
+                                // Replace the regular options with the deserialized options
                                 opts = deserializedOptions;
                             }
                             
