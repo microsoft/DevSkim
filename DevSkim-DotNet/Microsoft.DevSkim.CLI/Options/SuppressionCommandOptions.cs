@@ -5,7 +5,7 @@ using CommandLine;
 namespace Microsoft.DevSkim.CLI.Options;
 
 [Verb("suppress", HelpText = "Suppress issues identified in a DevSkim Sarif")]
-public class SuppressionCommandOptions
+public record SuppressionCommandOptions
 {
     [Option('I', "source-code", Required = true, HelpText = "Path to the parent directory containing the source code that was scanned to produce the sarif.")]
     public string Path { get; set; } = String.Empty;

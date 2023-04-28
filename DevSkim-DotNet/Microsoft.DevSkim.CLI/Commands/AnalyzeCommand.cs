@@ -7,6 +7,8 @@ using Microsoft.DevSkim.CLI.Writers;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -19,7 +21,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 {
     public class AnalyzeCommand
     {
-        private AnalyzeCommandOptions opts;
+        private BaseAnalyzeCommandOptions opts;
 
         public AnalyzeCommand(AnalyzeCommandOptions options)
         {
@@ -28,47 +30,30 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
-            if (opts.SuppressError)
+            (ExitCode exitCode, string? FullPath, Languages? languages) = Configure();
+            
+            if (exitCode != ExitCode.Okay)
             {
-                Console.SetError(StreamWriter.Null);
+                return (int)exitCode;
             }
-
-            if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
-            {
-                Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
-
-                return (int)ExitCode.CriticalError;
-            }
-
-            string fp = Path.GetFullPath(opts.Path);
-
-            if (string.IsNullOrEmpty(opts.BasePath))
-            {
-                opts.BasePath = fp;
-            }
-
-            if (!string.IsNullOrEmpty(opts.OutputFile))
-            {
-                opts.OutputFile = Path.Combine(Environment.CurrentDirectory, opts.OutputFile);
-            }
-
+            
             IEnumerable<FileEntry> fileListing;
             Extractor extractor = new Extractor();
             ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
             // Analysing a single file
-            if (!Directory.Exists(fp))
+            if (!Directory.Exists(FullPath))
             {
                 if (opts.RespectGitIgnore)
                 {
                     if (IsGitPresent())
                     {
-                        if (IsGitIgnored(fp))
+                        if (IsGitIgnored(FullPath))
                         {
                             Console.WriteLine("The file specified was ignored by gitignore.");
                             return (int)ExitCode.CriticalError;
                         }
 
-                        fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
+                        fileListing = FilePathToFileEntries(opts, FullPath, extractor, extractorOpts);
                     }
                     else
                     {
@@ -78,7 +63,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 else
                 {
-                    fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
+                    fileListing = FilePathToFileEntries(opts, FullPath, extractor, extractorOpts);
                 }
             }
             // Analyzing a directory
@@ -89,7 +74,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     if (IsGitPresent())
                     {
                         List<FileEntry> innerList = new List<FileEntry>();
-                        IEnumerable<string> files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories)
+                        IEnumerable<string> files = Directory.EnumerateFiles(FullPath, "*.*", SearchOption.AllDirectories)
                             .Where(fileName => !IsGitIgnored(fileName));
                         foreach (string? notIgnoredFileName in files)
                         {
@@ -108,7 +93,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 else
                 {
                     List<FileEntry> innerList = new List<FileEntry>();
-                    IEnumerable<string> files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
+                    IEnumerable<string> files = Directory.EnumerateFiles(FullPath, "*.*", SearchOption.AllDirectories);
                     foreach (string file in files)
                     {
                         innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
@@ -117,6 +102,90 @@ namespace Microsoft.DevSkim.CLI.Commands
                     fileListing = innerList;                
                 }
             }
+            return RunFileEntries(fileListing, languages);
+        }
+
+        /// <summary>
+        /// Configure the options and return the full path to scan if successful
+        /// </summary>
+        /// <returns></returns>
+        private (ExitCode, string?, Languages?) Configure()
+        {
+            if (opts.SuppressError)
+            {
+                Console.SetError(StreamWriter.Null);
+            }
+
+            // Ensure that the target to scan exists
+            if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
+            {
+                Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
+
+                return (ExitCode.CriticalError, null, null);
+            }
+
+            if (opts is AnalyzeCommandOptions optsWithJson)
+            {
+                // Check if the options json is specified.
+                if (!string.IsNullOrEmpty(optsWithJson.PathToOptionsJson))
+                {
+                    if (File.Exists(optsWithJson.PathToOptionsJson))
+                    {
+                        try
+                        {
+                            var deserializedOptions =
+                                JsonSerializer.Deserialize<SerializedAnalyzeCommandOptions>(File.ReadAllText(optsWithJson.PathToOptionsJson));
+                            if (deserializedOptions is { })
+                            {
+                                // For each property in the opts argument, if the argument is not default, override the equivalent from the deserialized options
+                                var serializedProperties = typeof(SerializedAnalyzeCommandOptions).GetProperties();
+                                foreach (var prop in typeof(BaseAnalyzeCommandOptions).GetProperties())
+                                {
+                                    var value = prop.GetValue(opts);
+                                    // Get the option attribute from the property
+                                    var maybeOptionAttribute = prop.GetCustomAttributes(true)?.Where(x => x is OptionAttribute).FirstOrDefault();
+                                    if (maybeOptionAttribute is OptionAttribute optionAttribute)
+                                    {
+                                        // Check if the option attributes default value differs from the value in the CLI provided options
+                                        //   If the CLI provided a non-default option, override the deserialized option
+                                        if (!optionAttribute.Default.Equals(value))
+                                        {
+                                            var selectedProp =
+                                                serializedProperties.FirstOrDefault(x => x.HasSameMetadataDefinitionAs(prop));
+                                            selectedProp?.SetValue(deserializedOptions, value);
+                                        }
+                                    }
+                                }
+                                
+                                // Replace the regular options with the deserialized options
+                                opts = deserializedOptions;
+                            }
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("Error while parsing additional options {0}", e.Message);
+                            return (ExitCode.CriticalError, null, null);
+                        }
+                    }
+                }
+            }
+            
+
+            string fp = Path.GetFullPath(opts.Path);
+            if (string.IsNullOrEmpty(fp))
+            {
+                Debug.WriteLine("Provided scan path was empty or null.");
+                return (ExitCode.CriticalError, null, null);
+            }
+            if (string.IsNullOrEmpty(opts.BasePath))
+            {
+                opts.BasePath = fp;
+            }
+            if (!string.IsNullOrEmpty(opts.OutputFile))
+            {
+                opts.OutputFile = Path.Combine(Environment.CurrentDirectory, opts.OutputFile);
+            }
 
             Languages? languages = null;
             if (!string.IsNullOrEmpty(opts.CommentsPath) || !string.IsNullOrEmpty(opts.LanguagesPath))
@@ -124,7 +193,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                 if (string.IsNullOrEmpty(opts.CommentsPath) || string.IsNullOrEmpty(opts.LanguagesPath))
                 {
                     Console.Error.WriteLine("When either comments or languages are specified both must be specified.");
-                    return (int)ExitCode.ArgumentParsingError;
+                    return (ExitCode.ArgumentParsingError, null, null);
+
                 }
 
                 try
@@ -134,11 +204,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                 catch (Exception e)
                 {
                     Console.Error.WriteLine($"Either the Comments or Languages file was not able to be read. ({e.Message})");
-                    return (int)ExitCode.ArgumentParsingError;
+                    return (ExitCode.ArgumentParsingError, null, null);
                 }
             }
             languages ??= DevSkimLanguages.LoadEmbedded();
-            return RunFileEntries(fileListing, languages);
+            
+            return (ExitCode.Okay, fp, languages);
         }
 
         /// <summary>
@@ -149,7 +220,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <param name="extractor"></param>
         /// <param name="extractorOptions"></param>
         /// <returns></returns>
-        private static IEnumerable<FileEntry> FilePathToFileEntries(AnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
+        private static IEnumerable<FileEntry> FilePathToFileEntries(BaseAnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
         {
             if (opts.CrawlArchives)
             {
@@ -321,6 +392,15 @@ namespace Microsoft.DevSkim.CLI.Commands
 
 
                     List<Issue> issues = processor.Analyze(fileText, fileEntry.Name).ToList();
+                    if (opts is SerializedAnalyzeCommandOptions serializedAnalyzeCommandOptions)
+                    {
+                        if (serializedAnalyzeCommandOptions.LanguageRuleIgnoreMap.TryGetValue(languageInfo.Name,
+                                out List<string>? maybeRulesToIgnore) && maybeRulesToIgnore is {} rulesToIgnore)
+                        {
+                            var numRemoved = issues.RemoveAll(x => !rulesToIgnore.Contains(x.Rule.Id));
+                            Debug.WriteLine($"Removed {numRemoved} results because of language rule filters.");
+                        }
+                    }
                     // We need to make sure the issues are ordered by index, so when doing replacements we can keep a straight count of the offset caused by previous changes
                     issues.Sort((issue1, issue2) => issue1.Boundary.Index - issue2.Boundary.Index);
 
