@@ -84,6 +84,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         catch (Exception e)
                         {
                             Debug.WriteLine("Error while parsing additional options {0}", e.Message);
+                            return (int)ExitCode.CriticalError;
                         }
                     }
                 }
