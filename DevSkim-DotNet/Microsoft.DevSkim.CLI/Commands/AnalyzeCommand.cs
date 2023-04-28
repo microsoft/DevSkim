@@ -30,6 +30,87 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
+            (ExitCode exitCode, string? FullPath, Languages? languages) = Configure();
+            
+            if (exitCode != ExitCode.Okay)
+            {
+                return (int)exitCode;
+            }
+            
+            IEnumerable<FileEntry> fileListing;
+            Extractor extractor = new Extractor();
+            ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
+            // Analysing a single file
+            if (!Directory.Exists(FullPath))
+            {
+                if (opts.RespectGitIgnore)
+                {
+                    if (IsGitPresent())
+                    {
+                        if (IsGitIgnored(FullPath))
+                        {
+                            Console.WriteLine("The file specified was ignored by gitignore.");
+                            return (int)ExitCode.CriticalError;
+                        }
+
+                        fileListing = FilePathToFileEntries(opts, FullPath, extractor, extractorOpts);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
+                        return (int)ExitCode.CriticalError;
+                    }
+                }
+                else
+                {
+                    fileListing = FilePathToFileEntries(opts, FullPath, extractor, extractorOpts);
+                }
+            }
+            // Analyzing a directory
+            else
+            {
+                if (opts.RespectGitIgnore)
+                {
+                    if (IsGitPresent())
+                    {
+                        List<FileEntry> innerList = new List<FileEntry>();
+                        IEnumerable<string> files = Directory.EnumerateFiles(FullPath, "*.*", SearchOption.AllDirectories)
+                            .Where(fileName => !IsGitIgnored(fileName));
+                        foreach (string? notIgnoredFileName in files)
+                        {
+                            innerList.AddRange(
+                                FilePathToFileEntries(opts, notIgnoredFileName, extractor, extractorOpts));
+                        }
+
+                        fileListing = innerList;
+                    }
+                    else
+                    {                        
+                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
+                        return (int)ExitCode.CriticalError;
+                    }
+                }
+                else
+                {
+                    List<FileEntry> innerList = new List<FileEntry>();
+                    IEnumerable<string> files = Directory.EnumerateFiles(FullPath, "*.*", SearchOption.AllDirectories);
+                    foreach (string file in files)
+                    {
+                        innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
+                    }
+
+                    fileListing = innerList;                
+                }
+            }
+            return RunFileEntries(fileListing, languages);
+        }
+
+        /// <summary>
+        /// Configure the options and return the full path to scan if successful
+        /// </summary>
+        /// <returns></returns>
+        private (ExitCode, string?, Languages?) Configure()
+        {
             if (opts.SuppressError)
             {
                 Console.SetError(StreamWriter.Null);
@@ -40,7 +121,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
 
-                return (int)ExitCode.CriticalError;
+                return (ExitCode.CriticalError, null, null);
             }
 
             if (opts is AnalyzeCommandOptions optsWithJson)
@@ -84,7 +165,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         catch (Exception e)
                         {
                             Debug.WriteLine("Error while parsing additional options {0}", e.Message);
-                            return (int)ExitCode.CriticalError;
+                            return (ExitCode.CriticalError, null, null);
                         }
                     }
                 }
@@ -92,81 +173,18 @@ namespace Microsoft.DevSkim.CLI.Commands
             
 
             string fp = Path.GetFullPath(opts.Path);
-
+            if (string.IsNullOrEmpty(fp))
+            {
+                Debug.WriteLine("Provided scan path was empty or null.");
+                return (ExitCode.CriticalError, null, null);
+            }
             if (string.IsNullOrEmpty(opts.BasePath))
             {
                 opts.BasePath = fp;
             }
-
             if (!string.IsNullOrEmpty(opts.OutputFile))
             {
                 opts.OutputFile = Path.Combine(Environment.CurrentDirectory, opts.OutputFile);
-            }
-
-            IEnumerable<FileEntry> fileListing;
-            Extractor extractor = new Extractor();
-            ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
-            // Analysing a single file
-            if (!Directory.Exists(fp))
-            {
-                if (opts.RespectGitIgnore)
-                {
-                    if (IsGitPresent())
-                    {
-                        if (IsGitIgnored(fp))
-                        {
-                            Console.WriteLine("The file specified was ignored by gitignore.");
-                            return (int)ExitCode.CriticalError;
-                        }
-
-                        fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
-                        return (int)ExitCode.CriticalError;
-                    }
-                }
-                else
-                {
-                    fileListing = FilePathToFileEntries(opts, fp, extractor, extractorOpts);
-                }
-            }
-            // Analyzing a directory
-            else
-            {
-                if (opts.RespectGitIgnore)
-                {
-                    if (IsGitPresent())
-                    {
-                        List<FileEntry> innerList = new List<FileEntry>();
-                        IEnumerable<string> files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories)
-                            .Where(fileName => !IsGitIgnored(fileName));
-                        foreach (string? notIgnoredFileName in files)
-                        {
-                            innerList.AddRange(
-                                FilePathToFileEntries(opts, notIgnoredFileName, extractor, extractorOpts));
-                        }
-
-                        fileListing = innerList;
-                    }
-                    else
-                    {                        
-                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
-                        return (int)ExitCode.CriticalError;
-                    }
-                }
-                else
-                {
-                    List<FileEntry> innerList = new List<FileEntry>();
-                    IEnumerable<string> files = Directory.EnumerateFiles(fp, "*.*", SearchOption.AllDirectories);
-                    foreach (string file in files)
-                    {
-                        innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
-                    }
-
-                    fileListing = innerList;                
-                }
             }
 
             Languages? languages = null;
@@ -175,7 +193,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                 if (string.IsNullOrEmpty(opts.CommentsPath) || string.IsNullOrEmpty(opts.LanguagesPath))
                 {
                     Console.Error.WriteLine("When either comments or languages are specified both must be specified.");
-                    return (int)ExitCode.ArgumentParsingError;
+                    return (ExitCode.ArgumentParsingError, null, null);
+
                 }
 
                 try
@@ -185,11 +204,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                 catch (Exception e)
                 {
                     Console.Error.WriteLine($"Either the Comments or Languages file was not able to be read. ({e.Message})");
-                    return (int)ExitCode.ArgumentParsingError;
+                    return (ExitCode.ArgumentParsingError, null, null);
                 }
             }
             languages ??= DevSkimLanguages.LoadEmbedded();
-            return RunFileEntries(fileListing, languages);
+            
+            return (ExitCode.Okay, fp, languages);
         }
 
         /// <summary>
