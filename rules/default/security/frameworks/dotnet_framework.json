@@ -22,5 +22,122 @@
                 "modifiers" : ["i"]
             }
         ]
+    },
+    {
+        "name": "Cookie Secure flag is disabled (.NET)",
+        "id": "DS450001",
+        "description": "Disabling the Secure flag could result in the disclosure of sensitive cookie information over HTTP.",
+        "recommendation": "Enable the Secure cookie on cookies.",
+        "severity": "important",
+        "rule_info": "DS450001.md",
+        "applies_to": [
+			"csharp"
+		],
+        "tags": [
+            "Framework.NET"
+        ],
+        "patterns": [
+            {
+                "pattern": "requireSSL=.false.",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": ["i"]
+            },
+            {
+                "pattern": "cookieRequireSSL=.false.",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": ["i"]
+            }
+        ],
+		"conditions" : [
+            {
+                "pattern" : 
+                {
+                    "pattern": "<(httpCookies|forms|roleManager)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": ["i"]
+                },
+                "search_in": "finding-region(-10, 0)"
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Set to true",
+                "type": "regex-replace",
+                "replacement": "true",
+                "pattern": {
+                    "pattern": "false",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": ["i"]
+                }
+            }
+        ],
+        "must-match": [
+            "<httpCookies requireSSL='false' />",
+            "<forms requireSSL='false'>",
+			"<roleManager cookieRequireSSL='false' >"
+        ]
+    },
+	{
+        "name": "Trace is enabled in system.web",
+        "id": "DS450002",
+        "description": "Having traces enabled could leak sensitive application information in production.",
+        "recommendation": "Disable tracing before deploying to production.",
+		"applies_to": [
+			"csharp"
+		],
+        "tags": [
+            "Framework.NET"
+        ],
+        "severity": "important",
+        "rule_info": "DS450002.md",
+        "patterns": [
+            {
+                "pattern": "<trace.*enabled=.true.",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+		"conditions" : [
+            {
+                "pattern" : {
+                    "pattern": "<system.web>",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "search_in": "finding-region(-10, 0)"
+            },
+            {
+                "pattern" : {
+                    "pattern": "localOnly=.true.",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true
+            }
+        ],
+        "must-match": [
+            "<system\\.web>\n<trace enabled='true' pageOutput='false' requestLimit='40' localOnly='false' />\n</system.web>"
+        ],
+        "must-not-match": [
+            "<system\\.web>\n<trace enabled='true' pageOutput='false' requestLimit='40' localOnly='true' />\n</system.web>"
+        ]
     }   
 ]
