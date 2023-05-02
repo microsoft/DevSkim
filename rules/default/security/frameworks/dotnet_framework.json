@@ -71,7 +71,7 @@
         "fix_its": [
             {
                 "name": "Set to true",
-                "type": "regex-replace",
+                "type": "RegexReplace",
                 "replacement": "true",
                 "pattern": {
                     "pattern": "false",
