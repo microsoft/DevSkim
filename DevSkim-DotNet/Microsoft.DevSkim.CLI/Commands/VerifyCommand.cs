@@ -49,13 +49,16 @@ namespace Microsoft.DevSkim.CLI.Commands
                     {
                         foreach (string error in status.Errors)
                         {
-                            Console.WriteLine(status.Errors);
+                            Console.WriteLine(error);
                         }
                     }
 
                     return (int)ExitCode.IssuesExists;
                 }
             }
+
+            Console.WriteLine("{0} of {1} rules have positive self-tests.",result.DevSkimRuleStatuses.Count(x => x.HasPositiveSelfTests),result.DevSkimRuleStatuses.Count);
+            Console.WriteLine("{0} of {1} rules have negative self-tests.",result.DevSkimRuleStatuses.Count(x => x.HasNegativeSelfTests),result.DevSkimRuleStatuses.Count);
 
             if (!devSkimRuleSet.Any())
             {
