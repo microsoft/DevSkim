@@ -103,7 +103,7 @@
         "rule_info": "DS450002.md",
         "patterns": [
             {
-                "pattern": "<trace.*enabled=.true.",
+                "pattern": "<trace[^>]+enabled=.true.[^>]+>",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -133,10 +133,10 @@
             }
         ],
         "must-match": [
-            "<system\\.web>\n<trace enabled='true' pageOutput='false' requestLimit='40' localOnly='false' />\n</system.web>"
+            "<system.web>\n<trace enabled='true' pageOutput='false' requestLimit='40' localOnly='false' />\n</system.web>"
         ],
         "must-not-match": [
-            "<system\\.web>\n<trace enabled='true' pageOutput='false' requestLimit='40' localOnly='true' />\n</system.web>"
+            "<system.web>\n<trace enabled='true' pageOutput='false' requestLimit='40' localOnly='true' />\n</system.web>"
         ]
     }   
 ]
