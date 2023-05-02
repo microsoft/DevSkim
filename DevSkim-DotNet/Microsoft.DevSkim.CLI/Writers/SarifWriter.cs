@@ -102,9 +102,11 @@ namespace Microsoft.DevSkim.CLI.Writers
                 rule["level"] = "warning";
             }
             
+            // Begin Workaround for https://github.com/microsoft/sarif-sdk/issues/2662
+            reReadLog["$schema"] = "https://www.schemastore.org/schemas/json/sarif-2.1.0.json";
             using var jsonWriter = new JsonTextWriter(TextWriter);
             reReadLog.WriteTo(jsonWriter);
-            // End Workaround
+            // End Workarounds
 
             TextWriter.Flush();
         }
