@@ -115,6 +115,7 @@
                         "code"
                     ]
                 },
+                "search_in": "finding-region(0,0)",
                 "negate_finding": true
             }
         ],
