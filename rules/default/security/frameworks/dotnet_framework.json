@@ -124,7 +124,7 @@
         "tags": [
             "Framework.NET"
         ],
-        "severity": "manual-review",
+        "severity": "manualreview",
         "rule_info": "DS450003.md",
         "patterns": [
             {
