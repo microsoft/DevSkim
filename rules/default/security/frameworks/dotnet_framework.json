@@ -14,7 +14,7 @@
         "rule_info": "DS450000.md",
         "patterns": [
             {
-                "xpaths": ["TargetFramework"],
+                "xpaths": ["//TargetFramework"],
                 "pattern": "(net11|net20|net35|net40|net403|net45|net451|net452|net46|net461|net462|net47|net471)",
                 "type": "regex",
                 "scopes": [
@@ -39,7 +39,7 @@
         ],
         "patterns": [
             {
-                "xpaths": ["httpCookies/@requireSSL", "forms/@requireSSL", "roleManager/@cookieRequireSSL"],
+                "xpaths": ["//httpCookies/@requireSSL", "//forms/@requireSSL", "//roleManager/@cookieRequireSSL"],
                 "pattern": "false",
                 "scopes": [
                     "code"
@@ -84,7 +84,7 @@
         "rule_info": "DS450002.md",
         "patterns": [
             {
-                "xpaths": ["system.web/trace/@enabled"],
+                "xpaths": ["//system.web/trace/@enabled"],
                 "pattern": "true",
                 "scopes": [
                     "code"
@@ -95,7 +95,7 @@
 		"conditions" : [
             {
                 "pattern" : {
-                    "xpaths": ["system.web/trace/@localOnly"],
+                    "xpaths": ["//system.web/trace/@localOnly"],
                     "pattern": "true",
                     "type": "regex",
                     "scopes": [
@@ -128,7 +128,7 @@
         "rule_info": "DS450003.md",
         "patterns": [
             {
-                "xpaths": ["system.web/compilation/@debug"],
+                "xpaths": ["//system.web/compilation/@debug"],
                 "pattern": "true",
                 "scopes": [
                     "code"
