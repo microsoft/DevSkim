@@ -78,8 +78,8 @@
         ],
         "must-match": [
             "<httpCookies requireSSL='false' />",
-            "<forms requireSSL='false'>",
-			"<roleManager cookieRequireSSL='false' >"
+            "<forms requireSSL='false' />",
+			"<roleManager cookieRequireSSL='false' />"
         ]
     },
 	{
