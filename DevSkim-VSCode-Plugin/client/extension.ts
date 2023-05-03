@@ -51,7 +51,7 @@ function getDevSkimConfiguration(section='MS-CST-E.vscode-devskim' ): DevSkimSet
 	settings.guidanceBaseURL = vscode.workspace.getConfiguration(section).get('guidance.guidanceBaseURL', "https://github.com/Microsoft/DevSkim/blob/main/guidance/");
 	settings.ignoreFiles = vscode.workspace.getConfiguration(section).get('ignores.ignoreFiles',
 		[ "out/.*", "bin/.*", "node_modules/.*", ".vscode/.*", "yarn.lock", "logs/.*", ".log", ".git" ]);
-	settings.ignoreRulesList = vscode.workspace.getConfiguration(section).get('ignores.ignoreRulesList', "");
+	settings.ignoreRulesList = vscode.workspace.getConfiguration(section).get('ignores.ignoreRulesList', []);
 	settings.ignoreDefaultRules = vscode.workspace.getConfiguration(section).get('ignores.ignoreDefaultRules', false);
 	settings.removeFindingsOnClose = vscode.workspace.getConfiguration(section).get('findings.removeFindingsOnClose', false);
 	settings.scanOnOpen = vscode.workspace.getConfiguration(section).get('triggers.scanOnOpen', false);
