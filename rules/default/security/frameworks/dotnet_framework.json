@@ -38,23 +38,7 @@
         ],
         "patterns": [
             {
-                "xpaths": ["httpCookies/@requireSSL"],
-                "pattern": "false",
-                "scopes": [
-                    "code"
-                ],
-                "type": "regex"
-            },
-            {
-                "xpaths": ["forms/@requireSSL"],
-                "pattern": "false",
-                "scopes": [
-                    "code"
-                ],
-                "type": "regex"
-            },
-            {
-                "xpaths": ["roleManager/@cookieRequireSSL"],
+                "xpaths": ["httpCookies/@requireSSL", "forms/@requireSSL", "roleManager/@cookieRequireSSL"],
                 "pattern": "false",
                 "scopes": [
                     "code"
@@ -66,6 +50,7 @@
             {
                 "name": "Set to true",
                 "replacement": "true",
+                "type": "RegexReplace",
                 "pattern": {
                     "pattern": "false",
                     "type": "substring",
@@ -74,6 +59,7 @@
                     ],
                     "modifiers": ["i"]
                 }
+                
             }
         ],
         "must-match": [
@@ -153,6 +139,7 @@
             {
                 "name": "Set debug to false",
                 "replacement": "false",
+                "type": "RegexReplace",
                 "pattern": {
                     "pattern": "true",
                     "type": "substring",
