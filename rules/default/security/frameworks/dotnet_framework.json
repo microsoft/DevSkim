@@ -22,6 +22,12 @@
                 ],
                 "modifiers" : ["i"]
             }
+        ],
+        "must-match": [
+            "<TargetFramework>net11</TargetFramework>"
+        ],
+        "must-not-match": [
+            "<TargetFramework>net999</TargetFramework>"
         ]
     },
     {
@@ -67,6 +73,11 @@
             "<httpCookies requireSSL='false' />",
             "<forms requireSSL='false' />",
 			"<roleManager cookieRequireSSL='false' />"
+        ],
+        "must-not-match": [
+            "<httpCookies requireSSL='true' />",
+            "<forms requireSSL='true' />",
+			"<roleManager cookieRequireSSL='true' />"
         ]
     },
 	{
