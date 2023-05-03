@@ -30,42 +30,27 @@
         "recommendation": "Enable the Secure cookie on cookies.",
         "severity": "important",
         "rule_info": "DS450001.md",
-        "applies_to": [
-			"csharp"
-		],
+        "applies_to_file_regex": [
+            ".*\\.config"
+        ],
         "tags": [
             "Framework.NET"
         ],
         "patterns": [
             {
-                "pattern": "requireSSL=.false.",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "modifiers": ["i"]
+                "xpaths": ["httpCookies/@requireSSL"],
+                "pattern": "false",
+                "type": "regex"
             },
             {
-                "pattern": "cookieRequireSSL=.false.",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "modifiers": ["i"]
-            }
-        ],
-		"conditions" : [
+                "xpaths": ["forms/@requireSSL"],
+                "pattern": "false",
+                "type": "regex"
+            },
             {
-                "pattern" : 
-                {
-                    "pattern": "<(httpCookies|forms|roleManager)",
-                    "type": "regex",
-                    "scopes": [
-                        "code"
-                    ],
-                    "modifiers": ["i"]
-                },
-                "search_in": "finding-region(-10, 0)"
+                "xpaths": ["roleManager/@cookieRequireSSL"],
+                "pattern": "false",
+                "type": "regex"
             }
         ],
         "fix_its": [
@@ -93,9 +78,9 @@
         "id": "DS450002",
         "description": "Having traces enabled could leak sensitive application information in production.",
         "recommendation": "Disable tracing before deploying to production.",
-		"applies_to": [
-			"csharp"
-		],
+        "applies_to_file_regex": [
+            ".*\\.config"
+        ],
         "tags": [
             "Framework.NET"
         ],
@@ -103,27 +88,16 @@
         "rule_info": "DS450002.md",
         "patterns": [
             {
-                "pattern": "<trace[^>]+enabled=.true.[^>]+>",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ]
+                "xpaths": ["system.web/trace/@enabled"],
+                "pattern": "true",
+                "type": "regex"
             }
         ],
 		"conditions" : [
             {
                 "pattern" : {
-                    "pattern": "<system.web>",
-                    "type": "substring",
-                    "scopes": [
-                        "code"
-                    ]
-                },
-                "search_in": "finding-region(-10, 0)"
-            },
-            {
-                "pattern" : {
-                    "pattern": "localOnly=.true.",
+                    "xpaths": ["system.web/trace/@localOnly"],
+                    "pattern": "true",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -137,6 +111,47 @@
         ],
         "must-not-match": [
             "<system.web>\n<trace enabled='true' pageOutput='false' requestLimit='40' localOnly='true' />\n</system.web>"
+        ]
+    },
+    {
+        "name": "Web.config debug is enabled",
+        "id": "DS450003",
+        "description": "Having debug mode enabled is inefficient and could leak sensitive application information in production.",
+        "recommendation": "Disable debug mode.",
+        "applies_to_file_regex": [
+            ".*\\.config"
+        ],
+        "tags": [
+            "Framework.NET"
+        ],
+        "severity": "manual-review",
+        "rule_info": "DS450003.md",
+        "patterns": [
+            {
+                "xpaths": ["system.web/compilation/@debug"],
+                "pattern": "true",
+                "type": "regex"
+            }
+        ],
+        "fix_its": [
+            {
+                "name": "Set debug to false",
+                "replacement": "false",
+                "pattern": {
+                    "pattern": "true",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": ["i"]
+                }
+            }
+        ],
+        "must-match": [
+            "<system.web>\n<compilation debug='true' targetFramework='1.0' />\n</system.web>"
+        ],
+        "must-not-match": [
+            "<system.web>\n<compilation debug='false' targetFramework='1.0' />\n</system.web>"
         ]
     }   
 ]
