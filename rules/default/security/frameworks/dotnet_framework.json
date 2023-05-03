@@ -4,8 +4,8 @@
         "id": "DS450000",
         "description": "Do not target .NET Framework versions less than 4.7.2.",
         "recommendation": "",
-        "applies_to": [
-            "csharp"
+        "applies_to_file_regex": [
+            ".*\\.csproj"
         ],
         "tags": [
             "Framework.NET.Outdated"
@@ -14,7 +14,8 @@
         "rule_info": "DS450000.md",
         "patterns": [
             {
-                "pattern": "<TargetFramework>.*\\b(net11|net20|net35|net40|net403|net45|net451|net452|net46|net461|net462|net47|net471)\\b.*</TargetFramework>",
+                "xpaths": ["TargetFramework"],
+                "pattern": "(net11|net20|net35|net40|net403|net45|net451|net452|net46|net461|net462|net47|net471)",
                 "type": "regex",
                 "scopes": [
                     "code"
