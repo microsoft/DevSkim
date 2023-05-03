@@ -52,6 +52,9 @@
     <Compile Include="DevSkimFixMessageTarget.cs" />
     <Compile Include="DevSkimLanguageClient.cs" />
     <Compile Include="DevSkimSuggestedAction.cs" />
+    <Compile Include="Options\FindingOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ProcessTracker\IProcessTracker.cs" />
     <Compile Include="ProcessTracker\IWindowEventsListener.cs" />
     <Compile Include="ProcessTracker\JobObjectProcessTracker.cs" />
@@ -60,14 +63,26 @@
     <Compile Include="ProcessTracker\WindowEventArgs.cs" />
     <Compile Include="ProcessTracker\WindowEventsListener.cs" />
     <Compile Include="ProcessTracker\WindowsSystemEvents.cs" />
-    <Compile Include="RuleOptionPageGrid.cs">
+    <Compile Include="Options\IgnoreOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="OptionPageGrid.cs">
+    <Compile Include="Options\GuidanceOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Options\AllOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Options\SuppressionOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Options\RuleOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Options\TriggerOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OptionPackage.cs" />
+    <Compile Include="Options\OptionsPackage.cs" />
     <Compile Include="SettingsChangedNotifier.cs" />
     <Compile Include="StaticData.cs" />
     <Compile Include="SuggestedActionsSourceProvider.cs" />
