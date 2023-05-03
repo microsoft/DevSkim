@@ -40,16 +40,25 @@
             {
                 "xpaths": ["httpCookies/@requireSSL"],
                 "pattern": "false",
+                "scopes": [
+                    "code"
+                ],
                 "type": "regex"
             },
             {
                 "xpaths": ["forms/@requireSSL"],
                 "pattern": "false",
+                "scopes": [
+                    "code"
+                ],
                 "type": "regex"
             },
             {
                 "xpaths": ["roleManager/@cookieRequireSSL"],
                 "pattern": "false",
+                "scopes": [
+                    "code"
+                ],
                 "type": "regex"
             }
         ],
@@ -90,6 +99,9 @@
             {
                 "xpaths": ["system.web/trace/@enabled"],
                 "pattern": "true",
+                "scopes": [
+                    "code"
+                ],
                 "type": "regex"
             }
         ],
@@ -130,6 +142,9 @@
             {
                 "xpaths": ["system.web/compilation/@debug"],
                 "pattern": "true",
+                "scopes": [
+                    "code"
+                ],
                 "type": "regex"
             }
         ],
