@@ -115,7 +115,7 @@
                         "code"
                     ]
                 },
-                "search_in": "finding-region(0,0)",
+                "search_in": "same-file",
                 "negate_finding": true
             }
         ],
