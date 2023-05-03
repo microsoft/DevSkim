@@ -4,8 +4,8 @@
         "id": "DS450000",
         "description": "Do not target .NET Framework versions less than 4.7.2.",
         "recommendation": "",
-        "applies_to_file_regex": [
-            ".*\\.csproj"
+        "applies_to": [
+            "CSharp Project"
         ],
         "tags": [
             "Framework.NET.Outdated"
