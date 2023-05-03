@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.8.5" />
+    <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.8.6" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.19.7" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
