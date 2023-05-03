@@ -15,7 +15,7 @@ export interface DevSkimSettings {
     suppressionCommentStyle: string;
     manualReviewerName: string;
     ignoreFiles: string[];
-    ignoreRulesList: string;
+    ignoreRulesList: string[];
     guidanceBaseURL: string;
     removeFindingsOnClose: boolean;
     ignoreDefaultRules: boolean;
@@ -41,7 +41,7 @@ export class DevSkimSettingsObject implements DevSkimSettings {
     suppressionCommentStyle: string = "line";
     manualReviewerName: string = "";
     ignoreFiles: string[] = [];
-    ignoreRulesList: string = "";
+    ignoreRulesList: string[] = [];
     guidanceBaseURL: string = "https://github.com/Microsoft/DevSkim/Guidance";
     removeFindingsOnClose: boolean = false;
     ignoreDefaultRules: boolean = false;
