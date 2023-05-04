@@ -13,8 +13,8 @@ namespace Microsoft.DevSkim.CLI.Commands
     public class FixCommand
     {
         private readonly FixCommandOptions _opts;
-        private ILoggerFactory _logFactory;
-        private ILogger<FixCommand> _logger;
+        private readonly ILoggerFactory _logFactory;
+        private readonly ILogger<FixCommand> _logger;
         
         /// <summary>
         /// Create an instance of a command to apply fixes from detections in a DevSkim AnalyzeCommand output Sarif
@@ -23,6 +23,8 @@ namespace Microsoft.DevSkim.CLI.Commands
         public FixCommand(FixCommandOptions options)
         {
             _opts = options;
+            _logFactory = _opts.GetLoggerFactory();
+            _logger = _logFactory.CreateLogger<FixCommand>();
         }
 
         /// <summary>
@@ -31,8 +33,6 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <returns></returns>
         public int Run()
         {
-            _logFactory = _opts.GetLoggerFactory();
-            _logger = _logFactory.CreateLogger<FixCommand>();
             SarifLog sarifLog = SarifLog.Load(_opts.SarifInput);
             if (sarifLog.Runs.Count > 0)
             {

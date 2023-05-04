@@ -22,9 +22,10 @@ namespace Microsoft.DevSkim.CLI.Commands
 {
     public class AnalyzeCommand
     {
-        private BaseAnalyzeCommandOptions opts;
-        private ILoggerFactory _logFactory;
-        private ILogger<AnalyzeCommand> _logger;
+        // Not readonly, this field can be modified by the configure method
+        private BaseAnalyzeCommandOptions _opts;
+        private readonly ILoggerFactory _logFactory;
+        private readonly ILogger<AnalyzeCommand> _logger;
 
         /// <summary>
         /// Create an instance of the Analyze command with the specified options. To execute the command with the options given call <see cref="Run"/>
@@ -32,13 +33,15 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <param name="options"></param>
         public AnalyzeCommand(AnalyzeCommandOptions options)
         {
-            opts = options;
+            _opts = options;
+            _logFactory = _opts.GetLoggerFactory();
+            _logger = _logFactory.CreateLogger<AnalyzeCommand>();
         }
 
         /// <summary>
         /// Run analysis based on the options provided to the constructor.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A negative or 0 int representing a <see cref="ExitCode"/>, when `ExitCodeIsNumIssues` is set, positive numbers indicate the number if issues identified by the scan</returns>
         public int Run()
         {
             (ExitCode exitCode, string? fullPath, Languages? languages) = Configure();
@@ -50,11 +53,11 @@ namespace Microsoft.DevSkim.CLI.Commands
             
             IEnumerable<FileEntry> fileListing;
             Extractor extractor = new Extractor();
-            ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
+            ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = _opts.Globs };
             // Analysing a single file
             if (!Directory.Exists(fullPath))
             {
-                if (opts.RespectGitIgnore)
+                if (_opts.RespectGitIgnore)
                 {
                     if (IsGitPresent())
                     {
@@ -64,7 +67,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             return (int)ExitCode.CriticalError;
                         }
 
-                        fileListing = FilePathToFileEntries(opts, fullPath, extractor, extractorOpts);
+                        fileListing = FilePathToFileEntries(_opts, fullPath, extractor, extractorOpts);
                     }
                     else
                     {
@@ -74,13 +77,13 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 else
                 {
-                    fileListing = FilePathToFileEntries(opts, fullPath, extractor, extractorOpts);
+                    fileListing = FilePathToFileEntries(_opts, fullPath, extractor, extractorOpts);
                 }
             }
             // Analyzing a directory
             else
             {
-                if (opts.RespectGitIgnore)
+                if (_opts.RespectGitIgnore)
                 {
                     if (IsGitPresent())
                     {
@@ -90,7 +93,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         foreach (string? notIgnoredFileName in files)
                         {
                             innerList.AddRange(
-                                FilePathToFileEntries(opts, notIgnoredFileName, extractor, extractorOpts));
+                                FilePathToFileEntries(_opts, notIgnoredFileName, extractor, extractorOpts));
                         }
 
                         fileListing = innerList;
@@ -107,7 +110,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*.*", SearchOption.AllDirectories);
                     foreach (string file in files)
                     {
-                        innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
+                        innerList.AddRange(FilePathToFileEntries(_opts, file, extractor, extractorOpts));
                     }
 
                     fileListing = innerList;                
@@ -122,23 +125,20 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <returns></returns>
         private (ExitCode, string?, Languages?) Configure()
         {
-            if (opts.SuppressError)
+            if (_opts.SuppressError)
             {
                 Console.SetError(StreamWriter.Null);
             }
 
-            _logFactory = opts.GetLoggerFactory();
-            _logger = _logFactory.CreateLogger<AnalyzeCommand>();
-
             // Ensure that the target to scan exists
-            if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
+            if (!Directory.Exists(_opts.Path) && !File.Exists(_opts.Path))
             {
-                _logger.LogDebug("Error: Not a valid file or directory {0}", opts.Path);
+                _logger.LogDebug("Error: Not a valid file or directory {0}", _opts.Path);
 
                 return (ExitCode.CriticalError, null, null);
             }
 
-            if (opts is AnalyzeCommandOptions optsWithJson)
+            if (_opts is AnalyzeCommandOptions optsWithJson)
             {
                 // Check if the options json is specified.
                 if (!string.IsNullOrEmpty(optsWithJson.PathToOptionsJson))
@@ -155,7 +155,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                 var serializedProperties = typeof(SerializedAnalyzeCommandOptions).GetProperties();
                                 foreach (var prop in typeof(BaseAnalyzeCommandOptions).GetProperties())
                                 {
-                                    var value = prop.GetValue(opts);
+                                    var value = prop.GetValue(_opts);
                                     // Get the option attribute from the property
                                     var maybeOptionAttribute = prop.GetCustomAttributes(true)?.Where(x => x is OptionAttribute).FirstOrDefault();
                                     if (maybeOptionAttribute is OptionAttribute optionAttribute)
@@ -172,7 +172,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                 }
                                 
                                 // Replace the regular options with the deserialized options
-                                opts = deserializedOptions;
+                                _opts = deserializedOptions;
                             }
                             
                         }
@@ -186,25 +186,25 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
             
 
-            string fp = Path.GetFullPath(opts.Path);
+            string fp = Path.GetFullPath(_opts.Path);
             if (string.IsNullOrEmpty(fp))
             {
                 _logger.LogDebug("Provided scan path was empty or null.");
                 return (ExitCode.CriticalError, null, null);
             }
-            if (string.IsNullOrEmpty(opts.BasePath))
+            if (string.IsNullOrEmpty(_opts.BasePath))
             {
-                opts.BasePath = fp;
+                _opts.BasePath = fp;
             }
-            if (!string.IsNullOrEmpty(opts.OutputFile))
+            if (!string.IsNullOrEmpty(_opts.OutputFile))
             {
-                opts.OutputFile = Path.Combine(Environment.CurrentDirectory, opts.OutputFile);
+                _opts.OutputFile = Path.Combine(Environment.CurrentDirectory, _opts.OutputFile);
             }
 
             Languages? languages = null;
-            if (!string.IsNullOrEmpty(opts.CommentsPath) || !string.IsNullOrEmpty(opts.LanguagesPath))
+            if (!string.IsNullOrEmpty(_opts.CommentsPath) || !string.IsNullOrEmpty(_opts.LanguagesPath))
             {
-                if (string.IsNullOrEmpty(opts.CommentsPath) || string.IsNullOrEmpty(opts.LanguagesPath))
+                if (string.IsNullOrEmpty(_opts.CommentsPath) || string.IsNullOrEmpty(_opts.LanguagesPath))
                 {
                     _logger.LogError("When either comments or languages are specified both must be specified.");
                     return (ExitCode.ArgumentParsingError, null, null);
@@ -213,7 +213,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 try
                 {
-                    languages = DevSkimLanguages.FromFiles(opts.CommentsPath, opts.LanguagesPath);
+                    languages = DevSkimLanguages.FromFiles(_opts.CommentsPath, _opts.LanguagesPath);
                 }
                 catch (Exception e)
                 {
@@ -280,7 +280,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             try
             {
-                if (opts.AbsolutePaths)
+                if (_opts.AbsolutePaths)
                 {
                     return Path.GetFullPath(childPath);
                 }
@@ -302,10 +302,10 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         private int RunFileEntries(IEnumerable<FileEntry> fileListing, Languages devSkimLanguages)
         {
-            DevSkimRuleSet devSkimRuleSet = opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
-            if (opts.Rules.Any())
+            DevSkimRuleSet devSkimRuleSet = _opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
+            if (_opts.Rules.Any())
             {
-                foreach (string path in opts.Rules)
+                foreach (string path in _opts.Rules)
                 {
                     devSkimRuleSet.AddPath(path);
                 }
@@ -324,14 +324,14 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
             }
 
-            if (opts.RuleIds.Any())
+            if (_opts.RuleIds.Any())
             {
-                devSkimRuleSet = devSkimRuleSet.WithIds(opts.RuleIds);
+                devSkimRuleSet = devSkimRuleSet.WithIds(_opts.RuleIds);
             }
 
-            if (opts.IgnoreRuleIds.Any())
+            if (_opts.IgnoreRuleIds.Any())
             {
-                devSkimRuleSet = devSkimRuleSet.WithoutIds(opts.IgnoreRuleIds);
+                devSkimRuleSet = devSkimRuleSet.WithoutIds(_opts.IgnoreRuleIds);
             }
             
             if (!devSkimRuleSet.Any())
@@ -341,13 +341,13 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
 
             Severity severityFilter = Severity.Unspecified;
-            foreach (Severity severity in opts.Severities)
+            foreach (Severity severity in _opts.Severities)
             {
                 severityFilter |= severity;
             }
             
             Confidence confidenceFilter = Confidence.Unspecified;
-            foreach (Confidence confidence in opts.Confidences)
+            foreach (Confidence confidence in _opts.Confidences)
             {
                 confidenceFilter |= confidence;
             }
@@ -358,18 +358,18 @@ namespace Microsoft.DevSkim.CLI.Commands
                 Languages = devSkimLanguages,
                 AllowAllTagsInBuildFiles = true,
                 LoggerFactory = _logFactory,
-                Parallel = !opts.DisableParallel,
+                Parallel = !_opts.DisableParallel,
                 SeverityFilter = severityFilter,
                 ConfidenceFilter = confidenceFilter,
-                EnableSuppressions = !opts.DisableSuppression
+                EnableSuppressions = !_opts.DisableSuppression
             };
 
             DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, devSkimRuleProcessorOptions);
-            GitInformation? information = GenerateGitInformation(Path.GetFullPath(opts.Path));
-            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(opts.OutputFileFormat) ? "text" : opts.OutputFileFormat,
-                                                           opts.OutputTextFormat,
-                                                           string.IsNullOrEmpty(opts.OutputFile) ? Console.Out : File.CreateText(opts.OutputFile),
-                                                           opts.OutputFile,
+            GitInformation? information = GenerateGitInformation(Path.GetFullPath(_opts.Path));
+            Writer outputWriter = WriterFactory.GetWriter(string.IsNullOrEmpty(_opts.OutputFileFormat) ? "text" : _opts.OutputFileFormat,
+                                                           _opts.OutputTextFormat,
+                                                           string.IsNullOrEmpty(_opts.OutputFile) ? Console.Out : File.CreateText(_opts.OutputFile),
+                                                           _opts.OutputFile,
                                                            information);
 
             int filesAnalyzed = 0;
@@ -406,7 +406,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
 
                     List<Issue> issues = processor.Analyze(fileText, fileEntry.Name).ToList();
-                    if (opts is SerializedAnalyzeCommandOptions serializedAnalyzeCommandOptions)
+                    if (_opts is SerializedAnalyzeCommandOptions serializedAnalyzeCommandOptions)
                     {
                         if (serializedAnalyzeCommandOptions.LanguageRuleIgnoreMap.TryGetValue(languageInfo.Name,
                                 out List<string>? maybeRulesToIgnore) && maybeRulesToIgnore is {} rulesToIgnore)
@@ -418,7 +418,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     // We need to make sure the issues are ordered by index, so when doing replacements we can keep a straight count of the offset caused by previous changes
                     issues.Sort((issue1, issue2) => issue1.Boundary.Index - issue2.Boundary.Index);
 
-                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || opts.DisableSuppression;
+                    bool issuesFound = issues.Any(iss => !iss.IsSuppressionInfo) || _opts.DisableSuppression;
 
                     if (issuesFound)
                     {
@@ -427,7 +427,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         
                         foreach (Issue issue in issues)
                         {
-                            if (!issue.IsSuppressionInfo || opts.DisableSuppression)
+                            if (!issue.IsSuppressionInfo || _opts.DisableSuppression)
                             {
                                 Interlocked.Increment(ref issuesCount);
                                 _logger.LogDebug("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",
@@ -440,9 +440,9 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                         issue.Rule.Name);
 
                                 IssueRecord record = new DevSkim.IssueRecord(
-                                    Filename: TryRelativizePath(opts.BasePath, fileEntry.FullPath),
+                                    Filename: TryRelativizePath(_opts.BasePath, fileEntry.FullPath),
                                     Filesize: fileText.Length,
-                                    TextSample: opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
+                                    TextSample: _opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
                                     Issue: issue,
                                     Language: languageInfo.Name,
                                     Fixes: issue.Rule.Fixes);
@@ -455,7 +455,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
 
             //Iterate through all files
-            if (opts.DisableParallel)
+            if (_opts.DisableParallel)
             {
                 foreach (FileEntry fileEntry in fileListing)
                 {
@@ -473,7 +473,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _logger.LogDebug("Files analyzed: {0}", filesAnalyzed);
             _logger.LogDebug("Files skipped: {0}", filesSkipped);
 
-            return opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? issuesCount : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
+            return _opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? issuesCount : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
         }
 
         private GitInformation? GenerateGitInformation(string optsPath)
