@@ -23,13 +23,8 @@
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    // TODO: [ProvideOptionPage(typeof(AllOptionsPage), "DevSkim", "All Options", 0, 0, true)]
-    [ProvideOptionPage(typeof(RuleOptionsPage), "DevSkim", "Rules", 0, 0, true)]
-    [ProvideOptionPage(typeof(SuppressionOptionsPage), "DevSkim", "Suppressions", 0, 0, true)]
-    [ProvideOptionPage(typeof(GuidanceOptionsPage), "DevSkim", "Guidance ", 0, 0, true)]
-    [ProvideOptionPage(typeof(IgnoreOptionsPage), "DevSkim", "Ignores", 0, 0, true)]
-    [ProvideOptionPage(typeof(FindingOptionsPage), "DevSkim", "Findings", 0, 0, true)]
-    [ProvideOptionPage(typeof(TriggerOptionsPage), "DevSkim", "Triggers", 0, 0, true)]
+    [ProvideOptionPage(typeof(GeneralOptionsPage), "DevSkim", "General", 1000, 1001, true)]
+    [ProvideProfile(typeof(GeneralOptionsPage), "DevSkim", "General", 1000, 1002, true, DescriptionResourceID = 1003)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class OptionsPackage : AsyncPackage
     {
