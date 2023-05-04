@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.DevSkim.VisualStudio
 {
     using Microsoft.VisualStudio.Shell;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -200,8 +201,20 @@
             "was suppressed")]
         public CommentStylesEnum SuppressionCommentStyle
         {
-            get; set;
-        } = CommentStylesEnum.Line;
+            get
+            {
+                if (Enum.TryParse(StaticSettings.portableSettings.SuppressionStyle, out CommentStylesEnum enumRes))
+                {
+                    return enumRes;
+                }
+                return CommentStylesEnum.Line;
+            }
+            set
+            {
+                StaticSettings.portableSettings.SuppressionStyle = value.ToString();
+                StaticSettings.Push();
+            }
+        }
 
         [Category(SuppressionsCategory)]
         [DisplayName("Manual Reviewer Name")]
