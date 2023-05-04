@@ -125,11 +125,6 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <returns></returns>
         private (ExitCode, string?, Languages?) Configure()
         {
-            if (_opts.SuppressError)
-            {
-                Console.SetError(StreamWriter.Null);
-            }
-
             // Ensure that the target to scan exists
             if (!Directory.Exists(_opts.Path) && !File.Exists(_opts.Path))
             {

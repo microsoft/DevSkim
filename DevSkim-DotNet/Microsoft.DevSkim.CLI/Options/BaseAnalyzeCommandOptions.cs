@@ -67,10 +67,7 @@ public record BaseAnalyzeCommandOptions : LogOptions
     
     [Option("absolute-path", HelpText = "Output absolute paths (overrides --base-path).", Default = false)]
     public bool AbsolutePaths { get; set; }
-    
-    [Option("suppress-error", HelpText = "Don't output to stderr", Default = false)]
-    public bool SuppressError { get; set; }
-    
+
     [Option("skip-git-ignored-files", HelpText = "Set to skip files which are ignored by .gitignore. Requires git to be installed.", Default = false)]
     public bool RespectGitIgnore { get; set; }
     
