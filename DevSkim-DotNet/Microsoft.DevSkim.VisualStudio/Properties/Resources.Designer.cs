@@ -70,7 +70,7 @@ namespace Microsoft.DevSkim.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rules.
+        ///   Looks up a localized string similar to General.
         /// </summary>
         internal static string _1001 {
             get {
@@ -79,7 +79,7 @@ namespace Microsoft.DevSkim.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DevSkim Rule Options.
+        ///   Looks up a localized string similar to DevSkim Settings.
         /// </summary>
         internal static string _1002 {
             get {
@@ -88,146 +88,11 @@ namespace Microsoft.DevSkim.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DevSkim options for rules.
+        ///   Looks up a localized string similar to All DevSkim settings.
         /// </summary>
         internal static string _1003 {
             get {
                 return ResourceManager.GetString("1003", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Suppressions.
-        /// </summary>
-        internal static string _1004 {
-            get {
-                return ResourceManager.GetString("1004", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim Suppression Options.
-        /// </summary>
-        internal static string _1005 {
-            get {
-                return ResourceManager.GetString("1005", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim options for suppressions.
-        /// </summary>
-        internal static string _1006 {
-            get {
-                return ResourceManager.GetString("1006", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Guidance.
-        /// </summary>
-        internal static string _1007 {
-            get {
-                return ResourceManager.GetString("1007", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim Guidance Options.
-        /// </summary>
-        internal static string _1008 {
-            get {
-                return ResourceManager.GetString("1008", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim options for guidance.
-        /// </summary>
-        internal static string _1009 {
-            get {
-                return ResourceManager.GetString("1009", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ignores.
-        /// </summary>
-        internal static string _1010 {
-            get {
-                return ResourceManager.GetString("1010", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim Ignore Options.
-        /// </summary>
-        internal static string _1011 {
-            get {
-                return ResourceManager.GetString("1011", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim options for ignores.
-        /// </summary>
-        internal static string _1012 {
-            get {
-                return ResourceManager.GetString("1012", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Findings.
-        /// </summary>
-        internal static string _1013 {
-            get {
-                return ResourceManager.GetString("1013", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim Finding Options.
-        /// </summary>
-        internal static string _1014 {
-            get {
-                return ResourceManager.GetString("1014", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim options for findings.
-        /// </summary>
-        internal static string _1015 {
-            get {
-                return ResourceManager.GetString("1015", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Triggers.
-        /// </summary>
-        internal static string _1016 {
-            get {
-                return ResourceManager.GetString("1016", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim Trigger Options.
-        /// </summary>
-        internal static string _1017 {
-            get {
-                return ResourceManager.GetString("1017", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DevSkim options for scan triggers.
-        /// </summary>
-        internal static string _1018 {
-            get {
-                return ResourceManager.GetString("1018", resourceCulture);
             }
         }
     }

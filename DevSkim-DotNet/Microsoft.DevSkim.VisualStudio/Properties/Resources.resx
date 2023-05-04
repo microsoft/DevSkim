@@ -122,75 +122,15 @@
     <comment>DevSkim Category ID</comment>
   </data>
   <data name="1001" xml:space="preserve">
-    <value>Rules</value>
+    <value>General</value>
     <comment>DevSkim Settings ID</comment>
   </data>
   <data name="1002" xml:space="preserve">
-    <value>DevSkim Rule Options</value>
+    <value>DevSkim Settings</value>
     <comment>DevSkim Export ID</comment>
   </data>
   <data name="1003" xml:space="preserve">
-    <value>DevSkim options for rules</value>
-    <comment>DevSkim Export Desc</comment>
-  </data>
-  <data name="1004" xml:space="preserve">
-    <value>Suppressions</value>
-    <comment>DevSkim Settings ID</comment>
-  </data>
-  <data name="1005" xml:space="preserve">
-    <value>DevSkim Suppression Options</value>
-    <comment>DevSkim Export ID</comment>
-  </data>
-  <data name="1006" xml:space="preserve">
-    <value>DevSkim options for suppressions</value>
-    <comment>DevSkim Export Desc</comment>
-  </data>
-  <data name="1007" xml:space="preserve">
-    <value>Guidance</value>
-    <comment>DevSkim Settings ID</comment>
-  </data>
-  <data name="1008" xml:space="preserve">
-    <value>DevSkim Guidance Options</value>
-    <comment>DevSkim Export ID</comment>
-  </data>
-  <data name="1009" xml:space="preserve">
-    <value>DevSkim options for guidance</value>
-    <comment>DevSkim Export Desc</comment>
-  </data>
-  <data name="1010" xml:space="preserve">
-    <value>Ignores</value>
-    <comment>DevSkim Settings ID</comment>
-  </data>
-  <data name="1011" xml:space="preserve">
-    <value>DevSkim Ignore Options</value>
-    <comment>DevSkim Export ID</comment>
-  </data>
-  <data name="1012" xml:space="preserve">
-    <value>DevSkim options for ignores</value>
-    <comment>DevSkim Export Desc</comment>
-  </data>
-  <data name="1013" xml:space="preserve">
-    <value>Findings</value>
-    <comment>DevSkim Settings ID</comment>
-  </data>
-  <data name="1014" xml:space="preserve">
-    <value>DevSkim Finding Options</value>
-    <comment>DevSkim Export ID</comment>
-  </data>
-  <data name="1015" xml:space="preserve">
-    <value>DevSkim options for findings</value>
-    <comment>DevSkim Export Desc</comment>
-  </data>
-  <data name="1016" xml:space="preserve">
-    <value>Triggers</value>
-    <comment>DevSkim Settings ID</comment>
-  </data>
-  <data name="1017" xml:space="preserve">
-    <value>DevSkim Trigger Options</value>
-    <comment>DevSkim Export ID</comment>
-  </data>
-  <data name="1018" xml:space="preserve">
-    <value>DevSkim options for scan triggers</value>
+    <value>All DevSkim settings</value>
     <comment>DevSkim Export Desc</comment>
   </data>
 </root>

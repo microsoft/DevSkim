@@ -52,7 +52,7 @@
     <Compile Include="DevSkimFixMessageTarget.cs" />
     <Compile Include="DevSkimLanguageClient.cs" />
     <Compile Include="DevSkimSuggestedAction.cs" />
-    <Compile Include="Options\FindingOptionsPage.cs">
+    <Compile Include="Options\GeneralOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ProcessTracker\IProcessTracker.cs" />
@@ -63,21 +63,6 @@
     <Compile Include="ProcessTracker\WindowEventArgs.cs" />
     <Compile Include="ProcessTracker\WindowEventsListener.cs" />
     <Compile Include="ProcessTracker\WindowsSystemEvents.cs" />
-    <Compile Include="Options\IgnoreOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Options\GuidanceOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Options\SuppressionOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Options\RuleOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Options\TriggerOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Options\OptionsPackage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
