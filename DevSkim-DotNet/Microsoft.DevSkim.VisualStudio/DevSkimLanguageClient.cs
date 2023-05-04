@@ -106,14 +106,14 @@ namespace Microsot.DevSkim.LanguageClient
 
         public Task OnServerInitializedAsync()
         {
-            // Put actual settings here
-            return SettingsNotifier.SendSettingsChangedNotificationAsync(new PortableScannerSettings());
+            return Task.CompletedTask;
         }
 
         public Task AttachForCustomMessageAsync(JsonRpc rpc)
         {
             this.Rpc = rpc;
             this.SettingsNotifier = new SettingsChangedNotifier(this.Rpc);
+            StaticSettings.SettingsNotifier = SettingsNotifier;
             return Task.CompletedTask;
         }
 

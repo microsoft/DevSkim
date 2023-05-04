@@ -3,6 +3,7 @@
     using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Runtime.InteropServices;
 
     [Guid(PageGuidString)]
@@ -24,24 +25,31 @@
         [Description("Turn on the rules with severity \"Critical\".")]
         public bool EnableCriticalSeverityRules
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.EnableCriticalSeverity;
+            set
+            { 
+                StaticSettings.portableSettings.EnableCriticalSeverity = value; 
+                StaticSettings.Push(); 
+            }
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Enable Important Severity Rules")]
         [Description("Turn on the rules with severity \"Important\".")]
         public bool EnableImportantSeverityRules
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.EnableImportantSeverityRules;
+            set => StaticSettings.portableSettings.EnableImportantSeverityRules = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Enable Moderate Severity Rules")]
         [Description("Turn on the rules with severity \"Moderate\".")]
         public bool EnableModerateSeverityRules
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.EnableModerateSeverityRules;
+            set => StaticSettings.portableSettings.EnableModerateSeverityRules = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Enable Manual Review Severity Rules")]
@@ -51,8 +59,9 @@
             "Since these rules tend to require further analysis upon flagging an issue, they are disabled by default.")]
         public bool EnableManualReviewSeverityRules
         {
-            get; set;
-        } = false;
+            get => StaticSettings.portableSettings.EnableManualReviewSeverityRules;
+            set => StaticSettings.portableSettings.EnableManualReviewSeverityRules = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Enable Best Practice Severity Rules")]
@@ -61,32 +70,36 @@
             "or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities.")]
         public bool EnableBestPracticeSeverityRules
         {
-            get; set;
-        } = false;
+            get => StaticSettings.portableSettings.EnableBestPracticeSeverityRules;
+            set => StaticSettings.portableSettings.EnableBestPracticeSeverityRules = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Enable High Confidence Rules")]
         [Description("Turn on the rules of confidence \"High\".")]
         public bool EnableHighConfidenceRules
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.EnableHighConfidenceRules;
+            set => StaticSettings.portableSettings.EnableHighConfidenceRules = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Enable Medium Confidence Rules")]
         [Description("Turn on the rules of confidence \"Medium\".")]
         public bool EnableMediumConfidenceRules
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.EnableMediumConfidenceRules;
+            set => StaticSettings.portableSettings.EnableMediumConfidenceRules = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Enable Low Confidence Rules")]
         [Description("Turn on the rules of confidence \"Low\".")]
         public bool EnableLowConfidenceRules
         {
-            get; set;
-        } = false;
+            get => StaticSettings.portableSettings.EnableLowConfidenceRules;
+            set => StaticSettings.portableSettings.EnableLowConfidenceRules = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Custom Rules Paths")]
@@ -94,24 +107,27 @@
             "for DevSkim to use in analysis.")]
         public List<string> CustomRulesPaths
         {
-            get; set;
-        } = new List<string>();
+            get => StaticSettings.portableSettings.CustomRulePaths.ToList();
+            set => StaticSettings.portableSettings.CustomRulePaths = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Custom Languages Path")]
         [Description("A local path to a custom language file for analysis. Also requires customCommentsPath to be set.")]
         public string CustomLanguagesPath
         {
-            get; set;
-        } = "";
+            get => StaticSettings.portableSettings.CustomLanguagesPath;
+            set => StaticSettings.portableSettings.CustomLanguagesPath = value;
+        }
 
         [Category(RulesCategory)]
         [DisplayName("Custom Comments Path")]
         [Description("A local path to a custom comments file for analysis. Also requires customLanguagesPath to be set.")]
         public string CustomCommentsPath
         {
-            get; set;
-        } = "";
+            get => StaticSettings.portableSettings.CustomCommentsPath;
+            set => StaticSettings.portableSettings.CustomCommentsPath = value;
+        }
 
 
         /// <summary>
@@ -123,8 +139,9 @@
     "The default is 30 days. Set to 0 to disable temporary suppressions.")]
         public int SuppressionDurationInDays
         {
-            get; set;
-        } = 30;
+            get => StaticSettings.portableSettings.SuppressionDuration;
+            set => StaticSettings.portableSettings.SuppressionDuration = value;
+        }
 
         public enum CommentStylesEnum
         {
@@ -147,8 +164,9 @@
         [Description("If set, insert this name in inserted suppression comments.")]
         public string ManualReviewerName
         {
-            get; set;
-        } = "";
+            get => StaticSettings.portableSettings.ReviewerName;
+            set => StaticSettings.portableSettings.ReviewerName = value;
+        }
 
 
         /// <summary>
@@ -161,8 +179,9 @@
     "organizations can clone and customize that repo, and specify their own base URL for the guidance.")]
         public string GuidanceBaseURL
         {
-            get; set;
-        } = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
+            get => StaticSettings.portableSettings.GuidanceBaseUrl;
+            set => StaticSettings.portableSettings.GuidanceBaseUrl = value;
+        }
 
 
         /// <summary>
@@ -173,40 +192,27 @@
         [Description("Regular expressions to exclude files and folders from analysis.")]
         public List<string> IgnoreFiles
         {
-            get; set;
-        } = new List<string>();
+            get => StaticSettings.portableSettings.IgnoreFiles.Select(x => x.ToString()).ToList();
+            set => StaticSettings.portableSettings.IgnoreFiles = value.Select(x => new System.Text.RegularExpressions.Regex(x)).ToList();
+        }
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Rules List")]
         [Description("DevSkim Rule IDs to ignore.")]
         public List<string> IgnoreRulesList
         {
-            get; set;
-        } = new List<string>
-        {
-            "\\.(exe|dll|so|dylib|bin|so\\..*)$",
-            "\\.(png|jpg|jpeg|gif|psd|ico|mp3|mpeg|bmp)$",
-            "\\.(zip|tar|gz|rar|jar|gz|7z|bz|bz2|gzip|cab|war|xz|nupkg|gem|egg)$",
-            "\\.(sqlite3|db)$",
-            "(^|/)(out|bin)/",
-            "(^|/)(tests?|unittests?|__tests__|__mocks__)/",
-            "(^|/)(\\.git|git)/",
-            "\\.(git|git[^./])$",
-            "-lock\\.[^/]|\\.lock$",
-            "(^|/)(\\.vscode|\\.cache|logs)/",
-            "(^|/)(nuget|node_modules)/",
-            "\\.(log|sarif|test)$",
-            "\\.(py[cod])$",
-            "(^|/)__pycache__/"
-        };
+            get => StaticSettings.portableSettings.IgnoreRuleIds.ToList();
+            set => StaticSettings.portableSettings.IgnoreRuleIds = value;
+        }
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Default Rules")]
         [Description("Disable all default DevSkim rules.")]
         public bool IgnoreDefaultRules
         {
-            get; set;
-        } = false;
+            get => StaticSettings.portableSettings.IgnoreDefaultRuleSet;
+            set => StaticSettings.portableSettings.IgnoreDefaultRuleSet = value;
+        }
 
 
         /// <summary>
@@ -221,8 +227,9 @@
             "command to automatically clear away after a couple of minutes.")]
         public bool RemoveFindingsOnClose
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.RemoveFindingsOnClose;
+            set => StaticSettings.portableSettings.RemoveFindingsOnClose = value;
+        }
 
 
         /// <summary>
@@ -233,16 +240,18 @@
         [Description("Scan files on open.")]
         public bool ScanOnOpen
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.ScanOnOpen;
+            set => StaticSettings.portableSettings.ScanOnOpen = value;
+        }
 
         [Category(TriggersCategory)]
         [DisplayName("Scan On Save")]
         [Description("Scan files on save.")]
         public bool ScanOnSave
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.ScanOnSave;
+            set => StaticSettings.portableSettings.ScanOnSave = value;
+        }
 
         [Category(TriggersCategory)]
         [DisplayName("Scan On Change")]
@@ -252,8 +261,5 @@
             get => StaticSettings.portableSettings.ScanOnChange;
             set => StaticSettings.portableSettings.ScanOnChange = value;
         }
-        //{
-        //    get; set;
-        //} = true;
     }
 }
