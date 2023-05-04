@@ -50,6 +50,18 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 return (int)exitCode;
             }
+
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                _logger.LogError("The path to source code was null or empty.");
+                return (int)ExitCode.ArgumentParsingError;
+            }
+
+            if (languages is null)
+            {
+                _logger.LogError("Languages could not be instantiated.");
+                return (int)ExitCode.CriticalError;
+            }
             
             IEnumerable<FileEntry> fileListing;
             Extractor extractor = new Extractor();
