@@ -34,7 +34,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             DevSkimRuleVerifier devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
             {
-                LanguageSpecs = !string.IsNullOrEmpty(_opts.CommentsPath) && !string.IsNullOrEmpty(_opts.LanguagesPath) ? DevSkimLanguages.FromFiles(_opts.CommentsPath, _opts.LanguagesPath) : new Languages()
+                LanguageSpecs = !string.IsNullOrEmpty(_opts.CommentsPath) && !string.IsNullOrEmpty(_opts.LanguagesPath) ? DevSkimLanguages.FromFiles(_opts.CommentsPath, _opts.LanguagesPath) : DevSkimLanguages.LoadEmbedded()
                 //TODO: Add logging factory to get validation errors.
             });
 
