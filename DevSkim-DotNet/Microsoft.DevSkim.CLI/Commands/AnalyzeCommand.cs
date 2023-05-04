@@ -128,7 +128,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             // Ensure that the target to scan exists
             if (!Directory.Exists(_opts.Path) && !File.Exists(_opts.Path))
             {
-                _logger.LogDebug("Error: Not a valid file or directory {0}", _opts.Path);
+                _logger.LogError("Error: Not a valid file or directory {0}", _opts.Path);
 
                 return (ExitCode.CriticalError, null, null);
             }
@@ -173,7 +173,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         }
                         catch (Exception e)
                         {
-                            _logger.LogDebug("Error while parsing additional options {0}", e.Message);
+                            _logger.LogError("Error while parsing additional options {0}", e.Message);
                             return (ExitCode.CriticalError, null, null);
                         }
                     }
@@ -184,7 +184,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             string fp = Path.GetFullPath(_opts.Path);
             if (string.IsNullOrEmpty(fp))
             {
-                _logger.LogDebug("Provided scan path was empty or null.");
+                _logger.LogError("Provided scan path was empty or null.");
                 return (ExitCode.CriticalError, null, null);
             }
             if (string.IsNullOrEmpty(_opts.BasePath))
@@ -314,7 +314,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 if (!result.Verified)
                 {
-                    _logger.LogDebug("Error: Rules failed validation. ");
+                    _logger.LogError("Error: Rules failed validation. ");
                     return (int)ExitCode.CriticalError;
                 }
             }
@@ -331,7 +331,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             
             if (!devSkimRuleSet.Any())
             {
-                _logger.LogDebug("Error: No rules were loaded. ");
+                _logger.LogError("Error: No rules were loaded. ");
                 return (int)ExitCode.CriticalError;
             }
 
@@ -519,40 +519,6 @@ namespace Microsoft.DevSkim.CLI.Commands
                 _logger.LogDebug("The file located at {0} could not be read. ({1}:{2})", pathToFile, e.GetType().Name, e.Message);
             }
             return Array.Empty<FileEntry>();
-        }
-
-        private bool ParseSeverity(string severityText, out Microsoft.ApplicationInspector.RulesEngine.Severity severity)
-        {
-            severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Critical;
-            bool result = true;
-            switch (severityText.ToLower())
-            {
-                case "critical":
-                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Critical;
-                    break;
-
-                case "important":
-                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Important;
-                    break;
-
-                case "moderate":
-                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.Moderate;
-                    break;
-
-                case "practice":
-                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.BestPractice;
-                    break;
-
-                case "manual":
-                    severity = Microsoft.ApplicationInspector.RulesEngine.Severity.ManualReview;
-                    break;
-
-                default:
-                    result = false;
-                    break;
-            }
-
-            return result;
         }
     }
 }
