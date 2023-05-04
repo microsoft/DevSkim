@@ -249,7 +249,11 @@
         [Description("Scan files on change.")]
         public bool ScanOnChange
         {
-            get; set;
-        } = true;
+            get => StaticSettings.portableSettings.ScanOnChange;
+            set => StaticSettings.portableSettings.ScanOnChange = value;
+        }
+        //{
+        //    get; set;
+        //} = true;
     }
 }
