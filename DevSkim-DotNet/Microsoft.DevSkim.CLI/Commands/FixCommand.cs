@@ -6,21 +6,33 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
     public class FixCommand
     {
         private readonly FixCommandOptions _opts;
-
+        private ILoggerFactory _logFactory;
+        private ILogger<FixCommand> _logger;
+        
+        /// <summary>
+        /// Create an instance of a command to apply fixes from detections in a DevSkim AnalyzeCommand output Sarif
+        /// </summary>
+        /// <param name="options"></param>
         public FixCommand(FixCommandOptions options)
         {
             _opts = options;
         }
 
-        // TODO Use proper logging abstractions
+        /// <summary>
+        /// Apply fixes as specified by the FixCommandOptions
+        /// </summary>
+        /// <returns></returns>
         public int Run()
         {
+            _logFactory = _opts.GetLoggerFactory();
+            _logger = _logFactory.CreateLogger<FixCommand>();
             SarifLog sarifLog = SarifLog.Load(_opts.SarifInput);
             if (sarifLog.Runs.Count > 0)
             {
@@ -28,7 +40,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 System.Collections.Generic.IEnumerable<IGrouping<Uri, Result>> groupedResults = run.Results.GroupBy(x => x.Locations[0].PhysicalLocation.ArtifactLocation.Uri);
                 if (!_opts.ApplyAllFixes && !_opts.FilesToApplyTo.Any() && !_opts.RulesToApplyFrom.Any())
                 {
-                    Console.WriteLine("Must specify either apply all fixes or a combination of file and rules to apply");
+                    _logger.LogError("Must specify either apply all fixes or a combination of file and rules to apply");
                     return (int)ExitCode.CriticalError;
                 }
 
@@ -76,7 +88,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             sb.Append(replacement.InsertedContent.Text);
                             if (_opts.DryRun)
                             {
-                                Console.WriteLine($"{potentialPath} will be changed: {theContent[replacement.DeletedRegion.CharOffset..(replacement.DeletedRegion.CharOffset+replacement.DeletedRegion.CharLength)]}->{replacement.InsertedContent.Text} @ {replacement.DeletedRegion.CharOffset}");
+                                _logger.LogInformation($"{potentialPath} will be changed: {theContent[replacement.DeletedRegion.CharOffset..(replacement.DeletedRegion.CharOffset+replacement.DeletedRegion.CharLength)]}->{replacement.InsertedContent.Text} @ {replacement.DeletedRegion.CharOffset}");
                             }
                             // CurPos tracks position in the original string,
                             // so we only want to move forward the length of the original deleted content, not the new content
@@ -92,7 +104,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                     else
                     {
-                        Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
+                        _logger.LogError($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
                 }
             }
