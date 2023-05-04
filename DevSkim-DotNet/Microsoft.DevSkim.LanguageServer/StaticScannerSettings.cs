@@ -2,6 +2,7 @@
 
 namespace DevSkim.LanguageServer
 {
+    using Microsoft.ApplicationInspector.RulesEngine;
     using Microsoft.DevSkim;
     using System;
     using System.Collections.Generic;
@@ -39,7 +40,60 @@ namespace DevSkim.LanguageServer
             ScanOnSave = request.ScanOnSave;
             ScanOnChange = request.ScanOnChange;
             RemoveFindingsOnClose = request.RemoveFindingsOnClose;
-            // TODO handle languages/comments here
+            RuleProcessorOptions.SeverityFilter = ParseSeverity(request);
+            RuleProcessorOptions.ConfidenceFilter = ParseConfidence(request);
+            try
+            {
+                RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath, languagesPath: request.CustomLanguagesPath);
+            }
+            catch 
+            { 
+                // TODO: Surface this error
+            }
+        }
+
+        private static Confidence ParseConfidence(PortableScannerSettings request)
+        {
+            Confidence confidence = Confidence.Unspecified;
+            if (request.EnableHighConfidenceRules)
+            {
+                confidence |= Confidence.High;
+            }
+            if (request.EnableMediumConfidenceRules)
+            {
+                confidence |= Confidence.Medium;
+            }
+            if (request.EnableLowConfidenceRules)
+            {
+                confidence |= Confidence.Low;
+            }
+            return confidence;
+        }
+
+        private static Severity ParseSeverity(PortableScannerSettings request)
+        {
+            Severity severity = Severity.Unspecified;
+            if (request.EnableCriticalSeverity)
+            {
+                severity |= Severity.Critical;
+            }
+            if (request.EnableImportantSeverityRules)
+            {
+                severity |= Severity.Important;
+            }
+            if (request.EnableManualReviewSeverityRules)
+            {
+                severity |= Severity.ManualReview;
+            }
+            if (request.EnableModerateSeverityRules)
+            {
+                severity |= Severity.Moderate;
+            }
+            if (request.EnableBestPracticeSeverityRules)
+            {
+                severity |= Severity.BestPractice;
+            }
+            return severity;
         }
     }
 }
