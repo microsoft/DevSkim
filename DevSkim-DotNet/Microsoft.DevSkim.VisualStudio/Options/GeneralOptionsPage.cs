@@ -27,9 +27,9 @@
         {
             get => StaticSettings.portableSettings.EnableCriticalSeverity;
             set
-            { 
-                StaticSettings.portableSettings.EnableCriticalSeverity = value; 
-                StaticSettings.Push(); 
+            {
+                StaticSettings.portableSettings.EnableCriticalSeverity = value;
+                StaticSettings.Push();
             }
         }
 
@@ -39,7 +39,11 @@
         public bool EnableImportantSeverityRules
         {
             get => StaticSettings.portableSettings.EnableImportantSeverityRules;
-            set => StaticSettings.portableSettings.EnableImportantSeverityRules = value;
+            set
+            {
+                StaticSettings.portableSettings.EnableImportantSeverityRules = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -48,7 +52,11 @@
         public bool EnableModerateSeverityRules
         {
             get => StaticSettings.portableSettings.EnableModerateSeverityRules;
-            set => StaticSettings.portableSettings.EnableModerateSeverityRules = value;
+            set
+            {
+                StaticSettings.portableSettings.EnableModerateSeverityRules = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -60,7 +68,11 @@
         public bool EnableManualReviewSeverityRules
         {
             get => StaticSettings.portableSettings.EnableManualReviewSeverityRules;
-            set => StaticSettings.portableSettings.EnableManualReviewSeverityRules = value;
+            set
+            {
+                StaticSettings.portableSettings.EnableManualReviewSeverityRules = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -71,7 +83,11 @@
         public bool EnableBestPracticeSeverityRules
         {
             get => StaticSettings.portableSettings.EnableBestPracticeSeverityRules;
-            set => StaticSettings.portableSettings.EnableBestPracticeSeverityRules = value;
+            set
+            {
+                StaticSettings.portableSettings.EnableBestPracticeSeverityRules = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -80,7 +96,11 @@
         public bool EnableHighConfidenceRules
         {
             get => StaticSettings.portableSettings.EnableHighConfidenceRules;
-            set => StaticSettings.portableSettings.EnableHighConfidenceRules = value;
+            set
+            {
+                StaticSettings.portableSettings.EnableHighConfidenceRules = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -89,7 +109,11 @@
         public bool EnableMediumConfidenceRules
         {
             get => StaticSettings.portableSettings.EnableMediumConfidenceRules;
-            set => StaticSettings.portableSettings.EnableMediumConfidenceRules = value;
+            set
+            {
+                StaticSettings.portableSettings.EnableMediumConfidenceRules = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -98,7 +122,11 @@
         public bool EnableLowConfidenceRules
         {
             get => StaticSettings.portableSettings.EnableLowConfidenceRules;
-            set => StaticSettings.portableSettings.EnableLowConfidenceRules = value;
+            set
+            {
+                StaticSettings.portableSettings.EnableLowConfidenceRules = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -108,7 +136,11 @@
         public List<string> CustomRulesPaths
         {
             get => StaticSettings.portableSettings.CustomRulePaths.ToList();
-            set => StaticSettings.portableSettings.CustomRulePaths = value;
+            set
+            {
+                StaticSettings.portableSettings.CustomRulePaths = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -117,7 +149,11 @@
         public string CustomLanguagesPath
         {
             get => StaticSettings.portableSettings.CustomLanguagesPath;
-            set => StaticSettings.portableSettings.CustomLanguagesPath = value;
+            set
+            {
+                StaticSettings.portableSettings.CustomLanguagesPath = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(RulesCategory)]
@@ -126,7 +162,11 @@
         public string CustomCommentsPath
         {
             get => StaticSettings.portableSettings.CustomCommentsPath;
-            set => StaticSettings.portableSettings.CustomCommentsPath = value;
+            set
+            {
+                StaticSettings.portableSettings.CustomCommentsPath = value;
+                StaticSettings.Push();
+            }
         }
 
 
@@ -140,7 +180,11 @@
         public int SuppressionDurationInDays
         {
             get => StaticSettings.portableSettings.SuppressionDuration;
-            set => StaticSettings.portableSettings.SuppressionDuration = value;
+            set
+            {
+                StaticSettings.portableSettings.SuppressionDuration = value;
+                StaticSettings.Push();
+            }
         }
 
         public enum CommentStylesEnum
@@ -165,7 +209,11 @@
         public string ManualReviewerName
         {
             get => StaticSettings.portableSettings.ReviewerName;
-            set => StaticSettings.portableSettings.ReviewerName = value;
+            set
+            {
+                StaticSettings.portableSettings.ReviewerName = value;
+                StaticSettings.Push();
+            }
         }
 
 
@@ -180,7 +228,11 @@
         public string GuidanceBaseURL
         {
             get => StaticSettings.portableSettings.GuidanceBaseUrl;
-            set => StaticSettings.portableSettings.GuidanceBaseUrl = value;
+            set
+            {
+                StaticSettings.portableSettings.GuidanceBaseUrl = value;
+                StaticSettings.Push();
+            }
         }
 
 
@@ -193,7 +245,11 @@
         public List<string> IgnoreFiles
         {
             get => StaticSettings.portableSettings.IgnoreFiles.Select(x => x.ToString()).ToList();
-            set => StaticSettings.portableSettings.IgnoreFiles = value.Select(x => new System.Text.RegularExpressions.Regex(x)).ToList();
+            set
+            {
+                StaticSettings.portableSettings.IgnoreFiles = value.Select(x => new System.Text.RegularExpressions.Regex(x)).ToList();
+                StaticSettings.Push();
+            }
         }
 
         [Category(IgnoresCategory)]
@@ -202,7 +258,11 @@
         public List<string> IgnoreRulesList
         {
             get => StaticSettings.portableSettings.IgnoreRuleIds.ToList();
-            set => StaticSettings.portableSettings.IgnoreRuleIds = value;
+            set
+            {
+                StaticSettings.portableSettings.IgnoreRuleIds = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(IgnoresCategory)]
@@ -211,7 +271,11 @@
         public bool IgnoreDefaultRules
         {
             get => StaticSettings.portableSettings.IgnoreDefaultRuleSet;
-            set => StaticSettings.portableSettings.IgnoreDefaultRuleSet = value;
+            set
+            {
+                StaticSettings.portableSettings.IgnoreDefaultRuleSet = value;
+                StaticSettings.Push();
+            }
         }
 
 
@@ -228,7 +292,11 @@
         public bool RemoveFindingsOnClose
         {
             get => StaticSettings.portableSettings.RemoveFindingsOnClose;
-            set => StaticSettings.portableSettings.RemoveFindingsOnClose = value;
+            set
+            {
+                StaticSettings.portableSettings.RemoveFindingsOnClose = value;
+                StaticSettings.Push();
+            }
         }
 
 
@@ -241,7 +309,11 @@
         public bool ScanOnOpen
         {
             get => StaticSettings.portableSettings.ScanOnOpen;
-            set => StaticSettings.portableSettings.ScanOnOpen = value;
+            set
+            {
+                StaticSettings.portableSettings.ScanOnOpen = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(TriggersCategory)]
@@ -250,7 +322,11 @@
         public bool ScanOnSave
         {
             get => StaticSettings.portableSettings.ScanOnSave;
-            set => StaticSettings.portableSettings.ScanOnSave = value;
+            set
+            {
+                StaticSettings.portableSettings.ScanOnSave = value;
+                StaticSettings.Push();
+            }
         }
 
         [Category(TriggersCategory)]
@@ -259,7 +335,11 @@
         public bool ScanOnChange
         {
             get => StaticSettings.portableSettings.ScanOnChange;
-            set => StaticSettings.portableSettings.ScanOnChange = value;
+            set
+            {
+                StaticSettings.portableSettings.ScanOnChange = value;
+                StaticSettings.Push();
+            }
         }
     }
 }
