@@ -1,13 +1,20 @@
 using System;
 using System.Collections.Generic;
 using CommandLine;
+using Microsoft.ApplicationInspector.Logging;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Writers;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
-public record BaseAnalyzeCommandOptions
+public record BaseAnalyzeCommandOptions : LogOptions
 {
+    [Option('I', "source-code",Required = true, HelpText = "Path to a directory containing files to scan or a single file to scan", Default = "")]
+    public string Path { get; set; } = string.Empty;
+    
+    [Option('O',"output-file",Required = false, HelpText = "Filename for result file, uses stdout if not set.", Default = "")]
+    public string OutputFile { get; set; } = string.Empty;
+
     [Option('r', HelpText = "Comma separated list of paths to rules files to use", Separator = ',', Default = new string[]{})]
     public IEnumerable<string> Rules { get; set; } = Array.Empty<string>();
     
@@ -23,12 +30,6 @@ public record BaseAnalyzeCommandOptions
     [Option("comments",Required = false, HelpText = "Path to custom json formatted Comments file to specify languages, when specified languages must also be specified", Default = "")]
     public string CommentsPath { get; set; } = string.Empty;
 
-    [Option('I', "source-code",Required = true, HelpText = "Path to a directory containing files to scan or a single file to scan", Default = "")]
-    public string Path { get; set; } = string.Empty;
-    
-    [Option('O',"output-file",Required = false, HelpText = "Filename for result file, uses stdout if not set.", Default = "")]
-    public string OutputFile { get; set; } = string.Empty;
-    
     [Option('o', "output-format", HelpText = "Format for output text.", Default = SimpleTextWriter.DefaultFormat)]
     public string OutputTextFormat { get; set; } = string.Empty;
     

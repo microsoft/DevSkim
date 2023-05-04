@@ -15,6 +15,7 @@ using CommandLine;
 using LibGit2Sharp;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Microsoft.DevSkim.CLI.Commands
@@ -22,15 +23,25 @@ namespace Microsoft.DevSkim.CLI.Commands
     public class AnalyzeCommand
     {
         private BaseAnalyzeCommandOptions opts;
+        private ILoggerFactory _logFactory;
+        private ILogger<AnalyzeCommand> _logger;
 
+        /// <summary>
+        /// Create an instance of the Analyze command with the specified options. To execute the command with the options given call <see cref="Run"/>
+        /// </summary>
+        /// <param name="options"></param>
         public AnalyzeCommand(AnalyzeCommandOptions options)
         {
             opts = options;
         }
 
+        /// <summary>
+        /// Run analysis based on the options provided to the constructor.
+        /// </summary>
+        /// <returns></returns>
         public int Run()
         {
-            (ExitCode exitCode, string? FullPath, Languages? languages) = Configure();
+            (ExitCode exitCode, string? fullPath, Languages? languages) = Configure();
             
             if (exitCode != ExitCode.Okay)
             {
@@ -41,29 +52,29 @@ namespace Microsoft.DevSkim.CLI.Commands
             Extractor extractor = new Extractor();
             ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = opts.Globs };
             // Analysing a single file
-            if (!Directory.Exists(FullPath))
+            if (!Directory.Exists(fullPath))
             {
                 if (opts.RespectGitIgnore)
                 {
                     if (IsGitPresent())
                     {
-                        if (IsGitIgnored(FullPath))
+                        if (IsGitIgnored(fullPath))
                         {
-                            Console.WriteLine("The file specified was ignored by gitignore.");
+                            _logger.LogError("The file specified was ignored by gitignore.");
                             return (int)ExitCode.CriticalError;
                         }
 
-                        fileListing = FilePathToFileEntries(opts, FullPath, extractor, extractorOpts);
+                        fileListing = FilePathToFileEntries(opts, fullPath, extractor, extractorOpts);
                     }
                     else
                     {
-                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
+                        _logger.LogError("Could not detect git on path. Unable to use gitignore.");
                         return (int)ExitCode.CriticalError;
                     }
                 }
                 else
                 {
-                    fileListing = FilePathToFileEntries(opts, FullPath, extractor, extractorOpts);
+                    fileListing = FilePathToFileEntries(opts, fullPath, extractor, extractorOpts);
                 }
             }
             // Analyzing a directory
@@ -74,7 +85,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     if (IsGitPresent())
                     {
                         List<FileEntry> innerList = new List<FileEntry>();
-                        IEnumerable<string> files = Directory.EnumerateFiles(FullPath, "*.*", SearchOption.AllDirectories)
+                        IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*.*", SearchOption.AllDirectories)
                             .Where(fileName => !IsGitIgnored(fileName));
                         foreach (string? notIgnoredFileName in files)
                         {
@@ -86,14 +97,14 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                     else
                     {                        
-                        Console.WriteLine("Could not detect git on path. Unable to use gitignore.");
+                        _logger.LogError("Could not detect git on path. Unable to use gitignore.");
                         return (int)ExitCode.CriticalError;
                     }
                 }
                 else
                 {
                     List<FileEntry> innerList = new List<FileEntry>();
-                    IEnumerable<string> files = Directory.EnumerateFiles(FullPath, "*.*", SearchOption.AllDirectories);
+                    IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*.*", SearchOption.AllDirectories);
                     foreach (string file in files)
                     {
                         innerList.AddRange(FilePathToFileEntries(opts, file, extractor, extractorOpts));
@@ -116,10 +127,13 @@ namespace Microsoft.DevSkim.CLI.Commands
                 Console.SetError(StreamWriter.Null);
             }
 
+            _logFactory = opts.GetLoggerFactory();
+            _logger = _logFactory.CreateLogger<AnalyzeCommand>();
+
             // Ensure that the target to scan exists
             if (!Directory.Exists(opts.Path) && !File.Exists(opts.Path))
             {
-                Debug.WriteLine("Error: Not a valid file or directory {0}", opts.Path);
+                _logger.LogDebug("Error: Not a valid file or directory {0}", opts.Path);
 
                 return (ExitCode.CriticalError, null, null);
             }
@@ -164,7 +178,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         }
                         catch (Exception e)
                         {
-                            Debug.WriteLine("Error while parsing additional options {0}", e.Message);
+                            _logger.LogDebug("Error while parsing additional options {0}", e.Message);
                             return (ExitCode.CriticalError, null, null);
                         }
                     }
@@ -175,7 +189,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             string fp = Path.GetFullPath(opts.Path);
             if (string.IsNullOrEmpty(fp))
             {
-                Debug.WriteLine("Provided scan path was empty or null.");
+                _logger.LogDebug("Provided scan path was empty or null.");
                 return (ExitCode.CriticalError, null, null);
             }
             if (string.IsNullOrEmpty(opts.BasePath))
@@ -192,7 +206,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 if (string.IsNullOrEmpty(opts.CommentsPath) || string.IsNullOrEmpty(opts.LanguagesPath))
                 {
-                    Console.Error.WriteLine("When either comments or languages are specified both must be specified.");
+                    _logger.LogError("When either comments or languages are specified both must be specified.");
                     return (ExitCode.ArgumentParsingError, null, null);
 
                 }
@@ -203,7 +217,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 catch (Exception e)
                 {
-                    Console.Error.WriteLine($"Either the Comments or Languages file was not able to be read. ({e.Message})");
+                    _logger.LogError($"Either the Comments or Languages file was not able to be read. ({e.Message})");
                     return (ExitCode.ArgumentParsingError, null, null);
                 }
             }
@@ -220,7 +234,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// <param name="extractor"></param>
         /// <param name="extractorOptions"></param>
         /// <returns></returns>
-        private static IEnumerable<FileEntry> FilePathToFileEntries(BaseAnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
+        private IEnumerable<FileEntry> FilePathToFileEntries(BaseAnalyzeCommandOptions opts, string file, Extractor extractor, ExtractorOptions extractorOptions)
         {
             if (opts.CrawlArchives)
             {
@@ -297,15 +311,15 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
                 DevSkimRuleVerifier devSkimVerifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
                 {
-                    LanguageSpecs = devSkimLanguages
-                    //TODO: Add logging factory to get validation errors.
+                    LanguageSpecs = devSkimLanguages,
+                    LoggerFactory = _logFactory
                 });
 
                 DevSkimRulesVerificationResult result = devSkimVerifier.Verify(devSkimRuleSet);
 
                 if (!result.Verified)
                 {
-                    Debug.WriteLine("Error: Rules failed validation. ");
+                    _logger.LogDebug("Error: Rules failed validation. ");
                     return (int)ExitCode.CriticalError;
                 }
             }
@@ -322,7 +336,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             
             if (!devSkimRuleSet.Any())
             {
-                Debug.WriteLine("Error: No rules were loaded. ");
+                _logger.LogDebug("Error: No rules were loaded. ");
                 return (int)ExitCode.CriticalError;
             }
 
@@ -343,7 +357,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 Languages = devSkimLanguages,
                 AllowAllTagsInBuildFiles = true,
-                LoggerFactory = NullLoggerFactory.Instance,
+                LoggerFactory = _logFactory,
                 Parallel = !opts.DisableParallel,
                 SeverityFilter = severityFilter,
                 ConfidenceFilter = confidenceFilter,
@@ -398,7 +412,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                 out List<string>? maybeRulesToIgnore) && maybeRulesToIgnore is {} rulesToIgnore)
                         {
                             var numRemoved = issues.RemoveAll(x => !rulesToIgnore.Contains(x.Rule.Id));
-                            Debug.WriteLine($"Removed {numRemoved} results because of language rule filters.");
+                            _logger.LogDebug($"Removed {numRemoved} results because of language rule filters.");
                         }
                     }
                     // We need to make sure the issues are ordered by index, so when doing replacements we can keep a straight count of the offset caused by previous changes
@@ -409,14 +423,14 @@ namespace Microsoft.DevSkim.CLI.Commands
                     if (issuesFound)
                     {
                         Interlocked.Increment(ref filesAffected);
-                        Debug.WriteLine("file:{0}", fileEntry.FullPath);
+                        _logger.LogDebug("file:{0}", fileEntry.FullPath);
                         
                         foreach (Issue issue in issues)
                         {
                             if (!issue.IsSuppressionInfo || opts.DisableSuppression)
                             {
                                 Interlocked.Increment(ref issuesCount);
-                                Debug.WriteLine("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",
+                                _logger.LogDebug("\tregion:{0},{1},{2},{3} - {4} [{5}] - {6}",
                                                         issue.StartLocation.Line,
                                                         issue.StartLocation.Column,
                                                         issue.EndLocation.Line,
@@ -455,9 +469,9 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             outputWriter.FlushAndClose();
 
-            Debug.WriteLine("Issues found: {0} in {1} files", issuesCount, filesAffected);
-            Debug.WriteLine("Files analyzed: {0}", filesAnalyzed);
-            Debug.WriteLine("Files skipped: {0}", filesSkipped);
+            _logger.LogDebug("Issues found: {0} in {1} files", issuesCount, filesAffected);
+            _logger.LogDebug("Files analyzed: {0}", filesAnalyzed);
+            _logger.LogDebug("Files skipped: {0}", filesSkipped);
 
             return opts.ExitCodeIsNumIssues ? (issuesCount > 0 ? issuesCount : (int)ExitCode.NoIssues) : (int)ExitCode.NoIssues;
         }
@@ -498,7 +512,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// </summary>
         /// <param name="pathToFile"></param>
         /// <returns></returns>
-        private static ICollection<FileEntry> FilenameToFileEntryArray(string pathToFile)
+        private ICollection<FileEntry> FilenameToFileEntryArray(string pathToFile)
         {
             try
             {
@@ -507,7 +521,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
             catch (Exception e)
             {
-                Debug.WriteLine("The file located at {0} could not be read. ({1}:{2})", pathToFile, e.GetType().Name, e.Message);
+                _logger.LogDebug("The file located at {0} could not be read. ({1}:{2})", pathToFile, e.GetType().Name, e.Message);
             }
             return Array.Empty<FileEntry>();
         }
