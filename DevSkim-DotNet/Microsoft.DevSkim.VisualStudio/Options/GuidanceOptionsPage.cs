@@ -3,9 +3,13 @@
     using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Runtime.InteropServices;
 
+    [Guid(PageGuidString)]
     public class GuidanceOptionsPage : DialogPage
     {
+        public const string PageGuidString = "69176916-cb59-3cd2-9483-038add1f08ce";
+
         [Category("Guidance Options")]
         [DisplayName("Guidance Base URL")]
         [Description("Each finding has a guidance file that describes the issue and solutions in more detail.  " +

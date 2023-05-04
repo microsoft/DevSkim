@@ -4,10 +4,14 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Runtime.InteropServices;
     using System.Windows.Media.Media3D;
 
+    [Guid(PageGuidString)]
     public class SuppressionOptionsPage : DialogPage
     {
+        public const string PageGuidString = "17fdabd9-f356-3ed3-96d6-433bcc49ec1a";
+
         [Category("Suppression Options")]
         [DisplayName("Suppression Duration In Days")]
         [Description("DevSkim allows for findings to be suppressed for a temporary period of time. " +

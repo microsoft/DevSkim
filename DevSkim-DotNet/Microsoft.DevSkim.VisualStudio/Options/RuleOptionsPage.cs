@@ -3,9 +3,13 @@
     using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Runtime.InteropServices;
 
+    [Guid(PageGuidString)]
     public class RuleOptionsPage : DialogPage
     {
+        public const string PageGuidString = "62a64958-3e57-382c-b128-3b8aac89f463";
+
         [Category("Rule Options")]
         [DisplayName("Enable Critical Severity Rules")]
         [Description("Turn on the rules with severity \"Critical\".")]

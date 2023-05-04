@@ -3,10 +3,12 @@
     using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Runtime.InteropServices;
 
+    [Guid(PageGuidString)]
     public class IgnoreOptionsPage : DialogPage
     {
-
+        public const string PageGuidString = "6b227b6f-7c79-345e-848d-d5730456c33e";
 
         [Category("Ignore Options")]
         [DisplayName("Ignore Files")]

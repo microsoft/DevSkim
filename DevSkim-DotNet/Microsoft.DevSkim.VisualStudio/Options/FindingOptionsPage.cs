@@ -3,9 +3,13 @@
     using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Runtime.InteropServices;
 
+    [Guid(PageGuidString)]
     public class FindingOptionsPage : DialogPage
     {
+        public const string PageGuidString = "c88696f6-dd46-380e-a706-14e73fd51564";
+
         // TODO: Do we even have a scan all files in workspace type of commmand here?
         [Category("Finding Options")]
         [DisplayName("Remove Findings On Close")]
