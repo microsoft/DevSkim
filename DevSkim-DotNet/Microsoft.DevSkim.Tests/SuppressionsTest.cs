@@ -3,6 +3,7 @@
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Commands;
 using System.Text;
+using Microsoft.DevSkim.CLI;
 using Microsoft.DevSkim.CLI.Options;
 
 namespace Microsoft.DevSkim.Tests
@@ -189,7 +190,7 @@ namespace Microsoft.DevSkim.Tests
             };
 
             int resultCode = new SuppressionCommand(opts).Run();
-            Assert.AreEqual(2, resultCode);
+            Assert.AreEqual((int)ExitCode.CriticalError, resultCode);
             string result = File.ReadAllText(sourceFile);
             Assert.IsFalse(result.Contains("DevSkim: ignore"));
         }

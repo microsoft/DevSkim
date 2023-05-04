@@ -16,7 +16,7 @@ namespace Microsoft.DevSkim
         [JsonPropertyName("type")]
         [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
         [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
-        public FixType? FixType { get; set; }
+        public FixType FixType { get; set; } = FixType.RegexReplace;
 
         [JsonProperty(PropertyName = "name")]
         [JsonPropertyName("name")]
