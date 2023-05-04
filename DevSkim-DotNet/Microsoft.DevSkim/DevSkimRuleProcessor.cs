@@ -27,7 +27,7 @@ namespace Microsoft.DevSkim
             if (_languages.FromFileNameOut(fileName, out LanguageInfo info))
             {
                 // Create a textcontainer
-                TextContainer textContainer = new TextContainer(text, info.Name, _languages);
+                TextContainer textContainer = new TextContainer(text, info.Name, _languages, _processorOptions.LoggerFactory);
                 // Get AI Issues
                 // -1 NumLinesContext disables all sample gathering
                 List<MatchRecord> matchRecords = _aiProcessor.AnalyzeFile(textContainer, new FileEntry(fileName, new MemoryStream()),

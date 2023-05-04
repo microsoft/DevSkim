@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -14,10 +15,14 @@ namespace Microsoft.DevSkim.CLI.Commands
     {
         private readonly SuppressionCommandOptions _opts;
         private readonly Languages devSkimLanguages;
-
+        private readonly ILoggerFactory _logFactory;
+        private readonly ILogger<SuppressionCommand> _logger;
+        
         public SuppressionCommand(SuppressionCommandOptions options)
         {
             _opts = options;
+            _logFactory = _opts.GetLoggerFactory();
+            _logger = _logFactory.CreateLogger<SuppressionCommand>();
             devSkimLanguages = !string.IsNullOrEmpty(options.LanguagesPath) && !string.IsNullOrEmpty(options.CommentsPath) ? DevSkimLanguages.FromFiles(options.CommentsPath, options.LanguagesPath) : DevSkimLanguages.LoadEmbedded();
         }
 
@@ -30,7 +35,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 System.Collections.Generic.IEnumerable<IGrouping<Uri, Result>> groupedResults = run.Results.GroupBy(x => x.Locations[0].PhysicalLocation.ArtifactLocation.Uri);
                 if (!_opts.ApplyAllSuppression && !_opts.FilesToApplyTo.Any() && !_opts.RulesToApplyFrom.Any())
                 {
-                    Console.WriteLine("Must specify either apply all suppression comments or a combination of file and rules to apply");
+                    _logger.LogError("Must specify either apply all suppression comments or a combination of file and rules to apply");
                     return (int)ExitCode.CriticalError;
                 }
 
@@ -69,7 +74,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                     if (!File.Exists(potentialPath))
                     {
-                        Console.Error.WriteLine($"{potentialPath} specified in sarif does not appear to exist on disk.");
+                        _logger.LogError($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
 
                     string[] theContent = File.ReadAllLines(potentialPath);
@@ -115,7 +120,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                     else
                     {
-                        Console.WriteLine($"{potentialPath} will be changed from: {string.Join(Environment.NewLine, theContent)} to {sb.ToString()}");
+                        _logger.LogInformation($"{potentialPath} will be changed from: {string.Join(Environment.NewLine, theContent)} to {sb.ToString()}");
                     }
                 }
             }

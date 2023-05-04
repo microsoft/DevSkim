@@ -107,8 +107,10 @@ namespace Microsoft.DevSkim.CLI.Writers
             reReadLog["$schema"] = "https://www.schemastore.org/schemas/json/sarif-2.1.0.json";
             using var jsonWriter = new JsonTextWriter(TextWriter);
             reReadLog.WriteTo(jsonWriter);
-            // End Workarounds
+            // Add a newline at the end to make logging messages cleaner
+            TextWriter.WriteLine();
 
+            // End Workarounds
             TextWriter.Flush();
         }
 

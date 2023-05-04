@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using CommandLine;
+using Microsoft.ApplicationInspector.Logging;
 
 namespace Microsoft.DevSkim.CLI.Options;
 
 [Verb("suppress", HelpText = "Suppress issues identified in a DevSkim Sarif")]
-public record SuppressionCommandOptions
+public record SuppressionCommandOptions : LogOptions
 {
     [Option('I', "source-code", Required = true, HelpText = "Path to the parent directory containing the source code that was scanned to produce the sarif.")]
     public string Path { get; set; } = String.Empty;
