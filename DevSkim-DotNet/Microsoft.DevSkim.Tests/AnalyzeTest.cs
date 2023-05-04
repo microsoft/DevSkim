@@ -3,6 +3,7 @@
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Commands;
 using System.Text;
+using Microsoft.DevSkim.CLI;
 using Microsoft.DevSkim.CLI.Options;
 
 namespace Microsoft.DevSkim.Tests
@@ -139,10 +140,10 @@ namespace Microsoft.DevSkim.Tests
     }
 ]";
         
-        [DataRow(commentFileContent, languageFileContent, ruleFileContent, 0, 1)]
-        [DataRow(languageFileContent, commentFileContent, ruleFileContent, 2, 1)]
-        [DataRow(commentFileContent, commentFileContent, ruleFileContent, 2, 1)]
-        [DataRow(languageFileContent, languageFileContent, ruleFileContent, 0, 3)] // We would expect this to fail, but failing to deserialize comments fails open currently in AI, thus comments are ignored, thus 3 results
+        [DataRow(commentFileContent, languageFileContent, ruleFileContent, (int)ExitCode.Okay, 1)]
+        [DataRow(languageFileContent, commentFileContent, ruleFileContent, (int)ExitCode.CriticalError, 1)]
+        [DataRow(commentFileContent, commentFileContent, ruleFileContent, (int)ExitCode.CriticalError, 1)]
+        [DataRow(languageFileContent, languageFileContent, ruleFileContent, (int)ExitCode.Okay, 3)] // We would expect this to fail, but failing to deserialize comments fails open currently in AI, thus comments are ignored, thus 3 results
 
         [DataTestMethod]
         public void TestCustomLanguageAndComments(string commentFileContentIn, string languageFileContentIn, string ruleFileContentIn, int expectedExitCode, int expectedNumResults)
