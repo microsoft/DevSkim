@@ -13,10 +13,17 @@
         ],
         "severity": "important",
         "rule_info": "DS440000.md",
-        "must-not-match": ["LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCg==", "curl --tlsv1.3"],
+        "must-match": [
+            "SecurityProtocolType.Tls11"
+        ],
+        "must-not-match": [
+            "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCg==", 
+            "curl --tlsv1.3",
+            "axolotls"
+        ],
         "patterns": [
             {
-                "pattern": "(SSL|D?TLS)[_v]*[123]([123_\\.])*",
+                "pattern": "(?<=\\W)(SSL|D?TLS)[_v]*[123]([123_\\.])*",
                 "type": "regex",
                 "scopes": [
                     "code"
