@@ -1,0 +1,102 @@
+[
+    {
+        "name": "Android debug is enabled.",
+        "id": "DS180000",
+        "description": "The android:debuggable element is set to true, which should be disabled for release builds.",
+        "recommendation": "",
+        "applies_to_file_regex": [
+            "AndroidManifest.xml"
+        ],
+        "tags": [
+            "Framework.Android"
+        ],
+        "severity": "ManualReview",
+        "rule_info": "DS180000.md",
+        "patterns": [
+            {
+                "xpaths": ["//Application/@android:debuggable"],
+                "pattern": "true",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers" : ["i"]
+            }
+        ],
+        "must-match": [
+            "<application android:debuggable='true' />"
+        ],
+        "must-not-match": [
+            "<application android:debuggable='false' />"
+        ]
+    },
+	{
+        "name": "Android debug is enabled.",
+        "id": "DS180001",
+        "description": "The setWebContentsDebugginEnabled element is set to true, which should be disabled for release builds.",
+        "recommendation": "",
+        "applies_to": [
+            "java"
+        ],
+        "tags": [
+            "Framework.Android"
+        ],
+        "severity": "ManualReview",
+        "rule_info": "DS180000.md",
+        "patterns": [
+            {
+                "pattern": "setWebContentsDebugginEnabled(true)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers" : ["i"]
+            }
+        ],
+        "must-match": [
+            "setWebContentsDebugginEnabled(true)"
+        ],
+        "must-not-match": [
+            "setWebContentsDebugginEnabled(false)"
+        ]
+    },
+	{
+        "name": "Android StrictMode is enabled.",
+        "id": "DS180002",
+        "description": "StrictMode is detected, which is useful for developers but should be disabled for release builds.",
+        "recommendation": "",
+        "applies_to": [
+            "java"
+        ],
+        "tags": [
+            "Framework.Android"
+        ],
+        "severity": "ManualReview",
+        "rule_info": "DS180001.md",
+        "patterns": [
+            {
+                "pattern": "StrictMode.setThreadPolicy(",
+                "type": "substring",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers" : ["i"]
+            },
+			{
+                "pattern": "StrictMode.setVmPolicy(",
+                "type": "substring",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers" : ["i"]
+            }
+        ],
+        "must-match": [
+            "StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()",
+			"StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()"
+        ],
+        "must-not-match": [
+            "application(StrictMode)"
+        ]
+    }
+]
