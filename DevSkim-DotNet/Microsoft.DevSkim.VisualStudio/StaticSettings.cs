@@ -8,7 +8,9 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    // Use a Static class to hold settings because SettingsManager does not work
+    /// <summary>
+    /// Static class used to pass settings from the GeneralOptionsPage to the VisualStudioConfigurationHandler
+    /// </summary>
     internal static class StaticSettings
     {
         public static SettingsChangedNotifier SettingsNotifier { get; internal set; }
