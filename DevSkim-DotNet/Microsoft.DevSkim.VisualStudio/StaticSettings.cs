@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive.Disposables;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -19,27 +20,32 @@
         internal static PortableScannerSettings portableSettings { get; set; } = new PortableScannerSettings();
 
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private static bool isWritingSetings = false;
+        private static bool isWritingSettings = false;
         private static object lockObj = new object();
 
         internal static void Push()
         {
-            if (isWritingSetings)
+            if (isWritingSettings)
             {
                 tokenSource.Cancel();
                 tokenSource = new CancellationTokenSource();
             }
-            //_ = Task.Run(async () => {
-            //    isWritingSetings = true;
-            //    // Add a sleep before sending settings to collate multiple quick changes at once
-            //    //  On startup the Set method for every property on the options page will be called
-            //    //  which will call Push for every setting in the GeneralOptionsPage,
-            //    //  this should reduce that to one notification instead.
-            //    Thread.Sleep(1000);
-            //    await SettingsNotifier.SendSettingsChangedNotificationAsync(portableSettings);
-            //    isWritingSetings = false;
-            //}
-            //, cancellationToken: tokenSource.Token);
+            var tokenToUse = tokenSource.Token;
+            isWritingSettings = true;
+            _ = Task.Run(async () =>
+            {
+                // Add a sleep before sending settings to collate multiple quick changes at once
+                //  On startup the Set method for every property on the options page will be called
+                //  which will call Push for every setting in the GeneralOptionsPage,
+                //  this should reduce that to one notification instead.
+                Thread.Sleep(1000);
+                if (!tokenToUse.IsCancellationRequested)
+                {
+                    await SettingsNotifier.SendSettingsChangedNotificationAsync(portableSettings);
+                }
+                isWritingSettings = false;
+            }
+            , cancellationToken: tokenToUse);
         }
     }
 }

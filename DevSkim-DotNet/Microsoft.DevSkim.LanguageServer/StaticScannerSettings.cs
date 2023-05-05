@@ -47,9 +47,25 @@ namespace DevSkim.LanguageServer
                 RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath, languagesPath: request.CustomLanguagesPath);
             }
             catch 
-            { 
+            {
+                RuleProcessorOptions.Languages = DevSkimLanguages.LoadEmbedded();
                 // TODO: Surface this error
             }
+            DevSkimRuleSet ruleSet = IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
+            foreach (string path in CustomRulePaths)
+            {
+                try
+                {
+                    ruleSet.AddPath(path);
+                }
+                catch
+                {
+                    // TODO: Log issue with provided path
+                }
+            }
+            ruleSet = ruleSet.WithoutIds(IgnoreRuleIds);
+            RuleSet = ruleSet;
+            Processor = new DevSkimRuleProcessor(RuleSet, RuleProcessorOptions);
         }
 
         private static Confidence ParseConfidence(PortableScannerSettings request)
