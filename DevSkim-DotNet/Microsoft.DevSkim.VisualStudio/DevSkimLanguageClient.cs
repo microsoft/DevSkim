@@ -111,7 +111,6 @@ namespace Microsot.DevSkim.LanguageClient
         public Task OnServerInitializedAsync()
         {
             return Task.CompletedTask;
-            //await StaticSettings.PushAsync();
         }
 
         public Task AttachForCustomMessageAsync(JsonRpc rpc)
