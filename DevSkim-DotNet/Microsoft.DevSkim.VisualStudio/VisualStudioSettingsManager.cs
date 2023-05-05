@@ -42,7 +42,7 @@
 
         private (GetValueResult, T) Get<T>(string propertyName)
         {
-            return (_settingsManager.TryGetValue(propertyName, out T val), val);
+            return (_settingsManager.TryGetValue($"{_subsetName}.{propertyName}", out T val), val);
         }
 
         private async Task PushSettingsToServerAsync()
@@ -145,7 +145,7 @@
                         (GetValueResult, List<string>) res = Get<List<string>>(propertyName);
                         if (res.Item1 == GetValueResult.Success)
                         {
-                            _currentSettings.CustomRulesPaths = res.Item2;
+                            _currentSettings.CustomRulesPaths = res.Item2 ?? new List<string>();
                         }
                         break;
                     }
@@ -215,7 +215,7 @@
                         (GetValueResult, List<string>) res = Get<List<string>>(propertyName);
                         if (res.Item1 == GetValueResult.Success)
                         {
-                            _currentSettings.IgnoreRulesList = res.Item2;
+                            _currentSettings.IgnoreRulesList = res.Item2 ?? new List<string>();
                         }
                         break;
                     }
