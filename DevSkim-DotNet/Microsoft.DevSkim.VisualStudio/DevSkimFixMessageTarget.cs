@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class DevSkimFixMessageTarget
@@ -33,6 +34,16 @@
                         (versionKey, oldSet) => { oldSet.Add(mapping); return oldSet; });
                     return oldValue;
                 });
+            //Clean out issues related to previous version of the file
+            //_ = Task.Run(() =>
+            //{
+            //    var toRemoveKeys = StaticData.FileToCodeFixMap[mapping.fileName].Keys.Where(fileVersion => fileVersion < mapping.version);
+            //    foreach (var key in toRemoveKeys)
+            //    {
+            //        StaticData.FileToCodeFixMap[mapping.fileName].TryRemove(key, out _);
+            //    }
+            //});
+            
             return Task.CompletedTask;
         }
     }

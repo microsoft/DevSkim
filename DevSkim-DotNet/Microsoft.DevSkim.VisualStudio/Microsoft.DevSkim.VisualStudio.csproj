@@ -72,9 +72,9 @@
     </Compile>
     <Compile Include="SettingsChangedNotifier.cs" />
     <Compile Include="StaticData.cs" />
-    <Compile Include="StaticSettings.cs" />
     <Compile Include="SuggestedActionsSourceProvider.cs" />
     <Compile Include="SuggestionActionsSource.cs" />
+    <Compile Include="VisualStudioSettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\readme-gallery.md">

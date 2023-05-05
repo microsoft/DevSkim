@@ -30,6 +30,8 @@ namespace Microsot.DevSkim.LanguageClient
         [ImportingConstructor]
         public DevSkimLanguageClient(IProcessTracker processTracker)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            _manager = new VisualStudioSettingsManager(ServiceProvider.GlobalProvider, this);
             _processTracker = processTracker;
         }
 
@@ -63,6 +65,8 @@ namespace Microsot.DevSkim.LanguageClient
 
         // This handles incoming messages to the language client
         public object CustomMessageTarget => DevSkimTarget;
+
+        private readonly VisualStudioSettingsManager _manager;
         private readonly IProcessTracker _processTracker;
 
         public async Task<Connection> ActivateAsync(CancellationToken token)
@@ -111,9 +115,8 @@ namespace Microsot.DevSkim.LanguageClient
 
         public Task AttachForCustomMessageAsync(JsonRpc rpc)
         {
-            this.Rpc = rpc;
-            this.SettingsNotifier = new SettingsChangedNotifier(this.Rpc);
-            StaticSettings.SettingsNotifier = SettingsNotifier;
+            Rpc = rpc;
+            SettingsNotifier = new SettingsChangedNotifier(Rpc);
             return Task.CompletedTask;
         }
 

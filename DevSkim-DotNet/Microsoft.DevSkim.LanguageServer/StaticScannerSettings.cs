@@ -29,13 +29,13 @@ namespace DevSkim.LanguageServer
 
         public static void UpdateWith(PortableScannerSettings request)
         {
-            SuppressionStyle = Enum.Parse<SuppressionStyle>(request.SuppressionStyle);
-            CustomRulePaths = request.CustomRulePaths;
-            IgnoreRuleIds = request.IgnoreRuleIds;
+            SuppressionStyle = Enum.Parse<SuppressionStyle>(request.SuppressionCommentStyle);
+            CustomRulePaths = request.CustomRulesPaths;
+            IgnoreRuleIds = request.IgnoreRulesList;
             IgnoreFiles = request.IgnoreFiles;
-            ReviewerName = request.ReviewerName;
-            SuppressionDuration = request.SuppressionDuration;
-            IgnoreDefaultRuleSet = request.IgnoreDefaultRuleSet;
+            ReviewerName = request.ManualReviewerName;
+            SuppressionDuration = request.SuppressionDurationInDays;
+            IgnoreDefaultRuleSet = request.IgnoreDefaultRules;
             ScanOnOpen = request.ScanOnOpen;
             ScanOnSave = request.ScanOnSave;
             ScanOnChange = request.ScanOnChange;
@@ -47,9 +47,25 @@ namespace DevSkim.LanguageServer
                 RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath, languagesPath: request.CustomLanguagesPath);
             }
             catch 
-            { 
+            {
+                RuleProcessorOptions.Languages = DevSkimLanguages.LoadEmbedded();
                 // TODO: Surface this error
             }
+            DevSkimRuleSet ruleSet = IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
+            foreach (string path in CustomRulePaths)
+            {
+                try
+                {
+                    ruleSet.AddPath(path);
+                }
+                catch
+                {
+                    // TODO: Log issue with provided path
+                }
+            }
+            ruleSet = ruleSet.WithoutIds(IgnoreRuleIds);
+            RuleSet = ruleSet;
+            Processor = new DevSkimRuleProcessor(RuleSet, RuleProcessorOptions);
         }
 
         private static Confidence ParseConfidence(PortableScannerSettings request)
@@ -73,7 +89,7 @@ namespace DevSkim.LanguageServer
         private static Severity ParseSeverity(PortableScannerSettings request)
         {
             Severity severity = Severity.Unspecified;
-            if (request.EnableCriticalSeverity)
+            if (request.EnableCriticalSeverityRules)
             {
                 severity |= Severity.Critical;
             }
