@@ -21,31 +21,13 @@
 
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static bool isWritingSettings = false;
-        private static object lockObj = new object();
 
         internal static void Push()
         {
-            if (isWritingSettings)
-            {
-                tokenSource.Cancel();
-                tokenSource = new CancellationTokenSource();
-            }
-            var tokenToUse = tokenSource.Token;
-            isWritingSettings = true;
             _ = Task.Run(async () =>
             {
-                // Add a sleep before sending settings to collate multiple quick changes at once
-                //  On startup the Set method for every property on the options page will be called
-                //  which will call Push for every setting in the GeneralOptionsPage,
-                //  this should reduce that to one notification instead.
-                Thread.Sleep(1000);
-                if (!tokenToUse.IsCancellationRequested)
-                {
-                    await SettingsNotifier.SendSettingsChangedNotificationAsync(portableSettings);
-                }
-                isWritingSettings = false;
-            }
-            , cancellationToken: tokenToUse);
+                await SettingsNotifier.SendSettingsChangedNotificationAsync(portableSettings);
+            });
         }
     }
 }
