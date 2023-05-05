@@ -75,6 +75,7 @@
     <Compile Include="StaticSettings.cs" />
     <Compile Include="SuggestedActionsSourceProvider.cs" />
     <Compile Include="SuggestionActionsSource.cs" />
+    <Compile Include="VisualStudioSettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\readme-gallery.md">

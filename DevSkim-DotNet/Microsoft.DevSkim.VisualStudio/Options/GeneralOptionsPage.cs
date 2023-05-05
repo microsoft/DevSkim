@@ -30,7 +30,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableCriticalSeverity = value;
-                StaticSettings.Push();
             }
         }
 
@@ -43,7 +42,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableImportantSeverityRules = value;
-                StaticSettings.Push();
             }
         }
 
@@ -56,7 +54,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableModerateSeverityRules = value;
-                StaticSettings.Push();
             }
         }
 
@@ -72,7 +69,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableManualReviewSeverityRules = value;
-                StaticSettings.Push();
             }
         }
 
@@ -87,7 +83,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableBestPracticeSeverityRules = value;
-                StaticSettings.Push();
             }
         }
 
@@ -100,7 +95,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableHighConfidenceRules = value;
-                StaticSettings.Push();
             }
         }
 
@@ -113,7 +107,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableMediumConfidenceRules = value;
-                StaticSettings.Push();
             }
         }
 
@@ -126,7 +119,6 @@
             set
             {
                 StaticSettings.portableSettings.EnableLowConfidenceRules = value;
-                StaticSettings.Push();
             }
         }
 
@@ -140,7 +132,6 @@
             set
             {
                 StaticSettings.portableSettings.CustomRulePaths = value;
-                StaticSettings.Push();
             }
         }
 
@@ -153,7 +144,6 @@
             set
             {
                 StaticSettings.portableSettings.CustomLanguagesPath = value;
-                StaticSettings.Push();
             }
         }
 
@@ -166,7 +156,6 @@
             set
             {
                 StaticSettings.portableSettings.CustomCommentsPath = value;
-                StaticSettings.Push();
             }
         }
 
@@ -184,7 +173,6 @@
             set
             {
                 StaticSettings.portableSettings.SuppressionDuration = value;
-                StaticSettings.Push();
             }
         }
 
@@ -212,7 +200,6 @@
             set
             {
                 StaticSettings.portableSettings.SuppressionStyle = value.ToString();
-                StaticSettings.Push();
             }
         }
 
@@ -225,7 +212,6 @@
             set
             {
                 StaticSettings.portableSettings.ReviewerName = value;
-                StaticSettings.Push();
             }
         }
 
@@ -244,7 +230,6 @@
             set
             {
                 StaticSettings.portableSettings.GuidanceBaseUrl = value;
-                StaticSettings.Push();
             }
         }
 
@@ -261,7 +246,6 @@
             set
             {
                 StaticSettings.portableSettings.IgnoreFiles = value.Select(x => new System.Text.RegularExpressions.Regex(x)).ToList();
-                StaticSettings.Push();
             }
         }
 
@@ -274,7 +258,6 @@
             set
             {
                 StaticSettings.portableSettings.IgnoreRuleIds = value;
-                StaticSettings.Push();
             }
         }
 
@@ -287,7 +270,6 @@
             set
             {
                 StaticSettings.portableSettings.IgnoreDefaultRuleSet = value;
-                StaticSettings.Push();
             }
         }
 
@@ -308,7 +290,6 @@
             set
             {
                 StaticSettings.portableSettings.RemoveFindingsOnClose = value;
-                StaticSettings.Push();
             }
         }
 
@@ -325,7 +306,6 @@
             set
             {
                 StaticSettings.portableSettings.ScanOnOpen = value;
-                StaticSettings.Push();
             }
         }
 
@@ -338,7 +318,6 @@
             set
             {
                 StaticSettings.portableSettings.ScanOnSave = value;
-                StaticSettings.Push();
             }
         }
 
@@ -351,7 +330,6 @@
             set
             {
                 StaticSettings.portableSettings.ScanOnChange = value;
-                StaticSettings.Push();
             }
         }
     }
