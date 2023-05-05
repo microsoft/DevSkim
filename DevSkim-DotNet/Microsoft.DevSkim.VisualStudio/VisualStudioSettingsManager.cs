@@ -4,6 +4,7 @@
     using Microsoft.DevSkim.LanguageProtoInterop;
     using Microsoft.VisualStudio.Settings;
     using Microsoft.VisualStudio.Shell;
+    using Microsot.DevSkim.LanguageClient;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
@@ -15,6 +16,8 @@
 
     internal class VisualStudioSettingsManager
     {
+        private SettingsChangedNotifier _notifier;
+        private DevSkimLanguageClient _client;
         private ISettingsManager _settingsManager;
 
         [Guid("9B164E40-C3A2-4363-9BC5-EB4039DEF653")]
@@ -22,8 +25,9 @@
 
         private PortableScannerSettings _currentSettings = new PortableScannerSettings();
         private string _subsetName = "Microsoft.DevSkim.VisualStudio.GeneralOptionsPage";
-        public VisualStudioSettingsManager([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
+        public VisualStudioSettingsManager([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider, DevSkimLanguageClient client)
         {
+            _client = client;
             _settingsManager = serviceProvider.GetService(typeof(SVsSettingsPersistenceManager)) as ISettingsManager;
             Assumes.Present(_settingsManager);
             IEnumerable<string> props = typeof(GeneralOptionsPage).GetProperties().Select(x => x.Name);
@@ -39,6 +43,17 @@
         private (GetValueResult, T) Get<T>(string propertyName)
         {
             return (_settingsManager.TryGetValue(propertyName, out T val), val);
+        }
+
+        private async Task PushSettingsToServerAsync()
+        {
+            await _client.SettingsNotifier?.SendSettingsChangedNotificationAsync(_currentSettings);
+        }
+
+        private async Task UpdateSettingsTaskAsync(string propertyName)
+        {
+            UpdateSettings(propertyName);
+            await PushSettingsToServerAsync();
         }
 
         private void UpdateSettings(string propertyName)
@@ -248,12 +263,6 @@
                 default:
                     break;
             }
-        }
-
-        private Task UpdateSettingsTaskAsync(string propertyName)
-        {
-            UpdateSettings(propertyName);
-            return Task.CompletedTask;
         }
     }
 }

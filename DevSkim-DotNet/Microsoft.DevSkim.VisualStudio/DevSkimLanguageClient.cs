@@ -31,7 +31,7 @@ namespace Microsot.DevSkim.LanguageClient
         public DevSkimLanguageClient(IProcessTracker processTracker)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            _manager = new VisualStudioSettingsManager(ServiceProvider.GlobalProvider);
+            _manager = new VisualStudioSettingsManager(ServiceProvider.GlobalProvider, this);
             _processTracker = processTracker;
         }
 
