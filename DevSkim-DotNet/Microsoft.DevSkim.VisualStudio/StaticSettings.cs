@@ -5,7 +5,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reactive.Disposables;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -16,9 +18,28 @@
         public static SettingsChangedNotifier SettingsNotifier { get; internal set; }
         internal static PortableScannerSettings portableSettings { get; set; } = new PortableScannerSettings();
 
+        private static CancellationTokenSource tokenSource = new CancellationTokenSource();
+        private static bool isWritingSetings = false;
+        private static object lockObj = new object();
+
         internal static void Push()
         {
-            Task.Run(() => SettingsNotifier.SendSettingsChangedNotificationAsync(portableSettings)).Wait();
+            if (isWritingSetings)
+            {
+                tokenSource.Cancel();
+                tokenSource = new CancellationTokenSource();
+            }
+            //_ = Task.Run(async () => {
+            //    isWritingSetings = true;
+            //    // Add a sleep before sending settings to collate multiple quick changes at once
+            //    //  On startup the Set method for every property on the options page will be called
+            //    //  which will call Push for every setting in the GeneralOptionsPage,
+            //    //  this should reduce that to one notification instead.
+            //    Thread.Sleep(1000);
+            //    await SettingsNotifier.SendSettingsChangedNotificationAsync(portableSettings);
+            //    isWritingSetings = false;
+            //}
+            //, cancellationToken: tokenSource.Token);
         }
     }
 }
