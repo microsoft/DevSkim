@@ -44,13 +44,15 @@ namespace DevSkim.LanguageServer
             RuleProcessorOptions.ConfidenceFilter = ParseConfidence(request);
             try
             {
-                RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath, languagesPath: request.CustomLanguagesPath);
+                RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath,
+                    languagesPath: request.CustomLanguagesPath);
             }
-            catch 
+            catch
             {
                 RuleProcessorOptions.Languages = DevSkimLanguages.LoadEmbedded();
                 // TODO: Surface this error
             }
+
             DevSkimRuleSet ruleSet = IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
             foreach (string path in CustomRulePaths)
             {
@@ -63,9 +65,11 @@ namespace DevSkim.LanguageServer
                     // TODO: Log issue with provided path
                 }
             }
+
             ruleSet = ruleSet.WithoutIds(IgnoreRuleIds);
             RuleSet = ruleSet;
             Processor = new DevSkimRuleProcessor(RuleSet, RuleProcessorOptions);
+        }
 
         private static SuppressionStyle ToSuppressionStyle(CommentStylesEnum suppressionCommentStyle)
         {
