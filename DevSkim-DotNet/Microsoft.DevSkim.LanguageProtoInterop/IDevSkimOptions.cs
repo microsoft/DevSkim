@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Microsoft.DevSkim.LanguageProtoInterop
 {
+    /// <summary>
+    /// When updating this Interface ensure UpdateSettingsGenerator can handle any types here
+    /// </summary>
     public interface IDevSkimOptions
     {
         public bool EnableCriticalSeverityRules { get; set; }

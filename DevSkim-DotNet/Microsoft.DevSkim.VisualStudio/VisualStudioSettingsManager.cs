@@ -67,6 +67,10 @@
             await PushSettingsToServerAsync();
         }
 
+        /// <summary>
+        /// See UpdateSettingsGenerator
+        /// </summary>
+        /// <param name="propertyName"></param>
         partial void UpdateSettings(string propertyName);
     }
 }

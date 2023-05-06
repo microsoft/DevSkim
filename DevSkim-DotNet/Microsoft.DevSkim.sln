@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.VisualStu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.LanguageProtoInterop", "Microsoft.DevSkim.LanguageProtoInterop\Microsoft.DevSkim.LanguageProtoInterop.csproj", "{774E78F3-B48A-4D01-B70B-9CFB03A55663}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerator", "SourceGenerator\SourceGenerator.csproj", "{5D12BB81-B659-4CCB-9FAC-8224A6728196}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.DevSkim.VisualStudio.SourceGenerator", "Microsoft.DevSkim.VisualStudio.SourceGenerator\Microsoft.DevSkim.VisualStudio.SourceGenerator.csproj", "{5D12BB81-B659-4CCB-9FAC-8224A6728196}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
