@@ -86,6 +86,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client">
       <Version>17.5.62</Version>
     </PackageReference>
@@ -146,6 +147,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SourceGenerator\SourceGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">
