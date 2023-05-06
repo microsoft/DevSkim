@@ -66,7 +66,6 @@ namespace DevSkim.LanguageServer
             ruleSet = ruleSet.WithoutIds(IgnoreRuleIds);
             RuleSet = ruleSet;
             Processor = new DevSkimRuleProcessor(RuleSet, RuleProcessorOptions);
-        }
 
         private static SuppressionStyle ToSuppressionStyle(CommentStylesEnum suppressionCommentStyle)
         {
