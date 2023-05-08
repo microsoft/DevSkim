@@ -86,6 +86,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client">
       <Version>17.5.62</Version>
     </PackageReference>
@@ -146,6 +147,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.DevSkim.VisualStudio.SourceGenerator\Microsoft.DevSkim.VisualStudio.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+      <Project>{5d12bb81-b659-4ccb-9fac-8224a6728196}</Project>
+      <Name>Microsoft.DevSkim.VisualStudio.SourceGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">

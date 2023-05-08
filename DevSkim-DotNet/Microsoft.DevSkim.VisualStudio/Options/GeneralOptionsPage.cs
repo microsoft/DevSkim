@@ -1,4 +1,6 @@
-﻿namespace Microsoft.DevSkim.VisualStudio
+﻿using Microsoft.DevSkim.LanguageProtoInterop;
+
+namespace Microsoft.DevSkim.VisualStudio
 {
     using Microsoft.VisualStudio.Shell;
     using System;
@@ -7,8 +9,9 @@
     using System.Linq;
     using System.Runtime.InteropServices;
 
+    // When adding any property here, be sure to add it to IDevSkimOptions as well
     [Guid(PageGuidString)]
-    public class GeneralOptionsPage : DialogPage
+    public class GeneralOptionsPage : DialogPage, IDevSkimOptions
     {
         public const string PageGuidString = "c88696f6-dd46-380e-a706-14e73fd51564";
         private const string RulesCategory = "Rules";
@@ -91,12 +94,7 @@
         [Description("DevSkim allows for findings to be suppressed for a temporary period of time. " +
     "The default is 30 days. Set to 0 to disable temporary suppressions.")]
         public int SuppressionDurationInDays { get; set; }
-
-        public enum CommentStylesEnum
-        {
-            Line,
-            Block
-        }
+        
         [Category(SuppressionsCategory)]
         [DisplayName("Suppression Comment Style")]
         [Description("When DevSkim inserts a suppression comment it defaults to using single line comments for " +

@@ -29,10 +29,10 @@ namespace DevSkim.LanguageServer
 
         public static void UpdateWith(PortableScannerSettings request)
         {
-            SuppressionStyle = Enum.Parse<SuppressionStyle>(request.SuppressionCommentStyle);
+            SuppressionStyle = ToSuppressionStyle(request.SuppressionCommentStyle);
             CustomRulePaths = request.CustomRulesPaths;
             IgnoreRuleIds = request.IgnoreRulesList;
-            IgnoreFiles = request.IgnoreFiles;
+            IgnoreFiles = request.IgnoreFiles.Select(x => new Regex(x)).ToArray();
             ReviewerName = request.ManualReviewerName;
             SuppressionDuration = request.SuppressionDurationInDays;
             IgnoreDefaultRuleSet = request.IgnoreDefaultRules;
@@ -44,13 +44,15 @@ namespace DevSkim.LanguageServer
             RuleProcessorOptions.ConfidenceFilter = ParseConfidence(request);
             try
             {
-                RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath, languagesPath: request.CustomLanguagesPath);
+                RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath,
+                    languagesPath: request.CustomLanguagesPath);
             }
-            catch 
+            catch
             {
                 RuleProcessorOptions.Languages = DevSkimLanguages.LoadEmbedded();
                 // TODO: Surface this error
             }
+
             DevSkimRuleSet ruleSet = IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
             foreach (string path in CustomRulePaths)
             {
@@ -63,9 +65,20 @@ namespace DevSkim.LanguageServer
                     // TODO: Log issue with provided path
                 }
             }
+
             ruleSet = ruleSet.WithoutIds(IgnoreRuleIds);
             RuleSet = ruleSet;
             Processor = new DevSkimRuleProcessor(RuleSet, RuleProcessorOptions);
+        }
+
+        private static SuppressionStyle ToSuppressionStyle(CommentStylesEnum suppressionCommentStyle)
+        {
+            return suppressionCommentStyle switch
+            {
+                CommentStylesEnum.Line => SuppressionStyle.Line,
+                CommentStylesEnum.Block => SuppressionStyle.Block,
+                _ => throw new NotImplementedException()
+            };
         }
 
         private static Confidence ParseConfidence(PortableScannerSettings request)

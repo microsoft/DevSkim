@@ -6,10 +6,10 @@ namespace Microsoft.DevSkim.LanguageProtoInterop
 {
     public class PortableScannerSettings
     {
-        public string SuppressionCommentStyle { get; set; } = "line";
+        public CommentStylesEnum SuppressionCommentStyle { get; set; } = CommentStylesEnum.Line;
         public ICollection<string> CustomRulesPaths { get; set; } = Array.Empty<string>();
         public ICollection<string> IgnoreRulesList { get; set; } = Array.Empty<string>();
-        public ICollection<Regex> IgnoreFiles { get; set; } = Array.Empty<Regex>();
+        public ICollection<string> IgnoreFiles { get; set; } = Array.Empty<string>();
         // Used to populate suppressions
         public string ManualReviewerName { get; set; } = string.Empty;
         // Suppression duration in days
