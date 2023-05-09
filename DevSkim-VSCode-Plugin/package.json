@@ -185,25 +185,11 @@
 					"MS-CST-E.vscode-devskim.ignores.ignoreFiles": {
 						"type": "array",
 						"default": [
-							"\\.(exe|dll|so|dylib|bin|so\\..*)$",
-							"\\.(png|jpg|jpeg|gif|psd|ico|mp3|mpeg|bmp)$",
-							"\\.(zip|tar|gz|rar|jar|gz|7z|bz|bz2|gzip|cab|war|xz|nupkg|gem|egg)$",
-							"\\.(sqlite3|db)$",
-							"(^|/)(out|bin)/",
-							"(^|/)(tests?|unittests?|__tests__|__mocks__)/",
-							"(^|/)(\\.git|git)/",
-							"\\.(git|git[^./])$",
-							"-lock\\.[^/]|\\.lock$",
-							"(^|/)(\\.vscode|\\.cache|logs)/",
-							"(^|/)(nuget|node_modules)/",
-							"\\.(log|sarif|test)$",
-							"\\.(py[cod])$",
-							"(^|/)__pycache__/"
 						],
 						"items": {
 							"type": "string"
 						},
-						"description": "Regular expressions to exclude files and folders from analysis."
+						"description": "Glob expressions to exclude files and folders from analysis."
 					},
 					"MS-CST-E.vscode-devskim.ignores.ignoreRulesList": {
 						"type": "array",

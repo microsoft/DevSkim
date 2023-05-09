@@ -3,6 +3,7 @@ using Microsoft.DevSkim;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Text.RegularExpressions;
+using GlobExpressions;
 
 namespace DevSkim.LanguageServer;
 
@@ -42,12 +43,12 @@ internal class ConfigHelpers
 		StaticScannerSettings.IgnoreDefaultRuleSet = configuration.GetValue<bool>($"{Section}:ignores:ignoreDefaultRules");
 		StaticScannerSettings.CustomRulePaths = CompileList<string>(configuration, "rules:customRulesPaths");
 		StaticScannerSettings.IgnoreRuleIds = CompileList<string>(configuration, "ignores:ignoreRulesList");
-		List<Regex> fileIgnoreRegexes = new();
+		List<Glob> fileIgnoreRegexes = new();
 		foreach (string potentialRegex in CompileList<string>(configuration, "ignores:ignoreFiles"))
 		{
 			try
 			{
-				fileIgnoreRegexes.Add(new Regex(potentialRegex));
+				fileIgnoreRegexes.Add(new Glob(potentialRegex));
 			}
 			catch (Exception e)
 			{
