@@ -111,6 +111,8 @@ export function activate(context: ExtensionContext) {
 				serverOptions,
 				clientOptions
 			);
+
+			 // Start the client. This will also launch the server
 			client.registerProposedFeatures();
 			const disposable = client.start();
 			
@@ -123,6 +125,7 @@ export function activate(context: ExtensionContext) {
 					client.onNotification(getFileVersion(), (fileversion: FileVersion) =>{
 						fixer.removeFindingsForOtherVersions(fileversion);
 					});
+					client.sendNotification(DidChangeConfigurationNotification.type, { settings: ""});
 				}
 			);
 
@@ -135,7 +138,7 @@ export function activate(context: ExtensionContext) {
 				}
 			});
 
-			// Start the client. This will also launch the server
+			// For disposal of the client
 			context.subscriptions.push(disposable);
 		}
 	});
