@@ -13,8 +13,6 @@ internal class Program
 {
 	public class Options
 	{
-		[Option("visual-studio", Required = false, HelpText = "Set to use Visual Studio compatible settings handling")]
-		public bool VisualStudioMode { get; set; }
 	}
 
 	static async Task Main(string[] args)
@@ -90,21 +88,6 @@ internal class Program
 							Log.Logger.Debug("Beginning server routines...");
 							using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = await languageServer.WorkDoneManager.Create(
 								new WorkDoneProgressBegin { Title = "Beginning server routines..." }).ConfigureAwait(false);
-
-							// if (!_options.VisualStudioMode)
-							// {
-							// 	IConfiguration configuration = await languageServer.Configuration.GetConfiguration(
-							// 		new ConfigurationItem
-							// 		{
-							// 			Section = ConfigHelpers.Section
-							// 		}
-							// 	).ConfigureAwait(false);
-							// 	ConfigHelpers.SetScannerSettings(configuration);
-							// }
-							// else
-							// {
-                            //     // TODO: Handle configuration for Visual Studio
-                            // }
 
                             Log.Logger.Debug("Listening for client events...");
 						}
