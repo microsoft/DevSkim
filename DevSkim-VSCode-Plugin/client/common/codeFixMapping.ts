@@ -8,7 +8,8 @@ export class CodeFixMapping
 	matchStart: string;
 	matchEnd: string;
 	isSuppression: boolean;
-	constructor(diagnostic: any, replacement: string, fileName: string, friendlyString: string, matchStart: string, matchEnd: string, isSuppression: boolean)
+	version: number;
+	constructor(diagnostic: any, replacement: string, fileName: string, friendlyString: string, matchStart: string, matchEnd: string, isSuppression: boolean, version: number)
 	{
 		this.diagnostic = diagnostic;
 		this.replacement = replacement;
@@ -17,5 +18,6 @@ export class CodeFixMapping
 		this.matchStart = matchStart;
 		this.matchEnd = matchEnd;
 		this.isSuppression = isSuppression;
+		this.version = version;
 	}
 }

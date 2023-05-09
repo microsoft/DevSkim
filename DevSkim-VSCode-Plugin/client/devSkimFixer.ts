@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 import { CodeFixMapping } from './common/codeFixMapping';
+import { FileVersion } from './common/fileVersion';
 
 export class DevSkimFixer implements vscode.CodeActionProvider {
 
-	fixMapping = new Map<string, CodeFixMapping[]>();
+	fixMapping = new Map<string, Map<number, CodeFixMapping[]>>();
 	public static readonly providedCodeActionKinds = [
 		vscode.CodeActionKind.QuickFix
 	];
@@ -13,20 +14,29 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		return `${fileName}: ${diagnostic.message}, ${String(diagnostic.code)}, ${diagnostic.range.start.line}, ${diagnostic.range.start.character}, ${diagnostic.range.end.line}, ${diagnostic.range.end.character}`;
 	}
 	
-	ensureMapHasMapping(mapping: CodeFixMapping)
+	removeFindingsForOtherVersions(fileVersion: FileVersion)
 	{
-		const key = this.createMapKeyForDiagnostic(mapping.diagnostic, mapping.fileName);
-		const keyVal = this.fixMapping.get(key);
-		if(keyVal != undefined)
+		var keyNames = this.fixMapping.get(fileVersion.fileName)?.keys() ?? new Array<number>();
+		for(let key of keyNames)
 		{
-			if (!keyVal.find(x => x.replacement == mapping.replacement))
+			if (key != fileVersion.version)
 			{
-				this.fixMapping.set(key, keyVal.concat(mapping));
+				this.fixMapping.get(fileVersion.fileName)?.delete(key);
 			}
+		}
+	}
+
+	ensureMapHasMappings(mapping: CodeFixMapping)
+	{
+		if (!this.fixMapping.has(mapping.fileName)){
+			this.fixMapping.set(mapping.fileName, new Map<number, CodeFixMapping[]>());
+		}
+		if (!this.fixMapping.get(mapping.fileName)?.has(mapping.version)){
+			this.fixMapping.get(mapping.fileName)?.set(mapping.version, [mapping]);
 		}
 		else
 		{
-			this.fixMapping.set(key, [mapping]);
+			this.fixMapping.get(mapping.fileName)?.get(mapping.version)?.push(mapping);
 		}
 	}
 
@@ -35,8 +45,12 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		const output : vscode.CodeAction[] = [];
 		context.diagnostics.filter(diagnostic => String(diagnostic.code).startsWith("MS-CST-E.devskim-language-server")).forEach((filteredDiagnostic : vscode.Diagnostic) => {
 			// The ToString method on URI in node swaps ':' into '%3A', but the C# one does not, but we need them to match.
-			this.fixMapping.get(this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace("%3A", ":")))?.forEach(codeFix => {
-				output.push(this.createFix(document, filteredDiagnostic, codeFix));
+			const diagnosticKey = this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace("%3A", ":"));
+			this.fixMapping.get(document.uri.toString().replace("%3A", ":"))?.get(document.version)?.forEach(codeFix => {
+				if (diagnosticKey == this.createMapKeyForDiagnostic(codeFix.diagnostic, codeFix.fileName))
+				{
+					output.push(this.createFix(document, filteredDiagnostic, codeFix));
+				}
 			});
 		});
 
