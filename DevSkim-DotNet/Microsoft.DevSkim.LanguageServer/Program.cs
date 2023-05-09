@@ -13,8 +13,6 @@ internal class Program
 {
 	public class Options
 	{
-		[Option("visual-studio", Required = false, HelpText = "Set to use Visual Studio compatible settings handling")]
-		public bool VisualStudioMode { get; set; }
 	}
 
 	static async Task Main(string[] args)
