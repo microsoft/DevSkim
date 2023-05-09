@@ -106,9 +106,10 @@ namespace DevSkim.LanguageServer
                 Uri = uri,
                 Version = version
             });
-            foreach (CodeFixMapping codeFixMapping in codeFixes.ToArray())
+            _facade.TextDocument.SendNotification(DevSkimMessages.FileVersion, new MappingsVersion(){version = version, fileName = uri.ToUri()});
+            foreach (var mapping in codeFixes)
             {
-                _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, codeFixMapping);
+                _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, mapping);
             }
 
             return Unit.Value;
