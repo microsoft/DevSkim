@@ -78,7 +78,6 @@ namespace Microsot.DevSkim.LanguageClient
             info.RedirectStandardOutput = true;
             info.UseShellExecute = false;
             info.CreateNoWindow = true;
-            info.Arguments = "--visual-studio";
 
             Process process = new Process();
             process.StartInfo = info;

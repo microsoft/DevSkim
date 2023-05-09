@@ -110,14 +110,19 @@ export function activate(context: ExtensionContext) {
 				serverOptions,
 				clientOptions
 			);
+
+			 // Start the client. This will also launch the server
 			client.registerProposedFeatures();
 			const disposable = client.start();
 			
 			client.onReady().then(() => 
-				client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
 				{
-				 	fixer.ensureMapHasMapping(mapping);
-				})
+					client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
+					{
+						fixer.ensureMapHasMapping(mapping);
+					});
+					client.sendNotification(DidChangeConfigurationNotification.type, { settings: ""});
+				}
 			);
 
 			vscode.workspace.onDidChangeConfiguration(e => {
@@ -129,7 +134,7 @@ export function activate(context: ExtensionContext) {
 				}
 			});
 
-			// Start the client. This will also launch the server
+			// For disposal of the client
 			context.subscriptions.push(disposable);
 		}
 	});
