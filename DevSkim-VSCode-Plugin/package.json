@@ -11,6 +11,12 @@
 		"type": "git",
 		"url": "https://github.com/Microsoft/devskim.git"
 	},
+	"capabilities": {
+		"virtualWorkspaces": {
+		  "supported": "limited",
+		  "description": "DevSkim has not been fully tested in virtual workspaces, but is functional."
+		}
+	},
 	"icon": "devskim.ico",
 	"galleryBanner": {
 		"color": "#999999",
