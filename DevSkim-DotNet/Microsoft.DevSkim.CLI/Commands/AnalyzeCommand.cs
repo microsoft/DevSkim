@@ -164,12 +164,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                                 {
                                     var value = prop.GetValue(_opts);
                                     // Get the option attribute from the property
-                                    var maybeOptionAttribute = prop.GetCustomAttributes(true)?.Where(x => x is OptionAttribute).FirstOrDefault();
+                                    var maybeOptionAttribute = prop.GetCustomAttributes(true).Where(x => x is OptionAttribute).FirstOrDefault();
                                     if (maybeOptionAttribute is OptionAttribute optionAttribute)
                                     {
                                         // Check if the option attributes default value differs from the value in the CLI provided options
                                         //   If the CLI provided a non-default option, override the deserialized option
-                                        if (!optionAttribute.Default.Equals(value))
+                                        if ((optionAttribute.Default is null && value is not null) || (optionAttribute.Default is not null && !optionAttribute.Default.Equals(value)))
                                         {
                                             var selectedProp =
                                                 serializedProperties.FirstOrDefault(x => x.HasSameMetadataDefinitionAs(prop));
