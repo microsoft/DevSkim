@@ -125,12 +125,12 @@ namespace Microsoft.DevSkim.VisualStudio
         /// </summary>
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Files")]
-        [Description("Regular expressions to exclude files and folders from analysis.")]
+        [Description("Specify glob expression patterns to exclude files and folders which match from analysis.")]
         public List<string> IgnoreFiles { get; set; }
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Rules List")]
-        [Description("DevSkim Rule IDs to ignore.")]
+        [Description("Exact string identity of DevSkim Rule IDs to ignore.")]
         public List<string> IgnoreRulesList { get; set; }
 
         [Category(IgnoresCategory)]

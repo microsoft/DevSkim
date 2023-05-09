@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 import * as path from 'path';
 import { ExtensionContext } from 'vscode';
-import { CodeFixMapping } from './common/codeFixMapping';
 import {
 	DidChangeConfigurationNotification,
 	LanguageClient,
@@ -15,9 +14,11 @@ import {
 
 import * as vscode from 'vscode';
 import { DevSkimSettings, DevSkimSettingsObject } from './common/devskimSettings';
-import { getCodeFixMapping } from './common/notificationNames';
+import { getCodeFixMapping, getFileVersion } from './common/notificationNames';
 import { selectors } from './common/selectors';
 import { DevSkimFixer } from './devSkimFixer';
+import { CodeFixMapping } from './common/codeFixMapping';
+import { FileVersion } from './common/fileVersion';
 
 let client: LanguageClient;
 
@@ -119,7 +120,10 @@ export function activate(context: ExtensionContext) {
 				{
 					client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
 					{
-						fixer.ensureMapHasMapping(mapping);
+						fixer.ensureMapHasMappings(mapping);
+					});
+					client.onNotification(getFileVersion(), (fileversion: FileVersion) =>{
+						fixer.removeFindingsForOtherVersions(fileversion);
 					});
 					client.sendNotification(DidChangeConfigurationNotification.type, { settings: ""});
 				}

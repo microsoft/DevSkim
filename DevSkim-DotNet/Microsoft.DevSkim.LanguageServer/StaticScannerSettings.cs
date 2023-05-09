@@ -1,4 +1,5 @@
-﻿using Microsoft.DevSkim.LanguageProtoInterop;
+﻿using GlobExpressions;
+using Microsoft.DevSkim.LanguageProtoInterop;
 
 namespace DevSkim.LanguageServer
 {
@@ -13,7 +14,7 @@ namespace DevSkim.LanguageServer
         internal static SuppressionStyle SuppressionStyle { get; set; } = SuppressionStyle.Line;
         internal static ICollection<string> CustomRulePaths { get; set; } = Array.Empty<string>();
         internal static ICollection<string> IgnoreRuleIds { get; set; } = Array.Empty<string>();
-        internal static ICollection<Regex> IgnoreFiles { get; set; } = Array.Empty<Regex>();
+        internal static ICollection<Glob> IgnoreFiles { get; set; } = Array.Empty<Glob>();
         // Used to populate suppressions
         internal static string ReviewerName { get; set; } = string.Empty;
         // Suppression duration in days
@@ -32,7 +33,7 @@ namespace DevSkim.LanguageServer
             SuppressionStyle = ToSuppressionStyle(request.SuppressionCommentStyle);
             CustomRulePaths = request.CustomRulesPaths;
             IgnoreRuleIds = request.IgnoreRulesList;
-            IgnoreFiles = request.IgnoreFiles.Select(x => new Regex(x)).ToArray();
+            IgnoreFiles = request.IgnoreFiles.Select(x => new Glob(x)).ToArray();
             ReviewerName = request.ManualReviewerName;
             SuppressionDuration = request.SuppressionDurationInDays;
             IgnoreDefaultRuleSet = request.IgnoreDefaultRules;

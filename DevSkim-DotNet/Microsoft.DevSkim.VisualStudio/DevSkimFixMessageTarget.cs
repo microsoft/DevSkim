@@ -16,35 +16,62 @@
         {
         }
 
-        // Mark the method with the JSONRPC call this will parse
-        [JsonRpcMethod(DevSkimMessages.CodeFixMapping)]
-        public Task CodeFixMappingEventAsync(JToken jToken)
+        /// <summary>
+        /// Remove all Code fixes for the specified filename that are not of the specified version
+        /// </summary>
+        /// <param name="token">JToken representation of <see cref="MappingsVersion"/></param>
+        /// <returns></returns>
+        [JsonRpcMethod(DevSkimMessages.FileVersion)]
+        public async Task RemoveOldMappingsByVersionAsync(JToken token)
         {
-            CodeFixMapping mapping = jToken.ToObject<CodeFixMapping>();
-            StaticData.FileToCodeFixMap.AddOrUpdate(mapping.fileName, 
-                // Add New Nested Dictionary
-                (Uri _) => new ConcurrentDictionary<int, HashSet<CodeFixMapping>>(new Dictionary<int, HashSet<CodeFixMapping>>() { { mapping.version ?? -1, new HashSet<CodeFixMapping>() { mapping } } }),
-                // Update Nested Dictionary
-                (key, oldValue) =>
+            await Task.Run(() =>
+            {
+                MappingsVersion version = token.ToObject<MappingsVersion>();
+                if (version is { })
                 {
-                    oldValue.AddOrUpdate(mapping.version ?? -1, 
-                        // Add new HashSet
-                        (int _) => new HashSet<CodeFixMapping>() { mapping },
-                        // Update HashSet of CodeFixMappings
-                        (versionKey, oldSet) => { oldSet.Add(mapping); return oldSet; });
-                    return oldValue;
-                });
-            //Clean out issues related to previous version of the file
-            //_ = Task.Run(() =>
-            //{
-            //    var toRemoveKeys = StaticData.FileToCodeFixMap[mapping.fileName].Keys.Where(fileVersion => fileVersion < mapping.version);
-            //    foreach (var key in toRemoveKeys)
-            //    {
-            //        StaticData.FileToCodeFixMap[mapping.fileName].TryRemove(key, out _);
-            //    }
-            //});
-            
-            return Task.CompletedTask;
+                    if (StaticData.FileToCodeFixMap.ContainsKey(version.fileName))
+                    {
+                        foreach (var key in StaticData.FileToCodeFixMap[version.fileName].Keys)
+                        {
+                            if (key != version.version)
+                            {
+                                StaticData.FileToCodeFixMap[version.fileName].TryRemove(key, out _);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        /// <summary>
+        /// Update the client cache of available fixes for published diagnostics
+        /// </summary>
+        /// <param name="jToken">JToken representation of <see cref="CodeFixMapping"/></param>
+        /// <returns></returns>
+        [JsonRpcMethod(DevSkimMessages.CodeFixMapping)]
+        public async Task CodeFixMappingEventAsync(JToken jToken)
+        {
+            await Task.Run(() =>
+            {
+                CodeFixMapping mapping = jToken.ToObject<CodeFixMapping>();
+                if (mapping is { })
+                {
+                    StaticData.FileToCodeFixMap.AddOrUpdate(mapping.fileName,
+                    // Add New Nested Dictionary
+                    (Uri _) => new ConcurrentDictionary<int, HashSet<CodeFixMapping>>(new Dictionary<int, HashSet<CodeFixMapping>>() { { mapping.version ?? -1, new HashSet<CodeFixMapping>() { mapping } } }),
+                    // Update Nested Dictionary
+                    (key, oldValue) =>
+                    {
+                        oldValue.AddOrUpdate(mapping.version ?? -1,
+                            // Add new HashSet
+                            (int _) => new HashSet<CodeFixMapping>() { mapping },
+                            // Update HashSet of CodeFixMappings
+                            (versionKey, oldSet) => { oldSet.Add(mapping); return oldSet; });
+                        return oldValue;
+                    });
+                }
+            });
         }
     }
 }
