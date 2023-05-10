@@ -5,13 +5,15 @@
 
 # User-specific files
 **/.idea
-
 DevSkim-DotNet/Microsoft.DevSkim.sln.DotSettings.user
 
 # Build artifacts
 DevSkim-VSCode-Plugin/client/dist/*
 DevSkim-VSCode-Plugin/devskimBinaries/*
 DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/generatedLanguageServerBinaries/*
+
+# Debug artifacts
+DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/devskim-server-*.txt
 
 # Legacy Files
 DevSkim-VSCode-Plugin/server/
