@@ -23,7 +23,7 @@
         private class SVsSettingsPersistenceManager { }
 
         private PortableScannerSettings _currentSettings = new PortableScannerSettings();
-        private string _subsetName = "Microsoft.DevSkim.VisualStudio.GeneralOptionsPage";
+        private string _subsetName = typeof(GeneralOptionsPage).FullName;
         public VisualStudioSettingsManager([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider, DevSkimLanguageClient client)
         {
             _client = client;
