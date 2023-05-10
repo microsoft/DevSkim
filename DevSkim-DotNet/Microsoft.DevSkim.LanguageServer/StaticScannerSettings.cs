@@ -45,8 +45,8 @@ namespace DevSkim.LanguageServer
             RuleProcessorOptions.ConfidenceFilter = ParseConfidence(request);
             try
             {
-                RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath,
-                    languagesPath: request.CustomLanguagesPath);
+                RuleProcessorOptions.Languages = !string.IsNullOrEmpty(request.CustomCommentsPath) && !string.IsNullOrEmpty(request.CustomLanguagesPath) ? DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath,
+                    languagesPath: request.CustomLanguagesPath) : DevSkimLanguages.LoadEmbedded();
             }
             catch
             {
