@@ -26,7 +26,7 @@ namespace DevSkim.LanguageServer
 
         Task<Unit> IRequestHandler<DevSkimSetLanguageServerSettingsParams, Unit>.Handle(DevSkimSetLanguageServerSettingsParams request, CancellationToken cancellationToken)
         {
-            var settings = request.ScannerSettings?.ToObject<PortableScannerSettings>();
+            PortableScannerSettings? settings = request.ScannerSettings?.ToObject<PortableScannerSettings>();
             if (settings is { } deNulledSettings)
             {
                 StaticScannerSettings.UpdateWith(deNulledSettings);

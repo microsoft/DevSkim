@@ -5,12 +5,30 @@ namespace Microsoft.DevSkim.VisualStudio.Options
     using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Drawing;
     using System.Runtime.InteropServices;
+    using System.Windows.Forms;
 
     // When adding any property here, be sure to add it to IDevSkimOptions as well
     [Guid(PageGuidString)]
     public class GeneralOptionsPage : DialogPage, IDevSkimOptions
     {
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        protected override IWin32Window Window
+        {
+            get
+            {
+                PropertyGrid propertyGrid = new PropertyGrid();
+                propertyGrid.Location = new Point(0, 0);
+                propertyGrid.ToolbarVisible = false;
+                propertyGrid.CommandsVisibleIfAvailable = false;
+                propertyGrid.PropertySort = PropertySort.Categorized;
+                propertyGrid.SelectedObject = AutomationObject;
+                return propertyGrid;
+            }
+        }
+
         public const string PageGuidString = "c88696f6-dd46-380e-a706-14e73fd51564";
         private const string RulesCategory = "Rules";
         private const string SuppressionsCategory = "Suppressions";
@@ -38,19 +56,19 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         public bool EnableModerateSeverityRules { get; set; } = true;
 
         [Category(RulesCategory)]
+        [DisplayName("Enable Best Practice Severity Rules")]
+        [Description("Turn on the rules with severity \"Best-Practice\". " +
+             "These rules either flag issues that are typically of a lower severity, " +
+             "or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities.")]
+        public bool EnableBestPracticeSeverityRules { get; set; } = true;
+
+        [Category(RulesCategory)]
         [DisplayName("Enable Manual Review Severity Rules")]
         [Description("Turn on the rules that flag things for manual review. " +
                      "These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, " +
                      "but are often programmatically necessary (for example, dynamic code generation with \"eval\").  " +
                      "Since these rules tend to require further analysis upon flagging an issue, they are disabled by default.")]
         public bool EnableManualReviewSeverityRules { get; set; } = true;
-
-        [Category(RulesCategory)]
-        [DisplayName("Enable Best Practice Severity Rules")]
-        [Description("Turn on the rules with severity \"Best-Practice\". " +
-                     "These rules either flag issues that are typically of a lower severity, " +
-                     "or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities.")]
-        public bool EnableBestPracticeSeverityRules { get; set; } = true;
 
         [Category(RulesCategory)]
         [DisplayName("Enable High Confidence Rules")]

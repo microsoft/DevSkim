@@ -1,7 +1,11 @@
 # DevSkim
-[![CodeQL (CLI)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml/badge.svg)](https://github.com/microsoft/DevSkim/actions/workflows/CLI-codeql-analysis.yml) [![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.DevSkim.CLI?label=CLI&logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) 
+[![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.DevSkim.CLI?label=CLI&logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) 
+[![Visual Studio 2022 Version](https://img.shields.io/visual-studio-marketplace/v/MS-CST-E.MicrosoftDevSkim?logo=Visual%20Studio&label=VS)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim)
+[![Visual Studio Code Version](https://img.shields.io/visual-studio-marketplace/v/MS-CST-E.vscode-devskim?logo=Visual%20Studio%20Code&label=VSCode)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim)
 
-[![Nuget](https://img.shields.io/nuget/dt/Microsoft.CST.DevSkim.CLI?logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/MS-CST-E.MicrosoftDevSkim?logo=Visual%20Studio)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.MicrosoftDevSkim) [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/MS-CST-E.vscode-devskim?logo=Visual%20Studio%20Code)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim)
+[![Nuget CLI Installs](https://img.shields.io/nuget/dt/Microsoft.CST.DevSkim.CLI?logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) 
+[![Visual Studio Installs](https://img.shields.io/visual-studio-marketplace/i/MS-CST-E.MicrosoftDevSkim?logo=Visual%20Studio)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.MicrosoftDevSkim) 
+[![Visual Studio Code Installs](https://img.shields.io/visual-studio-marketplace/i/MS-CST-E.vscode-devskim?logo=Visual%20Studio%20Code)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim)
 
 DevSkim is a framework of IDE extensions and language analyzers that provide inline security analysis 
 in the dev environment as the developer writes code. It has a flexible rule model that supports multiple programming
@@ -14,11 +18,12 @@ for the developer.
 ### Features
 
 * Built-in rules, and support for writing custom rules
-* Cross-platform CLI built on .NET 6.0 for file analysis
-* IDE plugins for Visual Studio and Visual Studio Code
+* Cross-platform CLI built on .NET for file analysis
+* IDE plugins for Visual Studio and Visual Studio Code built on Language Server Protocol
 * IntelliSense error "squiggly lines" for identified security issues
 * Information and guidance provided for identified security issues
 * Optional suppression of unwanted findings
+* Support for JSONPath, XPATH and YmlPath based rules
 * Broad language support including: C, C++, C#, Cobol, Go, Java, Javascript/Typescript, Python, and [more](https://github.com/Microsoft/DevSkim/wiki/Supported-Languages).
 
 ### Repository Structure
@@ -33,12 +38,10 @@ This repository contains DevSkim and its official supported plugins. Issues and 
   * Location: `./DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/`
 * DevSkim Visual Studio Code Plugin
   * Location: `./DevSkim-VSCode-Plugin/`
-* Common Rules and Guidance
+* Default Rules and Guidance
   * Location: `./rules/default/`
 
 ## Official Releases
-
-Platform specific binaries of the DevSkim CLI are available on our GitHub [releases page](https://github.com/microsoft/DevSkim/releases).
 
 The C# library is available on NuGet as [Microsoft.CST.DevSkim](https://www.nuget.org/packages/Microsoft.CST.DevSkim/).
 
@@ -49,6 +52,8 @@ The Visual Studio extension is available in the [Visual Studio Marketplace](http
 The Visual Studio Code plugin is available in the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim).
 
 DevSkim is also available as a [GitHub Action](https://github.com/microsoft/DevSkim-Action) to itegrate with the GitHub Security Issues pane.
+
+Platform specific binaries of the DevSkim CLI are also available on our GitHub [releases page](https://github.com/microsoft/DevSkim/releases).
 
 ## Installation
 
@@ -65,21 +70,22 @@ The DevSkim Visual Studio Code plugin can be downloaded and installed from the [
 Alternatively,  In VS Code, launch the Quick Open bar (Ctrl + P), and run the following command:
 ext install ms-cst-e.vscode-devskim
 
-### .NET Core App (Self Contained)
+### Command Line Interface
+#### .NET Core Global Tool (Recommended)
 
-Download the platform specific binary archive for your system (Windows, Mac OS, Linux) from the [releases page](https://github.com/microsoft/DevSkim/releases). Extract the archive, navigate to the DevSkim folder from a command line, and invoke `devskim` or `devskim.exe`.
-
-### .NET Core Global Tool
-
-If you already have .NET 6.0 installed, you can install the DevSkim CLI dotnet global tool by running the following from a command line:
+If you already have the .NET SDK installed, you can install the DevSkim CLI as a dotnet global tool by running the following from a command line:
 
 `dotnet tool install --global Microsoft.CST.DevSkim.CLI`
 
-This will add DevSkim to your PATH. You can then invoke the `devskim` command from a command line.
+This will add DevSkim to your PATH. You can then invoke `devskim` from a command line.
 
-### .NET Core Runtime Dependent App
+#### .NET Core App (Self Contained)
 
-First download and install the [.NET Core 56.0 runtime](https://dotnet.microsoft.com/).
+Download the platform specific binary archive for your system (Windows, Mac OS, Linux) from the [releases page](https://github.com/microsoft/DevSkim/releases). Extract the archive, navigate to the DevSkim folder from a command line, and invoke `devskim` or `devskim.exe`.
+
+#### .NET Core Runtime Dependent App
+
+First download and install the [Latest .NET runtime](https://dotnet.microsoft.com/).
 Then download the DevSkim netcoreapp archive from the [releases page](https://github.com/microsoft/DevSkim/releases). Extract the archive, navigate to the DevSkim folder from a command line, and invoke `dotnet devskim.dll`.
 
 ## Build from Source
@@ -90,7 +96,7 @@ For more information, see the wiki page about how to [Build from Source](https:/
 
 ### DevSkim CLI
 
-`devskim analyze c:\path\to\FilesToAnalyze`
+`devskim analyze --source-code c:\path\to\FilesToAnalyze`
 
 For more information, see the wiki page about the [Command Line Interface](https://github.com/microsoft/DevSkim/wiki/Command-Line-Interface).
 
