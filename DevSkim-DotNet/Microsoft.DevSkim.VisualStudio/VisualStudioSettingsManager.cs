@@ -42,21 +42,19 @@
         /// <returns>When successful, Success and the value, when unsuccessful, an enum other than success and undefined.</returns>
         private (ValueResultEnum, T) Get<T>(string propertyName)
         {
-            return (ToValueResultEnum(_settingsManager.TryGetValue($"{_subsetName}.{propertyName}", out T val)), val);
+            return (GetValueResultEnumToValueResultEnum(_settingsManager.TryGetValue($"{_subsetName}.{propertyName}", out T val)), val);
         }
 
-        private ValueResultEnum ToValueResultEnum(GetValueResult getValueResult)
+        private ValueResultEnum GetValueResultEnumToValueResultEnum(GetValueResult getValueResult) => getValueResult switch
         {
-            return getValueResult switch
-            {
-                GetValueResult.Success => ValueResultEnum.Success,
-                GetValueResult.Missing => ValueResultEnum.Missing,
-                GetValueResult.Corrupt => ValueResultEnum.Corrupt,
-                GetValueResult.IncompatibleType => ValueResultEnum.IncompatibleType,
-                GetValueResult.ObsoleteFormat => ValueResultEnum.ObsoleteFormat,
-                GetValueResult.UnknownError => ValueResultEnum.UnknownError,
-            };
-        }
+            GetValueResult.Success => ValueResultEnum.Success,
+            GetValueResult.Missing => ValueResultEnum.Missing,
+            GetValueResult.Corrupt => ValueResultEnum.Corrupt,
+            GetValueResult.IncompatibleType => ValueResultEnum.IncompatibleType,
+            GetValueResult.ObsoleteFormat => ValueResultEnum.ObsoleteFormat,
+            GetValueResult.UnknownError => ValueResultEnum.UnknownError,
+            _ => ValueResultEnum.UnknownError
+        };
 
         private async Task PushSettingsToServerAsync()
         {
