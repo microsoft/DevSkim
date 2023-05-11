@@ -1,6 +1,6 @@
 # DevSkim
 [![Nuget](https://img.shields.io/nuget/v/Microsoft.CST.DevSkim.CLI?label=CLI&logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) 
-[![Visual Studio 2022 Version](https://img.shields.io/visual-studio-marketplace/v/MS-CST-E.MicrosoftDevSkim?logo=Visual%20Studio&label=VS)] 
+[![Visual Studio 2022 Version](https://img.shields.io/visual-studio-marketplace/v/MS-CST-E.MicrosoftDevSkim?logo=Visual%20Studio&label=VS)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim)
 [![Visual Studio Code Version](https://img.shields.io/visual-studio-marketplace/v/MS-CST-E.vscode-devskim?logo=Visual%20Studio%20Code&label=VSCode)](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim)
 
 [![Nuget CLI Installs](https://img.shields.io/nuget/dt/Microsoft.CST.DevSkim.CLI?logo=NuGet)](https://www.nuget.org/packages/Microsoft.CST.DevSkim.CLI) 
