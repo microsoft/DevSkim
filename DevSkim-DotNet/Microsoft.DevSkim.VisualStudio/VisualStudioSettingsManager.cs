@@ -29,16 +29,17 @@
             _client = client;
             _settingsManager = serviceProvider.GetService(typeof(SVsSettingsPersistenceManager)) as ISettingsManager;
             Assumes.Present(_settingsManager);
-            IEnumerable<string> props = typeof(GeneralOptionsPage).GetProperties().Select(x => x.Name);
-            foreach(string name in props)
-            {
-                UpdateSettings(name);
-            }
-
             ISettingsSubset setting = _settingsManager.GetSubset($"{_subsetName}.*");
             setting.SettingChangedAsync += (sender, args) => UpdateSettingsTaskAsync(args.PropertyName.Substring(_subsetName.Length+1));
         }
-
+        
+        /// <summary>
+        /// Gets the specified <paramref name="propertyName"/> of the <see cref="_subsetName"/> from the <see cref="_settingsManager"/>
+        /// This is called by the generated code for <see cref="UpdateSettings(string)"/>
+        /// </summary>
+        /// <typeparam name="T">The <see cref="Type"/> of the parameter in <see cref="ISettingsManager"/></typeparam>
+        /// <param name="propertyName">The name of the parameter</param>
+        /// <returns>When successful, Success and the value, when unsuccessful, an enum other than success and undefined.</returns>
         private (ValueResultEnum, T) Get<T>(string propertyName)
         {
             return (ToValueResultEnum(_settingsManager.TryGetValue($"{_subsetName}.{propertyName}", out T val)), val);
@@ -65,6 +66,15 @@
         private async Task UpdateSettingsTaskAsync(string propertyName)
         {
             UpdateSettings(propertyName);
+            await PushSettingsToServerAsync();
+        }
+
+        public async Task UpdateAllSettingsAsync()
+        {
+            foreach (string name in typeof(IDevSkimOptions).GetProperties().Select(x => x.Name))
+            {
+                UpdateSettings(name);
+            }
             await PushSettingsToServerAsync();
         }
 
