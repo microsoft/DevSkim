@@ -83,7 +83,7 @@ This will add DevSkim to your PATH. You can then invoke the `devskim` command fr
 
 ### .NET Core Runtime Dependent App
 
-First download and install the [.NET Core 56.0 runtime](https://dotnet.microsoft.com/).
+First download and install the [Latest .NET runtime](https://dotnet.microsoft.com/).
 Then download the DevSkim netcoreapp archive from the [releases page](https://github.com/microsoft/DevSkim/releases). Extract the archive, navigate to the DevSkim folder from a command line, and invoke `dotnet devskim.dll`.
 
 ## Build from Source
@@ -94,7 +94,7 @@ For more information, see the wiki page about how to [Build from Source](https:/
 
 ### DevSkim CLI
 
-`devskim analyze c:\path\to\FilesToAnalyze`
+`devskim analyze --source-code c:\path\to\FilesToAnalyze`
 
 For more information, see the wiki page about the [Command Line Interface](https://github.com/microsoft/DevSkim/wiki/Command-Line-Interface).
 
