@@ -2,17 +2,22 @@
 
 namespace Microsoft.DevSkim.VisualStudio.Options
 {
+    using Microsoft.Build.Framework.XamlTypes;
     using Microsoft.VisualStudio.Shell;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.Design;
     using System.Drawing;
+    using System.Drawing.Design;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
-
     // When adding any property here, be sure to add it to IDevSkimOptions as well
     [Guid(PageGuidString)]
     public class GeneralOptionsPage : DialogPage, IDevSkimOptions
     {
+        const string StringCollectionEditor = "System.Windows.Forms.Design.StringCollectionEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         protected override IWin32Window Window
@@ -86,6 +91,8 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         public bool EnableLowConfidenceRules { get; set; } = false;
 
         [Category(RulesCategory)]
+        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [DisplayName("Custom Rules Paths")]
         [Description("A list of local paths on disk to rules files or folders containing rule files, " +
                      "for DevSkim to use in analysis.")]
@@ -144,11 +151,15 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Files")]
         [Description("Specify glob expression patterns to exclude files and folders which match from analysis.")]
+        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<string> IgnoreFiles { get; set; } = new List<string>();
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Rules List")]
         [Description("Exact string identity of DevSkim Rule IDs to ignore.")]
+        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<string> IgnoreRulesList { get; set; } = new List<string>();
 
         [Category(IgnoresCategory)]
@@ -187,5 +198,14 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         [DisplayName("Scan On Change")]
         [Description("Scan files on change.")]
         public bool ScanOnChange { get; set; } = true;
+
+        public class MyStringCollectionEditor : CollectionEditor
+        {
+            public MyStringCollectionEditor() : base(type: typeof(List<string>)) { }
+            protected override object CreateInstance(Type itemType)
+            {
+                return string.Empty;
+            }
+        }
     }
 }
