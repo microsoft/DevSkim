@@ -8,5 +8,5 @@ namespace Microsoft.DevSkim
         {
             DisableRequireUniqueIds = true;
         }
-    } 
+    }
 }

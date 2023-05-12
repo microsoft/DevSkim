@@ -115,7 +115,7 @@ namespace Microsoft.DevSkim
 
             return string.Empty;
         }
-        
+
         /// <summary>
         ///     Generate suppression text for a given rule ID and language. 
         ///     If the comment style for the language is not specified, returns null.

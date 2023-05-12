@@ -91,7 +91,7 @@ namespace DevSkim.LanguageServer
                                 string proposedTimedSuppression = DevSkimRuleProcessor.GenerateSuppressionByFileName(filename, issue.Rule.Id, StaticScannerSettings.SuppressionStyle == SuppressionStyle.Block, StaticScannerSettings.SuppressionDuration, StaticScannerSettings.ReviewerName, StaticScannerSettings.RuleProcessorOptions.Languages);
                                 if (!string.IsNullOrEmpty(proposedSuppression))
                                 {
-                                        codeFixes.Add(new CodeFixMapping(diag, $" {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
+                                    codeFixes.Add(new CodeFixMapping(diag, $" {proposedTimedSuppression}", uri.ToUri(), $"Suppress {issue.Rule.Id} until {expiration.ToString("yyyy-MM-dd")}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, true));
                                 }
                             }
                         }
@@ -106,7 +106,7 @@ namespace DevSkim.LanguageServer
                 Uri = uri,
                 Version = version
             });
-            _facade.TextDocument.SendNotification(DevSkimMessages.FileVersion, new MappingsVersion(){version = version, fileName = uri.ToUri()});
+            _facade.TextDocument.SendNotification(DevSkimMessages.FileVersion, new MappingsVersion() { version = version, fileName = uri.ToUri() });
             foreach (var mapping in codeFixes)
             {
                 _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, mapping);
