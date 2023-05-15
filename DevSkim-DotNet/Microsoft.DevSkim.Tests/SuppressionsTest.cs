@@ -42,7 +42,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(reviewerName, secondLineSuppression.Reviewer);
             Assert.AreEqual(expectedExpiration.Date, secondLineSuppression.ExpirationDate);
         }
-        
+
         [DataTestMethod]
         [DataRow("")]
         [DataRow("Contoso")]
@@ -71,7 +71,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual("DS137138", secondLineSuppression.GetSuppressedIds.First());
             Assert.AreEqual(reviewerName, secondLineSuppression.Reviewer);
         }
-        
+
         [DataTestMethod]
         [DataRow(true)]
         [DataRow(false)]

@@ -15,7 +15,7 @@ public class OptionsTests
         // Create a SerializedAnalyzeCommandOptions object
         var serializedOpts = new SerializedAnalyzeCommandOptions()
         {
-            Severities = new [] { Severity.Critical | Severity.Important},
+            Severities = new[] { Severity.Critical | Severity.Important },
             ExitCodeIsNumIssues = true,
             LanguageRuleIgnoreMap = new Dictionary<string, List<string>>()
             {
@@ -69,14 +69,14 @@ public class OptionsTests
         var jsTestPath = PathHelper.GetRandomTempFile("js");
         {
             using var serializedJsonStream = File.Create(serializedJsonPath);
-            JsonSerializer.Serialize(serializedJsonStream, serializedOpts, new JsonSerializerOptions(){});
+            JsonSerializer.Serialize(serializedJsonStream, serializedOpts, new JsonSerializerOptions() { });
             using var csharpStream = File.Create(csharpTestPath);
             JsonSerializer.Serialize(csharpStream, testContent);
             using var jsStream = File.Create(jsTestPath);
             JsonSerializer.Serialize(jsStream, testContent);
             File.WriteAllText(rulesPath, testRule);
         }
-        
+
         // Create an AnalyzeCommandOptions object that references the path to the file which ignores a specific rule
         var analyzeOpts = new AnalyzeCommandOptions()
         {
@@ -98,7 +98,7 @@ public class OptionsTests
         analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
         // This should be 1, because we haven't expressed the json option argument which sets the severity
         Assert.AreEqual(1, analyzerWithSerialized.Run());
-        
+
         // Try the js which it should find both
         analyzeOpts = new AnalyzeCommandOptions()
         {
@@ -115,7 +115,7 @@ public class OptionsTests
             Path = jsTestPath,
             Rules = new[] { rulesPath },
             PathToOptionsJson = serializedJsonPath,
-            Severities = new [] { Severity.Critical }
+            Severities = new[] { Severity.Critical }
         };
         analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
         // This should be 1, because only one rule has severity critical

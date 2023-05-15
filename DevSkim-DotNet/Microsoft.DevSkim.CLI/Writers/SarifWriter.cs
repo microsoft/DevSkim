@@ -66,7 +66,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             sarifLog.Runs.Add(runItem);
 
             // Begin Workaround for https://github.com/microsoft/sarif-sdk/issues/2024
-            
+
             // Save the sarif log to a stream
             var stream = new MemoryStream();
             sarifLog.Save(stream);
@@ -88,9 +88,9 @@ namespace Microsoft.DevSkim.CLI.Writers
             // For each result with no default configuration option, add one with the level warning
             foreach (var rule in rulesWithoutDefaultConfiguration)
             {
-                rule["defaultConfiguration"] = new JObject {{ "level", "warning" }};
+                rule["defaultConfiguration"] = new JObject { { "level", "warning" } };
             }
-            
+
             // Rules with a DefaultConfiguration object, but where that object has no level also should be set
             //  DevSkim should always populate this object with a level, but potentially
             var rulesWithoutDefaultConfigurationLevel = reReadLog.SelectTokens("$.runs[*].tool.driver.rules[*].defaultConfiguration")
@@ -101,7 +101,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             {
                 rule["level"] = "warning";
             }
-            
+
             // Begin Workaround for https://github.com/microsoft/sarif-sdk/issues/2662
             // The default provided schema is 404, so replace it with a 2.1.0 that is available.
             reReadLog["$schema"] = "https://www.schemastore.org/schemas/json/sarif-2.1.0.json";
@@ -115,7 +115,7 @@ namespace Microsoft.DevSkim.CLI.Writers
         }
 
         private ConcurrentDictionary<string, ArtifactLocation> locationCache = new ConcurrentDictionary<string, ArtifactLocation>();
-        
+
         private ArtifactLocation GetValueAndImplicitlyPopulateCache(string path)
         {
             if (locationCache.TryGetValue(path, out ArtifactLocation? value))
@@ -124,7 +124,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
 
             // Need to add UriBaseId = "%srcroot%" when not using absolute paths
-            ArtifactLocation newVal = new ArtifactLocation() { Uri = new Uri(path,UriKind.Relative) };
+            ArtifactLocation newVal = new ArtifactLocation() { Uri = new Uri(path, UriKind.Relative) };
             locationCache[path] = newVal;
             return newVal;
         }
@@ -232,7 +232,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                         CharLength = issue.Issue.Boundary.Length,
                     }, new ArtifactContent() { Text = DevSkimRuleProcessor.Fix(issue.TextSample, fix) }, null));
 
-                    ArtifactChange[] changes = new ArtifactChange[] 
+                    ArtifactChange[] changes = new ArtifactChange[]
                     {
                         new ArtifactChange(
                             GetValueAndImplicitlyPopulateCache(issue.Filename),

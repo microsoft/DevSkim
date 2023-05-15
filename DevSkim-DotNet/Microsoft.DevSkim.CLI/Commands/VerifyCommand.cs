@@ -23,7 +23,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             _logFactory = _opts.GetLoggerFactory();
             _logger = _logFactory.CreateLogger<VerifyCommand>();
         }
-        
+
         /// <summary>
         /// Execute the verification
         /// </summary>
@@ -35,7 +35,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 _logger.LogError("If languages or comments are specified both must be specified.");
                 return (int)ExitCode.ArgumentParsingError;
             }
-            
+
             DevSkimRuleSet devSkimRuleSet = new();
 
             foreach (string path in _opts.Rules)
@@ -68,15 +68,15 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
             }
 
-            _logger.LogInformation("{0} of {1} rules have must-match self-tests.",result.DevSkimRuleStatuses.Count(x => x.HasPositiveSelfTests),result.DevSkimRuleStatuses.Count);
-            _logger.LogInformation("{0} of {1} rules have must-not-match self-tests.",result.DevSkimRuleStatuses.Count(x => x.HasNegativeSelfTests),result.DevSkimRuleStatuses.Count);
+            _logger.LogInformation("{0} of {1} rules have must-match self-tests.", result.DevSkimRuleStatuses.Count(x => x.HasPositiveSelfTests), result.DevSkimRuleStatuses.Count);
+            _logger.LogInformation("{0} of {1} rules have must-not-match self-tests.", result.DevSkimRuleStatuses.Count(x => x.HasNegativeSelfTests), result.DevSkimRuleStatuses.Count);
 
             if (!devSkimRuleSet.Any())
             {
                 _logger.LogError("Error: No rules were loaded. ");
                 return (int)ExitCode.CriticalError;
             }
-            
+
             return (int)ExitCode.NoIssues;
         }
     }

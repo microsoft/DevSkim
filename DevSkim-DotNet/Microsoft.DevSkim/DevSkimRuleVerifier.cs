@@ -9,7 +9,7 @@ namespace Microsoft.DevSkim
         {
             _appInspectorVerifier = new RulesVerifier(options);
         }
-    
+
         public DevSkimRulesVerificationResult Verify(DevSkimRuleSet ruleSet)
         {
             RulesVerifierResult aiResult = _appInspectorVerifier.Verify(ruleSet);
