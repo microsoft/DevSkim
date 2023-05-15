@@ -4,6 +4,10 @@
     using System.Collections.Generic;
     using System.Text;
 
+    /// <summary>
+    /// A copy of Microsoft.VisualStudio.Settings.GetValueResult, 
+    ///     so the UpdateSettingsGenerator that must generate enums with these values doesn't have to reference the settings package.
+    /// </summary>
     public enum ValueResultEnum
     {
         //
