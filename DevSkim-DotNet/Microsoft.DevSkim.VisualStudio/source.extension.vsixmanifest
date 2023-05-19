@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Microsoft.DevSkim.VisualStudio.d1769410-aa48-48f6-b157-da14546b6c28" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="Microsoft DevLabs" />
+        <Identity Id="DevSkim" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="Microsoft DevLabs" />
         <DisplayName>Microsoft DevSkim</DisplayName>
         <Description xml:space="preserve">DevSkim for Visual Studio is a highly configurable regular expression based linter with a default RuleSet focused on common security related issues.</Description>
         <MoreInfo>https://github.com/Microsoft/DevSkim</MoreInfo>
