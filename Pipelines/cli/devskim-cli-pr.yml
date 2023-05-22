@@ -7,19 +7,13 @@ pr:
   branches:
     include:
     - main
-  paths:
-    include:
-    - Pipelines/cli/devskim-cli-pr.yml
-    - DevSkim-DotNet
-    - rules
-    - DevSkim-VSCode-Plugin
 
 resources:
   repositories:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.5
+      ref: refs/tags/v1.0.6
 
 stages:
 - stage: Test
