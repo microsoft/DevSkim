@@ -148,12 +148,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <!-- <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Microsoft.DevSkim.VisualStudio.SourceGenerator\Microsoft.DevSkim.VisualStudio.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
       <Project>{5d12bb81-b659-4ccb-9fac-8224a6728196}</Project>
       <Name>Microsoft.DevSkim.VisualStudio.SourceGenerator</Name>
     </ProjectReference>
-  </ItemGroup> -->
+  </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">
     <Exec Command="dotnet publish -f net7.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
