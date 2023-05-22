@@ -22,6 +22,7 @@ resources:
 
 stages:
 - stage: Test
+  dependsOn: []
   jobs:
   - template: dotnet-test-job.yml@templates
     parameters:
@@ -85,17 +86,10 @@ stages:
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
 
-- stage: ReleaseValidation
+- stage: Release
   dependsOn:
   - SDL
   - Build
-  jobs:
-  - template: manual-validation-job.yml@templates
-    parameters:
-      instructions: 'This step performs a DevSkim CLI / Lib release to GitHub and NuGet. Proceed?'
-
-- stage: Release
-  dependsOn: ReleaseValidation
   condition: succeeded()
   jobs:
   - job: sign_hash_release

@@ -61,18 +61,10 @@ stages:
           ArtifactName: 'Unsigned_Extension'
           publishLocation: 'Container'
 
-- stage: ReleaseValidation
+- stage: Release
   dependsOn:
   - SDL
   - Build
-  jobs:
-  - template: manual-validation-job.yml@templates
-    parameters:
-      instructions: 'This step performs a DevSkim VS extension release to the VS Marketplace. Proceed?'
-
-- stage: Release
-  dependsOn:
-  - ReleaseValidation
   condition: succeeded()
   jobs:
   - job: sign_hash_release

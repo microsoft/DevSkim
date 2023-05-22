@@ -22,6 +22,7 @@ resources:
 
 stages:
 - stage: SDL
+  dependsOn: []
   jobs:
   - template: sdl-job.yml@templates
     parameters:
@@ -124,18 +125,10 @@ stages:
         ArtifactName: 'Unsigned_Plugin'
         publishLocation: 'Container'
 
-- stage: ReleaseValidation
+- stage: Release
   dependsOn:
   - SDL
   - Build
-  jobs:
-  - template: manual-validation-job.yml@templates
-    parameters:
-      instructions: 'This step performs a DevSkim VS Code Extension release to GitHub and the VS Marketplace. Proceed?'
-
-- stage: Release
-  dependsOn:
-  - ReleaseValidation
   condition: succeeded()
   jobs:
   - job: sign_hash_release
