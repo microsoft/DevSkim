@@ -13,8 +13,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      #ref: refs/tags/v1.0.5
-      ref: da/add-retry-to-notice
+      ref: refs/tags/v1.0.6
 
 stages:
 - stage: Test
