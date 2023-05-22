@@ -92,7 +92,6 @@ namespace Microsoft.DevSkim.VisualStudio.Options
 
         [Category(RulesCategory)]
         [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [DisplayName("Custom Rules Paths")]
         [Description("A list of local paths on disk to rules files or folders containing rule files, " +
                      "for DevSkim to use in analysis.")]
@@ -152,14 +151,12 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         [DisplayName("Ignore Files")]
         [Description("Specify glob expression patterns to exclude files and folders which match from analysis.")]
         [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<string> IgnoreFiles { get; set; } = new List<string>();
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Rules List")]
         [Description("Exact string identity of DevSkim Rule IDs to ignore.")]
         [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<string> IgnoreRulesList { get; set; } = new List<string>();
 
         [Category(IgnoresCategory)]
