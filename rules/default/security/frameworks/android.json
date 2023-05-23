@@ -33,7 +33,7 @@
 	{
         "name": "Android debug is enabled.",
         "id": "DS180001",
-        "description": "The setWebContentsDebugginEnabled element is set to true, which should be disabled for release builds.",
+        "description": "The setWebContentsDebuggingEnabled element is set to true, which should be disabled for release builds.",
         "recommendation": "",
         "applies_to": [
             "java"
@@ -45,7 +45,7 @@
         "rule_info": "DS180000.md",
         "patterns": [
             {
-                "pattern": "setWebContentsDebugginEnabled(true)",
+                "pattern": "setWebContentsDebuggingEnabled(true)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -54,10 +54,10 @@
             }
         ],
         "must-match": [
-            "setWebContentsDebugginEnabled(true)"
+            "setWebContentsDebuggingEnabled(true)"
         ],
         "must-not-match": [
-            "setWebContentsDebugginEnabled(false)"
+            "setWebContentsDebuggingEnabled(false)"
         ]
     },
 	{
