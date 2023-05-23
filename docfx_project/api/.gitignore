@@ -3,3 +3,6 @@
 ###############
 *.yml
 .manifest
+
+# Generated
+Microsoft.DevSkim.*.yml
