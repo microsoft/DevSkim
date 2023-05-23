@@ -1,4 +1,5 @@
-﻿using Microsoft.DevSkim.LanguageProtoInterop;
+﻿using GlobExpressions;
+using Microsoft.DevSkim.LanguageProtoInterop;
 
 namespace DevSkim.LanguageServer
 {
@@ -13,7 +14,7 @@ namespace DevSkim.LanguageServer
         internal static SuppressionStyle SuppressionStyle { get; set; } = SuppressionStyle.Line;
         internal static ICollection<string> CustomRulePaths { get; set; } = Array.Empty<string>();
         internal static ICollection<string> IgnoreRuleIds { get; set; } = Array.Empty<string>();
-        internal static ICollection<Regex> IgnoreFiles { get; set; } = Array.Empty<Regex>();
+        internal static ICollection<Glob> IgnoreFiles { get; set; } = Array.Empty<Glob>();
         // Used to populate suppressions
         internal static string ReviewerName { get; set; } = string.Empty;
         // Suppression duration in days
@@ -29,13 +30,13 @@ namespace DevSkim.LanguageServer
 
         public static void UpdateWith(PortableScannerSettings request)
         {
-            SuppressionStyle = Enum.Parse<SuppressionStyle>(request.SuppressionStyle);
-            CustomRulePaths = request.CustomRulePaths;
-            IgnoreRuleIds = request.IgnoreRuleIds;
-            IgnoreFiles = request.IgnoreFiles;
-            ReviewerName = request.ReviewerName;
-            SuppressionDuration = request.SuppressionDuration;
-            IgnoreDefaultRuleSet = request.IgnoreDefaultRuleSet;
+            SuppressionStyle = ToSuppressionStyle(request.SuppressionCommentStyle);
+            CustomRulePaths = request.CustomRulesPaths;
+            IgnoreRuleIds = request.IgnoreRulesList;
+            IgnoreFiles = request.IgnoreFiles.Select(x => new Glob(x)).ToArray();
+            ReviewerName = request.ManualReviewerName;
+            SuppressionDuration = request.SuppressionDurationInDays;
+            IgnoreDefaultRuleSet = request.IgnoreDefaultRules;
             ScanOnOpen = request.ScanOnOpen;
             ScanOnSave = request.ScanOnSave;
             ScanOnChange = request.ScanOnChange;
@@ -44,12 +45,41 @@ namespace DevSkim.LanguageServer
             RuleProcessorOptions.ConfidenceFilter = ParseConfidence(request);
             try
             {
-                RuleProcessorOptions.Languages = DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath, languagesPath: request.CustomLanguagesPath);
+                RuleProcessorOptions.Languages = !string.IsNullOrEmpty(request.CustomCommentsPath) && !string.IsNullOrEmpty(request.CustomLanguagesPath) ? DevSkimLanguages.FromFiles(commentsPath: request.CustomCommentsPath,
+                    languagesPath: request.CustomLanguagesPath) : DevSkimLanguages.LoadEmbedded();
             }
-            catch 
-            { 
+            catch
+            {
+                RuleProcessorOptions.Languages = DevSkimLanguages.LoadEmbedded();
                 // TODO: Surface this error
             }
+
+            DevSkimRuleSet ruleSet = IgnoreDefaultRuleSet ? new DevSkimRuleSet() : DevSkimRuleSet.GetDefaultRuleSet();
+            foreach (string path in CustomRulePaths)
+            {
+                try
+                {
+                    ruleSet.AddPath(path);
+                }
+                catch
+                {
+                    // TODO: Log issue with provided path
+                }
+            }
+
+            ruleSet = ruleSet.WithoutIds(IgnoreRuleIds);
+            RuleSet = ruleSet;
+            Processor = new DevSkimRuleProcessor(RuleSet, RuleProcessorOptions);
+        }
+
+        private static SuppressionStyle ToSuppressionStyle(CommentStylesEnum suppressionCommentStyle)
+        {
+            return suppressionCommentStyle switch
+            {
+                CommentStylesEnum.Line => SuppressionStyle.Line,
+                CommentStylesEnum.Block => SuppressionStyle.Block,
+                _ => throw new NotImplementedException()
+            };
         }
 
         private static Confidence ParseConfidence(PortableScannerSettings request)
@@ -73,7 +103,7 @@ namespace DevSkim.LanguageServer
         private static Severity ParseSeverity(PortableScannerSettings request)
         {
             Severity severity = Severity.Unspecified;
-            if (request.EnableCriticalSeverity)
+            if (request.EnableCriticalSeverityRules)
             {
                 severity |= Severity.Critical;
             }

@@ -45,7 +45,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         public int Run()
         {
             (ExitCode exitCode, string? fullPath, Languages? languages) = Configure();
-            
+
             if (exitCode != ExitCode.Okay)
             {
                 return (int)exitCode;
@@ -62,7 +62,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 _logger.LogError("Languages could not be instantiated.");
                 return (int)ExitCode.CriticalError;
             }
-            
+
             IEnumerable<FileEntry> fileListing;
             Extractor extractor = new Extractor();
             ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, DenyFilters = _opts.Globs };
@@ -111,7 +111,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         fileListing = innerList;
                     }
                     else
-                    {                        
+                    {
                         _logger.LogError("Could not detect git on path. Unable to use gitignore.");
                         return (int)ExitCode.CriticalError;
                     }
@@ -125,7 +125,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         innerList.AddRange(FilePathToFileEntries(_opts, file, extractor, extractorOpts));
                     }
 
-                    fileListing = innerList;                
+                    fileListing = innerList;
                 }
             }
             return RunFileEntries(fileListing, languages);
@@ -164,12 +164,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                                 {
                                     var value = prop.GetValue(_opts);
                                     // Get the option attribute from the property
-                                    var maybeOptionAttribute = prop.GetCustomAttributes(true)?.Where(x => x is OptionAttribute).FirstOrDefault();
+                                    var maybeOptionAttribute = prop.GetCustomAttributes(true).Where(x => x is OptionAttribute).FirstOrDefault();
                                     if (maybeOptionAttribute is OptionAttribute optionAttribute)
                                     {
                                         // Check if the option attributes default value differs from the value in the CLI provided options
                                         //   If the CLI provided a non-default option, override the deserialized option
-                                        if (!optionAttribute.Default.Equals(value))
+                                        if ((optionAttribute.Default is null && value is not null) || (optionAttribute.Default is not null && !optionAttribute.Default.Equals(value)))
                                         {
                                             var selectedProp =
                                                 serializedProperties.FirstOrDefault(x => x.HasSameMetadataDefinitionAs(prop));
@@ -177,11 +177,11 @@ namespace Microsoft.DevSkim.CLI.Commands
                                         }
                                     }
                                 }
-                                
+
                                 // Replace the regular options with the deserialized options
                                 _opts = deserializedOptions;
                             }
-                            
+
                         }
                         catch (Exception e)
                         {
@@ -191,7 +191,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                 }
             }
-            
+
 
             string fp = Path.GetFullPath(_opts.Path);
             if (string.IsNullOrEmpty(fp))
@@ -229,7 +229,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
             }
             languages ??= DevSkimLanguages.LoadEmbedded();
-            
+
             return (ExitCode.Okay, fp, languages);
         }
 
@@ -245,7 +245,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         {
             if (opts.CrawlArchives)
             {
-                return extractor.Extract(file,extractorOptions);
+                return extractor.Extract(file, extractorOptions);
             }
 
             return extractorOptions.FileNamePasses(file) ? FilenameToFileEntryArray(file) : Array.Empty<FileEntry>();
@@ -340,7 +340,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 devSkimRuleSet = devSkimRuleSet.WithoutIds(_opts.IgnoreRuleIds);
             }
-            
+
             if (!devSkimRuleSet.Any())
             {
                 _logger.LogError("Error: No rules were loaded. ");
@@ -352,7 +352,7 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 severityFilter |= severity;
             }
-            
+
             Confidence confidenceFilter = Confidence.Unspecified;
             foreach (Confidence confidence in _opts.Confidences)
             {
@@ -416,7 +416,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     if (_opts is SerializedAnalyzeCommandOptions serializedAnalyzeCommandOptions)
                     {
                         if (serializedAnalyzeCommandOptions.LanguageRuleIgnoreMap.TryGetValue(languageInfo.Name,
-                                out List<string>? maybeRulesToIgnore) && maybeRulesToIgnore is {} rulesToIgnore)
+                                out List<string>? maybeRulesToIgnore) && maybeRulesToIgnore is { } rulesToIgnore)
                         {
                             var numRemoved = issues.RemoveAll(x => !rulesToIgnore.Contains(x.Rule.Id));
                             _logger.LogDebug($"Removed {numRemoved} results because of language rule filters.");
@@ -431,7 +431,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     {
                         Interlocked.Increment(ref filesAffected);
                         _logger.LogDebug("file:{0}", fileEntry.FullPath);
-                        
+
                         foreach (Issue issue in issues)
                         {
                             if (!issue.IsSuppressionInfo || _opts.DisableSuppression)
@@ -453,7 +453,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                     Issue: issue,
                                     Language: languageInfo.Name,
                                     Fixes: issue.Rule.Fixes);
-                                
+
                                 outputWriter.WriteIssue(record);
                             }
                         }

@@ -15,7 +15,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         private readonly FixCommandOptions _opts;
         private readonly ILoggerFactory _logFactory;
         private readonly ILogger<FixCommand> _logger;
-        
+
         /// <summary>
         /// Create an instance of a command to apply fixes from detections in a DevSkim AnalyzeCommand output Sarif
         /// </summary>
@@ -52,9 +52,9 @@ namespace Microsoft.DevSkim.CLI.Commands
 
                 if (_opts.RulesToApplyFrom.Any())
                 {
-                    groupedResults = groupedResults.Where(x => 
-                        _opts.RulesToApplyFrom.Any(y => 
-                            x.Any(z => 
+                    groupedResults = groupedResults.Where(x =>
+                        _opts.RulesToApplyFrom.Any(y =>
+                            x.Any(z =>
                                 z.RuleId == y)));
                 }
 
@@ -64,12 +64,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                     Uri fileName = resultGroup.Key;
                     string potentialPath = Path.Combine(_opts.Path, fileName.OriginalString);
                     // Flatten all the replacements into a single list
-                    System.Collections.Generic.List<Replacement> listOfReplacements = resultGroup.Where(x => x.Fixes is {}).SelectMany(x =>
+                    System.Collections.Generic.List<Replacement> listOfReplacements = resultGroup.Where(x => x.Fixes is { }).SelectMany(x =>
                         x.Fixes.SelectMany(y => y.ArtifactChanges)
                             .SelectMany(z => z.Replacements)).ToList();
                     // Order the results by the character offset
                     listOfReplacements.Sort((a, b) => a.DeletedRegion.CharOffset - b.DeletedRegion.CharOffset);
-                    
+
                     if (File.Exists(potentialPath))
                     {
                         string theContent = File.ReadAllText(potentialPath);
@@ -88,7 +88,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                             sb.Append(replacement.InsertedContent.Text);
                             if (_opts.DryRun)
                             {
-                                _logger.LogInformation($"{potentialPath} will be changed: {theContent[replacement.DeletedRegion.CharOffset..(replacement.DeletedRegion.CharOffset+replacement.DeletedRegion.CharLength)]}->{replacement.InsertedContent.Text} @ {replacement.DeletedRegion.CharOffset}");
+                                _logger.LogInformation($"{potentialPath} will be changed: {theContent[replacement.DeletedRegion.CharOffset..(replacement.DeletedRegion.CharOffset + replacement.DeletedRegion.CharLength)]}->{replacement.InsertedContent.Text} @ {replacement.DeletedRegion.CharOffset}");
                             }
                             // CurPos tracks position in the original string,
                             // so we only want to move forward the length of the original deleted content, not the new content
@@ -96,8 +96,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                         }
 
                         sb.Append(theContent[curPos..]);
-                        
-                        if(!_opts.DryRun)
+
+                        if (!_opts.DryRun)
                         {
                             File.WriteAllText(potentialPath, sb.ToString());
                         }
@@ -108,7 +108,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
                 }
             }
-            
+
             return (int)ExitCode.NoIssues;
         }
     }

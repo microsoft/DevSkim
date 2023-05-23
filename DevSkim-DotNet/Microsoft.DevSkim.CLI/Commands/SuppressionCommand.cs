@@ -17,7 +17,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         private readonly Languages devSkimLanguages;
         private readonly ILoggerFactory _logFactory;
         private readonly ILogger<SuppressionCommand> _logger;
-        
+
         public SuppressionCommand(SuppressionCommandOptions options)
         {
             _opts = options;

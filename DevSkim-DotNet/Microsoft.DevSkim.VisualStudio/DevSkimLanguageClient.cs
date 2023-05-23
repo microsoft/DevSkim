@@ -22,7 +22,6 @@ using Microsoft.DevSkim.VisualStudio;
 
 namespace Microsot.DevSkim.LanguageClient
 {
-    // TODO: Test if code type also covers things like .json
     [ContentType("code")]
     [Export(typeof(ILanguageClient))]
     public class DevSkimLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
@@ -30,41 +29,30 @@ namespace Microsot.DevSkim.LanguageClient
         [ImportingConstructor]
         public DevSkimLanguageClient(IProcessTracker processTracker)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            _manager = new VisualStudioSettingsManager(ServiceProvider.GlobalProvider, this);
             _processTracker = processTracker;
         }
 
+        /// <summary>
+        /// A reference to the Rpc connection between the client and server
+        /// </summary>
         internal JsonRpc Rpc
         {
             get;
             set;
         }
+        /// Pushes changed settings to the server
         public SettingsChangedNotifier SettingsNotifier { get; private set; }
-
-        public object MiddleLayer = _middleLayer;
-        private static object _middleLayer;
-
-        public event AsyncEventHandler<EventArgs> StartAsync;
-        public event AsyncEventHandler<EventArgs> StopAsync;
-
-        public string Name => "DevSkim Language Extension";
-
-        public IEnumerable<string> ConfigurationSections => null;
-
-        public object InitializationOptions => null;
-
-        public IEnumerable<string> FilesToWatch => null;
-
-        public bool ShowNotificationOnInitializeFailed => true;
-
-        // This handles modifying outgoing messages to the language server
-        object ILanguageClientCustomMessage2.MiddleLayer => null;
-
-        private DevSkimFixMessageTarget DevSkimTarget = new DevSkimFixMessageTarget();
-
-        // This handles incoming messages to the language client
-        public object CustomMessageTarget => DevSkimTarget;
+        /// <inheritdoc/>
+        public string Name => "DevSkim Visual Studio Extension";
+        // This handles incoming messages to the language client about fixes
+        public object CustomMessageTarget => new DevSkimFixMessageTarget();
+        /// Detects changes in the client settings
+        private readonly VisualStudioSettingsManager _manager;
+        /// Keeps track of the started language server process and ensures that it is properly closed when the extension closes.
         private readonly IProcessTracker _processTracker;
-
+        /// <inheritdoc/>
         public async Task<Connection> ActivateAsync(CancellationToken token)
         {
             await Task.Yield();
@@ -74,7 +62,6 @@ namespace Microsot.DevSkim.LanguageClient
             info.RedirectStandardOutput = true;
             info.UseShellExecute = false;
             info.CreateNoWindow = true;
-            info.Arguments = "--visual-studio";
 
             Process process = new Process();
             process.StartInfo = info;
@@ -86,8 +73,11 @@ namespace Microsot.DevSkim.LanguageClient
             }
             return null;
         }
-
-        
+        /// <inheritdoc/>
+        public event AsyncEventHandler<EventArgs> StartAsync;
+        /// <inheritdoc/>
+        public event AsyncEventHandler<EventArgs> StopAsync;
+        /// <inheritdoc/>
         public async Task OnLoadedAsync()
         {
             if (StartAsync != null)
@@ -95,7 +85,7 @@ namespace Microsot.DevSkim.LanguageClient
                 await StartAsync.InvokeAsync(this, EventArgs.Empty);
             }
         }
-
+        /// <inheritdoc/>
         public async Task StopServerAsync()
         {
             if (StopAsync != null)
@@ -104,19 +94,21 @@ namespace Microsot.DevSkim.LanguageClient
             }
         }
 
-        public Task OnServerInitializedAsync()
-        {
-            return Task.CompletedTask;
-        }
-
+        /// <inheritdoc/>
         public Task AttachForCustomMessageAsync(JsonRpc rpc)
         {
-            this.Rpc = rpc;
-            this.SettingsNotifier = new SettingsChangedNotifier(this.Rpc);
-            StaticSettings.SettingsNotifier = SettingsNotifier;
+            Rpc = rpc;
+            SettingsNotifier = new SettingsChangedNotifier(Rpc);
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc/>
+        public async Task OnServerInitializedAsync()
+        {
+            await _manager.UpdateAllSettingsAsync();
+        }
+
+        /// <inheritdoc/>
         public Task<InitializationFailureContext> OnServerInitializeFailedAsync(ILanguageClientInitializationInfo initializationState)
         {
             string message = "DevSkim Language Client failed to activate.";
@@ -130,5 +122,19 @@ namespace Microsot.DevSkim.LanguageClient
 
             return Task.FromResult(failureContext);
         }
+
+        // Not used but required by Interface
+        /// <inheritdoc/>
+        public IEnumerable<string> ConfigurationSections => null;
+        /// <inheritdoc/>
+        public object InitializationOptions => null;
+        /// <inheritdoc/>
+        public IEnumerable<string> FilesToWatch => null;
+        /// <inheritdoc/>
+        public bool ShowNotificationOnInitializeFailed => true;
+
+        // This handles modifying outgoing messages to the language server
+        /// <inheritdoc/>
+        object ILanguageClientCustomMessage2.MiddleLayer => null;
     }
 }

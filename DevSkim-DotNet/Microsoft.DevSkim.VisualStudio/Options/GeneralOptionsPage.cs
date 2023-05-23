@@ -1,15 +1,39 @@
-﻿namespace Microsoft.DevSkim.VisualStudio
+﻿using Microsoft.DevSkim.LanguageProtoInterop;
+
+namespace Microsoft.DevSkim.VisualStudio.Options
 {
+    using Microsoft.Build.Framework.XamlTypes;
     using Microsoft.VisualStudio.Shell;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
+    using System.ComponentModel.Design;
+    using System.Drawing;
+    using System.Drawing.Design;
     using System.Runtime.InteropServices;
-
+    using System.Windows.Forms;
+    // When adding any property here, be sure to add it to IDevSkimOptions as well
     [Guid(PageGuidString)]
-    public class GeneralOptionsPage : DialogPage
+    public class GeneralOptionsPage : DialogPage, IDevSkimOptions
     {
+        const string StringCollectionEditor = "System.Windows.Forms.Design.StringCollectionEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        protected override IWin32Window Window
+        {
+            get
+            {
+                PropertyGrid propertyGrid = new PropertyGrid();
+                propertyGrid.Location = new Point(0, 0);
+                propertyGrid.ToolbarVisible = false;
+                propertyGrid.CommandsVisibleIfAvailable = false;
+                propertyGrid.PropertySort = PropertySort.Categorized;
+                propertyGrid.SelectedObject = AutomationObject;
+                return propertyGrid;
+            }
+        }
+
         public const string PageGuidString = "c88696f6-dd46-380e-a706-14e73fd51564";
         private const string RulesCategory = "Rules";
         private const string SuppressionsCategory = "Suppressions";
@@ -24,151 +48,66 @@
         [Category(RulesCategory)]
         [DisplayName("Enable Critical Severity Rules")]
         [Description("Turn on the rules with severity \"Critical\".")]
-        public bool EnableCriticalSeverityRules
-        {
-            get => StaticSettings.portableSettings.EnableCriticalSeverity;
-            set
-            {
-                StaticSettings.portableSettings.EnableCriticalSeverity = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool EnableCriticalSeverityRules { get; set; } = true;
 
         [Category(RulesCategory)]
         [DisplayName("Enable Important Severity Rules")]
         [Description("Turn on the rules with severity \"Important\".")]
-        public bool EnableImportantSeverityRules
-        {
-            get => StaticSettings.portableSettings.EnableImportantSeverityRules;
-            set
-            {
-                StaticSettings.portableSettings.EnableImportantSeverityRules = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool EnableImportantSeverityRules { get; set; } = true;
 
         [Category(RulesCategory)]
         [DisplayName("Enable Moderate Severity Rules")]
         [Description("Turn on the rules with severity \"Moderate\".")]
-        public bool EnableModerateSeverityRules
-        {
-            get => StaticSettings.portableSettings.EnableModerateSeverityRules;
-            set
-            {
-                StaticSettings.portableSettings.EnableModerateSeverityRules = value;
-                StaticSettings.Push();
-            }
-        }
-
-        [Category(RulesCategory)]
-        [DisplayName("Enable Manual Review Severity Rules")]
-        [Description("Turn on the rules that flag things for manual review. " +
-            "These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, " +
-            "but are often programmatically necessary (for example, dynamic code generation with \"eval\").  " +
-            "Since these rules tend to require further analysis upon flagging an issue, they are disabled by default.")]
-        public bool EnableManualReviewSeverityRules
-        {
-            get => StaticSettings.portableSettings.EnableManualReviewSeverityRules;
-            set
-            {
-                StaticSettings.portableSettings.EnableManualReviewSeverityRules = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool EnableModerateSeverityRules { get; set; } = true;
 
         [Category(RulesCategory)]
         [DisplayName("Enable Best Practice Severity Rules")]
         [Description("Turn on the rules with severity \"Best-Practice\". " +
-            "These rules either flag issues that are typically of a lower severity, " +
-            "or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities.")]
-        public bool EnableBestPracticeSeverityRules
-        {
-            get => StaticSettings.portableSettings.EnableBestPracticeSeverityRules;
-            set
-            {
-                StaticSettings.portableSettings.EnableBestPracticeSeverityRules = value;
-                StaticSettings.Push();
-            }
-        }
+             "These rules either flag issues that are typically of a lower severity, " +
+             "or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities.")]
+        public bool EnableBestPracticeSeverityRules { get; set; } = true;
+
+        [Category(RulesCategory)]
+        [DisplayName("Enable Manual Review Severity Rules")]
+        [Description("Turn on the rules that flag things for manual review. " +
+                     "These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, " +
+                     "but are often programmatically necessary (for example, dynamic code generation with \"eval\").  " +
+                     "Since these rules tend to require further analysis upon flagging an issue, they are disabled by default.")]
+        public bool EnableManualReviewSeverityRules { get; set; } = true;
 
         [Category(RulesCategory)]
         [DisplayName("Enable High Confidence Rules")]
         [Description("Turn on the rules of confidence \"High\".")]
-        public bool EnableHighConfidenceRules
-        {
-            get => StaticSettings.portableSettings.EnableHighConfidenceRules;
-            set
-            {
-                StaticSettings.portableSettings.EnableHighConfidenceRules = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool EnableHighConfidenceRules { get; set; } = true;
 
         [Category(RulesCategory)]
         [DisplayName("Enable Medium Confidence Rules")]
         [Description("Turn on the rules of confidence \"Medium\".")]
-        public bool EnableMediumConfidenceRules
-        {
-            get => StaticSettings.portableSettings.EnableMediumConfidenceRules;
-            set
-            {
-                StaticSettings.portableSettings.EnableMediumConfidenceRules = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool EnableMediumConfidenceRules { get; set; } = true;
 
         [Category(RulesCategory)]
         [DisplayName("Enable Low Confidence Rules")]
         [Description("Turn on the rules of confidence \"Low\".")]
-        public bool EnableLowConfidenceRules
-        {
-            get => StaticSettings.portableSettings.EnableLowConfidenceRules;
-            set
-            {
-                StaticSettings.portableSettings.EnableLowConfidenceRules = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool EnableLowConfidenceRules { get; set; } = false;
 
         [Category(RulesCategory)]
+        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
         [DisplayName("Custom Rules Paths")]
         [Description("A list of local paths on disk to rules files or folders containing rule files, " +
-            "for DevSkim to use in analysis.")]
-        public List<string> CustomRulesPaths
-        {
-            get => StaticSettings.portableSettings.CustomRulePaths.ToList();
-            set
-            {
-                StaticSettings.portableSettings.CustomRulePaths = value;
-                StaticSettings.Push();
-            }
-        }
+                     "for DevSkim to use in analysis.")]
+        public List<string> CustomRulesPaths { get; set; } = new List<string>();
 
         [Category(RulesCategory)]
         [DisplayName("Custom Languages Path")]
-        [Description("A local path to a custom language file for analysis. Also requires customCommentsPath to be set.")]
-        public string CustomLanguagesPath
-        {
-            get => StaticSettings.portableSettings.CustomLanguagesPath;
-            set
-            {
-                StaticSettings.portableSettings.CustomLanguagesPath = value;
-                StaticSettings.Push();
-            }
-        }
+        [Description(
+            "A local path to a custom language file for analysis. Also requires customCommentsPath to be set.")]
+        public string CustomLanguagesPath { get; set; } = string.Empty;
 
         [Category(RulesCategory)]
         [DisplayName("Custom Comments Path")]
-        [Description("A local path to a custom comments file for analysis. Also requires customLanguagesPath to be set.")]
-        public string CustomCommentsPath
-        {
-            get => StaticSettings.portableSettings.CustomCommentsPath;
-            set
-            {
-                StaticSettings.portableSettings.CustomCommentsPath = value;
-                StaticSettings.Push();
-            }
-        }
+        [Description(
+            "A local path to a custom comments file for analysis. Also requires customLanguagesPath to be set.")]
+        public string CustomCommentsPath { get; set; } = string.Empty;
 
 
         /// <summary>
@@ -177,57 +116,21 @@
         [Category(SuppressionsCategory)]
         [DisplayName("Suppression Duration In Days")]
         [Description("DevSkim allows for findings to be suppressed for a temporary period of time. " +
-    "The default is 30 days. Set to 0 to disable temporary suppressions.")]
-        public int SuppressionDurationInDays
-        {
-            get => StaticSettings.portableSettings.SuppressionDuration;
-            set
-            {
-                StaticSettings.portableSettings.SuppressionDuration = value;
-                StaticSettings.Push();
-            }
-        }
+                     "The default is 30 days. Set to 0 to disable temporary suppressions.")]
+        public int SuppressionDurationInDays { get; set; } = 30;
 
-        public enum CommentStylesEnum
-        {
-            Line,
-            Block
-        }
         [Category(SuppressionsCategory)]
         [DisplayName("Suppression Comment Style")]
         [Description("When DevSkim inserts a suppression comment it defaults to using single line comments for " +
-            "every language that has them.  Setting this to 'block' will instead use block comments for the languages " +
-            "that support them.  Block comments are suggested if regularly adding explanations for why a finding " +
-            "was suppressed")]
-        public CommentStylesEnum SuppressionCommentStyle
-        {
-            get
-            {
-                if (Enum.TryParse(StaticSettings.portableSettings.SuppressionStyle, out CommentStylesEnum enumRes))
-                {
-                    return enumRes;
-                }
-                return CommentStylesEnum.Line;
-            }
-            set
-            {
-                StaticSettings.portableSettings.SuppressionStyle = value.ToString();
-                StaticSettings.Push();
-            }
-        }
+                     "every language that has them.  Setting this to 'block' will instead use block comments for the languages " +
+                     "that support them.  Block comments are suggested if regularly adding explanations for why a finding " +
+                     "was suppressed")]
+        public CommentStylesEnum SuppressionCommentStyle { get; set; } = CommentStylesEnum.Line;
 
         [Category(SuppressionsCategory)]
         [DisplayName("Manual Reviewer Name")]
         [Description("If set, insert this name in inserted suppression comments.")]
-        public string ManualReviewerName
-        {
-            get => StaticSettings.portableSettings.ReviewerName;
-            set
-            {
-                StaticSettings.portableSettings.ReviewerName = value;
-                StaticSettings.Push();
-            }
-        }
+        public string ManualReviewerName { get; set; } = string.Empty;
 
 
         /// <summary>
@@ -236,17 +139,9 @@
         [Category(GuidanceCategory)]
         [DisplayName("Guidance Base URL")]
         [Description("Each finding has a guidance file that describes the issue and solutions in more detail.  " +
-    "By default, those files live on the DevSkim github repo however, with this setting, " +
-    "organizations can clone and customize that repo, and specify their own base URL for the guidance.")]
-        public string GuidanceBaseURL
-        {
-            get => StaticSettings.portableSettings.GuidanceBaseUrl;
-            set
-            {
-                StaticSettings.portableSettings.GuidanceBaseUrl = value;
-                StaticSettings.Push();
-            }
-        }
+                     "By default, those files live on the DevSkim github repo however, with this setting, " +
+                     "organizations can clone and customize that repo, and specify their own base URL for the guidance.")]
+        public string GuidanceBaseURL { get; set; } = "https://github.com/microsoft/devskim/tree/main/guidance";
 
 
         /// <summary>
@@ -254,42 +149,20 @@
         /// </summary>
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Files")]
-        [Description("Regular expressions to exclude files and folders from analysis.")]
-        public List<string> IgnoreFiles
-        {
-            get => StaticSettings.portableSettings.IgnoreFiles.Select(x => x.ToString()).ToList();
-            set
-            {
-                StaticSettings.portableSettings.IgnoreFiles = value.Select(x => new System.Text.RegularExpressions.Regex(x)).ToList();
-                StaticSettings.Push();
-            }
-        }
+        [Description("Specify glob expression patterns to exclude files and folders which match from analysis.")]
+        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
+        public List<string> IgnoreFiles { get; set; } = new List<string>();
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Rules List")]
-        [Description("DevSkim Rule IDs to ignore.")]
-        public List<string> IgnoreRulesList
-        {
-            get => StaticSettings.portableSettings.IgnoreRuleIds.ToList();
-            set
-            {
-                StaticSettings.portableSettings.IgnoreRuleIds = value;
-                StaticSettings.Push();
-            }
-        }
+        [Description("Exact string identity of DevSkim Rule IDs to ignore.")]
+        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
+        public List<string> IgnoreRulesList { get; set; } = new List<string>();
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Default Rules")]
         [Description("Disable all default DevSkim rules.")]
-        public bool IgnoreDefaultRules
-        {
-            get => StaticSettings.portableSettings.IgnoreDefaultRuleSet;
-            set
-            {
-                StaticSettings.portableSettings.IgnoreDefaultRuleSet = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool IgnoreDefaultRules { get; set; } = false;
 
 
         /// <summary>
@@ -299,18 +172,10 @@
         [Category(FindingsCategory)]
         [DisplayName("Remove Findings On Close")]
         [Description("By default, when a source file is closed the findings remain in the 'Error List' window.  " +
-            "Setting this value to true will cause findings to be removed from 'Error List' when the document is closed.  " +
-            "Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' " +
-            "command to automatically clear away after a couple of minutes.")]
-        public bool RemoveFindingsOnClose
-        {
-            get => StaticSettings.portableSettings.RemoveFindingsOnClose;
-            set
-            {
-                StaticSettings.portableSettings.RemoveFindingsOnClose = value;
-                StaticSettings.Push();
-            }
-        }
+                     "Setting this value to true will cause findings to be removed from 'Error List' when the document is closed.  " +
+                     "Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' " +
+                     "command to automatically clear away after a couple of minutes.")]
+        public bool RemoveFindingsOnClose { get; set; } = true;
 
 
         /// <summary>
@@ -319,39 +184,24 @@
         [Category(TriggersCategory)]
         [DisplayName("Scan On Open")]
         [Description("Scan files on open.")]
-        public bool ScanOnOpen
-        {
-            get => StaticSettings.portableSettings.ScanOnOpen;
-            set
-            {
-                StaticSettings.portableSettings.ScanOnOpen = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool ScanOnOpen { get; set; } = true;
 
         [Category(TriggersCategory)]
         [DisplayName("Scan On Save")]
         [Description("Scan files on save.")]
-        public bool ScanOnSave
-        {
-            get => StaticSettings.portableSettings.ScanOnSave;
-            set
-            {
-                StaticSettings.portableSettings.ScanOnSave = value;
-                StaticSettings.Push();
-            }
-        }
+        public bool ScanOnSave { get; set; } = true;
 
         [Category(TriggersCategory)]
         [DisplayName("Scan On Change")]
         [Description("Scan files on change.")]
-        public bool ScanOnChange
+        public bool ScanOnChange { get; set; } = true;
+
+        public class MyStringCollectionEditor : CollectionEditor
         {
-            get => StaticSettings.portableSettings.ScanOnChange;
-            set
+            public MyStringCollectionEditor() : base(type: typeof(List<string>)) { }
+            protected override object CreateInstance(Type itemType)
             {
-                StaticSettings.portableSettings.ScanOnChange = value;
-                StaticSettings.Push();
+                return string.Empty;
             }
         }
     }
