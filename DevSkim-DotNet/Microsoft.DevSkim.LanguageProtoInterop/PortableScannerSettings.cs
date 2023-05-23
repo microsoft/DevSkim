@@ -4,12 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.DevSkim.LanguageProtoInterop
 {
-    public class PortableScannerSettings
+    public class PortableScannerSettings : IDevSkimOptions
     {
         public CommentStylesEnum SuppressionCommentStyle { get; set; } = CommentStylesEnum.Line;
-        public ICollection<string> CustomRulesPaths { get; set; } = Array.Empty<string>();
-        public ICollection<string> IgnoreRulesList { get; set; } = Array.Empty<string>();
-        public ICollection<string> IgnoreFiles { get; set; } = Array.Empty<string>();
+        public string CustomRulesPathsString { get; set; } = string.Empty;
+        public string IgnoreRulesListString { get; set; } = string.Empty;
+        public string IgnoreFilesString { get; set; } = string.Empty;
         // Used to populate suppressions
         public string ManualReviewerName { get; set; } = string.Empty;
         // Suppression duration in days
