@@ -1,8 +1,20 @@
-﻿namespace Microsoft.DevSkim.LanguageProtoInterop
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Microsoft.DevSkim.LanguageProtoInterop
 {
     using OmniSharp.Extensions.LanguageServer.Protocol.Models;
     using System;
-    using Microsoft.DevSkim;
+
+    /// <summary>
+    /// Holds a set of CodeFixMappings for a specific file path and version for that file
+    /// </summary>
+    public class MappingsVersion
+    {
+        public int? version;
+        public Uri fileName;
+    }
 
     public class CodeFixMapping
     {

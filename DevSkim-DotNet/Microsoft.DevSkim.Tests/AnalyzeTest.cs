@@ -56,7 +56,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(new Uri(tempFileName).GetFilePath(), resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath());
 
             string outFileName3 = Path.GetTempFileName();
-            
+
             opts = new AnalyzeCommandOptions()
             {
                 Path = tempFileName,
@@ -64,7 +64,7 @@ namespace Microsoft.DevSkim.Tests
                 OutputFileFormat = "sarif"
             };
             new AnalyzeCommand(opts).Run();
-            
+
             resultsFile = SarifLog.Load(outFileName3);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
@@ -85,16 +85,16 @@ namespace Microsoft.DevSkim.Tests
             resultsFile = SarifLog.Load(outFileName4);
             Assert.AreEqual(1, resultsFile.Runs.Count);
             Assert.AreEqual(2, resultsFile.Runs[0].Results.Count);
-            
+
             // The path to CWD isnt relative 
-            Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath(),Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
+            Assert.AreEqual(resultsFile.Runs[0].Results[0].Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath(), Path.GetRelativePath(Directory.GetCurrentDirectory(), tempFileName));
         }
 
         public const string contentToTest = @"MD5;
 // MD5
 /* MD5
 */";
-        
+
         public const string languageFileContent = @"[
     {
         ""name"": ""lorem"",
@@ -113,7 +113,7 @@ namespace Microsoft.DevSkim.Tests
         ""suffix"": ""*/""
     }
   ]";
-        
+
         public const string ruleFileContent = @"[
     {
         ""name"": ""Win32 - Hard-coded SSL/TLS Protocol"",
@@ -139,7 +139,7 @@ namespace Microsoft.DevSkim.Tests
         ]
     }
 ]";
-        
+
         [DataRow(commentFileContent, languageFileContent, ruleFileContent, (int)ExitCode.Okay, 1)]
         [DataRow(languageFileContent, commentFileContent, ruleFileContent, (int)ExitCode.CriticalError, 1)]
         [DataRow(commentFileContent, commentFileContent, ruleFileContent, (int)ExitCode.CriticalError, 1)]
@@ -172,7 +172,7 @@ namespace Microsoft.DevSkim.Tests
                 OutputFileFormat = "sarif",
                 CommentsPath = commentsFileName,
                 LanguagesPath = languagesFileName,
-                Rules = new []{ ruleFileName },
+                Rules = new[] { ruleFileName },
                 IgnoreDefaultRules = true
             };
             new AnalyzeCommand(opts).Run();
@@ -190,10 +190,10 @@ namespace Microsoft.DevSkim.Tests
                 }
             }
         }
-        
+
         [DataTestMethod]
-        [DataRow("DS126858","DS126858")]
-        [DataRow("DS137138","DS137138")]
+        [DataRow("DS126858", "DS126858")]
+        [DataRow("DS137138", "DS137138")]
         public void TestFilterByIds(string idToLimitTo, string idToExpect)
         {
             string tempFileName = $"{Path.GetTempFileName()}.cs";
@@ -209,7 +209,7 @@ namespace Microsoft.DevSkim.Tests
                 Path = tempFileName,
                 OutputFile = outFileName,
                 OutputFileFormat = "sarif",
-                RuleIds = new []{ idToLimitTo }
+                RuleIds = new[] { idToLimitTo }
             };
             new AnalyzeCommand(opts).Run();
 
@@ -220,10 +220,10 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(1, resultsFile.Runs[0].Results.Count);
             Assert.AreEqual(idToExpect, resultsFile.Runs[0].Results[0].RuleId);
         }
-        
+
         [DataTestMethod]
-        [DataRow("DS126858","DS137138")]
-        [DataRow("DS137138","DS126858")]
+        [DataRow("DS126858", "DS137138")]
+        [DataRow("DS137138", "DS126858")]
         public void TestIgnoreIds(string idToIgnore, string idToExpect)
         {
             string tempFileName = $"{Path.GetTempFileName()}.cs";
@@ -239,7 +239,7 @@ namespace Microsoft.DevSkim.Tests
                 Path = tempFileName,
                 OutputFile = outFileName,
                 OutputFileFormat = "sarif",
-                IgnoreRuleIds = new []{ idToIgnore }
+                IgnoreRuleIds = new[] { idToIgnore }
             };
             new AnalyzeCommand(opts).Run();
 

@@ -22,7 +22,7 @@ namespace Microsoft.DevSkim.CLI.Writers
     public class SimpleTextWriter : Writer
     {
         public const string DefaultFormat = "%F:%L:%C:%l:%c [%S] %R %N";
-        
+
         private bool anyIssues = false;
         public SimpleTextWriter(string formatString, TextWriter writer)
         {

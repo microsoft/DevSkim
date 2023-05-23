@@ -50,7 +50,7 @@ namespace Microsoft.DevSkim
         {
             get { return _reviewer; }
         }
-        
+
         /// <summary>
         ///     Suppression expiration date
         /// </summary>
@@ -154,7 +154,7 @@ namespace Microsoft.DevSkim
                 {
                     _reviewer = match.Groups[4].Value;
                 }
-                
+
                 // Parse date
                 if (match.Groups.Count > 2 && !string.IsNullOrEmpty(match.Groups[2].Value))
                 {

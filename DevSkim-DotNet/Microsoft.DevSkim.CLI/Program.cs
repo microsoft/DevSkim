@@ -17,11 +17,11 @@ namespace Microsoft.DevSkim.CLI
                     (FixCommandOptions opts) => new FixCommand(opts).Run(),
                     (VerifyCommandOptions opts) => new VerifyCommand(opts).Run(),
                     (SuppressionCommandOptions opts) => new SuppressionCommand(opts).Run(),
-                    errs => 
-                        errs.Any(x => 
-                            x.Tag is not ErrorType.VersionRequestedError 
-                            and not ErrorType.HelpVerbRequestedError 
-                            and not ErrorType.HelpRequestedError) 
+                    errs =>
+                        errs.Any(x =>
+                            x.Tag is not ErrorType.VersionRequestedError
+                            and not ErrorType.HelpVerbRequestedError
+                            and not ErrorType.HelpRequestedError)
                                 ? (int)ExitCode.ArgumentParsingError : (int)ExitCode.Okay);
         }
     }

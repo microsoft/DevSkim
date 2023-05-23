@@ -11,6 +11,12 @@
 		"type": "git",
 		"url": "https://github.com/Microsoft/devskim.git"
 	},
+	"capabilities": {
+		"virtualWorkspaces": {
+		  "supported": "limited",
+		  "description": "DevSkim has not been fully tested in virtual workspaces, but is functional."
+		}
+	},
 	"icon": "devskim.ico",
 	"galleryBanner": {
 		"color": "#999999",
@@ -80,46 +86,56 @@
 				"title": "Rules",
 				"properties": {
 					"MS-CST-E.vscode-devskim.rules.enableCriticalSeverityRules": {
+						"order": 0,
 						"type": "boolean",
 						"default": true,
 						"description": "Turn on the rules with severity \"Critical\"."
 					},
 					"MS-CST-E.vscode-devskim.rules.enableImportantSeverityRules": {
+						"order": 1,
 						"type": "boolean",
 						"default": true,
 						"description": "Turn on the rules with severity \"Important\"."
 					},
 					"MS-CST-E.vscode-devskim.rules.enableModerateSeverityRules": {
+						"order": 2,
 						"type": "boolean",
 						"default": true,
 						"description": "Turn on the rules with severity \"Moderate\"."
 					},
-					"MS-CST-E.vscode-devskim.rules.enableManualReviewSeverityRules": {
-						"type": "boolean",
-						"default": false,
-						"description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
-					},
 					"MS-CST-E.vscode-devskim.rules.enableBestPracticeSeverityRules": {
+						"order": 3,
 						"type": "boolean",
 						"default": false,
 						"description": "Turn on the rules of severity \"Best-Practice\". These rules either flag issues that are typically of a lower severity, or recommended practices that lead to more secure code, but aren't typically outright vulnerabilities."
 					},
+					"MS-CST-E.vscode-devskim.rules.enableManualReviewSeverityRules": {
+						"order": 4,
+						"type": "boolean",
+						"default": false,
+						"description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
+					},
+
 					"MS-CST-E.vscode-devskim.rules.enableHighConfidenceRules": {
+						"order": 5,
 						"type": "boolean",
 						"default": true,
 						"description": "Turn on the rules of confidence \"High\"."
 					},
 					"MS-CST-E.vscode-devskim.rules.enableMediumConfidenceRules": {
+						"order": 6,
 						"type": "boolean",
 						"default": true,
 						"description": "Turn on the rules of confidence \"Medium\"."
 					},
 					"MS-CST-E.vscode-devskim.rules.enableLowConfidenceRules": {
+						"order": 7,
 						"type": "boolean",
 						"default": false,
 						"description": "Turn on the rules of confidence \"Low\"."
 					},
 					"MS-CST-E.vscode-devskim.rules.customRulesPaths": {
+						"order": 8,
 						"type": "array",
 						"default": [],
 						"description": "A list of local paths on disk to rules files or folders containing rule files, for DevSkim to use in analysis.",
@@ -128,11 +144,13 @@
 						}
 					},
 					"MS-CST-E.vscode-devskim.rules.customLanguagesPath": {
+						"order": 9,
 						"type": "string",
 						"default": "",
 						"description": "A local path to a custom language file for analysis. Also requires customCommentsPath to be set."
 					},
 					"MS-CST-E.vscode-devskim.rules.customCommentsPath": {
+						"order": 10,
 						"type": "string",
 						"default": "",
 						"description": "A local path to a custom comments file for analysis. Also requires customLanguagesPath to be set."
@@ -145,11 +163,13 @@
 				"title": "Suppressions",
 				"properties": {
 					"MS-CST-E.vscode-devskim.suppressions.suppressionDurationInDays": {
+						"order": 0,
 						"type": "number",
 						"default": 30,
 						"description": "DevSkim allows for findings to be suppressed for a temporary period of time. The default is 30 days.  Set to 0 to disable temporary suppressions."
 					},
 					"MS-CST-E.vscode-devskim.suppressions.suppressionCommentStyle": {
+						"order": 1,
 						"type": "string",
 						"enum": [
 							"Line",
@@ -159,6 +179,7 @@
 						"description": "When DevSkim inserts a suppression comment it defaults to using single line comments for every language that has them.  Setting this to block will instead use block comments for the languages that support them.  Block comments are suggested if regularly adding explanations for why a finding was suppressed"
 					},
 					"MS-CST-E.vscode-devskim.suppressions.manualReviewerName": {
+						"order": 2,
 						"type": "string",
 						"default": "",
 						"description": "If set, insert this name in inserted suppression comments."
@@ -171,6 +192,7 @@
 				"title": "Guidance",
 				"properties": {
 					"MS-CST-E.vscode-devskim.guidance.guidanceBaseURL": {
+						"order": 0,
 						"type": "string",
 						"default": "https://github.com/Microsoft/DevSkim/blob/main/guidance/",
 						"description": "Each finding has a guidance file that describes the issue and solutions in more detail.  By default, those files live on the DevSkim github repo however, with this setting, organizations can clone and customize that repo, and specify their own base URL for the guidance."
@@ -183,29 +205,17 @@
 				"title": "Ignores",
 				"properties": {
 					"MS-CST-E.vscode-devskim.ignores.ignoreFiles": {
+						"order": 0,
 						"type": "array",
 						"default": [
-							"\\.(exe|dll|so|dylib|bin|so\\..*)$",
-							"\\.(png|jpg|jpeg|gif|psd|ico|mp3|mpeg|bmp)$",
-							"\\.(zip|tar|gz|rar|jar|gz|7z|bz|bz2|gzip|cab|war|xz|nupkg|gem|egg)$",
-							"\\.(sqlite3|db)$",
-							"(^|/)(out|bin)/",
-							"(^|/)(tests?|unittests?|__tests__|__mocks__)/",
-							"(^|/)(\\.git|git)/",
-							"\\.(git|git[^./])$",
-							"-lock\\.[^/]|\\.lock$",
-							"(^|/)(\\.vscode|\\.cache|logs)/",
-							"(^|/)(nuget|node_modules)/",
-							"\\.(log|sarif|test)$",
-							"\\.(py[cod])$",
-							"(^|/)__pycache__/"
 						],
 						"items": {
 							"type": "string"
 						},
-						"description": "Regular expressions to exclude files and folders from analysis."
+						"description": "Glob expressions to exclude files and folders from analysis."
 					},
 					"MS-CST-E.vscode-devskim.ignores.ignoreRulesList": {
+						"order": 1,
 						"type": "array",
 						"default": [],
 						"items": {
@@ -214,6 +224,7 @@
 						"description": "DevSkim Rule IDs to ignore."
 					},
 					"MS-CST-E.vscode-devskim.ignores.ignoreDefaultRules": {
+						"order": 2,
 						"type": "boolean",
 						"default": false,
 						"description": "Disable all default DevSkim rules."
@@ -226,6 +237,7 @@
 				"title": "Findings",
 				"properties": {
 					"MS-CST-E.vscode-devskim.findings.removeFindingsOnClose": {
+						"order": 0,
 						"type": "boolean",
 						"default": true,
 						"description": "By default, when a source file is closed the findings remain in the 'Problems' window.  Setting this value to true will cause findings to be removed from 'Problems' when the document is closed.  Note, setting this to true will cause findings that are listed when invoking the 'Scan all files in workspace' command to automatically clear away after a couple of minutes."
@@ -238,16 +250,19 @@
 				"title": "Triggers",
 				"properties": {
 					"MS-CST-E.vscode-devskim.triggers.scanOnOpen": {
+						"order": 0,
 						"type": "boolean",
 						"default": true,
 						"description": "Scan files on open."
 					},
 					"MS-CST-E.vscode-devskim.triggers.scanOnSave": {
+						"order": 1,
 						"type": "boolean",
 						"default": true,
 						"description": "Scan files on save."
 					},
 					"MS-CST-E.vscode-devskim.triggers.scanOnChange": {
+						"order": 2,
 						"type": "boolean",
 						"default": true,
 						"description": "Scan files on change."
@@ -260,6 +275,7 @@
 				"title": "Trace",
 				"properties": {
 					"MS-CST-E.vscode-devskim.trace.server": {
+						"order": 0,
 						"scope": "window",
 						"type": "string",
 						"enum": [
@@ -298,7 +314,7 @@
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"pack-ext": "npm run pre-pack-clean && npm run setup:release && npm run set-version-and-pack",
-		"pack-ext:debug": "npm run pre-pack-clean && npm run setup && && npm run set-version-and-pack",
+		"pack-ext:debug": "npm run pre-pack-clean && npm run setup && npm run set-version-and-pack",
 		"pre-pack-clean": "npm run clean:out && npm run clean:modules",
 		"set-version-and-pack": "npm run set-version && npm run do-pack && npm run reset-version",
 		"do-pack": "(npm run check-pre-release && npm run vsce-pack-pre) || npm run vsce-pack",

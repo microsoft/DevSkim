@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------------------------ */
 import * as path from 'path';
 import { ExtensionContext } from 'vscode';
-import { CodeFixMapping } from './common/codeFixMapping';
 import {
 	DidChangeConfigurationNotification,
 	LanguageClient,
@@ -15,9 +14,11 @@ import {
 
 import * as vscode from 'vscode';
 import { DevSkimSettings, DevSkimSettingsObject } from './common/devskimSettings';
-import { getCodeFixMapping } from './common/notificationNames';
+import { getCodeFixMapping, getFileVersion } from './common/notificationNames';
 import { selectors } from './common/selectors';
 import { DevSkimFixer } from './devSkimFixer';
+import { CodeFixMapping } from './common/codeFixMapping';
+import { FileVersion } from './common/fileVersion';
 
 let client: LanguageClient;
 
@@ -110,14 +111,22 @@ export function activate(context: ExtensionContext) {
 				serverOptions,
 				clientOptions
 			);
+
+			 // Start the client. This will also launch the server
 			client.registerProposedFeatures();
 			const disposable = client.start();
 			
 			client.onReady().then(() => 
-				client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
 				{
-				 	fixer.ensureMapHasMapping(mapping);
-				})
+					client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
+					{
+						fixer.ensureMapHasMappings(mapping);
+					});
+					client.onNotification(getFileVersion(), (fileversion: FileVersion) =>{
+						fixer.removeFindingsForOtherVersions(fileversion);
+					});
+					client.sendNotification(DidChangeConfigurationNotification.type, { settings: ""});
+				}
 			);
 
 			vscode.workspace.onDidChangeConfiguration(e => {
@@ -129,7 +138,7 @@ export function activate(context: ExtensionContext) {
 				}
 			});
 
-			// Start the client. This will also launch the server
+			// For disposal of the client
 			context.subscriptions.push(disposable);
 		}
 	});

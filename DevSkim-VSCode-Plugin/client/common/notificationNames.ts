@@ -8,3 +8,8 @@ export function getCodeFixMapping() : string
 {
 	return "devskim/codefixmapping";
 }
+
+export function getFileVersion() : string
+{
+	return "devskim/fileversion";
+}
