@@ -91,11 +91,10 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         public bool EnableLowConfidenceRules { get; set; } = false;
 
         [Category(RulesCategory)]
-        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
         [DisplayName("Custom Rules Paths")]
-        [Description("A list of local paths on disk to rules files or folders containing rule files, " +
+        [Description("A comma separated list of local paths on disk to rules files or folders containing rule files, " +
                      "for DevSkim to use in analysis.")]
-        public List<string> CustomRulesPaths { get; set; } = new List<string>();
+        public string CustomRulesPathsString { get; set; } = string.Empty;
 
         [Category(RulesCategory)]
         [DisplayName("Custom Languages Path")]
@@ -150,14 +149,12 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Files")]
         [Description("Specify glob expression patterns to exclude files and folders which match from analysis.")]
-        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
-        public List<string> IgnoreFiles { get; set; } = new List<string>();
+        public string IgnoreFilesString { get; set; } = string.Empty;
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Rules List")]
         [Description("Exact string identity of DevSkim Rule IDs to ignore.")]
-        [Editor(typeof(MyStringCollectionEditor), typeof(UITypeEditor))]
-        public List<string> IgnoreRulesList { get; set; } = new List<string>();
+        public string IgnoreRulesListString { get; set; } = string.Empty;
 
         [Category(IgnoresCategory)]
         [DisplayName("Ignore Default Rules")]
@@ -195,14 +192,5 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         [DisplayName("Scan On Change")]
         [Description("Scan files on change.")]
         public bool ScanOnChange { get; set; } = true;
-
-        public class MyStringCollectionEditor : CollectionEditor
-        {
-            public MyStringCollectionEditor() : base(type: typeof(List<string>)) { }
-            protected override object CreateInstance(Type itemType)
-            {
-                return string.Empty;
-            }
-        }
     }
 }

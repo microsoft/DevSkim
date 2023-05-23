@@ -31,9 +31,9 @@ namespace DevSkim.LanguageServer
         public static void UpdateWith(PortableScannerSettings request)
         {
             SuppressionStyle = ToSuppressionStyle(request.SuppressionCommentStyle);
-            CustomRulePaths = request.CustomRulesPaths;
-            IgnoreRuleIds = request.IgnoreRulesList;
-            IgnoreFiles = request.IgnoreFiles.Select(x => new Glob(x)).ToArray();
+            CustomRulePaths = request.CustomRulesPathsString.Split(',');
+            IgnoreRuleIds = request.IgnoreRulesListString.Split(',');
+            IgnoreFiles = request.IgnoreFilesString.Split(',').Select(x => new Glob(x)).ToArray();
             ReviewerName = request.ManualReviewerName;
             SuppressionDuration = request.SuppressionDurationInDays;
             IgnoreDefaultRuleSet = request.IgnoreDefaultRules;
