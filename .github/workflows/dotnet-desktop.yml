@@ -66,4 +66,4 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: DevSkim
-      uses: microsoft/DevSkim-Action@v1.0.5
+      uses: microsoft/DevSkim-Action@v1
