@@ -452,7 +452,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                     TextSample: _opts.SkipExcerpts ? string.Empty : issueText,
                                     Issue: issue,
                                     Language: languageInfo.Name,
-                                    Fixes: issue.Rule.Fixes.Where(x => DevSkimRuleProcessor.IsFixable(issueText, x)).ToList());
+                                    Fixes: issue.Rule.Fixes?.Where(x => DevSkimRuleProcessor.IsFixable(issueText, x)).ToList());
 
                                 outputWriter.WriteIssue(record);
                             }
