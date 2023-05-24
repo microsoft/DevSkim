@@ -147,13 +147,13 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         /// Ignore Options
         /// </summary>
         [Category(IgnoresCategory)]
-        [DisplayName("Ignore Files")]
-        [Description("Specify glob expression patterns to exclude files and folders which match from analysis.")]
+        [DisplayName("Ignore Files by Globs")]
+        [Description("Comma separated glob expression patterns to exclude files and folders which match from analysis.")]
         public string IgnoreFilesString { get; set; } = string.Empty;
 
         [Category(IgnoresCategory)]
-        [DisplayName("Ignore Rules List")]
-        [Description("Exact string identity of DevSkim Rule IDs to ignore.")]
+        [DisplayName("Ignore Rules by Id")]
+        [Description("Comma separated list of exact string identity of DevSkim Rule IDs to ignore.")]
         public string IgnoreRulesListString { get; set; } = string.Empty;
 
         [Category(IgnoresCategory)]
