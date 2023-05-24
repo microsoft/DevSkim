@@ -1,19 +1,15 @@
 ﻿// Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.DevSkim.LanguageProtoInterop;
-using Microsoft.Internal.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Experimentation;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.TextManager.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 
 namespace Microsoft.DevSkim.VisualStudio
 {

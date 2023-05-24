@@ -5,11 +5,8 @@ namespace Microsoft.DevSkim.VisualStudio.Options
     using Microsoft.Build.Framework.XamlTypes;
     using Microsoft.VisualStudio.Shell;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.ComponentModel.Design;
     using System.Drawing;
-    using System.Drawing.Design;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     // When adding any property here, be sure to add it to IDevSkimOptions as well
