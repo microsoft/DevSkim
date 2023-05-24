@@ -3,10 +3,7 @@
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using System;
-using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -16,8 +13,6 @@ namespace Microsoft.DevSkim.VisualStudio
     using Microsoft.DevSkim.LanguageProtoInterop;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     internal class DevSkimSuggestedAction: ISuggestedAction
@@ -78,7 +73,7 @@ namespace Microsoft.DevSkim.VisualStudio
 
         public Task<IEnumerable<SuggestedActionSet>> GetActionSetsAsync(CancellationToken cancellationToken)
         {
-            return null;
+            return Task.FromResult<IEnumerable<SuggestedActionSet>>(Array.Empty<SuggestedActionSet>());
         }
 
         public Task<object> GetPreviewAsync(CancellationToken cancellationToken)

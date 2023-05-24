@@ -69,9 +69,10 @@ namespace DevSkim.LanguageServer
                     for (int i = 0; i < issue.Rule.Fixes?.Count; i++)
                     {
                         CodeFix fix = issue.Rule.Fixes[i];
-                        if (fix.Replacement is not null)
+                        var targetText = text.Substring(issue.Boundary.Index, issue.Boundary.Length);
+                        if (fix.Replacement is not null && DevSkimRuleProcessor.IsFixable(targetText, fix))
                         {
-                            string potentialFix = DevSkimRuleProcessor.Fix(text.Substring(issue.Boundary.Index, issue.Boundary.Length), fix);
+                            string potentialFix = DevSkimRuleProcessor.Fix(targetText, fix);
                             codeFixes.Add(new CodeFixMapping(diag, potentialFix, uri.ToUri(), $"Replace with {potentialFix}", version, issue.Boundary.Index, issue.Boundary.Index + issue.Boundary.Length, false));
                         }
                     }

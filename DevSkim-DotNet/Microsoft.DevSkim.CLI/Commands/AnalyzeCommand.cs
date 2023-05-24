@@ -445,14 +445,14 @@ namespace Microsoft.DevSkim.CLI.Commands
                                                         issue.Rule.Id,
                                                         issue.Rule.Severity,
                                                         issue.Rule.Name);
-
+                                var issueText = fileText.Substring(issue.Boundary.Index, issue.Boundary.Length);
                                 IssueRecord record = new DevSkim.IssueRecord(
                                     Filename: TryRelativizePath(_opts.BasePath, fileEntry.FullPath),
                                     Filesize: fileText.Length,
-                                    TextSample: _opts.SkipExcerpts ? string.Empty : fileText.Substring(issue.Boundary.Index, issue.Boundary.Length),
+                                    TextSample: _opts.SkipExcerpts ? string.Empty : issueText,
                                     Issue: issue,
                                     Language: languageInfo.Name,
-                                    Fixes: issue.Rule.Fixes);
+                                    Fixes: issue.Rule.Fixes?.Where(x => DevSkimRuleProcessor.IsFixable(issueText, x)).ToList());
 
                                 outputWriter.WriteIssue(record);
                             }

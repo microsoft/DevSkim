@@ -7,11 +7,6 @@ pr:
   branches:
     include:
     - main
-  paths:
-    include:
-    - Pipelines/vscode/devskim-vscode-pr.yml
-    - DevSkim-VSCode-Plugin
-    - rules
 
 resources:
   repositories:

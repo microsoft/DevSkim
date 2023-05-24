@@ -5,11 +5,8 @@ namespace Microsoft.DevSkim.VisualStudio.Options
     using Microsoft.Build.Framework.XamlTypes;
     using Microsoft.VisualStudio.Shell;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.ComponentModel.Design;
     using System.Drawing;
-    using System.Drawing.Design;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     // When adding any property here, be sure to add it to IDevSkimOptions as well
@@ -147,13 +144,13 @@ namespace Microsoft.DevSkim.VisualStudio.Options
         /// Ignore Options
         /// </summary>
         [Category(IgnoresCategory)]
-        [DisplayName("Ignore Files")]
-        [Description("Specify glob expression patterns to exclude files and folders which match from analysis.")]
+        [DisplayName("Ignore Files by Globs")]
+        [Description("Comma separated glob expression patterns to exclude files and folders which match from analysis.")]
         public string IgnoreFilesString { get; set; } = string.Empty;
 
         [Category(IgnoresCategory)]
-        [DisplayName("Ignore Rules List")]
-        [Description("Exact string identity of DevSkim Rule IDs to ignore.")]
+        [DisplayName("Ignore Rules by Id")]
+        [Description("Comma separated list of exact string identity of DevSkim Rule IDs to ignore.")]
         public string IgnoreRulesListString { get; set; } = string.Empty;
 
         [Category(IgnoresCategory)]

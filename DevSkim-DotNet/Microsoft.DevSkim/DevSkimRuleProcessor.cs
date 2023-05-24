@@ -96,6 +96,28 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
+        ///     Checks if the target source can be fixed with the provided fix
+        /// </summary>
+        /// <param name="text"> Source code line </param>
+        /// <param name="fixRecord"> Fix record to be applied </param>
+        /// <returns> Fixed source code line </returns>
+        public static bool IsFixable(string text, CodeFix fixRecord)
+        {
+            if (fixRecord?.FixType is { } fr && fr == FixType.RegexReplace)
+            {
+                if (fixRecord.Pattern is { })
+                {
+                    Regex regex = new Regex(fixRecord.Pattern.Pattern ?? string.Empty);
+                    return regex.IsMatch(text);
+                }
+            }
+
+            return false;
+        }
+
+
+
+        /// <summary>
         ///     Generate appropriate suppression with comment style based on the filename
         /// </summary>
         /// <param name="fileName"></param>
