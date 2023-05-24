@@ -78,7 +78,7 @@ namespace Microsoft.DevSkim.VisualStudio
 
         public Task<IEnumerable<SuggestedActionSet>> GetActionSetsAsync(CancellationToken cancellationToken)
         {
-            return null;
+            return Task.FromResult<IEnumerable<SuggestedActionSet>>(Array.Empty<SuggestedActionSet>());
         }
 
         public Task<object> GetPreviewAsync(CancellationToken cancellationToken)

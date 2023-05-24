@@ -14,7 +14,7 @@
     {
         public ISuggestedActionsSource CreateSuggestedActionsSource(ITextView textView, ITextBuffer textBuffer)
         {
-            if (textBuffer == null && textView == null)
+            if (textBuffer == null || textView == null)
             {
                 return null;
             }
