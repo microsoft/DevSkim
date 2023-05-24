@@ -15,15 +15,15 @@ namespace Microsoft.DevSkim.LanguageProtoInterop
         public bool EnableHighConfidenceRules { get; set; }
         public bool EnableMediumConfidenceRules { get; set; }
         public bool EnableLowConfidenceRules { get; set; }
-        public List<string> CustomRulesPaths { get; set; }
+        public string CustomRulesPathsString { get; set; }
         public string CustomLanguagesPath { get; set; }
         public string CustomCommentsPath { get; set; }
         public int SuppressionDurationInDays { get; set; }
         public CommentStylesEnum SuppressionCommentStyle { get; set; }
         public string ManualReviewerName { get; set; }
         public string GuidanceBaseURL { get; set; }
-        public List<string> IgnoreFiles { get; set; }
-        public List<string> IgnoreRulesList { get; set; }
+        public string IgnoreFilesString { get; set; }
+        public string IgnoreRulesListString { get; set; }
         public bool IgnoreDefaultRules { get; set; }
         public bool RemoveFindingsOnClose { get; set; }
         public bool ScanOnOpen { get; set; }
