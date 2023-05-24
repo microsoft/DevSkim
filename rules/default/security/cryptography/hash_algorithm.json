@@ -15,7 +15,8 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ]
+                ],
+                "modifiers":["i"]
             }
         ],
         "fix_its": [
@@ -29,7 +30,6 @@
                     "scopes": [
                         "code"
                     ],
-                    "modifiers":["i"],
                     "_comment": ""
                 }
             },
@@ -44,7 +44,9 @@
                         "code"
                     ],
                     "_comment": ""
-                },
+                }
+            },
+            {
                 "name": "Change to \"sha512\"",
                 "type": "RegexReplace",
                 "replacement": "sha512",
@@ -55,7 +57,20 @@
                         "code"
                     ],
                     "_comment": "Matches lower case variants of the above"
-                },
+                }
+            },
+            {
+                "name": "Change to \"sha256\"",
+                "type": "RegexReplace",
+                "replacement": "sha256",
+                "pattern": {
+                    "pattern": "(md2|md4|md5|ripemd|ripemd(128|256|160|320)|(sha0|sha-0|sha1|sha-1))",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "Matches lower case variants of the above"
+                }
             }
         ],
         "must-match": [
