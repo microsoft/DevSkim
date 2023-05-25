@@ -3,10 +3,10 @@
 
 name: DevSkim_CLI_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger: none
+pr:
   paths:
     exclude:
     - /*.md
-pr: none
 
 resources:
   repositories:
