@@ -241,25 +241,29 @@ namespace Microsoft.DevSkim.CLI.Writers
                 foreach (CodeFix fix in issue.Issue.Rule.Fixes.Where(codeFix => DevSkimRuleProcessor.IsFixable(issue.TextSample, codeFix)))
                 {
                     List<Replacement> replacements = new List<Replacement>();
-                    replacements.Add(new Replacement(new Region()
+                    var potentialReplacement = DevSkimRuleProcessor.Fix(issue.TextSample, fix);
+                    if (potentialReplacement is { })
                     {
-                        CharOffset = issue.Issue.Boundary.Index,
-                        CharLength = issue.Issue.Boundary.Length,
-                    }, new ArtifactContent() { Text = DevSkimRuleProcessor.Fix(issue.TextSample, fix) }, null));
+                        replacements.Add(new Replacement(new Region()
+                        {
+                            CharOffset = issue.Issue.Boundary.Index,
+                            CharLength = issue.Issue.Boundary.Length,
+                        }, new ArtifactContent() { Text =  potentialReplacement}, null));
 
-                    ArtifactChange[] changes = new ArtifactChange[]
-                    {
-                        new ArtifactChange(
-                            GetValueAndImplicitlyPopulateCache(issue.Filename),
-                            replacements,
-                            null)
-                    };
+                        ArtifactChange[] changes = new ArtifactChange[]
+                        {
+                            new ArtifactChange(
+                                GetValueAndImplicitlyPopulateCache(issue.Filename),
+                                replacements,
+                                null)
+                        };
 
-                    fixes.Add(new Fix()
-                    {
-                        ArtifactChanges = changes,
-                        Description = new Message() { Text = issue.Issue.Rule.Description }
-                    });
+                        fixes.Add(new Fix()
+                        {
+                            ArtifactChanges = changes,
+                            Description = new Message() { Text = issue.Issue.Rule.Description }
+                        });
+                    }
                 }
             }
             return fixes.ToList();

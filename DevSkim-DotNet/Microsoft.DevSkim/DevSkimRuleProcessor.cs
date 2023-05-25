@@ -79,9 +79,9 @@ namespace Microsoft.DevSkim
         /// <param name="text"> Source code line </param>
         /// <param name="fixRecord"> Fix record to be applied </param>
         /// <returns> Fixed source code line </returns>
-        public static string Fix(string text, CodeFix fixRecord)
+        public static string? Fix(string text, CodeFix fixRecord)
         {
-            string result = string.Empty;
+            string? result = null;
 
             if (fixRecord?.FixType is { } and FixType.RegexReplace)
             {
