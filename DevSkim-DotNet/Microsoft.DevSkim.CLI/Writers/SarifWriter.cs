@@ -220,9 +220,14 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
         }
 
+        /// <summary>
+        /// Gets deduplicated set of fixes for the issue
+        /// </summary>
+        /// <param name="issue"></param>
+        /// <returns></returns>
         private List<Fix> GetFixits(IssueRecord issue)
         {
-            List<Fix> fixes = new List<Fix>();
+            HashSet<Fix> fixes = new HashSet<Fix>();
             if (issue.Issue.Rule.Fixes != null)
             {
                 foreach (CodeFix fix in issue.Issue.Rule.Fixes.Where(codeFix => DevSkimRuleProcessor.IsFixable(issue.TextSample, codeFix)))
@@ -249,7 +254,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                     });
                 }
             }
-            return fixes;
+            return fixes.ToList();
         }
 
         private void MapRuleToResult(Rule rule, ref Result resultItem)
