@@ -225,7 +225,7 @@ namespace Microsoft.DevSkim.CLI.Writers
             List<Fix> fixes = new List<Fix>();
             if (issue.Issue.Rule.Fixes != null)
             {
-                foreach (CodeFix fix in issue.Issue.Rule.Fixes)
+                foreach (CodeFix fix in issue.Issue.Rule.Fixes.Where(codeFix => DevSkimRuleProcessor.IsFixable(issue.TextSample, codeFix)))
                 {
                     List<Replacement> replacements = new List<Replacement>();
                     replacements.Add(new Replacement(new Region()
