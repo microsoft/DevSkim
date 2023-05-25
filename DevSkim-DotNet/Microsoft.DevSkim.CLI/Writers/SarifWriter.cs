@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -198,9 +199,9 @@ namespace Microsoft.DevSkim.CLI.Writers
                 Uri helpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo); ;
                 ReportingDescriptor sarifRule = new ReportingDescriptor();
                 sarifRule.Id = devskimRule.Id;
-                sarifRule.Name = devskimRule.Name;
+                sarifRule.Name = ToSarifFriendlyName(devskimRule.Name);
                 sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
-                sarifRule.FullDescription = new MultiformatMessageString() { Text = devskimRule.Description };
+                sarifRule.FullDescription = new MultiformatMessageString() { Text = $"{devskimRule.Name}: {devskimRule.Description}" };
                 sarifRule.Help = new MultiformatMessageString()
                 {
                     // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
@@ -220,6 +221,12 @@ namespace Microsoft.DevSkim.CLI.Writers
                 _rules.TryAdd(devskimRule.Id, sarifRule);
             }
         }
+
+        private string ToSarifFriendlyName(string devskimRuleName) =>
+            string.Concat(devskimRuleName.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => string.Concat(x.Where(char.IsLetterOrDigit)))
+                .Select(word => string.IsNullOrEmpty(word) ? string.Empty : 
+                    word.Length == 1 ? word : $"{word[..1].ToUpper()}{word[1..].ToLower()}"));
 
         /// <summary>
         /// Gets deduplicated set of fixes for the issue
