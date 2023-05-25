@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-
+ 
 namespace Microsoft.DevSkim
 {
     /// <summary>
