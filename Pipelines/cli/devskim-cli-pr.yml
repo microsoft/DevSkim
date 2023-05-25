@@ -8,8 +8,7 @@ pr:
     include:
     - main
   paths:
-    include:
-    - '*.md'
+    include: ['*.md']
 
 resources:
   repositories:
