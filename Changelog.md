@@ -1,0 +1,42 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.4] - 2023-05-24
+### Fixed
+- Fixes output sarif returning not applicable fixes
+
+## [1.0.3] - 2023-05-24
+### Fixed
+- Fixes output sarif for runs with rules with empty string for Recommendation and Description
+
+## [1.0.2] - 2023-05-24
+### Fixed
+- Fix output sarif for runs with rules with null string for Recommendation and Description
+
+## [1.0.1] - 2023-05-24
+This version is a major refactor of DevSkim.
+### CLI
+Old Usage: `devskim analyze path/to/src path/to/output.sarif -f sarif`
+
+New Usage: `devskim analyze -I path/to/src -O path/to/out.sarif`
+### Added
+- Added fix and suppress commands that operate on the output sarif from Analyze and the source code scanned with analyze to apply fixes/suppressions
+- Support jsonpath/xpath and ymlpath based rules
+- New `--options-json` argument to analyze to specify DevSkim configuration via a JSON file, including ability to Ignore rules only for specific languages
+- IDE extensions are now based on a unified C# Language Server, and support new options like user provided Rules/Languages.
+
+### Changed
+- Input/output files are now named parameters (-I/--source-code and -O/--output-file), not positional parameters
+- Sarif is now the default output format for the CLI
+- DevSkim targets .NET 6.0 and .NET 7.0
+- Rule self tests are now included directly in rule specification (must-match and must-not-match fields) and are checked by the Verify command.
+
+### Removed
+- Json is no longer supported as an output format argument
+- Pack, test and catalogue commands removed
+
+### Fixes
+- Rule improvements, engine performance and reliablity improvements.
