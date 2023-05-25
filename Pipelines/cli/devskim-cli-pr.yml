@@ -9,7 +9,7 @@ pr:
     - main
   paths:
     include:
-    - /*
+    - '*.md'
 
 resources:
   repositories:
