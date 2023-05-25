@@ -50,6 +50,7 @@ New: `devskim analyze -I path/to/src -O path/to/out.sarif`
 - DevSkim targets .NET 6.0 and .NET 7.0
 - Rule self tests are now included directly in rule specification (must-match and must-not-match fields) and are checked by the Verify command.
 - Visual Studio Extension now targets VS 2022 instead of VS 2019.
+- VS Code Extension now requires VSC Engine 1.63 or later
 
 ### Removed
 - Json is no longer supported as an output format argument to CLI
