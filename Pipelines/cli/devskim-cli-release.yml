@@ -7,6 +7,9 @@ trigger:
   branches:
     include:
     - main
+  paths:
+    exclude:
+    - *.md
 pr: none
 
 resources:
