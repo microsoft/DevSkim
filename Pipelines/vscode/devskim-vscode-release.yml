@@ -8,9 +8,8 @@ trigger:
     include:
     - main
   paths:
-    include:
-    - DevSkim-VSCode-Plugin
-    - rules
+    exclude:
+    - *.md
 pr: none
 
 resources:

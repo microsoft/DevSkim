@@ -2,7 +2,6 @@
 {
     using Microsoft;
     using System;
-    using System.Collections.Generic;
     using Microsoft.DevSkim.LanguageProtoInterop;
     using Microsoft.DevSkim.VisualStudio.Options;
     using System.Linq;

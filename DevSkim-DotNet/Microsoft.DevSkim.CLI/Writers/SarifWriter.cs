@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,7 +33,8 @@ namespace Microsoft.DevSkim.CLI.Writers
                 {
                     Driver = new ToolComponent()
                     {
-                        Rules = _rules.Select(x => x.Value).ToList()
+                        Rules = _rules.Select(x => x.Value).ToList(),
+                        InformationUri = new Uri("https://github.com/microsoft/DevSkim/")
                     }
                 },
                 Results = _results.ToList()
@@ -197,12 +199,14 @@ namespace Microsoft.DevSkim.CLI.Writers
                 Uri helpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo); ;
                 ReportingDescriptor sarifRule = new ReportingDescriptor();
                 sarifRule.Id = devskimRule.Id;
-                sarifRule.Name = devskimRule.Name;
+                sarifRule.Name = ToSarifFriendlyName(devskimRule.Name);
                 sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
-                sarifRule.FullDescription = new MultiformatMessageString() { Text = devskimRule.Description };
+                sarifRule.FullDescription = new MultiformatMessageString() { Text = $"{devskimRule.Name}: {devskimRule.Description}" };
                 sarifRule.Help = new MultiformatMessageString()
                 {
-                    Text = devskimRule.Recommendation ?? devskimRule.Description,
+                    // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
+                    Text = !string.IsNullOrEmpty(devskimRule.Recommendation) ? devskimRule.Recommendation : 
+                        (!string.IsNullOrEmpty(devskimRule.Description) ? devskimRule.Description : $"Visit {helpUri} for guidance on this issue."),
                     Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue."
                 };
                 sarifRule.HelpUri = helpUri;
@@ -218,36 +222,51 @@ namespace Microsoft.DevSkim.CLI.Writers
             }
         }
 
+        private string ToSarifFriendlyName(string devskimRuleName) =>
+            string.Concat(devskimRuleName.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => string.Concat(x.Where(char.IsLetterOrDigit)))
+                .Select(word => string.IsNullOrEmpty(word) ? string.Empty : 
+                    word.Length == 1 ? word : $"{word[..1].ToUpper()}{word[1..].ToLower()}"));
+
+        /// <summary>
+        /// Gets deduplicated set of fixes for the issue
+        /// </summary>
+        /// <param name="issue"></param>
+        /// <returns></returns>
         private List<Fix> GetFixits(IssueRecord issue)
         {
-            List<Fix> fixes = new List<Fix>();
+            HashSet<Fix> fixes = new HashSet<Fix>();
             if (issue.Issue.Rule.Fixes != null)
             {
-                foreach (CodeFix fix in issue.Issue.Rule.Fixes)
+                foreach (CodeFix fix in issue.Issue.Rule.Fixes.Where(codeFix => DevSkimRuleProcessor.IsFixable(issue.TextSample, codeFix)))
                 {
                     List<Replacement> replacements = new List<Replacement>();
-                    replacements.Add(new Replacement(new Region()
+                    var potentialReplacement = DevSkimRuleProcessor.Fix(issue.TextSample, fix);
+                    if (potentialReplacement is { })
                     {
-                        CharOffset = issue.Issue.Boundary.Index,
-                        CharLength = issue.Issue.Boundary.Length,
-                    }, new ArtifactContent() { Text = DevSkimRuleProcessor.Fix(issue.TextSample, fix) }, null));
+                        replacements.Add(new Replacement(new Region()
+                        {
+                            CharOffset = issue.Issue.Boundary.Index,
+                            CharLength = issue.Issue.Boundary.Length,
+                        }, new ArtifactContent() { Text =  potentialReplacement}, null));
 
-                    ArtifactChange[] changes = new ArtifactChange[]
-                    {
-                        new ArtifactChange(
-                            GetValueAndImplicitlyPopulateCache(issue.Filename),
-                            replacements,
-                            null)
-                    };
+                        ArtifactChange[] changes = new ArtifactChange[]
+                        {
+                            new ArtifactChange(
+                                GetValueAndImplicitlyPopulateCache(issue.Filename),
+                                replacements,
+                                null)
+                        };
 
-                    fixes.Add(new Fix()
-                    {
-                        ArtifactChanges = changes,
-                        Description = new Message() { Text = issue.Issue.Rule.Description }
-                    });
+                        fixes.Add(new Fix()
+                        {
+                            ArtifactChanges = changes,
+                            Description = new Message() { Text = issue.Issue.Rule.Description }
+                        });
+                    }
                 }
             }
-            return fixes;
+            return fixes.ToList();
         }
 
         private void MapRuleToResult(Rule rule, ref Result resultItem)

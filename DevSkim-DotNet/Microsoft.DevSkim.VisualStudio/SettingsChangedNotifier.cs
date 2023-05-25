@@ -1,19 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.DevSkim.LanguageProtoInterop;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.LanguageServer.Protocol;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using StreamJsonRpc;
 
 namespace Microsoft.DevSkim.VisualStudio

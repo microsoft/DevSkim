@@ -8,10 +8,8 @@ trigger:
     include:
     - main
   paths:
-    include:
-    - DevSkim-DotNet/Microsoft.DevSkim
-    - DevSkim-DotNet/Microsoft.DevSkim.VisualStudio
-    - rules
+    exclude:
+    - *.md
 pr: none
 
 resources:

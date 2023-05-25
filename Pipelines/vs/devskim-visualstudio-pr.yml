@@ -7,12 +7,6 @@ pr:
   branches:
     include:
     - main
-  paths:
-    include:
-    - Pipelines/vs/devskim-visualstudio-pr.yml
-    - DevSkim-DotNet/Microsoft.DevSkim
-    - DevSkim-DotNet/Microsoft.DevSkim.VisualStudio
-    - rules
 
 resources:
   repositories:
