@@ -9,7 +9,7 @@ trigger:
     - main
   paths:
     exclude:
-    - *.md
+    - /*.md
 pr: none
 
 resources:
