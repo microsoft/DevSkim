@@ -202,7 +202,9 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.Help = new MultiformatMessageString()
                 {
-                    Text = devskimRule.Recommendation ?? devskimRule.Description ?? $"Visit {helpUri} for guidance on this issue.",
+                    // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
+                    Text = !string.IsNullOrEmpty(devskimRule.Recommendation) ? devskimRule.Recommendation : 
+                        (!string.IsNullOrEmpty(devskimRule.Description) ? devskimRule.Description : $"Visit {helpUri} for guidance on this issue."),
                     Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue."
                 };
                 sarifRule.HelpUri = helpUri;
