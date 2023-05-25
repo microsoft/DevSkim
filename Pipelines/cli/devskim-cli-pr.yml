@@ -2,11 +2,7 @@
 # https://aka.ms/yaml
 
 name: DevSkim_CLI_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-trigger:
-  batch: true
-  branches:
-    include:
-    - main
+trigger: none
   paths:
     exclude:
     - /*.md
