@@ -1,0 +1,32 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_CLI_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    - /*.md
+pr: none
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      ref: refs/tags/v1.0.6
+
+stages:
+- stage: Test
+  dependsOn: []
+  jobs:
+  - template: dotnet-test-job.yml@templates
+    parameters:
+      jobName: 'dotnet_test_windows'
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
+      vmImage: 'oss-tools-win2022_1es-managed'
+      projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
