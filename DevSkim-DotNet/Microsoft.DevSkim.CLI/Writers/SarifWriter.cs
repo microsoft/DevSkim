@@ -32,7 +32,8 @@ namespace Microsoft.DevSkim.CLI.Writers
                 {
                     Driver = new ToolComponent()
                     {
-                        Rules = _rules.Select(x => x.Value).ToList()
+                        Rules = _rules.Select(x => x.Value).ToList(),
+                        InformationUri = new Uri("https://github.com/microsoft/DevSkim/")
                     }
                 },
                 Results = _results.ToList()
