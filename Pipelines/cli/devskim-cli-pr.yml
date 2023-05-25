@@ -1,9 +1,12 @@
 # Azure Pipelines
 # https://aka.ms/yaml
 
-name: DevSkim_CLI_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+name: DevSkim_CLI_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger: none
 pr:
+  branches:
+    include:
+    - main
   paths:
     exclude:
     - '/*.md'
