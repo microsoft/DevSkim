@@ -84,15 +84,29 @@ namespace Microsoft.DevSkim
 
             if (fixRecord?.FixType is { } fr && fr == FixType.RegexReplace)
             {
-                if (fixRecord.Pattern is { })
+                if (fixRecord.Pattern is { } fixPattern)
                 {
-                    //TODO: Better pattern search and modifiers
-                    Regex regex = new Regex(fixRecord.Pattern.Pattern ?? string.Empty);
+                    Regex regex = SearchPatternToRegex(fixPattern);
                     result = regex.Replace(text, fixRecord.Replacement ?? string.Empty);
                 }
             }
 
             return result;
+        }
+
+        private static Regex SearchPatternToRegex(SearchPattern pattern)
+        {
+            RegexOptions options = RegexOptions.None;
+            if (pattern.Modifiers.Contains("i"))
+            {
+                options |= RegexOptions.IgnoreCase;
+            }
+            if (pattern.Modifiers.Contains("m"))
+            {
+                options |= RegexOptions.Multiline;
+            }
+            Regex regex = new Regex(pattern.Pattern, options);
+            return regex;
         }
 
         /// <summary>
@@ -105,9 +119,9 @@ namespace Microsoft.DevSkim
         {
             if (fixRecord?.FixType is { } fr && fr == FixType.RegexReplace)
             {
-                if (fixRecord.Pattern is { })
+                if (fixRecord.Pattern is { } fixPattern)
                 {
-                    Regex regex = new Regex(fixRecord.Pattern.Pattern ?? string.Empty);
+                    Regex regex = SearchPatternToRegex(fixPattern);
                     return regex.IsMatch(text);
                 }
             }
