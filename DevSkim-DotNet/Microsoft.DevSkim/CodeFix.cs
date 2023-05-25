@@ -8,7 +8,7 @@ using Newtonsoft.Json.Converters;
 namespace Microsoft.DevSkim
 {
     /// <summary>
-    ///     Code fix class     
+    ///     Code fix class  test    
     /// </summary>
     public class CodeFix
     {
