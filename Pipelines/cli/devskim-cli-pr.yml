@@ -6,7 +6,7 @@ trigger: none
 pr:
   paths:
     exclude:
-    - /*.md
+    - '/*.md'
 
 resources:
   repositories:
