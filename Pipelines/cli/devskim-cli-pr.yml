@@ -11,7 +11,7 @@ pr:
     exclude:
     - "*.md"
     - "Pipelines/**/*.yml"
-
+  
 resources:
   repositories:
     - repository: templates
