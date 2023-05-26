@@ -7,6 +7,9 @@ pr:
   branches:
     include:
     - main
+  paths:
+    include:
+    - "*.md"
 
 resources:
   repositories:
