@@ -7,6 +7,10 @@ pr:
   branches:
     include:
     - main
+  paths:
+    exclude:
+    - "*.md"
+    - "Pipelines/**/*.yml"
 
 resources:
   repositories:
