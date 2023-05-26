@@ -8,7 +8,7 @@ pr:
     include:
     - main
   paths:
-    include:
+    exclude:
     - "*.md"
 
 resources:
