@@ -4,7 +4,7 @@ using System.Linq;
 using CommandLine;
 using Microsoft.DevSkim.CLI.Commands;
 using Microsoft.DevSkim.CLI.Options;
-
+    
 namespace Microsoft.DevSkim.CLI
 {
     internal class Program
