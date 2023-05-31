@@ -6,17 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Pipes;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
-using Newtonsoft.Json.Linq;
 using Task = System.Threading.Tasks.Task;
-using Microsoft.VisualStudio.LanguageServer.Protocol;
 using System.ComponentModel.Composition;
 using Microsoft.Build.Framework.XamlTypes;
-using Microsoft.DevSkim.LanguageProtoInterop;
 using Microsoft.DevSkim.VisualStudio.ProcessTracker;
 using Microsoft.DevSkim.VisualStudio;
 

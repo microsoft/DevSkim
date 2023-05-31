@@ -15,7 +15,8 @@
                 "type": "regex",
                 "scopes": [
                     "code"
-                ]
+                ],
+                "modifiers":["i"]
             }
         ],
         "fix_its": [
@@ -44,10 +45,37 @@
                     ],
                     "_comment": ""
                 }
+            },
+            {
+                "name": "Change to \"sha512\"",
+                "type": "RegexReplace",
+                "replacement": "sha512",
+                "pattern": {
+                    "pattern": "(md2|md4|md5|ripemd|ripemd(128|256|160|320)|(sha0|sha-0|sha1|sha-1))",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "Matches lower case variants of the above"
+                }
+            },
+            {
+                "name": "Change to \"sha256\"",
+                "type": "RegexReplace",
+                "replacement": "sha256",
+                "pattern": {
+                    "pattern": "(md2|md4|md5|ripemd|ripemd(128|256|160|320)|(sha0|sha-0|sha1|sha-1))",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "Matches lower case variants of the above"
+                }
             }
         ],
         "must-match": [
-            "MD5 hash = new Hash();"
+            "MD5 hash = new Hash();",
+            "echo -n Welcome | md5sum"
         ],
         "must-not-match": [
             "SHA512"

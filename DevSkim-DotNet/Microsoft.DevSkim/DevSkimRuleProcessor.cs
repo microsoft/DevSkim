@@ -73,27 +73,83 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
-        ///     Applies given fix on the provided source code line
+        ///     Applies given fix on the provided source code line.
+        ///     Recommended to call <see cref="IsFixable"/> first to ensure the fix is intended for the target.
         /// </summary>
         /// <param name="text"> Source code line </param>
         /// <param name="fixRecord"> Fix record to be applied </param>
         /// <returns> Fixed source code line </returns>
-        public static string Fix(string text, CodeFix fixRecord)
+        public static string? Fix(string text, CodeFix fixRecord)
         {
-            string result = string.Empty;
+            string? result = null;
 
-            if (fixRecord?.FixType is { } fr && fr == FixType.RegexReplace)
+            if (fixRecord?.FixType is { } and FixType.RegexReplace)
             {
-                if (fixRecord.Pattern is { })
+                if (fixRecord.Pattern is { } fixPattern)
                 {
-                    //TODO: Better pattern search and modifiers
-                    Regex regex = new Regex(fixRecord.Pattern.Pattern ?? string.Empty);
-                    result = regex.Replace(text, fixRecord.Replacement ?? string.Empty);
+                    Regex? regex = SearchPatternToRegex(fixPattern);
+                    if (regex is { })
+                    {
+                        result = regex.Replace(text, fixRecord.Replacement ?? string.Empty);
+                    }
                 }
             }
 
             return result;
         }
+
+        private static Regex? SearchPatternToRegex(SearchPattern pattern)
+        {
+            RegexOptions options = RegexOptions.None;
+            if (pattern.Modifiers.Contains("i"))
+            {
+                options |= RegexOptions.IgnoreCase;
+            }
+            if (pattern.Modifiers.Contains("m"))
+            {
+                options |= RegexOptions.Multiline;
+            }
+
+            if (pattern.Pattern is { })
+            {
+                try
+                {
+                    Regex regex = new Regex(pattern.Pattern, options);
+                    return regex;
+                }
+                catch (Exception e)
+                {
+                    // failed to construct regex for fix
+                }    
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Checks if the target source can be fixed with the provided fix
+        /// </summary>
+        /// <param name="text"> Source code line </param>
+        /// <param name="fixRecord"> Fix record to be applied </param>
+        /// <returns> Fixed source code line </returns>
+        public static bool IsFixable(string text, CodeFix fixRecord)
+        {
+            if (fixRecord?.FixType is { } fr && fr == FixType.RegexReplace)
+            {
+                if (fixRecord.Pattern is { } fixPattern)
+                {
+                    Regex? regex = SearchPatternToRegex(fixPattern);
+                    if (regex is { })
+                    {
+                        return regex.IsMatch(text);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
 
         /// <summary>
         ///     Generate appropriate suppression with comment style based on the filename
