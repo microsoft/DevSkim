@@ -3,7 +3,7 @@
         "name": "XSLT Scripting Enabled",
         "id": "DS132781",
         "description": "XSLT Scripting is a feature that should only be enabled if script support is necessary and you are certain this is used in a trusted environment.",
-        "recommendation": "",
+        "recommendation": "Disable XSLT scripting.",
         "applies_to": [
             "CSharp"
         ],
@@ -37,9 +37,13 @@
             }
         ],
         "must-match": [
-            "XsltSettings n = new XsltSettings();\n n.EnableScript=true"
+            "XsltSettings n = new XsltSettings();\n n.EnableScript=true",
+			"XsltSettings n = new XsltSettings(){ EnableScript = true };",
+			"var settings = new XsltSettings(){ EnableScript = true };",
+			"XsltSettings n = new(){ EnableScript = true };"
         ],
 		"must-not-match": [
             "CustomObject object = new CustomObject();\n object.EnableScript=true"
         ]
-    },
+    }
+]
