@@ -14,7 +14,7 @@
         "rule_info": "DS180000.md",
         "patterns": [
             {
-                "xpaths": ["//Application/@android:debuggable"],
+                "xpaths": ["//application/@android:debuggable"],
                 "pattern": "true",
                 "type": "regex",
                 "scopes": [
@@ -39,10 +39,10 @@
             }
         ],
         "must-match": [
-            "<application android:debuggable='true' />"
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><manifest xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:android=\"http://schemas.android.com/apk/res/android\"><application android:debuggable='true' /></manifest>"
         ],
         "must-not-match": [
-            "<application android:debuggable='false' />"
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><manifest xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:android=\"http://schemas.android.com/apk/res/android\"><application android:debuggable='false' /></manifest>"
         ]
     },
 	{
@@ -60,7 +60,7 @@
         "rule_info": "DS180000.md",
         "patterns": [
             {
-                "pattern": "setWebContentsDebuggingEnabled(true)",
+                "pattern": "setWebContentsDebuggingEnabled\\(true\\)",
                 "type": "regex",
                 "scopes": [
                     "code"
