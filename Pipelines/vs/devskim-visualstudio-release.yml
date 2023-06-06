@@ -17,7 +17,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.6
+      ref: refs/tags/v1.0.7
 
 stages:
 - stage: SDL
