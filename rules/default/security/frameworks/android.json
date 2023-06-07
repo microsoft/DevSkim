@@ -14,7 +14,11 @@
         "rule_info": "DS180000.md",
         "patterns": [
             {
-                "xpaths": ["//application/@android:debuggable"],
+                "xpaths": ["//default:application/@android:debuggable"],
+	    	"xpathnamespaces": {
+                    "default": "http://maven.apache.org/POM/4.0.0",
+                    "android": "http://schemas.android.com/apk/res/android"
+                }
                 "pattern": "true",
                 "type": "regex",
                 "scopes": [
