@@ -7,6 +7,7 @@
         "tags": [
             "Cryptography.BannedHashAlgorithm"
         ],
+        "does_not_apply_to": ["json"],
         "severity": "critical",
         "rule_info": "DS126858.md",
         "patterns": [
