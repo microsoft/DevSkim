@@ -77,6 +77,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                         _logger.LogError($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
 
+                    var fileContent = File.ReadAllText(potentialPath);
+                    var fileEndsWithNewLine =  fileContent.EndsWith("\r\n") || fileContent.EndsWith("\n"); // OS agnostic newline check
                     string[] theContent = File.ReadAllLines(potentialPath);
                     int currLine = 0;
                     StringBuilder sb = new StringBuilder();
@@ -111,7 +113,9 @@ namespace Microsoft.DevSkim.CLI.Commands
                         {
                             sb.Append($"{line}{Environment.NewLine}");
                         }
-                        sb.Append($"{theContent.Last()}");
+                        var lastContentLine = theContent.Last();
+                        var lastLine = fileEndsWithNewLine ? $"{lastContentLine}{Environment.NewLine}" : lastContentLine;
+                        sb.Append(lastLine);
                     }
 
                     if (!_opts.DryRun)
