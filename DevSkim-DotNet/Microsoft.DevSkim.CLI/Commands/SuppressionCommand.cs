@@ -98,9 +98,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                                     sb.Append($"{line}{Environment.NewLine}");
                                 }
 
+                                if (!theContent[zeroBasedStartLine].Contains(ignoreComment)) // if the target line already contains the ignore comment
+                                {
                                 string suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zeroBasedStartLine]}{Environment.NewLine}" :
                                     $"{theContent[zeroBasedStartLine]} {ignoreComment}{Environment.NewLine}";
                                 sb.Append(suppressionComment);
+                            }
                             }
 
                             currLine = zeroBasedStartLine + 1;
