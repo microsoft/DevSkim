@@ -1,0 +1,12 @@
+﻿@page "/"
+@using Microsoft.CST.OAT.Blazor.Components
+@using Microsoft.DevSkim.CLI.Options
+@using BindingFlags = System.Reflection.BindingFlags
+
+<!-- <Inputs.ObjectInput id="SerializedOptionsObject" Object="@AppState.commandOptions" onChangeAction="RefreshPage"/> -->
+
+<Microsoft.CST.OAT.Blazor.Components.Inputs.ObjectInput id="testScaffold" Object="@this" SubPath="opts" onChangeAction="refreshPage" />
+@code{
+    public Action refreshPage => () => this.StateHasChanged();
+    public SerializedAnalyzeCommandOptions opts => AppState.commandOptions;
+}
