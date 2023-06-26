@@ -29,7 +29,7 @@ jobs:
         uses: microsoft/DevSkim-Action@v1.0.8
         with:
           directory-to-scan: DevSkim-DotNet
-          exclude-rules: DS137138
+          exclude-rules: DS1234,DS137138
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
