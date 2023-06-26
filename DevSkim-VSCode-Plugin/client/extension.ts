@@ -86,13 +86,13 @@ export function activate(context: ExtensionContext) {
 			const workPath = path.dirname(serverModule);
 			const serverOptions: ServerOptions = {
 				run: { 
-					command: "dotnet", 
+					command: dotNetPath, 
 					args: [serverModule], 
 					options: {cwd: workPath},
 					transport: TransportKind.pipe
 				},
 				debug: { 
-					command: "dotnet", 
+					command: dotNetPath, 
 					args: [serverModule], 
 					options: {cwd: workPath},
 					transport: TransportKind.pipe
