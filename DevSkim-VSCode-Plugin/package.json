@@ -72,13 +72,7 @@
 	],
 	"main": "./client/out/extension",
 	"contributes": {
-		"commands": [
-			{
-				"command": "MS-CST-E.vscode-devskim.scanWorkspace",
-				"category": "DevSkim",
-				"title": "Scan all files in the workspace"
-			}
-		],
+		"commands": [],
 		"configuration": [
 			{
 				"order": 10,
