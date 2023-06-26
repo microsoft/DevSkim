@@ -26,11 +26,21 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run DevSkim scanner
-        uses: microsoft/DevSkim-Action@v1
+        uses: microsoft/DevSkim-Action@v1.0.8
         with:
           directory-to-scan: DevSkim-DotNet
-
-      - name: Upload DevSkim scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+          exclude-rules: DS12345
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
         with:
-          sarif_file: devskim-results.sarif
+          # Artifact name
+          name: devskim-results.sarif # optional, default is artifact
+          # A file, directory or wildcard pattern that describes what to upload
+          path: devskim-results.sarif
+          # The desired behavior if no files are found using the provided path.
+          if-no-files-found: error # optional, default is warn
+          # Duration after which artifact will expire in days. 0 means using default retention.
+#      - name: Upload DevSkim scan results to GitHub Security tab
+#        uses: github/codeql-action/upload-sarif@v2
+#        with:
+#          sarif_file: devskim-results.sarif
