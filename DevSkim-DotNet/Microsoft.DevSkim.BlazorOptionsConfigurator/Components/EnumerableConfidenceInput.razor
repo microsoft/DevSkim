@@ -1,0 +1,104 @@
+﻿@inherits Microsoft.CST.OAT.Blazor.Components.Inputs.BaseInput;
+@using Microsoft.CST.OAT.Utils;
+@using System.Collections.Generic;
+@using Microsoft.ApplicationInspector.RulesEngine;
+
+<div class="row">
+    <div class="col">
+        <select class="form-control" id="@id" @bind="AddEnumIndex" data-input-type="enum-input">
+            @for (int i = 0; i < values.Count; i++)
+            {
+                <option value="@i">@values[i].ToString()</option>
+            }
+        </select>  
+    </div>
+    <div class="col-4">
+        <button @onclick="AddData">Add @buttonText</button>
+    </div>
+</div>
+@if (dataProxy.Count > 0)
+{
+    <div class="row">
+        <div class="col">
+            <select class="form-control" @bind="SelectedIndex">
+                @for (int i = 0; i < dataProxy.Count; i++)
+                {
+                    <option value="@i">@dataProxy[i]</option>
+                }
+            </select>
+        </div>
+        <div class="col-4">
+            <button @onclick="RemoveData">Remove @buttonText</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string buttonText { get; set; } = "Confidence";
+
+    int AddEnumIndex { get; set; }
+
+    int SelectedIndex { get; set; }
+
+    string CurrentInput { get; set; } = string.Empty;
+
+    List<Confidence> dataProxy = new List<Confidence>();
+
+    [Parameter]
+    public Initializer? initializer { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        initializer.init = () => { dataProxy = SubProperty.ToList(); StateHasChanged(); onChangeAction.Invoke(); };
+        initializer.init.Invoke();
+        base.OnInitialized();
+    }
+    
+    List<Confidence> values
+    {
+        get
+        {
+            var vals = new List<Confidence>();
+
+            foreach(var value in Enum.GetValues(typeof(Confidence)))
+            {
+                vals.Add((Confidence)value);
+            }
+            return vals;
+        }
+    }
+
+    void AddData(EventArgs eventArgs)
+    {
+        if (SubProperty == null)
+        {
+            dataProxy = new List<Confidence>();
+        }
+        dataProxy?.Add(values[AddEnumIndex]);
+        SubProperty = dataProxy;
+    }
+
+    void RemoveData(EventArgs eventArgs)
+    {
+        dataProxy?.RemoveAt(SelectedIndex);
+        SubProperty = dataProxy;
+    }
+
+    public IEnumerable<Confidence>? SubProperty
+    {
+        get
+        {
+            if (Helpers.GetValueByPropertyOrFieldName(Object, SubPath) is IEnumerable<Confidence> confidences)
+            {
+                return confidences;
+            }
+            return null;
+        }
+        set
+        {
+            Helpers.SetValueByPropertyOrFieldName(Object, SubPath, value);
+            onChangeAction.Invoke();
+        }
+    }
+}

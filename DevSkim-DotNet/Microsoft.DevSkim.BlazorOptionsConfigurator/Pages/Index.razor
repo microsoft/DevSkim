@@ -1,0 +1,81 @@
+﻿@page "/"
+@using Microsoft.CST.OAT.Blazor.Components
+@using Microsoft.DevSkim.CLI.Options
+@using BindingFlags = System.Reflection.BindingFlags
+@using CommandLine
+@using Microsoft.ApplicationInspector.RulesEngine
+@using Microsoft.DevSkim.BlazorOptionsConfigurator.Components
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using Tewr.Blazor.FileReader;
+@inject IJSRuntime JSRuntime
+@inject IFileReaderService FileReaderService;
+<button @onclick="Export">Export</button><button @onclick="ResetToDefaults">Reset To Defaults</button>
+@foreach (var property in typeof(SerializedAnalyzeCommandOptions).GetProperties())
+{
+    var attrs = property.GetCustomAttributes(true).OfType<OptionAttribute>().FirstOrDefault();
+    if (attrs is not null && attrs.LongName != "source-code")
+    {
+        var nameTouse = !string.IsNullOrEmpty(attrs.ShortName) ? !string.IsNullOrEmpty(attrs.LongName) ? $"-{attrs.ShortName} | --{attrs.LongName}" : $"-{attrs.ShortName}" : $"--{attrs.LongName}";
+        <div>
+            <p><b>@nameTouse</b>: @attrs.HelpText</p>
+            @if (property.PropertyType.Equals(typeof(string)))
+            {
+                <Microsoft.CST.OAT.Blazor.Components.Inputs.StringInput id="@nameTouse" Object="opts" SubPath="@property.Name" placeholder="value for string" onChangeAction="refreshPage" />
+            }
+            @if (property.PropertyType.Equals(typeof(bool)))
+            {
+                <Microsoft.CST.OAT.Blazor.Components.Inputs.BoolInput id="@nameTouse" Object="opts" SubPath="@property.Name" onChangeAction="refreshPage" />
+            }
+            @if (property.PropertyType.Equals(typeof(Serilog.Events.LogEventLevel)))
+            {
+                <Microsoft.CST.OAT.Blazor.Components.Inputs.EnumInput id="@nameTouse" Object="opts" SubPath="@property.Name" type="typeof(Serilog.Events.LogEventLevel)" onChangeAction="refreshPage" />
+            }
+            @if (property.PropertyType.Equals(typeof(IDictionary<string, List<string>>)))
+            {
+                <DictionaryStringListStringInput id="@nameTouse" Object="opts" SubPath="@property.Name" onChangeAction="refreshPage" />
+            }
+            @if (property.PropertyType.Equals(typeof(IEnumerable<string>)))
+            {
+                var initializer = new Initializer();
+                initializers.Add(initializer);
+                <EnumerableStringInput id="@nameTouse" Object="opts" SubPath="@property.Name" onChangeAction="refreshPage" initializer="@initializer" />
+            }
+            @if (property.PropertyType.Equals(typeof(IEnumerable<Confidence>)))
+            {
+                var initializer = new Initializer();
+                initializers.Add(initializer);
+                <EnumerableConfidenceInput id="@nameTouse" Object="opts" SubPath="@property.Name" onChangeAction="refreshPage" initializer="@initializer" />
+            }
+            @if (property.PropertyType.Equals(typeof(IEnumerable<Severity>)))
+            {
+                var initializer = new Initializer();
+                initializers.Add(initializer);
+                <EnumerableSeverityInput id="@nameTouse" Object="opts" SubPath="@property.Name" onChangeAction="refreshPage" initializer="@initializer" />
+            }
+            </div>
+    }
+}
+@code{
+    public Action refreshPage => () => this.StateHasChanged();
+    public SerializedAnalyzeCommandOptions opts => AppState.commandOptions;
+
+    public List<Initializer> initializers = new List<Initializer>();
+    
+    public async Task Export()
+    {
+        await JSRuntime.InvokeAsync<object>("saveFile", "DevSkimOptions.json", JsonSerializer.Serialize(opts, new JsonSerializerOptions() { Converters = { new JsonStringEnumConverter() }, WriteIndented = true }));
+    }
+
+    public void ResetToDefaults()
+    {
+        AppState.commandOptions = AppState.CreateDefaultCommandOptions();
+        foreach (var initializer in initializers)
+        {
+            initializer.init.Invoke();
+        }
+        StateHasChanged();
+    }
+    
+    private ElementReference inputTypeFileElement;
+}

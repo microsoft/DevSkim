@@ -1,0 +1,82 @@
+﻿@using Microsoft.CST.OAT.Utils
+@inherits Microsoft.CST.OAT.Blazor.Components.Inputs.BaseInput;
+
+<div class="row">
+    <div class="col">
+        <input class="form-control" id="@id" type="text" @bind="CurrentInput" />
+    </div>
+    <div class="col-4">
+        <button @onclick="AddData">Add @buttonText</button>
+    </div>
+</div>
+@if (dataProxy?.Count > 0)
+{
+    <div class="row">
+        <div class="col">
+            <select class="form-control" @bind="SelectedIndex">
+                @for (int i = 0; i < dataProxy.Count; i++)
+                {
+                    <option value="@i">@dataProxy[i]</option>
+                }
+            </select>
+        </div>
+        <div class="col-4">
+            <button @onclick="RemoveData">Remove @buttonText</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string buttonText { get; set; } = "String";
+
+    int SelectedIndex { get; set; }
+
+    string CurrentInput { get; set; } = string.Empty;
+
+    List<string> dataProxy = new List<string>();
+
+    [Parameter]
+    public Initializer? initializer { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        initializer.init = () => { dataProxy = SubProperty.ToList(); onChangeAction.Invoke(); };
+        initializer.init.Invoke();
+        base.OnInitialized();
+    }
+    
+    void AddData(EventArgs eventArgs)
+    {
+        if (SubProperty == null)
+        {
+            Helpers.SetValueByPropertyOrFieldName(Object, SubPath, new List<string>());
+        }
+        dataProxy?.Add(CurrentInput);
+        SubProperty = dataProxy;
+        CurrentInput = string.Empty;
+    }
+
+    void RemoveData(EventArgs eventArgs)
+    {
+        dataProxy?.RemoveAt(SelectedIndex);
+        SubProperty = dataProxy;
+    }
+
+    public IEnumerable<string>? SubProperty
+    {
+        get
+        {
+            if (Helpers.GetValueByPropertyOrFieldName(Object, SubPath) is IEnumerable<string> val)
+            {
+                return val;
+            }
+            return null;
+        }
+        set
+        {
+            Helpers.SetValueByPropertyOrFieldName(Object, SubPath, value);
+            onChangeAction.Invoke();
+        }
+    }
+}
