@@ -1,0 +1,170 @@
+﻿@inherits Microsoft.CST.OAT.Blazor.Components.Inputs.BaseInput;
+@using Microsoft.CST.OAT.Utils;
+@using Serilog;
+@using System.Reflection
+@using Microsoft.CST.OAT.Blazor.Components
+<div class="row">
+    <div class="col underline">Language :</div>
+    <div class="col underline">Rule IDs :</div>
+    <div class="col"></div>
+</div>
+<div class="row">
+    <div class="col">
+        <Microsoft.CST.OAT.Blazor.Components.Inputs.StringInput id="@IdForKey" Object="@this" SubPath="KeyObject" onChangeAction="onChangeAction" />
+    </div>
+    <div class="col">
+        <Microsoft.CST.OAT.Blazor.Components.Inputs.ListStringInput id="@IdForKey" Object="@this" SubPath="ValueObject" onChangeAction="onChangeAction" />
+    </div>
+    <div class="col">
+        <button class="btn-block" @onclick="AddEntry">Add @buttonText</button>
+    </div>
+</div>
+
+@if (SubProperty?.Count > 0)
+{
+    <div class="row">
+        <div class="col-2 underline">
+            <span>Key :</span>
+        </div>
+        <div class="col">
+            <select class="form-control" @bind="SelectedKey">
+                @for (int i = 0; i < Keys.Count; i++)
+                {
+                    <option value="@i">@Keys[i]</option>
+                }
+            </select>
+        </div>
+        @if (!isDisabled)
+        {
+            <div class="col-4">
+                <button @onclick="RemoveEntry" disabled="@NoKeys">Remove @buttonText</button>
+            </div>
+        }
+
+    </div>
+    <div class="row">
+        <div class="col-2 underline">
+            <span>Value : </span>
+        </div>
+        <div class="col">
+            @if (Keys.Count > 0)
+            {
+                SelectedKey = Math.Min(Keys.Count - 1, SelectedKey);
+                if (Keys[SelectedKey] is string key)
+                {
+                    SelectedValueObject = SubProperty[key];
+                    <Microsoft.CST.OAT.Blazor.Components.Inputs.ListStringInput id="selectedValueObjectId" Object="@this" SubPath="SelectedValueObject" onChangeAction="onChangeAction" />
+                }
+                else
+                {
+                    SelectedValueObject = null;
+                }
+            }
+        </div>
+    </div>        
+}
+
+@code {
+    List<string> selectedValueObject;
+
+    public List<string> SelectedValueObject 
+    {
+        get
+        {
+            return selectedValueObject;
+        }
+        set
+        {
+            selectedValueObject = value;
+            if (SubProperty is { } && Keys[SelectedKey] is string NotNullKey)
+            {
+                SubProperty[NotNullKey] = selectedValueObject;
+            }
+        } 
+    }
+
+    string IdForKey => $"{id}.KeyInput";
+    string IdForValue => $"{id}.ValueInput";
+    
+    public List<string> ValueObject { get; set; }
+    
+    public string KeyObject { get; set; }
+
+    [Parameter]
+    public string buttonText { get; set; } = "Dictionary Key And Value";
+    
+    bool NoKeys => Keys.Count == 0;
+
+    int SelectedKey 
+    { 
+        get; 
+        set; 
+    }
+
+    System.Collections.IList Keys { get; set; } = new List<object>();
+
+    void RemoveEntry()
+    {
+        if (SelectedKey < Keys.Count)
+        {
+            if (Keys[SelectedKey] is string obj)
+            {
+                SubProperty?.Remove(obj);
+            }
+        }
+        Setup();    
+        onChangeAction.Invoke();
+    }
+
+    void AddEntry()
+    {
+        if (SubProperty is null)
+        {
+            SubProperty = new Dictionary<string, List<string>>();
+        }
+        if (SubProperty is not null)
+        {
+            SubProperty[KeyObject] = ValueObject;
+        }
+        
+        Setup();
+        onChangeAction.Invoke();
+    }
+
+    void Setup()
+    {
+        Keys.Clear();
+
+        if (SubProperty?.Keys is {})
+        {
+            foreach(var key in SubProperty.Keys)
+            {
+                Keys.Add(key);
+            } 
+        }
+
+    }
+
+    protected override void OnInitialized()
+    {
+        Setup();
+        base.OnInitialized();
+    }
+
+    public IDictionary<string,List<string>> SubProperty
+    {
+        get
+        {
+            if (Helpers.GetValueByPropertyOrFieldName(Object, SubPath) is IDictionary<string, List<string>> idict)
+            {
+                return idict;
+            }
+            return null;
+        }
+        set
+        {
+            Helpers.SetValueByPropertyOrFieldName(Object, SubPath, value);
+            onChangeAction.Invoke();
+        }
+    }
+}

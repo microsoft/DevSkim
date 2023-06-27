@@ -36,9 +36,14 @@
 
     List<string> dataProxy = new List<string>();
 
+    [Parameter]
+    public Initializer? initializer { get; set; }
+    
     protected override void OnInitialized()
     {
-        dataProxy = SubProperty.ToList();
+        initializer.init = () => { dataProxy = SubProperty.ToList(); onChangeAction.Invoke(); };
+        initializer.init.Invoke();
+        base.OnInitialized();
     }
     
     void AddData(EventArgs eventArgs)

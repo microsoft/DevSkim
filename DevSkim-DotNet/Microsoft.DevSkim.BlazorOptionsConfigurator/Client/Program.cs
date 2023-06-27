@@ -1,3 +1,5 @@
+using Tewr.Blazor.FileReader;
+
 namespace Microsoft.DevSkim.BlazorOptionsConfigurator
 {
     using Microsoft.AspNetCore.Components.Web;
@@ -11,6 +13,7 @@ namespace Microsoft.DevSkim.BlazorOptionsConfigurator
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
+            builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

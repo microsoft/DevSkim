@@ -45,9 +45,14 @@
 
     List<Confidence> dataProxy = new List<Confidence>();
 
+    [Parameter]
+    public Initializer? initializer { get; set; }
+    
     protected override void OnInitialized()
     {
-        dataProxy = SubProperty.ToList();
+        initializer.init = () => { dataProxy = SubProperty.ToList(); StateHasChanged(); onChangeAction.Invoke(); };
+        initializer.init.Invoke();
+        base.OnInitialized();
     }
     
     List<Confidence> values
