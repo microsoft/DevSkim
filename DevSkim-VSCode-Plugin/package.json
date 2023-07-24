@@ -13,8 +13,8 @@
 	},
 	"capabilities": {
 		"virtualWorkspaces": {
-		  "supported": "limited",
-		  "description": "DevSkim has not been fully tested in virtual workspaces, but is functional."
+			"supported": "limited",
+			"description": "DevSkim has not been fully tested in virtual workspaces, but is functional."
 		}
 	},
 	"icon": "devskim.ico",
@@ -109,7 +109,6 @@
 						"default": false,
 						"description": "Turn on the rules that flag things for manual review. These are typically scenarios that *could* be incredibly severe if tainted data can be inserted, but are often programmatically necessary (for example, dynamic code generation with \"eval\").  Since these rules tend to require further analysis upon flagging an issue, they disabled by default."
 					},
-
 					"MS-CST-E.vscode-devskim.rules.enableHighConfidenceRules": {
 						"order": 5,
 						"type": "boolean",
@@ -201,8 +200,7 @@
 					"MS-CST-E.vscode-devskim.ignores.ignoreFiles": {
 						"order": 0,
 						"type": "array",
-						"default": [
-						],
+						"default": [],
 						"items": {
 							"type": "string"
 						},
