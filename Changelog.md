@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.13] - 2023-07-24
+### Dependencies
+Update VS Code Extension Dependencies
+
+## [1.0.12] - 2023-07-24
+### Guidance
+Updated Guidance for DS126858 
+
 ## [1.0.11] - 2023-06-26
 ### Update Dependency
 - Update SemVer dependency in VS Code Extension.
