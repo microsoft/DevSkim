@@ -22,6 +22,12 @@ public class OptionsTests
                 { "csharp", new List<string>() { ruleIdToIgnore } }
             }
         };
+        var serializedOpts2 = new SerializedAnalyzeCommandOptions()
+        {
+            Severities = new[] { Severity.Critical | Severity.Important },
+            ExitCodeIsNumIssues = true,
+            Globs = new List<string>() {"*.js"}
+        };
         // Serialize it to a file
         var testContent = "Hello World";
         var testRule =
@@ -65,11 +71,14 @@ public class OptionsTests
 ]";
         var rulesPath = PathHelper.GetRandomTempFile("json");
         var serializedJsonPath = PathHelper.GetRandomTempFile("json");
+        var serializedJsonPath2 = PathHelper.GetRandomTempFile("json");
         var csharpTestPath = PathHelper.GetRandomTempFile("cs");
         var jsTestPath = PathHelper.GetRandomTempFile("js");
         {
             using var serializedJsonStream = File.Create(serializedJsonPath);
             JsonSerializer.Serialize(serializedJsonStream, serializedOpts, new JsonSerializerOptions() { });
+            using var serializedJsonStream2 = File.Create(serializedJsonPath2);
+            JsonSerializer.Serialize(serializedJsonStream2, serializedOpts2, new JsonSerializerOptions() { });
             using var csharpStream = File.Create(csharpTestPath);
             JsonSerializer.Serialize(csharpStream, testContent);
             using var jsStream = File.Create(jsTestPath);
@@ -84,6 +93,7 @@ public class OptionsTests
             Rules = new[] { rulesPath },
             PathToOptionsJson = serializedJsonPath
         };
+
         var analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
         // We set exit code is num issues so this should be 1, from the 1 rule that isn't ignored
         Assert.AreEqual(1, analyzerWithSerialized.Run());
@@ -121,5 +131,26 @@ public class OptionsTests
         // This should be 1, because only one rule has severity critical
         Assert.AreEqual(1, analyzerWithSerialized.Run());
         // Test that an option explicitly set overrides an option set in the json
+        
+        // set of options to test enumerable parsing
+        analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = csharpTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath2
+        };
+        analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // This should be 2, because the globs dont exclude cs files
+        Assert.AreEqual(2, analyzerWithSerialized.Run());
+        // set of options to test enumerable parsing
+        analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = jsTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath2
+        };
+        analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // This should be 0, because the globs exclude js files
+        Assert.AreEqual(0, analyzerWithSerialized.Run());
     }
 }
