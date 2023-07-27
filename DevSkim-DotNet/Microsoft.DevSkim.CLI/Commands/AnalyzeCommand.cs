@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -154,7 +155,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         try
                         {
                             var deserializedOptions =
-                                JsonSerializer.Deserialize<SerializedAnalyzeCommandOptions>(File.ReadAllText(optsWithJson.PathToOptionsJson));
+                                JsonSerializer.Deserialize<SerializedAnalyzeCommandOptions>(File.ReadAllText(optsWithJson.PathToOptionsJson), new JsonSerializerOptions(){Converters = { new JsonStringEnumConverter() }});
                             if (deserializedOptions is { })
                             {
                                 // For each property in the opts argument, if the argument is not default, override the equivalent from the deserialized options
