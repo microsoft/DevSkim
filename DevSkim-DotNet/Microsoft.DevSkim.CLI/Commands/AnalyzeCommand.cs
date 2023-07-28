@@ -7,16 +7,16 @@ using Microsoft.DevSkim.CLI.Writers;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
+using KellermanSoftware.CompareNetObjects;
 using LibGit2Sharp;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.DevSkim.CLI.Options;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Microsoft.DevSkim.CLI.Commands
 {
@@ -155,7 +155,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         try
                         {
                             var deserializedOptions =
-                                JsonSerializer.Deserialize<SerializedAnalyzeCommandOptions>(File.ReadAllText(optsWithJson.PathToOptionsJson));
+                                JsonSerializer.Deserialize<SerializedAnalyzeCommandOptions>(File.ReadAllText(optsWithJson.PathToOptionsJson), new JsonSerializerOptions(){Converters = { new JsonStringEnumConverter() }});
                             if (deserializedOptions is { })
                             {
                                 // For each property in the opts argument, if the argument is not default, override the equivalent from the deserialized options
@@ -165,11 +165,16 @@ namespace Microsoft.DevSkim.CLI.Commands
                                     var value = prop.GetValue(_opts);
                                     // Get the option attribute from the property
                                     var maybeOptionAttribute = prop.GetCustomAttributes(true).Where(x => x is OptionAttribute).FirstOrDefault();
+                                    var compareLogic = new CompareLogic();
                                     if (maybeOptionAttribute is OptionAttribute optionAttribute)
                                     {
                                         // Check if the option attributes default value differs from the value in the CLI provided options
                                         //   If the CLI provided a non-default option, override the deserialized option
-                                        if ((optionAttribute.Default is null && value is not null) || (optionAttribute.Default is not null && !optionAttribute.Default.Equals(value)))
+                                        // The values not default if the default is null and the set value is not
+                                        if ((optionAttribute.Default is null && value is not null) 
+                                            // Or the value is set to non-null and the values are not equal
+                                            // Also handles enumerable comparisons
+                                            || (!compareLogic.Compare(optionAttribute.Default, value).AreEqual))
                                         {
                                             var selectedProp =
                                                 serializedProperties.FirstOrDefault(x => x.HasSameMetadataDefinitionAs(prop));
