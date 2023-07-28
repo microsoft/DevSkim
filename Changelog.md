@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.14] - 2023-07-27
+### Fixes
+Fixes an issue handling IEnumerable arguments specified with the options-json argument to Analyze.
+
+### Dependencies
+Updates RuleEngine dependency to fix an issue with handling matching strings with `//` in languages that use `//` for inline comment format.
+
 ## [1.0.13] - 2023-07-24
 ### Dependencies
 Update VS Code Extension Dependencies
