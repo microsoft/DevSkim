@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.15] - 2023-07-31
 ## Rules
-Fix reported false positives #548 and #549.
+Fix false positives reported in #344, #548 and #549.
 
 ## [1.0.14] - 2023-07-27
 ### Fixes
