@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.15] - 2023-07-31
+## Rules
+Fix false positives reported in #344, #548 and #549.
+
 ## [1.0.14] - 2023-07-27
 ### Fixes
 Fixes an issue handling IEnumerable arguments specified with the options-json argument to Analyze.
