@@ -76,9 +76,214 @@
         }
 
         /// <summary>
-        /// See UpdateSettingsGenerator
+        /// See the ManualUpdateSettingsGenerator project to generate this method
+        /// Auto-generated
         /// </summary>
         /// <param name="propertyName"></param>
-        partial void UpdateSettings(string propertyName);
+        private void UpdateSettings(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "EnableCriticalSeverityRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableCriticalSeverityRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "EnableImportantSeverityRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableImportantSeverityRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "EnableModerateSeverityRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableModerateSeverityRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "EnableManualReviewSeverityRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableManualReviewSeverityRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "EnableBestPracticeSeverityRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableBestPracticeSeverityRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "EnableHighConfidenceRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableHighConfidenceRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "EnableMediumConfidenceRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableMediumConfidenceRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "EnableLowConfidenceRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.EnableLowConfidenceRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "CustomRulesPathsString":
+                    {
+                        var res = Get<string>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.CustomRulesPathsString = res.Item2;
+                        }
+                        break;
+                    }
+                case "CustomLanguagesPath":
+                    {
+                        var res = Get<string>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.CustomLanguagesPath = res.Item2;
+                        }
+                        break;
+                    }
+                case "CustomCommentsPath":
+                    {
+                        var res = Get<string>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.CustomCommentsPath = res.Item2;
+                        }
+                        break;
+                    }
+                case "SuppressionDurationInDays":
+                    {
+                        var res = Get<int>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.SuppressionDurationInDays = res.Item2;
+                        }
+                        break;
+                    }
+                case "SuppressionCommentStyle":
+                    {
+                        var res = Get<CommentStylesEnum>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.SuppressionCommentStyle = res.Item2;
+                        }
+                        break;
+                    }
+                case "ManualReviewerName":
+                    {
+                        var res = Get<string>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.ManualReviewerName = res.Item2;
+                        }
+                        break;
+                    }
+                case "GuidanceBaseURL":
+                    {
+                        var res = Get<string>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.GuidanceBaseURL = res.Item2;
+                        }
+                        break;
+                    }
+                case "IgnoreFilesString":
+                    {
+                        var res = Get<string>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.IgnoreFilesString = res.Item2;
+                        }
+                        break;
+                    }
+                case "IgnoreRulesListString":
+                    {
+                        var res = Get<string>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.IgnoreRulesListString = res.Item2;
+                        }
+                        break;
+                    }
+                case "IgnoreDefaultRules":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.IgnoreDefaultRules = res.Item2;
+                        }
+                        break;
+                    }
+                case "RemoveFindingsOnClose":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.RemoveFindingsOnClose = res.Item2;
+                        }
+                        break;
+                    }
+                case "ScanOnOpen":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.ScanOnOpen = res.Item2;
+                        }
+                        break;
+                    }
+                case "ScanOnSave":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.ScanOnSave = res.Item2;
+                        }
+                        break;
+                    }
+                case "ScanOnChange":
+                    {
+                        var res = Get<bool>(propertyName);
+                        if (res.Item1 == ValueResultEnum.Success)
+                        {
+                            _currentSettings.ScanOnChange = res.Item2;
+                        }
+                        break;
+                    }
+                default: break;
+            }
+        }
     }
 }

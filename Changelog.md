@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.16] - 2023-08-04
+### Fixes
+Fixes an issue with loading settings in the Visual Studio extension.
+
 ## [1.0.15] - 2023-07-31
-## Rules
+### Rules
 Fix false positives reported in #344, #548 and #549.
 
 ## [1.0.14] - 2023-07-27
