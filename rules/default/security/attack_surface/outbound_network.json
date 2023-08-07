@@ -136,7 +136,7 @@
             "https://",
             "this is \"https://foo.com\"",
             "<SCRIPT SRC=\"//BLAH\"></SCRIPT>",
-            "xmlnx:xsi=\"http://www.w3.org/someschema/\""
+            "xmlns:xsi=\"http://www.w3.org/someschema/\""
         ]
     }
 ]
