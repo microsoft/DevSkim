@@ -58,6 +58,18 @@
                 "search_in": "finding-region(-1, 0)"
             },
             {
+                "pattern" : 
+                {
+                    "pattern": "xmlns:xsi=",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "finding-region(-1, 0)"
+            },
+            {
                 "pattern" :
                 {
                     "pattern": "<!DOCTYPE",
@@ -123,7 +135,8 @@
             "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">",
             "https://",
             "this is \"https://foo.com\"",
-            "<SCRIPT SRC=\"//BLAH\"></SCRIPT>"
+            "<SCRIPT SRC=\"//BLAH\"></SCRIPT>",
+            "xmlns:xsi=\"http://www.w3.org/someschema/\""
         ]
     }
 ]
