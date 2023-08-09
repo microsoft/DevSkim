@@ -7,7 +7,7 @@
         "tags": [
             "Cryptography.PRNG.Weak"
         ],
-        "language": [
+        "applies_to": [
             "c",
             "cpp",
             "csharp",
@@ -103,7 +103,7 @@
         "tags": [
             "Cryptography.PRNG.Weak"
         ],
-        "language": [
+        "applies_to": [
             "rust"
         ],
         "severity": "important",
