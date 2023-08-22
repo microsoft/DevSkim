@@ -8,6 +8,6 @@
     internal static class StaticData
     {
         // Maps file name to a dictionary of file versions to a deduplicated set of CodeFixMappings
-        internal static ConcurrentDictionary<Uri, ConcurrentDictionary<int, HashSet<CodeFixMapping>>> FileToCodeFixMap { get; } = new ConcurrentDictionary<Uri, ConcurrentDictionary<int, HashSet<CodeFixMapping>>>();
+        internal static ConcurrentDictionary<Uri, ConcurrentDictionary<int, ConcurrentDictionary<CodeFixMapping, bool>>> FileToCodeFixMap { get; } = new();
     }
 }

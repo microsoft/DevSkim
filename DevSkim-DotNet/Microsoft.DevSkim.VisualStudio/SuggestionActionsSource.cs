@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -43,11 +44,11 @@ namespace Microsoft.DevSkim.VisualStudio
             List<ISuggestedAction> suggestedActions = new List<ISuggestedAction>();
             if (TryGetWordUnderCaret(out TextExtent wordExtent) && wordExtent.IsSignificant)
             {
-                if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out System.Collections.Concurrent.ConcurrentDictionary<int, HashSet<CodeFixMapping>> dictForFile))
+                if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out ConcurrentDictionary<int, ConcurrentDictionary<CodeFixMapping, bool>> dictForFile))
                 {
-                    if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out HashSet<CodeFixMapping> fixes))
+                    if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out ConcurrentDictionary<CodeFixMapping, bool> fixes))
                     {
-                        suggestedActions.AddRange(fixes.Where(codeFixMapping => Intersects(codeFixMapping, wordExtent)).Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping)));
+                        suggestedActions.AddRange(fixes.Where(codeFixMapping => Intersects(codeFixMapping.Key, wordExtent)).Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping.Key)));
                     }
                 }
                 yield return new SuggestedActionSet(suggestedActions, wordExtent.Span);
@@ -79,11 +80,11 @@ namespace Microsoft.DevSkim.VisualStudio
                 bool res = TryGetWordUnderCaret(out TextExtent wordExtent);
                 if (res && wordExtent.IsSignificant)
                 {
-                    if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out System.Collections.Concurrent.ConcurrentDictionary<int, HashSet<CodeFixMapping>> dictForFile))
+                    if (StaticData.FileToCodeFixMap.TryGetValue(new Uri(_fileName), out ConcurrentDictionary<int, ConcurrentDictionary<CodeFixMapping, bool>> dictForFile))
                     {
-                        if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out HashSet<CodeFixMapping> fixes))
+                        if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out ConcurrentDictionary<CodeFixMapping, bool> fixes))
                         {
-                            return fixes.Any(codeFixMapping => Intersects(codeFixMapping, wordExtent));
+                            return fixes.Any(codeFixMapping => Intersects(codeFixMapping.Key, wordExtent));
                         }
                     }
                 }
