@@ -58,15 +58,22 @@
                 {
                     StaticData.FileToCodeFixMap.AddOrUpdate(mapping.fileName,
                     // Add New Nested Dictionary
-                    (Uri _) => new ConcurrentDictionary<int, HashSet<CodeFixMapping>>(new Dictionary<int, HashSet<CodeFixMapping>>() { { mapping.version ?? -1, new HashSet<CodeFixMapping>() { mapping } } }),
+                    (Uri _) => new (new Dictionary<int, ConcurrentDictionary<CodeFixMapping, bool>> 
+                    { { mapping.version ?? -1, new (new Dictionary<CodeFixMapping, bool>() 
+                        { {mapping, true } }) } }),
                     // Update Nested Dictionary
                     (key, oldValue) =>
                     {
                         oldValue.AddOrUpdate(mapping.version ?? -1,
-                            // Add new HashSet
-                            (int _) => new HashSet<CodeFixMapping>() { mapping },
-                            // Update HashSet of CodeFixMappings
-                            (versionKey, oldSet) => { oldSet.Add(mapping); return oldSet; });
+                            // Add new Set of mappings
+                            (int _) =>
+                            {
+                                var addedMapping = new ConcurrentDictionary<CodeFixMapping, bool>();
+                                addedMapping.TryAdd(mapping, true);
+                                return addedMapping;
+                            },
+                            // Update Set of CodeFixMappings
+                            (versionKey, oldSet) => { oldSet.TryAdd(mapping, true); return oldSet; });
                         return oldValue;
                     });
                 }

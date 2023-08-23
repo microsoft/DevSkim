@@ -16,7 +16,7 @@ namespace Microsoft.DevSkim.LanguageProtoInterop
         public Uri fileName;
     }
 
-    public class CodeFixMapping
+    public class CodeFixMapping : IEquatable<CodeFixMapping>
     {
         /// <summary>
         /// Reported version of the document the diagnostic applies to
@@ -72,6 +72,37 @@ namespace Microsoft.DevSkim.LanguageProtoInterop
             this.matchStart = matchStart;
             this.matchEnd = matchEnd;
             this.isSuppression = isSuppression;
+        }
+
+        public bool Equals(CodeFixMapping other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return version == other.version && Equals(diagnostic, other.diagnostic) && replacement == other.replacement && Equals(fileName, other.fileName) && friendlyString == other.friendlyString && matchStart == other.matchStart && matchEnd == other.matchEnd && isSuppression == other.isSuppression;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((CodeFixMapping)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = version.GetHashCode();
+                hashCode = (hashCode * 397) ^ (diagnostic != null ? diagnostic.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (replacement != null ? replacement.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (fileName != null ? fileName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (friendlyString != null ? friendlyString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ matchStart;
+                hashCode = (hashCode * 397) ^ matchEnd;
+                hashCode = (hashCode * 397) ^ isSuppression.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.19] - 2023-08-22
+### VS Extension
+Fix concurrent access issue with cache storage for fixes. Fix #480
+
 ## [1.0.18] - 2023-08-09
 ### Rules
 Fix language filtering on random number generator rules. Fix #468
