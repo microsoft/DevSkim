@@ -104,7 +104,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 rule["level"] = "warning";
             }
 
-            // Finally write out the fixed sarif
+            // Write out the fixed sarif
             using var jsonWriter = new JsonTextWriter(TextWriter);
             reReadLog.WriteTo(jsonWriter);
             // Add a newline at the end to make logging messages cleaner
