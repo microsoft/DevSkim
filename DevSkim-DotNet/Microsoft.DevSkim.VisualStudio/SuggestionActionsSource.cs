@@ -48,7 +48,10 @@ namespace Microsoft.DevSkim.VisualStudio
                 {
                     if (dictForFile.TryGetValue(wordExtent.Span.Snapshot.Version.VersionNumber, out ConcurrentDictionary<CodeFixMapping, bool> fixes))
                     {
-                        suggestedActions.AddRange(fixes.Where(codeFixMapping => Intersects(codeFixMapping.Key, wordExtent)).Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping.Key)));
+                        suggestedActions.AddRange(fixes.Where(codeFixMapping => 
+                            Intersects(codeFixMapping.Key, wordExtent))
+                            .OrderBy(fix => fix.Key)
+                            .Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping.Key)));
                     }
                 }
                 yield return new SuggestedActionSet(suggestedActions, wordExtent.Span);
