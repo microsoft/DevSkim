@@ -11,6 +11,9 @@ Removes workaround for 404 sarif schema uri
 ### Dependencies
 Updates dependencies to latest.
 
+### VS Extension
+Fix ordering of proposed fixes in UX. #582
+
 ## [1.0.19] - 2023-08-22
 ### VS Extension
 Fix concurrent access issue with cache storage for fixes. Fix #480
