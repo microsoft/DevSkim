@@ -50,7 +50,7 @@ namespace Microsoft.DevSkim.VisualStudio
                     {
                         suggestedActions.AddRange(fixes.Where(codeFixMapping => 
                             Intersects(codeFixMapping.Key, wordExtent))
-                            .OrderBy(fix => fix.Key)
+                            .OrderBy(fix => fix.Key.friendlyString)
                             .Select(intersectedMapping => new DevSkimSuggestedAction(wordExtent.Span, intersectedMapping.Key)));
                     }
                 }
