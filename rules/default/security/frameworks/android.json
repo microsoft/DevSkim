@@ -15,10 +15,10 @@
         "patterns": [
             {
                 "xpaths": ["//default:application/@android:debuggable"],
-	    	"xpathnamespaces": {
+	    	    "xpathnamespaces": {
                     "default": "http://maven.apache.org/POM/4.0.0",
                     "android": "http://schemas.android.com/apk/res/android"
-                }
+                },
                 "pattern": "true",
                 "type": "regex",
                 "scopes": [
