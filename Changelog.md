@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.0.22] - 2023-09-14
+### Dependencies
+Update AppInspector rules engine dependency to fix an issue with JSONPath rules and boolean values.
+
+### Rules
+Fix a JSON formatting error in the android debuggable rule
+
 ### Miscellaneous
 Delete advisory parser script. #586
 
