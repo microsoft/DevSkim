@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.22] - 2023-09-14
 ### Dependencies
-Update AppInspector rules engine dependency to fix an issue with JSONPath rules and boolean values.
+Update dependencies - incorporate a fix for an issue with JSONPath selection used for matching boolean values. https://github.com/microsoft/ApplicationInspector/pull/561
 
 ### Rules
 Fix a JSON formatting error in the android debuggable rule
