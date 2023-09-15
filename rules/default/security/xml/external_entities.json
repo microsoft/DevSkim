@@ -84,7 +84,7 @@
             }
         ],
         "must-match": [
-            "shouldResolveExternalEntities=TRUE",
+            "shouldResolveExternalEntities=TRUE"
         ],
         "must-not-match": [
         ]
