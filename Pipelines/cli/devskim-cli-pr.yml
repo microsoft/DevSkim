@@ -13,7 +13,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/heads/da/misc-fixes
+      ref: refs/tags/v1.0.8
 
 stages:
 - stage: Test
