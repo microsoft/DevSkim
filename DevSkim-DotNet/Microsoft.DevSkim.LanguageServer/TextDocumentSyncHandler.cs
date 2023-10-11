@@ -20,7 +20,7 @@ namespace DevSkim.LanguageServer
     {
         private readonly ILogger<TextDocumentSyncHandler> _logger;
         private readonly ILanguageServerFacade _facade;
-        private readonly DocumentSelector _documentSelector = DocumentSelector.ForLanguage(StaticScannerSettings.RuleProcessorOptions.Languages.GetNames());
+        private readonly TextDocumentSelector _documentSelector = TextDocumentSelector.ForLanguage(StaticScannerSettings.RuleProcessorOptions.Languages.GetNames());
         private DevSkimRuleProcessor _processor => StaticScannerSettings.Processor;
 
         public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerFacade facade)
@@ -190,13 +190,6 @@ namespace DevSkim.LanguageServer
             return Unit.Value;
         }
 
-        protected override TextDocumentSyncRegistrationOptions CreateRegistrationOptions(SynchronizationCapability capability, ClientCapabilities clientCapabilities) => new TextDocumentSyncRegistrationOptions()
-        {
-            DocumentSelector = _documentSelector,
-            Change = Change,
-            Save = new SaveOptions() { IncludeText = true }
-        };
-
         public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
         {
             if (StaticScannerSettings.RuleProcessorOptions.Languages.FromFileNameOut(uri.GetFileSystemPath(), out LanguageInfo Info))
@@ -205,5 +198,12 @@ namespace DevSkim.LanguageServer
             }
             return new TextDocumentAttributes(uri, "unknown");
         }
+
+        protected override TextDocumentSyncRegistrationOptions CreateRegistrationOptions(TextSynchronizationCapability capability, ClientCapabilities clientCapabilities) => new TextDocumentSyncRegistrationOptions()
+        {
+            DocumentSelector = _documentSelector,
+            Change = Change,
+            Save = new SaveOptions() { IncludeText = true }
+        };
     }
 }
