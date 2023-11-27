@@ -13,7 +13,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/branches/gfs/Net8
+      ref: refs/tags/v1.0.8
 
 stages:
 - stage: Test
@@ -21,13 +21,15 @@ stages:
   - template: dotnet-test-job.yml@templates
     parameters:
       jobName: 'dotnet_test_windows'
-      dotnetVersions: ['6.0.x','7.0.x','8.0.x']
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
       vmImage: 'oss-tools-win2022_1es-managed'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
   - template: dotnet-test-job.yml@templates
     parameters:
       jobName: 'dotnet_test_ubuntu'
-      dotnetVersions: ['6.0.x','7.0.x','8.0.x']
+      dotnetVersion: 7.0.x
+      dotnetVersionLTS: 6.0.x
       vmImage: 'ubuntu-22.04-image-base'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
       
@@ -45,7 +47,7 @@ stages:
   - template: dotnet-publish-linux-mac-job.yml@templates
     parameters:
       buildConfiguration: 'Release'
-      dotnetVersion: '8.0.x'
+      dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       exePath: 'devskim'
@@ -54,7 +56,7 @@ stages:
   - template: dotnet-publish-win-netcore-job.yml@templates
     parameters:
       buildConfiguration: 'Release'
-      dotnetVersion: '8.0.x'
+      dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
@@ -63,7 +65,7 @@ stages:
     parameters:
       jobName: 'pack_lib'
       buildConfiguration: 'Release'
-      dotnetVersion: '8.0.x'
+      dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
       projectName: 'DevSkim_Lib'
       preBuild:
@@ -72,7 +74,7 @@ stages:
     parameters:
       jobName: 'pack_cli'
       buildConfiguration: 'Release'
-      dotnetVersion: '8.0.x'
+      dotnetVersion: '7.0.x'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
       projectName: 'DevSkim_CLI'
       preBuild:
