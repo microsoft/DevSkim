@@ -36,10 +36,10 @@
 
     <ItemGroup>
       <PackageReference Include="CommandLineParser" Version="2.9.1" />
-      <PackageReference Include="LibGit2Sharp" Version="0.27.2" />
-      <PackageReference Include="Microsoft.CST.ApplicationInspector.Logging" Version="1.9.14" />
+      <PackageReference Include="LibGit2Sharp" Version="0.28.0" />
+      <PackageReference Include="Microsoft.CST.ApplicationInspector.Logging" Version="1.9.15" />
       <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-      <PackageReference Include="Sarif.Sdk" Version="4.3.4" />
+      <PackageReference Include="Sarif.Sdk" Version="4.3.7" />
     </ItemGroup>
 
 </Project>
