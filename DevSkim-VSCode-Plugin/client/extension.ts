@@ -26,7 +26,7 @@ async function resolveDotNetPath(): Promise<string> {
 	const result = await vscode.commands.executeCommand<any>(
 		"dotnet.acquire",
 		{
-			version: "7.0",
+			version: "8.0",
 			requestingExtensionId: "MS-CST-E.vscode-devskim",
 		}
 	);
