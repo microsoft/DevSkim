@@ -13,7 +13,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.0.8
+      ref: refs/tags/v1.1.0
 
 stages:
 - stage: SDL
@@ -30,7 +30,7 @@ stages:
     parameters:
       buildTool: 'msbuild'
       buildConfiguration: 'Release'
-      dotnetVersion: '7.0.x'
+      dotnetVersion: '8.0.x'
       targetFramework: 'net47'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Microsoft.DevSkim.VisualStudio.csproj'
       projectName: 'DevSkim_VS'
