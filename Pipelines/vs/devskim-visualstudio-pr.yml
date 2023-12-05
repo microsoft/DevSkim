@@ -30,7 +30,9 @@ stages:
     parameters:
       buildTool: 'msbuild'
       buildConfiguration: 'Release'
-      dotnetVersion: '8.0.x'
+      # 12/5/23 - This has to be built with msbuild but the template refuses to fetch the latest version of msbuild
+      #   so we have to build with net 7 for now as the version fetched does not support net 8
+      dotnetVersion: '7.0.x'
       targetFramework: 'net47'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Microsoft.DevSkim.VisualStudio.csproj'
       projectName: 'DevSkim_VS'
