@@ -149,11 +149,11 @@
   </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="dotnet publish -f net7.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
+    <Exec Command="dotnet publish -f net8.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
   </Target>
   <!-- Publish the language server binaries for Debug -->
   <Target Name="BuildLanguageServerDebug" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command="dotnet publish -f net7.0 -c Debug ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
+    <Exec Command="dotnet publish -f net8.0 -c Debug ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
   </Target>
   <!-- Include the published language server binaries -->
   <Target Name="IncludeLanguageServer" BeforeTargets="GetVsixSourceItems">
