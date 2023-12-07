@@ -2,7 +2,7 @@
 
 <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <AssemblyName>devskim</AssemblyName>
     <StartupObject>Microsoft.DevSkim.CLI.Program</StartupObject>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
@@ -36,8 +36,8 @@
 
     <ItemGroup>
       <PackageReference Include="CommandLineParser" Version="2.9.1" />
-      <PackageReference Include="LibGit2Sharp" Version="0.28.0" />
-      <PackageReference Include="Microsoft.CST.ApplicationInspector.Logging" Version="1.9.15" />
+      <PackageReference Include="LibGit2Sharp" Version="0.29.0" />
+      <PackageReference Include="Microsoft.CST.ApplicationInspector.Logging" Version="1.9.16" />
       <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
       <PackageReference Include="Sarif.Sdk" Version="4.3.7" />
     </ItemGroup>
