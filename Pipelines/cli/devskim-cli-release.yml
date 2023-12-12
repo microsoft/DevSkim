@@ -481,21 +481,6 @@ stages:
       inputs:
         targetPath: '$(Build.StagingDirectory)'
         artifact: 'Signed_Binaries'
-    - task: GitHubRelease@1
-      displayName: Release to GitHub
-      inputs:
-        gitHubConnection: 'DevSkim'
-        repositoryName: 'microsoft/DevSkim'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'userSpecifiedTag'
-        tag: 'v$(ReleaseVersion)'
-        title: 'DevSkim CLI v$(ReleaseVersion)'
-        assets: |
-          $(Build.StagingDirectory)/*.zip
-          $(Build.StagingDirectory)/HASHES.txt
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
     - task: NuGetCommand@2
       displayName: Publish NuGet Packages
       inputs:
@@ -551,3 +536,18 @@ stages:
       inputs:
         PathtoPublish: '$(Build.StagingDirectory)/Manifests'
         ArtifactName: 'Release Manifests'
+    - task: GitHubRelease@1
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: 'DevSkim'
+        repositoryName: 'microsoft/DevSkim'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecifiedTag'
+        tag: 'v$(ReleaseVersion)'
+        title: 'DevSkim CLI v$(ReleaseVersion)'
+        assets: |
+          $(Build.StagingDirectory)/*.zip
+          $(Build.StagingDirectory)/HASHES.txt
+        changeLogCompareToRelease: 'lastNonDraftRelease'
+        changeLogType: 'commitBased'
