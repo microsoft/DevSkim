@@ -42,7 +42,7 @@ namespace Microsoft.DevSkim.CLI.Writers
         {
             if (anyIssues)
             {
-                TextWriter.WriteLine("For guidance on reported issues visit the relevant page here: https://github.com/microsoft/DevSkim/tree/main/guidance.");
+                TextWriter.WriteLine("For guidance on reported issues visit the relevant page here: https://github.com/microsoft/DevSkim/tree/main/guidance");
             }
 
             TextWriter.Flush();
