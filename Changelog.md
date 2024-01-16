@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.28] - 2024-1-4
+### Fix
+Remove trailing period after general guidance URI in output to make it clickable when automatically converted to uri by terminal
+
+### Dependencies
+Update dependencies
+
+## [1.0.27] - 2023-12-12
+### Pipelines
+Move GitHub Release task to last task in publish pipeline.
+
+## [1.0.26] - 2023-12-05
+### Dependencies
+Update dependencies.
+
+### Framework
+Build using .NET 8
+
+## [1.0.25] - 2023-11-10
+### Dependencies
+Update dependencies. Resolves an issue with some xpath queries via AppInspector Rules engine https://github.com/microsoft/ApplicationInspector/pull/567
+
+## [1.0.24] - 2023-10-10
+### Dependencies
+Update OmniSharp language server and App Inspector dependencies.
+
+## [1.0.23] - 2023-10-05
+### Miscellaneous
+Update deployment pipeline version
+
 ## [1.0.22] - 2023-09-14
 ### Dependencies
 Update dependencies - incorporate a fix for an issue with JSONPath selection used for matching boolean values. https://github.com/microsoft/ApplicationInspector/pull/561
