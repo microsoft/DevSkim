@@ -85,17 +85,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client">
-      <Version>17.7.20</Version>
+      <Version>17.8.36</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol">
       <Version>17.2.8</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.7.37357" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.8.37222" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.6.2164">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.8.2365">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -149,11 +149,11 @@
   </ItemGroup>
   <!-- Publish the language server binaries for Release -->
   <Target Name="BuildLanguageServer" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="dotnet publish -f net7.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
+    <Exec Command="dotnet publish -f net8.0 -c Release ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
   </Target>
   <!-- Publish the language server binaries for Debug -->
   <Target Name="BuildLanguageServerDebug" BeforeTargets="IncludeLanguageServer" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command="dotnet publish -f net7.0 -c Debug ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
+    <Exec Command="dotnet publish -f net8.0 -c Debug ..\Microsoft.DevSkim.LanguageServer -r win-x64 --sc -o generatedLanguageServerBinaries" />
   </Target>
   <!-- Include the published language server binaries -->
   <Target Name="IncludeLanguageServer" BeforeTargets="GetVsixSourceItems">
