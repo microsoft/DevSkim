@@ -220,7 +220,7 @@ stages:
     - task: GitHubRelease@1
       displayName: Release to GitHub
       inputs:
-        gitHubConnection: 'DevSkim'
+        gitHubConnection: 'github.com_gfs'
         repositoryName: 'microsoft/DevSkim'
         action: 'create'
         target: '$(Build.SourceVersion)'
