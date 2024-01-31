@@ -17,7 +17,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.1.0
+      ref: refs/tags/v1.1.1
 
 variables:
   BuildConfiguration: 'Release'
@@ -96,8 +96,8 @@ stages:
   - job: sign_hash_release
     displayName: Code Sign, Generate Hashes, Publish Public Releases
     pool:
-      name: 'OSS-Tools-1ESPool'
-      vmImage: 'oss-tools-win2022_1es-managed'
+      name: 'CSPA'
+      vmImage: 'win2022-image-base'
     steps:
     - task: UseDotNet@2
       inputs:
