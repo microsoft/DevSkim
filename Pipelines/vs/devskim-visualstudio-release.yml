@@ -17,7 +17,7 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.1.0
+      ref: refs/tags/v1.1.1
 
 stages:
 - stage: SDL
@@ -76,8 +76,8 @@ stages:
   - job: sign_hash_release
     displayName: Code Sign, Generate Hashes, Publish Public Release
     pool:
-      name: 'OSS-Tools-1ESPool'
-      vmImage: 'windows-latest'
+      name: 'CSPA'
+      vmImage: 'win2022-image-base'
     steps:
     - template: nbgv-set-version-steps.yml@templates
     - task: DownloadBuildArtifacts@0

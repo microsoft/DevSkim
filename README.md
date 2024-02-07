@@ -107,7 +107,7 @@ Once the DevSkim plugin is installed and enabled, simply write some code, and fe
 ## Writing Rules
 
 Please see [Writing Rules](https://github.com/Microsoft/DevSkim/wiki/Writing-Rules) for
-instructions on how to author new rules.
+instructions on how to author rules.
 
 ## Contributing
 
