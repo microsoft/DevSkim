@@ -41,6 +41,9 @@ namespace Microsoft.DevSkim
                         StartLocation: textContainer.GetLocation(matchRecord.Boundary.Index),
                         EndLocation: textContainer.GetLocation(matchRecord.Boundary.Index + matchRecord.Boundary.Length),
                         Rule: devSkimRule);
+                        // Match record confidence is based on pattern confidence (from AI engine)
+                        // As a backup, DevSkim Rules may also have an overall confidence specified for the rule, use that when match confidence undefined
+                        issue.Confidence = matchRecord.Confidence == Confidence.Unspecified ? devSkimRule.Confidence : matchRecord.Confidence;
                         if (_processorOptions.EnableSuppressions)
                         {
                             Suppression supp = new(textContainer, issue.StartLocation.Line);

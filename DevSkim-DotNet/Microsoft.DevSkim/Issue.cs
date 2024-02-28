@@ -41,5 +41,9 @@ namespace Microsoft.DevSkim
         ///     Location (line, column) where issue starts
         /// </summary>
         public Location StartLocation { get; set; }
+        /// <summary>
+        ///     Confidence level of match
+        /// </summary>
+        public Confidence Confidence { get; internal set; }
     }
 }
