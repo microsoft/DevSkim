@@ -16,6 +16,7 @@
             "TypeScript.DangerousFunctionCall",
             "PHP.DangerousFunctionCall"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS189424.md",
         "patterns": [
@@ -46,6 +47,7 @@
             "JavaScript.DangerousFunctionCall",
             "TypeScript.DangerousFunctionCall"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS172411.md",
         "patterns": [
@@ -75,6 +77,7 @@
         "tags": [
             "Dotnet.Unsafecode"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS172412.md",
         "patterns": [

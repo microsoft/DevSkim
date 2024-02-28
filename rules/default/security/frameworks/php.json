@@ -10,6 +10,7 @@
     "tags": [
       "Implementation.PHP"
     ],
+    "confidence": "high",
     "severity": "moderate",
     "rule_info": "DS144886.md",
     "patterns": [
@@ -79,6 +80,7 @@
     "tags": [
       "Implementation.PHP"
     ],
+    "confidence": "high",
     "severity": "moderate",
     "rule_info": "DS163877.md",
     "patterns": [

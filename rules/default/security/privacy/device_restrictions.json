@@ -10,6 +10,7 @@
         "tags": [
             "Implementation.Mobile.iOS.DataProtection.Privacy.UDID"
         ],
+        "confidence": "medium",
         "severity": "important",
         "rule_info": "DS165348.md",
         "patterns": [

@@ -10,6 +10,7 @@
         "tags": [
             "Cryptography.Library.Abandoned"
         ],
+        "confidence": "medium",
         "severity": "moderate",
         "rule_info": "DS175862.md",
         "patterns": [
@@ -42,6 +43,7 @@
         "tags": [
             "Cryptography.Symmetric.PotentiallyWeakAlgorithm"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS109501.md",
         "patterns": [
@@ -86,6 +88,7 @@
         "tags": [
             "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
         ],
+        "confidence": "medium",
         "severity": "critical",
         "rule_info": "DS106863.md",
         "patterns": [
@@ -131,6 +134,7 @@
         "tags": [
             "Cryptography.Symmetric.WeakOrBrokenAlgorithm"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS106864.md",
         "patterns": [
@@ -175,6 +179,7 @@
         "tags": [
             "Cryptography.Symmetric.WeakOrBrokenAlgorithm.DES"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS106865.md",
         "patterns": [
@@ -213,6 +218,7 @@
         "tags": [
             "Cryptography.Symmetric.WeakOrBrokenAlgorithm.DES"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS106866.md",
         "patterns": [
@@ -258,6 +264,7 @@
         "tags": [
             "Cryptography.Symmetric.WeakOrBrokenAlgorithm.RC2"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS156431.md",
         "patterns": [

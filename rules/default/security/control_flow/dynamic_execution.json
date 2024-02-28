@@ -12,6 +12,7 @@
             "ControlFlow.DynamicExecution.JavaScript",
             "Design.Mobile.iOS.WebView.DynamicJavaScript"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS165746.md",
         "patterns": [

@@ -10,6 +10,7 @@
         "tags": [
             "ControlFlow.Permission.Evalation"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS113853.md",
         "patterns": [
@@ -36,6 +37,7 @@
         "tags": [
             "Implementation.Scripting.PowerShell.DangeousFunction"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS104456.md",
         "patterns": [

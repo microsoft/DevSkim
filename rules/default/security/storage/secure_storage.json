@@ -11,6 +11,7 @@
         "tags": [
             "Storage.Windows.DPAPI"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS112266.md",
         "patterns": [
@@ -54,6 +55,7 @@
         "tags": [
             "Storage.Apple.iOS.UserDefaults.SensitiveData"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS191340.md",
         "patterns": [

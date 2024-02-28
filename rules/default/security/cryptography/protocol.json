@@ -11,6 +11,7 @@
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS144436.md",
         "patterns": [
@@ -52,6 +53,7 @@
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS127101.md",
         "patterns": [
@@ -75,6 +77,7 @@
         "tags": [
             "Cryptography.Protocol.TLS"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS169125.md",
         "patterns": [
@@ -100,6 +103,7 @@
         "tags": [
             "Cryptography.Protocol.Banned"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS169126.md",
         "patterns": [
@@ -169,6 +173,7 @@
         "tags": [
             "Cryptography.Protocol.Banned"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS169126.md",
         "patterns": [
@@ -430,6 +435,7 @@
         "tags": [
             "Cryptography.Protocol.Banned"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS169126.md",
         "patterns": [

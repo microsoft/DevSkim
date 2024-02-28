@@ -14,6 +14,7 @@
         "rule_info": "",
         "patterns": [
             {
+                "confidence": "high",
                 "pattern": "(%Y-%M-%d)|(%M-%d-%Y)|(%M/%d/%Y)",
                 "type": "regex",
                 "scopes": [
