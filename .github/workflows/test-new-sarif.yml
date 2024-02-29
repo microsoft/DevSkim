@@ -32,7 +32,7 @@ jobs:
     - name: Build 
       run: dotnet build DevSkim-DotNet/Microsoft.DevSkim.CLI
     - name: Scan
-      run: dotnet DevSkim-DotNet/Microsoft.DevSkim.CLI/bin/Debug/net8.0/devskim.dll -I test.cs -o out.sarif
+      run: dotnet DevSkim-DotNet/Microsoft.DevSkim.CLI/bin/Debug/net8.0/devskim.dll analyze -I test.cs -o out.sarif
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
