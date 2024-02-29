@@ -22,8 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
-      # Allow upload of events into GitHub Security tab
-      security-events: write
     steps:
 
     - uses: actions/checkout@v4
