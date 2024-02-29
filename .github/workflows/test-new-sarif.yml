@@ -18,7 +18,10 @@ jobs:
     permissions:
       actions: read
       contents: read
-
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
       # Allow upload of events into GitHub Security tab
       security-events: write
     steps:
@@ -29,29 +32,61 @@ jobs:
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    - name: Build 
-      run: dotnet build DevSkim-DotNet/Microsoft.DevSkim.CLI
-    - name: Scan
-      run: dotnet DevSkim-DotNet/Microsoft.DevSkim.CLI/bin/Debug/net8.0/devskim.dll analyze -I test.cs -O out.sarif
+    # - name: Build 
+    #   run: dotnet build DevSkim-DotNet/Microsoft.DevSkim.CLI
+    # - name: Scan
+    #   run: dotnet DevSkim-DotNet/Microsoft.DevSkim.CLI/bin/Debug/net8.0/devskim.dll analyze -I test.cs -O out.sarif
 
+   
+    # - name: SARIF Multitool
+    #   uses: microsoft/sarif-actions@v0.1
+    #   with:
+    #     # Command to be sent to SARIF Multitool
+    #     command: out.sarif # optional, default is version
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        # If you wish to specify custom queries, you can do so here or in a config file.
+        # By default, queries listed here will override any specified in a config file.
+        # Prefix the list here with "+" to use these queries and those in the config file.
+
+        # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+        # queries: security-extended,security-and-quality
+
+
+    # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
+    # If this step fails, then you should remove it and run the build manually (see below)
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    # ℹ️ Command-line programs to run using the OS shell.
+    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+
+    #   If the Autobuild fails above, remove it and uncomment the following three lines.
+    #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
+
+    # - run: |
+    #     echo "Run, Build Application using script"
+    #     ./location_of_script_within_repo/buildscript.sh
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
         # Artifact name
         name: out.sarif # optional, default is artifact
         # A file, directory or wildcard pattern that describes what to upload
-        path: out.sarif
+        path: ../results/*.sarif
         # The desired behavior if no files are found using the provided path.
         if-no-files-found: error # optional, default is warn
         # Duration after which artifact will expire in days. 0 means using default retention.
         retention-days: 1 # optional
-    - name: SARIF Multitool
-      uses: microsoft/sarif-actions@v0.1
-      with:
-        # Command to be sent to SARIF Multitool
-        command: out.sarif # optional, default is version
     # Make sure results exist and can by uploaded
-    - name: Upload results
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: out.sarif
+    # - name: Upload results
+    #   uses: github/codeql-action/upload-sarif@v2
+    #   with:
+    #     sarif_file: out.sarif
