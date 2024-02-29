@@ -72,13 +72,14 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+        output: results
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
         # Artifact name
         name: out.sarif # optional, default is artifact
         # A file, directory or wildcard pattern that describes what to upload
-        path: ../results/*.sarif
+        path: results/*.sarif
         # The desired behavior if no files are found using the provided path.
         if-no-files-found: error # optional, default is warn
         # Duration after which artifact will expire in days. 0 means using default retention.
