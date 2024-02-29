@@ -17,6 +17,7 @@
             "javascript",
             "typescript"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS148264.md",
         "patterns": [
@@ -106,6 +107,7 @@
         "applies_to": [
             "rust"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS148264.md",
         "patterns": [
@@ -140,6 +142,7 @@
         "tags": [
             "Cryptography.PRNG.Weak"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS148264.md",
         "patterns": [
@@ -167,6 +170,7 @@
         "tags": [
             "Cryptography.WeakRandomness"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS149435.md",
         "patterns": [

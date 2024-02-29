@@ -12,6 +12,7 @@
             "CERT.FIO38-C",
             "C.DangerousFunctionCall"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS179924.md",
         "patterns": [
@@ -41,6 +42,7 @@
         "tags": [
             "PHP.Injection"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS181731.md",
         "patterns": [

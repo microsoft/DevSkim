@@ -10,6 +10,7 @@
         "tags": [
             "XSLT"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS132781.md",
         "patterns": [

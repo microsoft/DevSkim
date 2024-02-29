@@ -10,6 +10,7 @@
         "tags": [
             "Framework.Android"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS180000.md",
         "patterns": [
@@ -60,6 +61,7 @@
         "tags": [
             "Framework.Android"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS180000.md",
         "patterns": [
@@ -105,6 +107,7 @@
         "tags": [
             "Framework.Android"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS180001.md",
         "patterns": [

@@ -10,6 +10,7 @@
         "tags": [
             "Implementation.Web.ASPNET.ControllerWithoutExtendingController"
         ],
+        "confidence": "medium",
         "severity": "moderate",
         "rule_info": "DS184626.md",
         "patterns": [

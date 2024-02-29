@@ -10,6 +10,7 @@
         "tags": [
             "Framework.NET.Outdated"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS450000.md",
         "patterns": [
@@ -35,6 +36,7 @@
         "id": "DS450001",
         "description": "Disabling the Secure flag could result in the disclosure of sensitive cookie information over HTTP.",
         "recommendation": "Enable the Secure cookie on cookies.",
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS450001.md",
         "applies_to_file_regex": [
@@ -91,6 +93,7 @@
         "tags": [
             "Framework.NET"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS450002.md",
         "patterns": [
@@ -135,6 +138,7 @@
         "tags": [
             "Framework.NET"
         ],
+        "confidence": "high",
         "severity": "manualreview",
         "rule_info": "DS450003.md",
         "patterns": [

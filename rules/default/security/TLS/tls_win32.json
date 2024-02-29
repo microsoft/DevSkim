@@ -15,6 +15,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -43,6 +44,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -71,6 +73,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -155,6 +158,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hard-Coded"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS440000.md",
         "patterns": [

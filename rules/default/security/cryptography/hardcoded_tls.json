@@ -11,6 +11,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS440000.md",
         "must-match": [
@@ -73,6 +74,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
+        "confidence": "high",
         "severity": "important",
         "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
         "rule_info": "DS440000.md",
@@ -146,6 +148,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
+        "confidence": "high",
         "severity": "important",
         "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
         "rule_info": "DS440000.md",
@@ -190,6 +193,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -213,6 +217,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -280,6 +285,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS440000.md",
         "patterns": [
@@ -316,6 +322,7 @@
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS440000.md",
         "patterns": [

@@ -8,6 +8,7 @@
             "Cryptography.BannedHashAlgorithm"
         ],
         "does_not_apply_to": ["json"],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS126858.md",
         "patterns": [
@@ -96,6 +97,7 @@
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS197800.md",
         "patterns": [
@@ -155,6 +157,7 @@
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS128420.md",
         "patterns": [
@@ -212,6 +215,7 @@
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS108647.md",
         "patterns": [
@@ -275,6 +279,7 @@
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS196098.md",
         "patterns": [
@@ -335,6 +340,7 @@
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS168931.md",
         "patterns": [
@@ -389,6 +395,7 @@
         "tags": [
             "Cryptography.HashAlgorithm.InsufficientEntropy"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS197836.md",
         "patterns": [

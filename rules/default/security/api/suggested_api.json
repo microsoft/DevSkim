@@ -12,6 +12,7 @@
         "tags": [
             "API.DangerousAPI.ProblematicFunction"
         ],
+        "confidence": "high",
         "severity": "BestPractice",
         "rule_info": "DS161085.md",
         "patterns": [
@@ -54,6 +55,7 @@
         "tags": [
             "API.DangerousAPI.ProblematicFunction"
         ],
+        "confidence": "high",
         "severity": "BestPractice",
         "rule_info": "DS121708.md",
         "patterns": [
@@ -99,6 +101,7 @@
         "tags": [
             "API.DangerousAPI.ProblematicFunction"
         ],
+        "confidence": "high",
         "severity": "BestPractice",
         "rule_info": "DS140021.md",
         "patterns": [

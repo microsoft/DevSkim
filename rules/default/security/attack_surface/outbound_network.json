@@ -10,6 +10,7 @@
         "tags": [
             "ThreatModel.Integration.HTTP"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS137038.md",
         "patterns": [
@@ -33,6 +34,7 @@
         "tags": [
             "ThreatModel.Integration.HTTP"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS137138.md",
         "patterns": [

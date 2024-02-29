@@ -7,6 +7,7 @@
         "tags": [
             "Cryptography.Certificate.Validation"
         ],
+        "confidence": "high",
         "severity": "critical",
         "rule_info": "DS101155.md",
         "patterns": [
@@ -56,6 +57,7 @@
         "tags": [
             "Cryptography.SecurityContext.Initialization"
         ],
+        "confidence": "high",
         "severity": "ManualReview",
         "rule_info": "DS101159.md",
         "patterns": [

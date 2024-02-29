@@ -10,6 +10,7 @@
         "tags": [
             "Vulerable-Dependency.Library.NuGet"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "4021279",
         "patterns": [
@@ -168,6 +169,7 @@
         "tags": [
             "Vulerable-Dependency.Library.NuGet"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "3214296",
         "patterns": [

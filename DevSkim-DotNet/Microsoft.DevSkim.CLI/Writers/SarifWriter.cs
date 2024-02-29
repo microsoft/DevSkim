@@ -213,12 +213,35 @@ namespace Microsoft.DevSkim.CLI.Writers
                     Enabled = true,
                     Level = DevSkimLevelToSarifLevel(devskimRule.Severity)
                 };
+                // Set github code scanning properties
+                sarifRule.SetProperty("precision", ConfidenceToPrecision(devskimRule.Confidence));
+                sarifRule.SetProperty("problem.severity", DevSkimLevelToGitHubLevel(devskimRule.Severity));
                 sarifRule.SetProperty("DevSkimSeverity", devskimRule.Severity.ToString());
                 sarifRule.SetProperty("DevSkimConfidence", devskimRule.Confidence.ToString());
 
                 _rules.TryAdd(devskimRule.Id, sarifRule);
             }
         }
+
+        private object DevSkimLevelToGitHubLevel(Severity severity) => severity switch
+        {
+            Severity.Unspecified => string.Empty,
+            Severity.Critical => "error",
+            Severity.Important => "warning",
+            Severity.Moderate => "warning",
+            Severity.BestPractice => "recommendation",
+            Severity.ManualReview => "recommendation",
+            _ => string.Empty,
+        };
+
+        private static string ConfidenceToPrecision(Confidence confidence) => confidence switch
+        {
+            Confidence.High => "high",
+            Confidence.Medium => "medium",
+            Confidence.Low => "low",
+            Confidence.Unspecified => string.Empty,
+            _ => string.Empty
+        };
 
         private string ToSarifFriendlyName(string devskimRuleName) =>
             string.Concat(devskimRuleName.Split(' ', StringSplitOptions.RemoveEmptyEntries)

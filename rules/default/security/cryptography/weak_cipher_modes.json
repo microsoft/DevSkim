@@ -7,6 +7,7 @@
         "tags": [
             "Cryptography.Symmetric.CipherMode.Weak"
         ],
+        "confidence": "medium",
         "severity": "important",
         "rule_info": "DS187371.md",
         "patterns": [
@@ -35,6 +36,7 @@
         "tags": [
             "Cryptography.Symmetric.CipherMode.Weak"
         ],
+        "confidence": "high",
         "severity": "important",
         "rule_info": "DS182720.md",
         "patterns": [

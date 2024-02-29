@@ -10,6 +10,7 @@
         "tags": [
             "Implementation.iOS.XML.DTDEntityResolution"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS132779.md",
         "patterns": [
@@ -57,6 +58,7 @@
         "tags": [
             "Implementation.iOS.XML.DTDEntityResolution"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS132780.md",
         "patterns": [
@@ -100,6 +102,7 @@
         "tags": [
             "Implementation.iOS.XML.DTDEntityResolution"
         ],
+        "confidence": "high",
         "severity": "moderate",
         "rule_info": "DS132790.md",
         "patterns": [

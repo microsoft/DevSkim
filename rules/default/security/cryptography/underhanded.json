@@ -7,6 +7,7 @@
         "tags": [
             "Cryptography.HashAlgorithm.WeakOrBrokenImplementation"
         ],
+        "confidence": "medium",
         "severity": "critical",
         "rule_info": "DS109733.md",
         "patterns": [
