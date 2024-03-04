@@ -148,7 +148,7 @@ stages:
       displayName: Publish Signed Artifact to Pipeline
       inputs:
         targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Signed_Extension'
+        artifact: 'Signed_Extension_$(System.JobId)_$(System.JobAttempt)'
     - task: PowerShell@2
       displayName: Move VS Marketplace Manifest
       inputs:
