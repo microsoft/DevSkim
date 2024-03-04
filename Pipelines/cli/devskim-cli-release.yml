@@ -480,7 +480,7 @@ stages:
       displayName: Publish Signed Artifacts to Pipeline
       inputs:
         targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Signed_Binaries'
+        artifact: 'Signed_Binaries_$(System.JobId)_$(System.JobAttempt)'
     - task: NuGetCommand@2
       displayName: Publish NuGet Packages
       inputs:
