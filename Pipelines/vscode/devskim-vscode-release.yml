@@ -195,7 +195,7 @@ stages:
       displayName: Publish Signed Artifact to Pipeline
       inputs:
         targetPath: '$(Build.StagingDirectory)'
-        artifact: 'Signed_Plugin'
+        artifact: 'Signed_Plugin_$(System.JobId)_$(System.JobAttempt)'
     - task: Npm@1
       displayName: Install vsce
       inputs:
