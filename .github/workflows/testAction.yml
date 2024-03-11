@@ -22,5 +22,9 @@ jobs:
     - uses: microsoft/DevSkim-Action@v1
       with: 
         ignore_globs: '**/one/*.cs'
-    - name: CatOutput
-      run: cat devskim-results.sarif
+    - uses: actions/upload-artifact@v4
+      with:
+        # Name of the artifact to upload.
+        # Optional. Default is 'artifact'
+        name: devskimResults
+        path: devskim-results.sarif
