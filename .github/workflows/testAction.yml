@@ -1,0 +1,26 @@
+# Testing DevSkim Action
+name: Test DevSkim Action
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["gfs/TestDevSkimAction"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+
+jobs:
+  Check-Changelog:
+    name: TestAction
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: microsoft/DevSkim-Action@v1
+    - uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: devskim-results.sarif
+        ignore_globs: '**/one/*.cs'
