@@ -20,7 +20,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: microsoft/DevSkim-Action@v1
-    - uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: devskim-results.sarif
+      with: 
         ignore_globs: '**/one/*.cs'
+    - name: CatOutput
+      run: cat devskim-results.sarif
