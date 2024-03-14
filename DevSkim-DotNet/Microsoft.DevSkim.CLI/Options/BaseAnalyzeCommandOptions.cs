@@ -31,10 +31,10 @@ public record BaseAnalyzeCommandOptions : LogOptions
     public string CommentsPath { get; set; } = string.Empty;
 
     [Option('o', "output-format", HelpText = "Format for output text.", Default = SimpleTextWriter.DefaultFormat)]
-    public string OutputTextFormat { get; set; } = string.Empty;
+    public string OutputTextFormat { get; set; } = SimpleTextWriter.DefaultFormat;
 
     [Option('f', "file-format", HelpText = "Format type for output. [text|sarif]", Default = "sarif")]
-    public string OutputFileFormat { get; set; } = string.Empty;
+    public string OutputFileFormat { get; set; } = "sarif";
 
     [Option('s', "severity", HelpText = "Comma-separated Severities to match", Separator = ',', Default = new[] { Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice, Severity.ManualReview })]
     public IEnumerable<Severity> Severities { get; set; } = new[] { Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice, Severity.ManualReview };
