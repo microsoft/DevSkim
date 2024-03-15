@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: microsoft/DevSkim-Action@v1
       with: 
-        ignore-globs: '**/one/*.cs'
+        options-json: 'options.json'
     - uses: actions/upload-artifact@v4
       with:
         # Name of the artifact to upload.

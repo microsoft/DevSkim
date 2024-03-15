@@ -1,0 +1,8 @@
+{
+	"Globs": [
+	  "*.contoso"
+	],
+	"LanguageRuleIgnoreMap": {
+	   "csharp" : [ "DS123456789"]
+	}
+  }
