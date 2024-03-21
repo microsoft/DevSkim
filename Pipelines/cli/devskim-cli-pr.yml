@@ -25,16 +25,12 @@ variables:
   DotnetVersion: '8.0.x'
 
 extends:
-  # The pipeline extends the 1ES PT which will inject different SDL and compliance tasks.
-  # For non-production pipelines, use "Unofficial" as defined below.
-  # For productions pipelines, use "Official".
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
-    # Update the pool with your team's 1ES hosted pool.
     pool:
-      name: MSSecurity-1ES-Build-Agents-Pool  # Name of your hosted pool 
-      image: MSSecurity-1ES-Windows-2022  # Name of the image in your pool. If not specified, first image of the pool is used
-      os: windows  # OS of the image. This value cannot be a variable. Allowed values: windows, linux, macOS
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Windows-2022
+      os: windows
     stages:
     - stage: Test
       jobs:
@@ -44,15 +40,15 @@ extends:
           dotnetVersions: ['6.0.x','7.0.x','8.0.x']
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
           poolName: MSSecurity-1ES-Build-Agents-Pool
-          poolImage: MSSecurity-1ES-Windows-2022  # Name of the image in your pool. If not specified, first image of the pool is used
-          poolOs: windows  # OS of the image. This value cannot be a variable. Allowed values: windows, linux, macOS
+          poolImage: MSSecurity-1ES-Windows-2022
+          poolOs: windows
       - template: dotnet-test-job.yml@templates
         parameters:
           jobName: 'dotnet_test_ubuntu'
           dotnetVersions: ['6.0.x','7.0.x','8.0.x']
-          poolName: MSSecurity-1ES-Build-Agents-Pool  # Name of your hosted pool 
-          poolImage: MSSecurity-1ES-Ubuntu-2204  # Name of the image in your pool. If not specified, first image of the pool is used
-          poolOs: linux  # OS of the image. This value cannot be a variable. Allowed values: windows, linux, macOS
+          poolName: MSSecurity-1ES-Build-Agents-Pool
+          poolImage: MSSecurity-1ES-Ubuntu-2204
+          poolOs: linux
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'          
     - stage: Build
       dependsOn:

@@ -13,20 +13,23 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.1.1
+      # ref: refs/tags/v1.1.1
+      ref: refs/heads/gfs/UpdateTemplates
+    - repository: 1esPipelines
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/release
 
 stages:
-- stage: SDL
-  dependsOn: []
-  jobs:
-  - template: sdl-job.yml@templates
-    parameters:
-      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
-
 - stage: Build
   dependsOn: []
   jobs:
   - template: dotnet-build-job.yml@templates
+    templateContext:
+      outputs:
+      - output: pipelineArtifact
+        targetPath: $(Build.StagingDirectory)/extension
+        artifactName: 'Unsigned_Extension'
     parameters:
       buildTool: 'msbuild'
       buildConfiguration: 'Release'
@@ -34,6 +37,11 @@ stages:
       targetFramework: 'net47'
       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Microsoft.DevSkim.VisualStudio.csproj'
       projectName: 'DevSkim_VS'
+      poolName: MSSecurity-1ES-Build-Agents-Pool
+      poolImage: MSSecurity-1ES-Windows-2022
+      poolOs: windows
+      artifactName: 'vs-archive'
+      manifestName: 'vs-manifest'
       preBuild:
       - template: nbgv-set-version-steps.yml@templates
       # Workaround: Using the .NET 8 SDK doesn't install the right version of MSBuild for .NET 8
@@ -56,9 +64,3 @@ stages:
         inputs:
           targetType: 'inline'
           script: 'mv $env:BUILD_STAGINGDIRECTORY/bin/dotnetapp/DevSkim_VS_dotnetapp_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY/extension'
-      - task: PublishBuildArtifacts@1
-        displayName: Pipeline Publish Extension
-        inputs:
-          PathtoPublish: '$(Build.StagingDirectory)/extension'
-          ArtifactName: 'Unsigned_Extension'
-          publishLocation: 'Container'
