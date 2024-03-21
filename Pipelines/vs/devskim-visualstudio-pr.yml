@@ -32,11 +32,6 @@ extends:
       dependsOn: []
       jobs:
       - template: dotnet-build-job.yml@templates
-        templateContext:
-          outputs:
-          - output: pipelineArtifact
-            targetPath: $(Build.StagingDirectory)/extension
-            artifactName: 'Unsigned_Extension'
         parameters:
           buildTool: 'msbuild'
           buildConfiguration: 'Release'
@@ -49,6 +44,8 @@ extends:
           poolOs: windows
           artifactName: 'vs-archive'
           manifestName: 'vs-manifest'
+          extraArtifactName: 'Unsigned_Extension'
+          extraArtifactLocation: 'extension'
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
           # Workaround: Using the .NET 8 SDK doesn't install the right version of MSBuild for .NET 8
