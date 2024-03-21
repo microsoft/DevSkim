@@ -50,49 +50,42 @@ extends:
       #     dotnetVersions: ['6.0.x','7.0.x','8.0.x']
       #     vmImage: 'MSSecurity-1ES-Ubuntu-2204'
       #     projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'          
-    # - stage: SDL
-    #   dependsOn: []
-    #   jobs:
-    #   - template: sdl-job.yml@templates
-    #     parameters:
-    #       serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
-
-    # - stage: Build
-    #   dependsOn:
-    #   - Test
-    #   jobs:
-    #   - template: dotnet-publish-linux-mac-job.yml@templates
-    #     parameters:
-    #       buildConfiguration: 'Release'
-    #       dotnetVersion: ${{ variables.DotnetVersion }}
-    #       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
-    #       projectName: 'DevSkim_CLI'
-    #       exePath: 'devskim'
-    #       preBuild:
-    #       - template: nbgv-set-version-steps.yml@templates
-    #   - template: dotnet-publish-win-netcore-job.yml@templates
-    #     parameters:
-    #       buildConfiguration: 'Release'
-    #       dotnetVersion: ${{ variables.DotnetVersion }}
-    #       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
-    #       projectName: 'DevSkim_CLI'
-    #       preBuild:
-    #       - template: nbgv-set-version-steps.yml@templates
-    #   - template: nuget-build-job.yml@templates
-    #     parameters:
-    #       jobName: 'pack_lib'
-    #       buildConfiguration: 'Release'
-    #       dotnetVersion: ${{ variables.DotnetVersion }}
-    #       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
-    #       projectName: 'DevSkim_Lib'
-    #       preBuild:
-    #       - template: nbgv-set-version-steps.yml@templates
-    #   - template: nuget-build-job.yml@templates
-    #     parameters:
-    #       jobName: 'pack_cli'
-    #       buildConfiguration: 'Release'
-    #       dotnetVersion: ${{ variables.DotnetVersion }}
-    #       projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
-    #       projectName: 'DevSkim_CLI'
-    #       preBuild:
-    #       - template: nbgv-set-version-steps.yml@templates
+    - stage: Build
+      dependsOn:
+      - Test
+      jobs:
+      - template: dotnet-publish-linux-mac-job.yml@templates
+        parameters:
+          buildConfiguration: 'Release'
+          dotnetVersion: ${{ variables.DotnetVersion }}
+          projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+          projectName: 'DevSkim_CLI'
+          exePath: 'devskim'
+          preBuild:
+          - template: nbgv-set-version-steps.yml@templates
+      - template: dotnet-publish-win-netcore-job.yml@templates
+        parameters:
+          buildConfiguration: 'Release'
+          dotnetVersion: ${{ variables.DotnetVersion }}
+          projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+          projectName: 'DevSkim_CLI'
+          preBuild:
+          - template: nbgv-set-version-steps.yml@templates
+      - template: nuget-build-job.yml@templates
+        parameters:
+          jobName: 'pack_lib'
+          buildConfiguration: 'Release'
+          dotnetVersion: ${{ variables.DotnetVersion }}
+          projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
+          projectName: 'DevSkim_Lib'
+          preBuild:
+          - template: nbgv-set-version-steps.yml@templates
+      - template: nuget-build-job.yml@templates
+        parameters:
+          jobName: 'pack_cli'
+          buildConfiguration: 'Release'
+          dotnetVersion: ${{ variables.DotnetVersion }}
+          projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
+          projectName: 'DevSkim_CLI'
+          preBuild:
+          - template: nbgv-set-version-steps.yml@templates
