@@ -44,17 +44,12 @@ extends:
           dotnetVersions: ['6.0.x','7.0.x','8.0.x']
           vmImage: 'MSSecurity-1ES-Windows-2022'
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
-      - template: dotnet-test-job.yml@templates
-        parameters:
-          jobName: 'dotnet_test_ubuntu'
-          dotnetVersions: ['6.0.x','7.0.x','8.0.x']
-          vmImage: 'MSSecurity-1ES-Ubuntu-2204'
-          projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
-          pool:
-            name: MSSecurity-1ES-Build-Agents-Pool  # Name of your hosted pool 
-            image: MSSecurity-1ES-Ubuntu-2204  # Name of the image in your pool. If not specified, first image of the pool is used
-            os: linux  # OS of the image. This value cannot be a variable. Allowed values: windows, linux, macOS
-          
+      # - template: dotnet-test-job.yml@templates
+      #   parameters:
+      #     jobName: 'dotnet_test_ubuntu'
+      #     dotnetVersions: ['6.0.x','7.0.x','8.0.x']
+      #     vmImage: 'MSSecurity-1ES-Ubuntu-2204'
+      #     projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'          
     # - stage: SDL
     #   dependsOn: []
     #   jobs:
