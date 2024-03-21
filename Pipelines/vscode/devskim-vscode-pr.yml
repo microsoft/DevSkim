@@ -29,18 +29,18 @@ extends:
       os: windows
     stages:
     - stage: Build
-      templateContext:
-        outputs:
-        - output: pipelineArtifact
-          targetPath: $(Build.StagingDirectory)/packages
-          artifactName: 'Unsigned_Plugin'
-        - output: pipelineArtifact
-          targetPath: $(Build.StagingDirectory)/Manifests
-          artifactName: 'VSCode_Manifests'
       dependsOn: []
       jobs:
       - job: build_vscode_plugin
         displayName: Build VS Code Plugin
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            targetPath: $(Build.StagingDirectory)/packages
+            artifactName: 'Unsigned_Plugin'
+          - output: pipelineArtifact
+            targetPath: $(Build.StagingDirectory)/Manifests
+            artifactName: 'VSCode_Manifests'
         steps:
         - task: UseDotNet@2
           displayName: Install Dotnet SDK

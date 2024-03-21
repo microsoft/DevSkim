@@ -30,13 +30,13 @@ extends:
     stages:
     - stage: Build
       dependsOn: []
-      templateContext:
-        outputs:
-        - output: pipelineArtifact
-          targetPath: $(Build.StagingDirectory)/extension
-          artifactName: 'Unsigned_Extension'
       jobs:
       - template: dotnet-build-job.yml@templates
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            targetPath: $(Build.StagingDirectory)/extension
+            artifactName: 'Unsigned_Extension'
         parameters:
           buildTool: 'msbuild'
           buildConfiguration: 'Release'
