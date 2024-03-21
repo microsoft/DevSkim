@@ -62,7 +62,6 @@ extends:
           projectName: 'DevSkim_CLI'
           exePath: 'devskim'
           artifactName: 'linux-mac-archive'
-          manifestName: 'linux-mac-manifest'
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
       - template: dotnet-publish-win-netcore-job.yml@templates
@@ -72,7 +71,6 @@ extends:
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
           projectName: 'DevSkim_CLI'
           artifactName: 'win-netcore-archive'
-          manifestName: 'win-netcore-manifest'
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
       - template: nuget-build-job.yml@templates
@@ -83,7 +81,6 @@ extends:
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
           projectName: 'DevSkim_Lib'
           artifactName: 'nuget-lib-archive'
-          manifestName: 'nuget-lib-manifest'
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
       - template: nuget-build-job.yml@templates
@@ -94,6 +91,5 @@ extends:
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
           projectName: 'DevSkim_CLI'
           artifactName: 'nuget-cli-archive'
-          manifestName: 'nuget-cli-manifest'
           preBuild:
           - template: nbgv-set-version-steps.yml@templates

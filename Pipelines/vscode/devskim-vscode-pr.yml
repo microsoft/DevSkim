@@ -38,9 +38,6 @@ extends:
           - output: pipelineArtifact
             targetPath: $(Build.StagingDirectory)/packages
             artifactName: 'Unsigned_Plugin'
-          - output: pipelineArtifact
-            targetPath: $(Build.StagingDirectory)/Manifests
-            artifactName: 'VSCode_Manifests'
         steps:
         - task: UseDotNet@2
           displayName: Install Dotnet SDK
@@ -60,28 +57,6 @@ extends:
             targetType: 'inline'
             script: mkdir sbom/vscode/ ; mkdir sbom/langserver/ ; mkdir packages
             workingDirectory: '$(Build.StagingDirectory)'
-        - task: ManifestGeneratorTask@0
-          displayName: Generate VS Code Plugin Manifest
-          inputs:
-            BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/client/out/'
-            ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
-            PackageName: 'DevSkim VS Code Plugin'
-            PackageVersion: '$(ReleaseVersion)'
-        - task: ManifestGeneratorTask@0
-          displayName: Generate DevSkim Language Server Manifest
-          inputs:
-            BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/devskimBinaries/'
-            ManifestDirPath: '$(Build.StagingDirectory)/sbom/langserver/'
-            PackageName: 'DevSkim Language Server'
-            PackageVersion: '$(ReleaseVersion)'
-        - task: ArchiveFiles@2
-          displayName: Archive Manifests
-          inputs:
-            rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
-            includeRootFolder: false
-            archiveType: 'zip'
-            archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_VSCode_Manifests.zip'
-            replaceExistingArchive: true
         - task: Npm@1
           displayName: Package VS Code Plugin
           inputs:
