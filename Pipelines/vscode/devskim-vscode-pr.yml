@@ -13,108 +13,57 @@ resources:
     - repository: templates
       type: git
       name: SecurityEngineering/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v1.1.1
+      ref: refs/tags/v2.0.0
+    - repository: 1esPipelines
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/release
 
-stages:
-- stage: SDL
-  jobs:
-  - template: sdl-job.yml@templates
-    parameters:
-      serviceTreeID: '9792b8d3-bc2c-432c-8fc9-bdb143552208'
-
-- stage: Build
-  dependsOn: []
-  jobs:
-  - job: build_vscode_plugin
-    displayName: Build VS Code Plugin
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  parameters:
     pool:
-      name: 'CSPA'
-      vmImage: 'win2022-image-base'
-    steps:
-    - task: UseDotNet@2
-      displayName: Install Dotnet SDK
-      inputs:
-        packageType: 'sdk'
-        version: '8.0.x'
-    - task: CodeQL3000Init@0
-    - task: Npm@1
-      displayName: Build VS Code Plugin
-      inputs:
-        command: 'custom'
-        workingDir: 'DevSkim-VSCode-Plugin/'     
-        customCommand: 'run build'
-    - task: CodeQL3000Finalize@0
-    - task: AntiMalware@4
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: 'DevSkim-VSCode-Plugin/'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Warning'
-    - template: nbgv-set-version-steps.yml@templates
-    - task: PowerShell@2
-      displayName: Mkdir for Manifests and Packages
-      inputs:
-        targetType: 'inline'
-        script: mkdir sbom/vscode/ ; mkdir sbom/langserver/ ; mkdir packages
-        workingDirectory: '$(Build.StagingDirectory)'
-    - task: ManifestGeneratorTask@0
-      displayName: Generate VS Code Plugin Manifest
-      inputs:
-        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/client/out/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/vscode/'
-        PackageName: 'DevSkim VS Code Plugin'
-        PackageVersion: '$(ReleaseVersion)'
-    - task: ManifestGeneratorTask@0
-      displayName: Generate DevSkim Language Server Manifest
-      inputs:
-        BuildDropPath: '$(Build.SourcesDirectory)/DevSkim-VSCode-Plugin/devskimBinaries/'
-        ManifestDirPath: '$(Build.StagingDirectory)/sbom/langserver/'
-        PackageName: 'DevSkim Language Server'
-        PackageVersion: '$(ReleaseVersion)'
-    - task: ArchiveFiles@2
-      displayName: Archive Manifests
-      inputs:
-        rootFolderOrFile: '$(Build.StagingDirectory)/sbom/'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.StagingDirectory)/Manifests/DevSkim_VSCode_Manifests.zip'
-        replaceExistingArchive: true
-    - task: PublishBuildArtifacts@1
-      displayName: Pipeline Publish Manifest Archive
-      inputs:
-        PathtoPublish: '$(Build.StagingDirectory)/Manifests'
-        ArtifactName: 'Manifests'
-        publishLocation: 'Container'
-    - task: Npm@1
-      displayName: Package VS Code Plugin
-      inputs:
-        command: 'custom'
-        workingDir: 'DevSkim-VSCode-Plugin/'
-        customCommand: 'run pack-ext'
-    - task: AntiMalware@4
-      displayName: Anti-Malware Scan
-      inputs:
-        InputType: 'Basic'
-        ScanType: 'CustomScan'
-        FileDirPath: 'DevSkim-VSCode-Plugin/'
-        EnableServices: true
-        SupportLogOnError: false
-        TreatSignatureUpdateFailureAs: 'Warning'
-        SignatureFreshness: 'UpToDate'
-        TreatStaleSignatureAs: 'Warning'
-    - task: PowerShell@2
-      displayName: Move Plugin File
-      inputs:
-        targetType: 'inline'
-        script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/packages/'
-    - task: PublishBuildArtifacts@1
-      displayName: Pipeline Publish Unsigned Artifact
-      inputs:
-        PathtoPublish: '$(Build.StagingDirectory)/packages/'
-        ArtifactName: 'Unsigned_Plugin'
-        publishLocation: 'Container'
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Windows-2022
+      os: windows
+    stages:
+    - stage: Build
+      dependsOn: []
+      jobs:
+      - job: build_vscode_plugin
+        displayName: Build VS Code Plugin
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            targetPath: $(Build.StagingDirectory)/packages
+            artifactName: 'Unsigned_Plugin'
+        steps:
+        - task: UseDotNet@2
+          displayName: Install Dotnet SDK
+          inputs:
+            packageType: 'sdk'
+            version: '8.0.x'
+        - task: Npm@1
+          displayName: Build VS Code Plugin
+          inputs:
+            command: 'custom'
+            workingDir: 'DevSkim-VSCode-Plugin/'     
+            customCommand: 'run build'
+        - template: nbgv-set-version-steps.yml@templates
+        - task: PowerShell@2
+          displayName: Mkdir for Manifests and Packages
+          inputs:
+            targetType: 'inline'
+            script: mkdir sbom/vscode/ ; mkdir sbom/langserver/ ; mkdir packages
+            workingDirectory: '$(Build.StagingDirectory)'
+        - task: Npm@1
+          displayName: Package VS Code Plugin
+          inputs:
+            command: 'custom'
+            workingDir: 'DevSkim-VSCode-Plugin/'
+            customCommand: 'run pack-ext'
+        - task: PowerShell@2
+          displayName: Move Plugin File
+          inputs:
+            targetType: 'inline'
+            script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/packages/'

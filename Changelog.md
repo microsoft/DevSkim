@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.34] - 2024-3-18
+### Pipeline
+Pipeline only changes
+
 ## [1.0.33] - 2024-3-13
 ### Fix
 Fixes properly setting the default value for the `OutputFileFormat` and `OutputTextFormat` fields when using the `options-json` argument to the analyze command.
