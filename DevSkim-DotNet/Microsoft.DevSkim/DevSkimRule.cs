@@ -22,5 +22,10 @@ namespace Microsoft.DevSkim
         [JsonProperty(PropertyName = "rule_info")]
         [JsonPropertyName("rule_info")]
         public string? RuleInfo { get; set; }
+
+        public override string ToString()
+        {
+            return $"'{Id}: {Name}'";
+        }
     }
 }

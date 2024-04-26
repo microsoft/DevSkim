@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace Microsoft.DevSkim.Tests;
 
 [TestClass]
@@ -79,5 +81,107 @@ public class DefaultRulesTests
         DevSkimRuleProcessor analyzer = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions());
         IEnumerable<Issue> analysis = analyzer.Analyze(content, "thing.xml");
         Assert.AreEqual(1, analysis.Count());
+    }
+
+    public static IEnumerable<object[]> DefaultRules
+    {
+        get
+        {
+            DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
+            foreach (DevSkimRule rule in devSkimRuleSet)
+            {
+                yield return new object[] { rule };
+            }
+        }
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(DefaultRules))]
+    public void Rule_should_specify_guidance(DevSkimRule rule)
+    {
+        if (rule.Disabled)
+        {
+            Assert.Inconclusive("Rule is disabled.");
+        }
+
+        if (string.IsNullOrEmpty(rule.RuleInfo))
+        {
+            Assert.Fail("Rule does not specify guidance file.");
+        }
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(DefaultRules))]
+    public void Rule_guidance_file_should_exist(DevSkimRule rule)
+    {
+        if (rule.Disabled)
+        {
+            Assert.Inconclusive("Rule is disabled.");
+        }
+
+        if (string.IsNullOrEmpty(rule.RuleInfo))
+        {
+            Assert.Inconclusive("Rule does not specify guidance file.");
+        }
+
+        string guidanceDir = GetGuidanceDirectory();
+        string guidanceFile = Path.Combine(guidanceDir, rule.RuleInfo);
+        Assert.IsTrue(File.Exists(guidanceFile), $"Guidance file {guidanceFile} does not exist.");
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(DefaultRules))]
+    public void Rule_guidance_should_be_complete(DevSkimRule rule)
+    {
+        if (rule.Disabled)
+        {
+            Assert.Inconclusive("Rule is disabled.");
+        }
+
+        if(string.IsNullOrEmpty(rule.RuleInfo))
+        {
+            Assert.Inconclusive("Rule does not specify guidance file.");
+        }
+
+        string guidanceDir = GetGuidanceDirectory();
+        string guidanceFile = Path.Combine(guidanceDir, rule.RuleInfo);
+        if(!File.Exists(guidanceFile))
+        {
+            Assert.Inconclusive("Guidance file does not exist");
+        }
+
+        string guidance = File.ReadAllText(guidanceFile);
+        if(guidance.Contains("TODO"))
+        {
+            Assert.Fail($"Guidance file {guidanceFile} contains TODO.");
+        }
+    }
+
+    private static string GetGuidanceDirectory()
+    {
+        string directory = Directory.GetCurrentDirectory();
+
+        /* Given a directory, like: "C:\src\DevSkim\DevSkim-DotNet\Microsoft.DevSkim.Tests\bin\Debug\net8.0"
+         * we want to find:         "C:\src\DevSkim\guidance"
+         */
+
+        var currentDirInfo = new DirectoryInfo(directory);
+        while (currentDirInfo != null && currentDirInfo.Name != "DevSkim")
+        {
+            currentDirInfo = currentDirInfo.Parent;
+        }
+
+        if (currentDirInfo == null)
+        {
+            throw new Exception("Could not find DevSkim-DotNet directory.");
+        }
+
+        string guidanceDir = Path.Combine(currentDirInfo.FullName, "guidance");
+        if (!Directory.Exists(guidanceDir))
+        {
+            throw new Exception($"Guidance directory {guidanceDir} does not exist.");
+        }
+
+        return guidanceDir;
     }
 }
