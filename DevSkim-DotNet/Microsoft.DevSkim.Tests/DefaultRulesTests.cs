@@ -151,7 +151,8 @@ public class DefaultRulesTests
         }
 
         string guidance = File.ReadAllText(guidanceFile);
-        if(guidance.Contains("TODO"))
+        if(guidance.Contains("TODO", StringComparison.OrdinalIgnoreCase) 
+            || guidance.Contains("TO DO", StringComparison.OrdinalIgnoreCase))
         {
             Assert.Fail($"Guidance file {guidanceFile} contains TODO.");
         }
