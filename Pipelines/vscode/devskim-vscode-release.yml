@@ -155,10 +155,15 @@ stages:
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Warning'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: Code Sign VSCode Plugin
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
         Pattern: '*.vsix'
         signConfigType: 'inlineSignParams'
