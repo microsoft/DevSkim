@@ -133,10 +133,15 @@ stages:
         packageType: 'sdk'
         version: '6.x'
     # First party code signing
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: First Party Code Sign - Linux
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
@@ -166,10 +171,15 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: First Party Code Sign - MacOS
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
@@ -199,10 +209,15 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: First Party Code Sign - Windows
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/win/DevSkim_CLI_win_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
@@ -232,10 +247,15 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: First Party Code Sign - .NET Core App
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
         Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
         signConfigType: 'inlineSignParams'
@@ -266,10 +286,15 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
     # Third party code signing
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: Third Party Code Sign - Linux
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
@@ -299,10 +324,15 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: Third Party Code Sign - MacOS
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
@@ -332,10 +362,15 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: Third Party Code Sign - Windows
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/win/DevSkim_CLI_win_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
@@ -365,10 +400,15 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: Third Party Code Sign - .NET Core App
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
         Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
         signConfigType: 'inlineSignParams'
@@ -398,10 +438,15 @@ stages:
         SessionTimeout: '60'
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
-    - task: EsrpCodeSigning@3
+    - task: EsrpCodeSigning@5
       displayName: Code Sign Nuget Packages
       inputs:
-        ConnectedServiceName: 'Devskim_CodeSign'
+        ConnectedServiceName: 'CodeSignConnection'
+        AppRegistrationClientId: '20c4d859-e6d2-4527-a52d-ca6756291e99'
+        AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+        AuthAKVName: 'prss-scanx'
+        AuthCertName: 'buildtask-1fdauth1'
+        AuthSignCertName: 'buildtask-1fdsign'
         FolderPath: '$(Build.BinariesDirectory)'
         Pattern: '*.nupkg, *.snupkg'
         signConfigType: 'inlineSignParams'
