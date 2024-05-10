@@ -12,7 +12,7 @@
         ],
         "confidence": "high",
         "severity": "ManualReview",
-        "rule_info": "DS112838.md",
+        "rule_info": "DS112835.md",
         "patterns": [
             {
                 "pattern": "Switch.System.Net.DontEnableSchUseStrongCrypto",
