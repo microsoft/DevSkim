@@ -12,7 +12,7 @@
         ],
         "confidence": "high",
         "severity": "moderate",
-        "rule_info": "4021279",
+        "rule_info": "DS300001.md",
         "patterns": [
             {
                 "pattern": "<package id=\"System.Text.Encodings.Web\" version=\"(4\\.0\\.0|4\\.3\\.0)\"",
