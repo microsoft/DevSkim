@@ -171,7 +171,7 @@
         ],
         "confidence": "high",
         "severity": "moderate",
-        "rule_info": "3214296",
+        "rule_info": "DS300005.md",
         "patterns": [
             {
                 "pattern": "<package id=\"Microsoft.IdentityModel.Tokens\" version=\"(5\\.1\\.0)\"",
