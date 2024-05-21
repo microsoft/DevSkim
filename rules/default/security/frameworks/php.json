@@ -26,7 +26,7 @@
       {
         "name": "Change to $_GET",
         "type": "RegexReplace",
-        "replacement": "$_GET",
+        "replacement": "$$_GET",
         "pattern": {
           "pattern": "\\$_REQUEST",
           "type": "regex",
@@ -39,7 +39,7 @@
       {
         "name": "Change to $_POST",
         "type": "RegexReplace",
-        "replacement": "$_POST",
+        "replacement": "$$_POST",
         "pattern": {
           "pattern": "\\$_REQUEST",
           "type": "regex",
@@ -52,7 +52,7 @@
       {
         "name": "Change to $_COOKIE",
         "type": "RegexReplace",
-        "replacement": "$_COOKIE",
+        "replacement": "$$_COOKIE",
         "pattern": {
           "pattern": "\\$_REQUEST",
           "type": "regex",
