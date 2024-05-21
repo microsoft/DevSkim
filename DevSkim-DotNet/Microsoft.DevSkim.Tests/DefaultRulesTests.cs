@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace Microsoft.DevSkim.Tests;
 
 [TestClass]
