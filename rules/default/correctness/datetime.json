@@ -11,7 +11,7 @@
             "Correctness.DateTime.Format"
         ],
         "severity": "moderate",
-        "rule_info": "",
+        "rule_info": "DS600100.md",
         "patterns": [
             {
                 "confidence": "high",

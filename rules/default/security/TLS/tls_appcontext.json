@@ -15,7 +15,7 @@
         ],
         "confidence": "high",
         "severity": "ManualReview",
-        "rule_info": "DS440000.md",
+        "rule_info": "DS112835.md",
         "patterns": [
             {
                 "pattern": "TestSwitch.LocalAppContext.DisableCaching",

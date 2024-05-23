@@ -8,7 +8,7 @@
             "DS440000"
         ],
         "applies_to": [
-            "csharp",           
+            "csharp",
             "powershell",
             "vb",
             "fsharp"
@@ -18,7 +18,7 @@
         ],
         "confidence": "high",
         "severity": "ManualReview",
-        "rule_info": "DS440000.md",
+        "rule_info": "DS112835.md",
         "patterns": [
             {
                 "pattern": "SslProtocolsExtensions.Tls11",
@@ -89,14 +89,14 @@
                 "scopes": [
                     "code"
                 ]
-            },            
+            },
             {
                 "pattern": "SslProtocols.Tls",
                 "type": "string",
                 "scopes": [
                     "code"
                 ]
-            },            
+            },
             {
                 "pattern": "(SslProtocols)192",
                 "type": "string",

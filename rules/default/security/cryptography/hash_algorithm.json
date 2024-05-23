@@ -99,7 +99,7 @@
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS197800.md",
+        "rule_info": "DS126858.md",
         "patterns": [
             {
                 "pattern": "CC_(MD2|MD4|MD5|SHA1)",
@@ -159,7 +159,7 @@
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS128420.md",
+        "rule_info": "DS126858.md",
         "patterns": [
             {
                 "pattern": "hash\\s*\\(\\s*[\\'\\\"](md2|md4|md5|sha1|sha224|ripemd128|ripemd160|ripemd256|ripemd320)[\\'\\\"](.*)\\)",
@@ -205,19 +205,19 @@
         "name": "Do not use broken/weak cryptographic hash algorithms",
         "id": "DS108647",
         "description": "Avoid using broken or weak hash algorithms.",
-        "recommendation": "Use Digest::SHA256 or Digest::SHA512",                
+        "recommendation": "Use Digest::SHA256 or Digest::SHA512",
         "applies_to": [
             "ruby"
         ],
         "overrides": [
             "DS126858"
-            ],        
+        ],
         "tags": [
             "Cryptography.HashAlgorithm.BrokenOrWeak"
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS108647.md",
+        "rule_info": "DS126858.md",
         "patterns": [
             {
                 "pattern": "Digest::(MD5|RMD160|SHA1)",
@@ -281,7 +281,7 @@
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS196098.md",
+        "rule_info": "DS126858.md",
         "patterns": [
             {
                 "pattern": "(md5|sha)\\.new\\(",
@@ -342,7 +342,7 @@
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS168931.md",
+        "rule_info": "DS126858.md",
         "patterns": [
             {
                 "pattern": "MD5CryptoServiceProvider",

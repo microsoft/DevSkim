@@ -90,7 +90,7 @@
         ],
         "confidence": "medium",
         "severity": "critical",
-        "rule_info": "DS106863.md",
+        "rule_info": "DS106864.md",
         "patterns": [
             {
                 "pattern": "DES",
@@ -181,7 +181,7 @@
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS106865.md",
+        "rule_info": "DS106864.md",
         "patterns": [
             {
                 "pattern": "['\"](?:DES(?:-(?:C(?:BC|FB[18]?)|E(?:CB|DE(?:-(?:C(?:BC|FB)|OFB))?)|OFB))?)['\"]",
@@ -220,7 +220,7 @@
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS106866.md",
+        "rule_info": "DS106864.md",
         "patterns": [
             {
                 "pattern": "DESEngine|DESedeEngine",

@@ -3,12 +3,49 @@ namespace Microsoft.DevSkim.Tests;
 [TestClass]
 public class DefaultRulesTests
 {
+    private static string _guidanceDirectory = string.Empty;
+
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext testContext)
+    {
+        string directory = Directory.GetCurrentDirectory();
+
+        /* Given a directory, like: "C:\src\DevSkim\DevSkim-DotNet\Microsoft.DevSkim.Tests\bin\Debug\net8.0"     - local dev
+         * OR                       "/mnt/vss/_work/1/s/DevSkim-DotNet/Microsoft.DevSkim.Tests/bin/Debug/net8.0" - CI for DevSkim CLI
+         * we want to find:         "C:\src\DevSkim\guidance"
+         * 
+         * so we look for DevSkim-DotNet and then go up one more level to find guidance.
+         */
+
+        var currentDirInfo = new DirectoryInfo(directory);
+        while (currentDirInfo != null && currentDirInfo.Name != "DevSkim-DotNet")
+        {
+            currentDirInfo = currentDirInfo.Parent;
+        }
+
+        currentDirInfo = currentDirInfo?.Parent;
+
+        if (currentDirInfo == null)
+        {
+            string message = $"Could not find DevSkim-DotNet directory from: {directory}.";
+            throw new Exception(message);
+        }
+
+        string guidanceDir = Path.Combine(currentDirInfo.FullName, "guidance");
+        if (!Directory.Exists(guidanceDir))
+        {
+            throw new Exception($"Guidance directory {guidanceDir} does not exist.");
+        }
+
+        _guidanceDirectory = guidanceDir;
+    }
+
     [TestMethod]
     public void ValidateDefaultRules()
     {
-        DevSkimRuleSet devSkimRuleSet = DevSkim.DevSkimRuleSet.GetDefaultRuleSet();
+        DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
         Assert.AreNotEqual(0, devSkimRuleSet.Count());
-        DevSkimRuleVerifier validator = new DevSkim.DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+        var validator = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
         {
             LanguageSpecs = DevSkimLanguages.LoadEmbedded()
         });
@@ -79,5 +116,64 @@ public class DefaultRulesTests
         DevSkimRuleProcessor analyzer = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions());
         IEnumerable<Issue> analysis = analyzer.Analyze(content, "thing.xml");
         Assert.AreEqual(1, analysis.Count());
+    }
+
+    public static IEnumerable<object[]> DefaultRules
+    {
+        get
+        {
+            DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
+            foreach (DevSkimRule rule in devSkimRuleSet)
+            {
+                yield return new object[] { rule };
+            }
+        }
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(DefaultRules))]
+    public void Rule_guidance_file_should_be_specified_and_exist(DevSkimRule rule)
+    {
+        if (rule.Disabled)
+        {
+            Assert.Inconclusive("Rule is disabled.");
+        }
+
+        if (string.IsNullOrEmpty(rule.RuleInfo))
+        {
+            Assert.Fail("Rule does not specify guidance file.");
+        }
+
+        string guidanceFile = Path.Combine(_guidanceDirectory, rule.RuleInfo);
+        Assert.IsTrue(File.Exists(guidanceFile), $"Guidance file {guidanceFile} does not exist.");
+    }
+
+    [Ignore] // TODO: temporary to get missing guidance in.
+    [TestMethod]
+    [DynamicData(nameof(DefaultRules))]
+    public void Rule_guidance_should_be_complete(DevSkimRule rule)
+    {
+        if (rule.Disabled)
+        {
+            Assert.Inconclusive("Rule is disabled.");
+        }
+
+        if(string.IsNullOrEmpty(rule.RuleInfo))
+        {
+            Assert.Inconclusive("Rule does not specify guidance file.");
+        }
+
+        string guidanceFile = Path.Combine(_guidanceDirectory, rule.RuleInfo);
+        if(!File.Exists(guidanceFile))
+        {
+            Assert.Inconclusive("Guidance file does not exist");
+        }
+
+        string guidance = File.ReadAllText(guidanceFile);
+        if(guidance.Contains("TODO", StringComparison.OrdinalIgnoreCase) 
+            || guidance.Contains("TO DO", StringComparison.OrdinalIgnoreCase))
+        {
+            Assert.Fail($"Guidance file {guidanceFile} contains TODO.");
+        }
     }
 }
