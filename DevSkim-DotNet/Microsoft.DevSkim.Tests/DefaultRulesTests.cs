@@ -10,19 +10,24 @@ public class DefaultRulesTests
     {
         string directory = Directory.GetCurrentDirectory();
 
-        /* Given a directory, like: "C:\src\DevSkim\DevSkim-DotNet\Microsoft.DevSkim.Tests\bin\Debug\net8.0"
+        /* Given a directory, like: "C:\src\DevSkim\DevSkim-DotNet\Microsoft.DevSkim.Tests\bin\Debug\net8.0"     - local dev
+         * OR                       "/mnt/vss/_work/1/s/DevSkim-DotNet/Microsoft.DevSkim.Tests/bin/Debug/net8.0" - CI for DevSkim CLI
          * we want to find:         "C:\src\DevSkim\guidance"
+         * 
+         * so we look for DevSkim-DotNet and then go up one more level to find guidance.
          */
 
         var currentDirInfo = new DirectoryInfo(directory);
-        while (currentDirInfo != null && currentDirInfo.Name != "DevSkim")
+        while (currentDirInfo != null && currentDirInfo.Name != "DevSkim-DotNet")
         {
             currentDirInfo = currentDirInfo.Parent;
         }
 
+        currentDirInfo = currentDirInfo?.Parent;
+
         if (currentDirInfo == null)
         {
-            string message = $"Could not find DevSkim directory from: {directory}.";
+            string message = $"Could not find DevSkim-DotNet directory from: {directory}.";
             throw new Exception(message);
         }
 
