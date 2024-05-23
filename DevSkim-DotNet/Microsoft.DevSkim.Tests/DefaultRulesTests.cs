@@ -3,12 +3,44 @@ namespace Microsoft.DevSkim.Tests;
 [TestClass]
 public class DefaultRulesTests
 {
+    private static string _guidanceDirectory = string.Empty;
+
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext testContext)
+    {
+        string directory = Directory.GetCurrentDirectory();
+
+        /* Given a directory, like: "C:\src\DevSkim\DevSkim-DotNet\Microsoft.DevSkim.Tests\bin\Debug\net8.0"
+         * we want to find:         "C:\src\DevSkim\guidance"
+         */
+
+        var currentDirInfo = new DirectoryInfo(directory);
+        while (currentDirInfo != null && currentDirInfo.Name != "DevSkim")
+        {
+            currentDirInfo = currentDirInfo.Parent;
+        }
+
+        if (currentDirInfo == null)
+        {
+            string message = $"Could not find DevSkim directory from: {directory}.";
+            throw new Exception(message);
+        }
+
+        string guidanceDir = Path.Combine(currentDirInfo.FullName, "guidance");
+        if (!Directory.Exists(guidanceDir))
+        {
+            throw new Exception($"Guidance directory {guidanceDir} does not exist.");
+        }
+
+        _guidanceDirectory = guidanceDir;
+    }
+
     [TestMethod]
     public void ValidateDefaultRules()
     {
-        DevSkimRuleSet devSkimRuleSet = DevSkim.DevSkimRuleSet.GetDefaultRuleSet();
+        DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
         Assert.AreNotEqual(0, devSkimRuleSet.Count());
-        DevSkimRuleVerifier validator = new DevSkim.DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+        var validator = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
         {
             LanguageSpecs = DevSkimLanguages.LoadEmbedded()
         });
@@ -95,7 +127,7 @@ public class DefaultRulesTests
 
     [TestMethod]
     [DynamicData(nameof(DefaultRules))]
-    public void Rule_should_specify_guidance(DevSkimRule rule)
+    public void Rule_guidance_file_should_be_specified_and_exist(DevSkimRule rule)
     {
         if (rule.Disabled)
         {
@@ -106,24 +138,8 @@ public class DefaultRulesTests
         {
             Assert.Fail("Rule does not specify guidance file.");
         }
-    }
 
-    [TestMethod]
-    [DynamicData(nameof(DefaultRules))]
-    public void Rule_guidance_file_should_exist(DevSkimRule rule)
-    {
-        if (rule.Disabled)
-        {
-            Assert.Inconclusive("Rule is disabled.");
-        }
-
-        if (string.IsNullOrEmpty(rule.RuleInfo))
-        {
-            Assert.Inconclusive("Rule does not specify guidance file.");
-        }
-
-        string guidanceDir = GetGuidanceDirectory();
-        string guidanceFile = Path.Combine(guidanceDir, rule.RuleInfo);
+        string guidanceFile = Path.Combine(_guidanceDirectory, rule.RuleInfo);
         Assert.IsTrue(File.Exists(guidanceFile), $"Guidance file {guidanceFile} does not exist.");
     }
 
@@ -142,8 +158,7 @@ public class DefaultRulesTests
             Assert.Inconclusive("Rule does not specify guidance file.");
         }
 
-        string guidanceDir = GetGuidanceDirectory();
-        string guidanceFile = Path.Combine(guidanceDir, rule.RuleInfo);
+        string guidanceFile = Path.Combine(_guidanceDirectory, rule.RuleInfo);
         if(!File.Exists(guidanceFile))
         {
             Assert.Inconclusive("Guidance file does not exist");
@@ -155,33 +170,5 @@ public class DefaultRulesTests
         {
             Assert.Fail($"Guidance file {guidanceFile} contains TODO.");
         }
-    }
-
-    private static string GetGuidanceDirectory()
-    {
-        string directory = Directory.GetCurrentDirectory();
-
-        /* Given a directory, like: "C:\src\DevSkim\DevSkim-DotNet\Microsoft.DevSkim.Tests\bin\Debug\net8.0"
-         * we want to find:         "C:\src\DevSkim\guidance"
-         */
-
-        var currentDirInfo = new DirectoryInfo(directory);
-        while (currentDirInfo != null && currentDirInfo.Name != "DevSkim")
-        {
-            currentDirInfo = currentDirInfo.Parent;
-        }
-
-        if (currentDirInfo == null)
-        {
-            throw new Exception("Could not find DevSkim-DotNet directory.");
-        }
-
-        string guidanceDir = Path.Combine(currentDirInfo.FullName, "guidance");
-        if (!Directory.Exists(guidanceDir))
-        {
-            throw new Exception($"Guidance directory {guidanceDir} does not exist.");
-        }
-
-        return guidanceDir;
     }
 }
