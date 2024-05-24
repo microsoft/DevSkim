@@ -60,7 +60,7 @@
         ],
         "confidence": "high",
         "severity": "moderate",
-        "rule_info": "DS132780.md",
+        "rule_info": "DS132779.md",
         "patterns": [
             {
                 "pattern": "shouldResolveExternalEntities\\s*=\\s*TRUE",
@@ -104,7 +104,7 @@
         ],
         "confidence": "high",
         "severity": "moderate",
-        "rule_info": "DS132790.md",
+        "rule_info": "DS132779.md",
         "patterns": [
             {
                 "pattern": "setShouldResolveExternalEntities:\\s*YES",
