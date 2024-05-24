@@ -148,7 +148,6 @@ public class DefaultRulesTests
         Assert.IsTrue(File.Exists(guidanceFile), $"Guidance file {guidanceFile} does not exist.");
     }
 
-    [Ignore] // TODO: temporary to get missing guidance in.
     [TestMethod]
     [DynamicData(nameof(DefaultRules))]
     public void Rule_guidance_should_be_complete(DevSkimRule rule)
