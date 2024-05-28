@@ -9,7 +9,7 @@
         ],
         "confidence": "medium",
         "severity": "important",
-        "rule_info": "DS187371.md",
+        "rule_info": "DS182720.md",
         "patterns": [
             {
                 "pattern": "(ECB|OFB|CFB|CTS|PCBC|GMAC|XCBC|IACBC|IAPM|EAX|OCB|CWC|AEAD|LRW|XEX|XTS|CMC|EME|CBCMAC|OMAC|PMAC)",
