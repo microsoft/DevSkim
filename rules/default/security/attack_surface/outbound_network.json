@@ -12,7 +12,7 @@
         ],
         "confidence": "high",
         "severity": "ManualReview",
-        "rule_info": "DS137038.md",
+        "rule_info": "DS137138.md",
         "patterns": [
             {
                 "pattern": "Net::HTTP",
