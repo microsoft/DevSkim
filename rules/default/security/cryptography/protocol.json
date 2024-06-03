@@ -13,7 +13,7 @@
         ],
         "confidence": "high",
         "severity": "important",
-        "rule_info": "DS144436.md",
+        "rule_info": "DS169126.md",
         "patterns": [
             {
                 "pattern": "SecurityProtocolType\\.(Ssl3|Tls|Tls11)",
