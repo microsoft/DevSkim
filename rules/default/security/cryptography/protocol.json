@@ -55,7 +55,7 @@
         ],
         "confidence": "high",
         "severity": "moderate",
-        "rule_info": "DS127101.md",
+        "rule_info": "DS112835.md",
         "patterns": [
             {
                 "pattern": "SecPkgCred_SupportedProtocols",
