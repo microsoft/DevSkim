@@ -169,12 +169,12 @@ public class DefaultRulesTests
         }
 
         string guidance = File.ReadAllText(guidanceFile);
-        if (rule.Id == "DS176209") // "Suspicious comment" - a TODO comment
-        {
-            Assert.IsFalse(string.IsNullOrEmpty(guidance));
-        }
-        else if (guidance.Contains("TODO", StringComparison.OrdinalIgnoreCase) 
-            || guidance.Contains("TO DO", StringComparison.OrdinalIgnoreCase))
+        bool hasContent = !string.IsNullOrEmpty(guidance);
+        Assert.IsTrue(hasContent, $"Guidance file {guidanceFile} is empty.");
+
+        if (rule.Id != "DS176209" && // "Suspicious comment" - a TODO comment
+            (guidance.Contains("TODO", StringComparison.OrdinalIgnoreCase)
+            || guidance.Contains("TO DO", StringComparison.OrdinalIgnoreCase)))
         {
             Assert.Fail($"Guidance file {guidanceFile} contains TODO.");
         }
