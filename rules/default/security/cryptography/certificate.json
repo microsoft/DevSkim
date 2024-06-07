@@ -1,37 +1,5 @@
 [
     {
-        "name": "Encryption Marked 'Optional'",
-        "id": "DS114352",
-        "description": "Optional encryption or integrity checking can be dangerous.",
-        "recommendation": "As a best practice, always enable strong encryption and integrity checking.",
-        "tags": [
-            "Cryptography.Optional"
-        ],
-        "confidence": "high",
-        "severity": "important",
-        "rule_info": "DS114352.md",
-        "patterns": [
-            {
-                "pattern": "Integrity.*optional",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
-                "pattern": "Encryption.*optional",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ]
-            }
-        ],
-        "must-match": [
-            "IntegrityCheck = optional",
-            "EncryptionEnabled = optional"
-        ]
-    },
-    {
         "name": "Disabled certificate validation",
         "id": "DS181865",
         "description": "Extend default certificate validation, but do not disable or override default rules.",

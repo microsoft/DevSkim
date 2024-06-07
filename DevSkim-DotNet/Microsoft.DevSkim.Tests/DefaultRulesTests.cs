@@ -148,7 +148,6 @@ public class DefaultRulesTests
         Assert.IsTrue(File.Exists(guidanceFile), $"Guidance file {guidanceFile} does not exist.");
     }
 
-    [Ignore] // TODO: temporary to get missing guidance in.
     [TestMethod]
     [DynamicData(nameof(DefaultRules))]
     public void Rule_guidance_should_be_complete(DevSkimRule rule)
@@ -170,8 +169,12 @@ public class DefaultRulesTests
         }
 
         string guidance = File.ReadAllText(guidanceFile);
-        if(guidance.Contains("TODO", StringComparison.OrdinalIgnoreCase) 
-            || guidance.Contains("TO DO", StringComparison.OrdinalIgnoreCase))
+        bool hasContent = !string.IsNullOrEmpty(guidance);
+        Assert.IsTrue(hasContent, $"Guidance file {guidanceFile} is empty.");
+
+        if (rule.Id != "DS176209" && // "Suspicious comment" - a TODO comment
+            (guidance.Contains("TODO", StringComparison.OrdinalIgnoreCase)
+            || guidance.Contains("TO DO", StringComparison.OrdinalIgnoreCase)))
         {
             Assert.Fail($"Guidance file {guidanceFile} contains TODO.");
         }

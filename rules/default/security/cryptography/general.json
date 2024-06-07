@@ -9,7 +9,7 @@
         ],
         "confidence": "high",
         "severity": "critical",
-        "rule_info": "DS101155.md",
+        "rule_info": "DS181865.md",
         "patterns": [
             {
                 "pattern": "encrypt\\s*=\\s*false",

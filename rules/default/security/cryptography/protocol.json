@@ -13,7 +13,7 @@
         ],
         "confidence": "high",
         "severity": "important",
-        "rule_info": "DS144436.md",
+        "rule_info": "DS169126.md",
         "patterns": [
             {
                 "pattern": "SecurityProtocolType\\.(Ssl3|Tls|Tls11)",
@@ -55,7 +55,7 @@
         ],
         "confidence": "high",
         "severity": "moderate",
-        "rule_info": "DS127101.md",
+        "rule_info": "DS112835.md",
         "patterns": [
             {
                 "pattern": "SecPkgCred_SupportedProtocols",
@@ -79,7 +79,7 @@
         ],
         "confidence": "high",
         "severity": "important",
-        "rule_info": "DS169125.md",
+        "rule_info": "DS169126.md",
         "patterns": [
             {
                 "pattern": "(SSLv?2|SSLv?3|TLSv?1|TLSv?10)",
