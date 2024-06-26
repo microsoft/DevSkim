@@ -2,19 +2,15 @@
 # https://aka.ms/yaml
 
 name: DevSkim_VisualStudio_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-trigger:
-  batch: true
-  branches:
-    include:
-    - main
-  paths:
-    exclude:
-    - "*.md"
-#pr: none
-pr:
-  branches:
-    include:
-    - main
+trigger: none
+  # batch: true
+  # branches:
+  #   include:
+  #   - main
+  # paths:
+  #   exclude:
+  #   - "*.md"
+pr: none
 
 resources:
   repositories:
