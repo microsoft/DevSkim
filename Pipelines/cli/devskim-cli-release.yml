@@ -31,10 +31,6 @@ variables:
   BuildConfiguration: 'Release'
   DotnetVersion: '8.0.x'
 
-variables:
-  BuildConfiguration: 'Release'
-  DotnetVersion: '8.0.x'
-
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
