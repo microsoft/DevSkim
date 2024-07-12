@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.39] - 20224-6-26
+## [1.0.40] - 2024-7-08
+## Fix
+Fixes extraneous printing of git errors when git ignore checking is enabled during analysis.
+
+## [1.0.39] - 2024-6-26
 ### Pipelines
 Pipeline maintenance.
 

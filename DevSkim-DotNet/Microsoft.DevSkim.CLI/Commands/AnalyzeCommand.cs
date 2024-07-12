@@ -267,7 +267,8 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 Arguments = $"check-ignore {fp}",
                 WorkingDirectory = Directory.GetParent(fp)?.FullName,
-                RedirectStandardOutput = true
+                RedirectStandardOutput = true,
+                RedirectStandardError = true // Suppress git errors being printed - particularly when not in a git work tree
             });
             process?.WaitForExit();
             string? stdOut = process?.StandardOutput.ReadToEnd();
