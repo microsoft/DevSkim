@@ -61,6 +61,12 @@ namespace Microsoft.DevSkim.CLI.Commands
                         issueRecords = issueRecords.Where(x => _opts.RulesToApplyFrom.Any(y => y == x.RuleId)).ToList();
                     }
 
+                    // No issues remain for file after filtering to specified rule ids, skip file
+                    if (!issueRecords.Any())
+                    {
+                        continue;
+                    }
+                    
                     issueRecords
                     .Sort((a, b) => a.PhysicalLocation.Region.StartLine - b.PhysicalLocation.Region.StartLine);
 
