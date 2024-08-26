@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Options;
@@ -83,9 +82,10 @@ namespace Microsoft.DevSkim.CLI.Commands
                     if (!File.Exists(potentialPath))
                     {
                         _logger.LogError($"{potentialPath} specified in sarif does not appear to exist on disk.");
+                        continue;
                     }
                     string content = File.ReadAllText(potentialPath);
-                    string[] theContent = SplitMyStringIntoPieces(content);
+                    string[] theContent = SplitStringByLinesWithNewLines(content);
                     int currLine = 0;
                     StringBuilder sb = new StringBuilder();
 
@@ -95,29 +95,35 @@ namespace Microsoft.DevSkim.CLI.Commands
                         {
                             Region region = issueRecord.PhysicalLocation.Region;
                             int zeroBasedStartLine = region.StartLine - 1;
-                            bool isMultiline = theContent[zeroBasedStartLine].EndsWith(@"\");
-                            string ignoreComment = DevSkimRuleProcessor.GenerateSuppressionByLanguage(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || isMultiline, _opts.Duration, _opts.Reviewer, devSkimLanguages);
+                            string originalLine = theContent[zeroBasedStartLine];
+                            int lineEndPosition = FindNewLine(originalLine);
+                            // If line ends with `\` it may have continuation on the next line,
+                            //  so put the comment at the line start and use multiline format
+                            bool forceMultiLine = lineEndPosition >= 0 && originalLine[..lineEndPosition].EndsWith(@"\");
+                            string ignoreComment = DevSkimRuleProcessor.GenerateSuppressionByLanguage(region.SourceLanguage, issueRecord.RulesId, _opts.PreferMultiline || forceMultiLine, _opts.Duration, _opts.Reviewer, devSkimLanguages);
                             if (!string.IsNullOrEmpty(ignoreComment))
                             {
                                 foreach (string line in theContent[currLine..zeroBasedStartLine])
                                 {
                                     sb.Append($"{line}");
                                 }
-
-                                string originalLine = theContent[zeroBasedStartLine];
-                                int lineEndPosition = FindNewLine(originalLine);
-                                // Use the content then the ignore comment then the original newline characters from the extra array
-                                if (lineEndPosition != -1)
+                                
+                                if (forceMultiLine)
                                 {
-                                    sb.Append(isMultiline
-                                        ? $"{ignoreComment}{theContent[zeroBasedStartLine]}"
-                                        : $"{originalLine[0..lineEndPosition]} {ignoreComment}{originalLine[lineEndPosition..]}");
+                                    sb.Append($"{ignoreComment} {originalLine}");
                                 }
                                 else
                                 {
-                                    sb.Append(isMultiline
-                                        ? $"{ignoreComment}{theContent[zeroBasedStartLine]}"
-                                        : $"{theContent[zeroBasedStartLine]} {ignoreComment}");
+                                    // Use the content then the ignore comment then the original newline characters from the extra array
+                                    if (lineEndPosition != -1)
+                                    {
+                                        sb.Append($"{originalLine[0..lineEndPosition]} {ignoreComment}{originalLine[lineEndPosition..]}");
+                                    }
+                                    // No new line so we can just use the line as is
+                                    else
+                                    {
+                                        sb.Append($"{originalLine} {ignoreComment}");
+                                    }
                                 }
                             }
 
@@ -172,7 +178,7 @@ namespace Microsoft.DevSkim.CLI.Commands
         /// </summary>
         /// <param name="content"></param>
         /// <returns>Array of strings, each containing the content of one line from the input string including any newline characters from that line</returns>
-        private string[] SplitMyStringIntoPieces(string content)
+        private string[] SplitStringByLinesWithNewLines(string content)
         {
             List<string> lines = new();
             int curPos = 0;
