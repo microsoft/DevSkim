@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.42] - 2024-08-26
 ## Fix
-Fixes suppression command to not perturb line breaks, particularly when a file has findings which are not selected for suppression.
+Fixes suppression command to not perturb line breaks, particularly when a file has findings which are not selected for suppression. #631
 
 ## [1.0.41] - 2024-08-23
 ## Rules
