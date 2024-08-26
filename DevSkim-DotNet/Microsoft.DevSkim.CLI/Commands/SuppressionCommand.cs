@@ -1,9 +1,11 @@
 // Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Options;
@@ -82,8 +84,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                     {
                         _logger.LogError($"{potentialPath} specified in sarif does not appear to exist on disk.");
                     }
-
-                    string[] theContent = File.ReadAllLines(potentialPath);
+                    string content = File.ReadAllText(potentialPath);
+                    string[] theContent = SplitMyStringIntoPieces(content);
                     int currLine = 0;
                     StringBuilder sb = new StringBuilder();
 
@@ -99,12 +101,24 @@ namespace Microsoft.DevSkim.CLI.Commands
                             {
                                 foreach (string line in theContent[currLine..zeroBasedStartLine])
                                 {
-                                    sb.Append($"{line}{Environment.NewLine}");
+                                    sb.Append($"{line}");
                                 }
 
-                                string suppressionComment = isMultiline ? $"{ignoreComment}{theContent[zeroBasedStartLine]}{Environment.NewLine}" :
-                                    $"{theContent[zeroBasedStartLine]} {ignoreComment}{Environment.NewLine}";
-                                sb.Append(suppressionComment);
+                                string originalLine = theContent[zeroBasedStartLine];
+                                int lineEndPosition = FindNewLine(originalLine);
+                                // Use the content then the ignore comment then the original newline characters from the extra array
+                                if (lineEndPosition != -1)
+                                {
+                                    sb.Append(isMultiline
+                                        ? $"{ignoreComment}{theContent[zeroBasedStartLine]}"
+                                        : $"{originalLine[0..lineEndPosition]} {ignoreComment}{originalLine[lineEndPosition..]}");
+                                }
+                                else
+                                {
+                                    sb.Append(isMultiline
+                                        ? $"{ignoreComment}{theContent[zeroBasedStartLine]}"
+                                        : $"{theContent[zeroBasedStartLine]} {ignoreComment}");
+                                }
                             }
 
                             currLine = zeroBasedStartLine + 1;
@@ -115,7 +129,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     {
                         foreach (string line in theContent[currLine..^1])
                         {
-                            sb.Append($"{line}{Environment.NewLine}");
+                            sb.Append($"{line}");
                         }
                         sb.Append($"{theContent.Last()}");
                     }
@@ -132,6 +146,50 @@ namespace Microsoft.DevSkim.CLI.Commands
             }
 
             return (int)ExitCode.NoIssues;
+        }
+
+        /// <summary>
+        /// Find the first location of a newline (\n or \r\n) in a string
+        /// </summary>
+        /// <param name="originalLine"></param>
+        /// <returns>Character index of the first newline sequence or -1 if none found</returns>
+        private int FindNewLine(string originalLine)
+        {
+            int indexOfNewLine = originalLine.IndexOf('\n');
+            if (indexOfNewLine >= 1)
+            {
+                if (originalLine[indexOfNewLine - 1] == '\r')
+                {
+                    indexOfNewLine = indexOfNewLine - 1;
+                }
+            }
+
+            return indexOfNewLine;
+        }
+
+        /// <summary>
+        /// Split string into lines including the newline characters
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns>Array of strings, each containing the content of one line from the input string including any newline characters from that line</returns>
+        private string[] SplitMyStringIntoPieces(string content)
+        {
+            List<string> lines = new();
+            int curPos = 0;
+            for (int i = 0; i < content.Length; i++)
+            {
+                if (content[i] == '\n')
+                {
+                    lines.Add(content[curPos..(i+1)]);
+                    curPos = i + 1;
+                }
+
+                if (i == content.Length - 1)
+                {
+                    lines.Add(content[curPos..(i+1)]);
+                }
+            }
+            return lines.ToArray();
         }
     }
 }
