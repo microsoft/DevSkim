@@ -51,7 +51,7 @@ The Visual Studio extension is available in the [Visual Studio Marketplace](http
 
 The Visual Studio Code plugin is available in the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=MS-CST-E.vscode-devskim).
 
-DevSkim is also available as a [GitHub Action](https://github.com/microsoft/DevSkim-Action) to itegrate with the GitHub Security Issues pane.
+DevSkim is also available as a [GitHub Action](https://github.com/microsoft/DevSkim-Action) to integrate with the GitHub Security Issues pane.
 
 Platform specific binaries of the DevSkim CLI are also available on our GitHub [releases page](https://github.com/microsoft/DevSkim/releases).
 

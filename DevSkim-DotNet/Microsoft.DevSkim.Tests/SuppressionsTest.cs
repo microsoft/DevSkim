@@ -286,5 +286,63 @@ namespace Microsoft.DevSkim.Tests
             new AnalyzeCommand(opts).Run();
             return (basePath, tempFileName, Path.Combine(basePath, outFileName));
         }
+        
+        /// <summary>
+        /// Test that suppressing an issue doesn't change the line break characters
+        /// </summary>
+        /// <param name="lineBreakSequence">Character sequence used for line breaks</param>
+        /// <param name="preferMultiLine">Use multiline comments or not</param>
+        [DataTestMethod]
+        [DataRow("\r\n", true)]
+        [DataRow("\r\n", false)]
+        [DataRow("\n", true)]
+        [DataRow("\n", false)]
+        public void DontPerturbExtantLineBreaks(string lineBreakSequence, bool preferMultiLine)
+        {
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis($"MD5\\{lineBreakSequence}http://contoso.com{lineBreakSequence}", "c");
+
+            SuppressionCommandOptions opts = new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true,
+                PreferMultiline = preferMultiLine
+            };
+
+            int resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            string result = File.ReadAllText(sourceFile);
+            Assert.AreEqual(lineBreakSequence, result[^lineBreakSequence.Length..]);
+        }
+        
+        /// <summary>
+        /// Test that files don't change at all when they have findings but those rule ids are not selected for suppression
+        /// </summary>
+        /// <param name="lineBreakSequence">Character sequence used for line breaks</param>
+        /// <param name="preferMultiLine">Use multiline comments or not</param>
+        [DataTestMethod]
+        [DataRow("\r\n", true)]
+        [DataRow("\r\n", false)]
+        [DataRow("\n", true)]
+        [DataRow("\n", false)]
+        public void DontChangeFilesWithoutSelectedFindings(string lineBreakSequence, bool preferMultiline)
+        {
+            string originalContent = $"MD5{lineBreakSequence}http://contoso.com{lineBreakSequence}";
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(originalContent, "c");
+
+            SuppressionCommandOptions opts = new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = false,
+                PreferMultiline = preferMultiline,
+                RulesToApplyFrom = new string[] { "NotAValidRuleId" } // Don't apply any rules
+            };
+
+            int resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            string result = File.ReadAllText(sourceFile);
+            Assert.AreEqual(originalContent, result);
+        }
     }
 }
