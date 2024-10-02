@@ -12,7 +12,7 @@ resources:
   repositories:
     - repository: templates
       type: git
-      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      name: Data/OSS-Tools-Pipeline-Templates
       ref: refs/tags/v2.0.0
     - repository: 1esPipelines
       type: git
