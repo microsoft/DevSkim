@@ -45,3 +45,14 @@ pipelines:
           lastModifiedDate: 2024-11-01
         armory:
           lastModifiedDate: 2024-11-01
+  1046:
+    retail:
+      source:
+        credscan:
+          lastModifiedDate: 2024-11-01
+        eslint:
+          lastModifiedDate: 2024-11-01
+        psscriptanalyzer:
+          lastModifiedDate: 2024-11-01
+        armory:
+          lastModifiedDate: 2024-11-01
