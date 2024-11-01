@@ -1,22 +1,12 @@
-# Azure Pipelines
-# https://aka.ms/yaml
-
 name: DevSkim_VisualStudio_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger: none
-  # batch: true
-  # branches:
-  #   include:
-  #   - main
-  # paths:
-  #   exclude:
-  #   - "*.md"
 pr: none
 
 resources:
   repositories:
     - repository: templates
       type: git
-      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      name: Data/OSS-Tools-Pipeline-Templates
       ref: refs/tags/v2.0.0
     - repository: 1esPipelines
       type: git
@@ -26,6 +16,11 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
+    sdl:
+      sourceRepositoriesToScan:
+        exclude:
+          - repository: 1esPipelines
+          - repository: templates
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
       image: MSSecurity-1ES-Windows-2022
@@ -70,3 +65,86 @@ extends:
             inputs:
               targetType: 'inline'
               script: 'mv $env:BUILD_STAGINGDIRECTORY/bin/dotnetapp/DevSkim_VS_dotnetapp_$(ReleaseVersion)/*.vsix $env:BUILD_STAGINGDIRECTORY/extension'
+
+    - stage: Release
+      dependsOn:
+      - Build
+      condition: succeeded()
+      jobs:
+      - job: sign_hash_release
+        displayName: Code Sign, Generate Hashes, Publish Public Release
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            path: '$(Build.StagingDirectory)'
+            artifact: 'Signed_Binaries_$(System.JobId)_$(System.JobAttempt)'
+        steps:
+        - template: nbgv-set-version-steps.yml@templates
+        - task: DownloadPipelineArtifact@2
+          displayName: Retrieve Unsigned Artifact 
+          inputs:
+            buildType: 'current'
+            artifactName: 'Unsigned_Extension'
+            targetPath: '$(Build.BinariesDirectory)\Unsigned_Extension'
+        - task: AntiMalware@3
+          displayName: Anti-Malware Scan
+          inputs:
+            InputType: 'Basic'
+            ScanType: 'CustomScan'
+            FileDirPath: '$(Build.BinariesDirectory)'
+            EnableServices: true
+            SupportLogOnError: false
+            TreatSignatureUpdateFailureAs: 'Warning'
+            SignatureFreshness: 'UpToDate'
+            TreatStaleSignatureAs: 'Warning'
+        - task: EsrpCodeSigning@5
+          displayName: Code Sign VS Extension
+          inputs:
+            ConnectedServiceName: 'oss-esrp-signing-v5-connection'
+            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
+            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
+            AuthAKVName: 'oss-signing-vault'
+            AuthCertName: 'oss-esrp-auth-cert'
+            AuthSignCertName: 'oss-esrp-signing-cert'
+            FolderPath: '$(Build.BinariesDirectory)\Unsigned_Extension'
+            Pattern: '*.vsix'
+            signConfigType: 'inlineSignParams'
+            inlineOperation: |
+              [
+                      {
+                          "KeyCode" : "CP-233016",
+                          "OperationCode" : "OpcSign",
+                          "Parameters" : {
+                              "FileDigest" : "/fd SHA256"
+                          },
+                          "ToolName" : "sign",
+                          "ToolVersion" : "1.0"
+                      },
+                      {
+                          "KeyCode" : "CP-233016",
+                          "OperationCode" : "OpcVerify",
+                          "Parameters" : {},
+                          "ToolName" : "sign",
+                          "ToolVersion" : "1.0"
+                      }
+                  ]
+            SessionTimeout: '60'
+            MaxConcurrency: '50'
+            MaxRetryAttempts: '5'
+        - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+          displayName: 'Delete Code Sign Summaries'
+        - task: PowerShell@2
+          displayName: Move Extension File
+          inputs:
+            targetType: 'inline'
+            script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Extension/*.vsix $env:BUILD_STAGINGDIRECTORY/'
+        - task: PowerShell@2
+          displayName: Generate Hashes
+          inputs:
+            targetType: 'inline'
+            script: |
+              Get-ChildItem $(Build.StagingDirectory) | Foreach-Object {
+                $name = $_.Name
+                $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
+                Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
+              }

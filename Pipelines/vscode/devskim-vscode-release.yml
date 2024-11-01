@@ -1,22 +1,12 @@
-# Azure Pipelines
-# https://aka.ms/yaml
-
 name: DevSkim_VSCode_Release_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger: none
-  # batch: true
-  # branches:
-  #   include:
-  #   - main
-  # paths:
-  #   exclude:
-  #   - "*.md"
 pr: none
 
 resources:
   repositories:
     - repository: templates
       type: git
-      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      name: Data/OSS-Tools-Pipeline-Templates
       ref: refs/tags/v2.0.0
     - repository: 1esPipelines
       type: git
@@ -26,6 +16,11 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
+    sdl:
+      sourceRepositoriesToScan:
+        exclude:
+          - repository: 1esPipelines
+          - repository: templates
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
       image: MSSecurity-1ES-Windows-2022
@@ -71,3 +66,77 @@ extends:
           inputs:
             targetType: 'inline'
             script: 'mv DevSkim-VSCode-Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/packages/'
+       
+    - stage: Release
+      dependsOn:
+      - Build
+      condition: succeeded()
+      jobs:
+      - job: sign_hash_release
+        displayName: Code Sign, Generate Hashes, Publish Public Release
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            path: '$(Build.StagingDirectory)'
+            artifact: 'Signed_Binaries_$(System.JobId)_$(System.JobAttempt)'
+        steps:
+        - template: nbgv-set-version-steps.yml@templates
+        - task: DownloadPipelineArtifact@2
+          displayName: Retrieve Unsigned Artifact 
+          inputs:
+            buildType: 'current'
+            artifactName: 'Unsigned_Plugin'
+            targetPath: '$(System.ArtifactsDirectory)\Unsigned_Plugin'
+        - task: AntiMalware@4
+          displayName: Anti-Malware Scan
+          inputs:
+            InputType: 'Basic'
+            ScanType: 'CustomScan'
+            FileDirPath: '$(System.ArtifactsDirectory)'
+            EnableServices: true
+            SupportLogOnError: true
+            TreatSignatureUpdateFailureAs: 'Warning'
+            SignatureFreshness: 'UpToDate'
+            TreatStaleSignatureAs: 'Warning'
+        - task: EsrpCodeSigning@5
+          displayName: Code Sign VSCode Plugin
+          inputs:
+            ConnectedServiceName: 'oss-esrp-signing-v5-connection'
+            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
+            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
+            AuthAKVName: 'oss-signing-vault'
+            AuthCertName: 'oss-esrp-auth-cert'
+            AuthSignCertName: 'oss-esrp-signing-cert'
+            FolderPath: '$(System.ArtifactsDirectory)\Unsigned_Plugin'
+            Pattern: '*.vsix'
+            signConfigType: 'inlineSignParams'
+            inlineOperation: |
+              [
+                      {
+                          "KeyCode" : "CP-233016",
+                          "OperationCode" : "OpcSign",
+                          "Parameters" : {
+                              "FileDigest" : "/fd SHA256"
+                          },
+                          "ToolName" : "sign",
+                          "ToolVersion" : "1.0"
+                      },
+                      {
+                          "KeyCode" : "CP-233016",
+                          "OperationCode" : "OpcVerify",
+                          "Parameters" : {},
+                          "ToolName" : "sign",
+                          "ToolVersion" : "1.0"
+                      }
+                  ]
+            SessionTimeout: '60'
+            MaxConcurrency: '50'
+            MaxRetryAttempts: '5'
+
+        - powershell: 'Get-ChildItem -Path ''$(System.ArtifactsDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+          displayName: 'Delete Code Sign Summaries'
+        - task: PowerShell@2
+          displayName: Move Plugin File
+          inputs:
+            targetType: 'inline'
+            script: 'mv $env:SYSTEM_ARTIFACTSDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
