@@ -82,7 +82,7 @@
         "rule_info": "DS169126.md",
         "patterns": [
             {
-                "pattern": "(SSLv?2|SSLv?3|TLSv?1|TLSv?10)",
+                "pattern": "(SSLv?2|SSLv?3|TLSv?1(?![._]?[2-9])|TLSv?1[._]?[01])",
                 "type": "RegexWord",
                 "scopes": [
                     "code"
@@ -90,9 +90,23 @@
             }
         ],
         "must-match": [
+            "SSLv2",
             "SSLv3",
             "TLSv1",
-            "TLSv10"
+            "TLSv10",
+            "TLSv1_0",
+            "TLSv1.0",
+            "TLSv11",
+            "TLSv1_1",
+            "TLSv1.1"
+        ],
+        "must-not-match": [
+            "TLSv12",
+            "TLSv1_2",
+            "TLSv1.2",
+            "TLSv13",
+            "TLSv1_3",
+            "TLSv1.3"
         ]
     },
     {
@@ -129,22 +143,8 @@
                 ]
             },
             {
-                "pattern": "TLSv1(?!_[2-9])",
+                "pattern": "TLSv1(?![._]?[2-9])",
                 "type": "regex",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
-                "pattern": "TLSv1(0|_0)",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
-                "pattern": "TLSv1_1",
-                "type": "string",
                 "scopes": [
                     "code"
                 ]
@@ -154,11 +154,21 @@
             "SSLv3",
             "TLSv1",
             "TLSv10",
+            "TLSv1.0",
+            "TLSv1_0",
+            "TLSv11",
+            "TLSv1.1",
+            "TLSv1_1",
+            "TLSv1X9",
             "SSLv2_client"
         ],
         "must-not-match":[
+            "TLSv12",
             "TLSv1_2",
-            "TLSv1_3"
+            "TLSv1.2",
+            "TLSv13",
+            "TLSv1_3",
+            "TLSv1.3"
         ]
     },
     {
