@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Rules
 Fixed false positives and false negatives in outdated/banned SSL/TLS protocols. #649
 
+## [1.0.44] - 2024-11-01
+### Pipeline
+Pipeline only changes
+
+## [1.0.43] - 2024-10-29
+### Pipeline
+Pipeline only changes
+
 ## [1.0.42] - 2024-08-26
 ## Fix
 Fixes suppression command to not perturb line breaks, particularly when a file has findings which are not selected for suppression. #631
