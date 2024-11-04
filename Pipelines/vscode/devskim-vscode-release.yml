@@ -86,13 +86,13 @@ extends:
           inputs:
             buildType: 'current'
             artifactName: 'Unsigned_Plugin'
-            targetPath: '$(System.ArtifactsDirectory)\Unsigned_Plugin'
+            targetPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
         - task: AntiMalware@4
           displayName: Anti-Malware Scan
           inputs:
             InputType: 'Basic'
             ScanType: 'CustomScan'
-            FileDirPath: '$(System.ArtifactsDirectory)'
+            FileDirPath: '$(Build.BinariesDirectory)'
             EnableServices: true
             SupportLogOnError: true
             TreatSignatureUpdateFailureAs: 'Warning'
@@ -107,7 +107,7 @@ extends:
             AuthAKVName: 'oss-signing-vault'
             AuthCertName: 'oss-esrp-auth-cert'
             AuthSignCertName: 'oss-esrp-signing-cert'
-            FolderPath: '$(System.ArtifactsDirectory)\Unsigned_Plugin'
+            FolderPath: '$(Build.BinariesDirectory)\Unsigned_Plugin'
             Pattern: '*.vsix'
             signConfigType: 'inlineSignParams'
             inlineOperation: |
@@ -133,10 +133,43 @@ extends:
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
 
-        - powershell: 'Get-ChildItem -Path ''$(System.ArtifactsDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
+        - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
           displayName: 'Delete Code Sign Summaries'
         - task: PowerShell@2
           displayName: Move Plugin File
           inputs:
             targetType: 'inline'
-            script: 'mv $env:SYSTEM_ARTIFACTSDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
+            script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
+
+        # Install dependencies and VS Code Extension Manager (vsce >= v2.26.1 needed)
+        - script: |
+              cd $(Build.StagingDirectory)
+              npm install -g @vscode/vsce
+              npm install
+          displayName: "Install vsce and dependencies"
+
+        # Publish to marketplace
+        - task: AzureCLI@2
+          displayName: 'Publishing with Managed Identity'  
+          inputs:
+            azureSubscription: oss-vs-marketplace-publish-mi-connection
+            scriptType: "pscore"
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              cd $(Build.StagingDirectory)
+              vsce publish --azure-credential
+
+        - task: GitHubRelease@1
+          displayName: Release to GitHub
+          inputs:
+            gitHubConnection: 'github.com_gfs'
+            repositoryName: 'microsoft/DevSkim'
+            action: 'create'
+            target: '$(Build.SourceVersion)'
+            tagSource: 'userSpecifiedTag'
+            tag: 'VSCode_v$(ReleaseVersion)'
+            title: 'DevSkim VS Code Extension v$(ReleaseVersion)'
+            assets: |
+              $(Build.StagingDirectory)/*.vsix
+            changeLogCompareToRelease: 'lastNonDraftRelease'
+            changeLogType: 'commitBased'
