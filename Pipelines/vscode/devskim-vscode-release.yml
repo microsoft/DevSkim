@@ -135,11 +135,18 @@ extends:
 
         - powershell: 'Get-ChildItem -Path ''$(Build.BinariesDirectory)'' -Recurse CodeSign* | foreach { Remove-Item -Path $_.FullName }'
           displayName: 'Delete Code Sign Summaries'
+
         - task: PowerShell@2
           displayName: Move Plugin File
           inputs:
             targetType: 'inline'
             script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
+
+        - task: PowerShell@2
+          displayName: Move package.json File
+          inputs:
+            targetType: 'inline'
+            script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-VSCode-Plugin/*.json $env:BUILD_STAGINGDIRECTORY/'
 
         # Install dependencies and VS Code Extension Manager (vsce >= v2.26.1 needed)
         - script: |
