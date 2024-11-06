@@ -142,11 +142,11 @@ extends:
             targetType: 'inline'
             script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
 
-        - task: PowerShell@2
-          displayName: Move package.json File
+        - task: CmdLine@2
+          displayName: 'List files in StagingDirectory'
           inputs:
-            targetType: 'inline'
-            script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-VSCode-Plugin/*.json $env:BUILD_STAGINGDIRECTORY/'
+            script: dir /B
+            workingDirectory: '$(Build.StagingDirectory)'
 
         # Install dependencies and VS Code Extension Manager (vsce >= v2.26.1 needed)
         - script: |
@@ -162,9 +162,19 @@ extends:
             azureSubscription: oss-vs-marketplace-publish-mi-connection
             scriptType: "pscore"
             scriptLocation: 'inlineScript'
+            workingDirectory: '$(Build.StagingDirectory)'
             inlineScript: |
-              cd $(Build.StagingDirectory)
-              vsce publish --azure-credential
+                $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix
+                if ("$(ReleaseVersion)".Contains("-"))
+                {
+                    echo "Publishing as --pre-release = $(ReleaseVersion)"
+                    vsce publish --packagePath $packPath --pre-release --azure-credential
+                }
+                else
+                {
+                    echo "Publishing as official release = $(ReleaseVersion)"
+                    vsce publish --packagePath $packPath --azure-credential
+                }
 
         - task: GitHubRelease@1
           displayName: Release to GitHub
