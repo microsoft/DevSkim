@@ -148,3 +148,41 @@ extends:
                 $tmp = (Get-FileHash "$(Build.StagingDirectory)\$name").Hash
                 Add-Content $(Build.StagingDirectory)\HASHES.txt "$tmp`t$name"
               }
+        - task: PowerShell@2
+          displayName: Move VS Marketplace Manifest
+          inputs:
+            targetType: 'inline'
+            script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/publish.manifest.json $env:BUILD_STAGINGDIRECTORY/'
+        - task: PowerShell@2
+          displayName: Move Readme-gallery.md
+          inputs:
+            targetType: 'inline'
+            script: 'mv $env:BUILD_SOURCESDIRECTORY/DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Content/readme-gallery.md $env:BUILD_STAGINGDIRECTORY/'
+
+        - task: AzureCLI@2
+          displayName: 'Publishing with Managed Identity'  
+          inputs:
+            azureSubscription: oss-vs-marketplace-publish-mi-connection
+            scriptType: "pscore"
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              $aadToken = az account get-access-token --query accessToken --resource 499b84ac-1321-427f-aa17-267ca6975798 -o tsv
+              Install-Module VSSetup -Force
+              $vsixPublisher = Join-Path -Path (Get-VSSetupInstance -All | Select-VSSetupInstance -Latest).installationPath -ChildPath "VSSDK\VisualStudioIntegration\Tools\Bin\VsixPublisher.exe" -Resolve
+              $vsixPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix -Relative
+              & $vsixPublisher publish -payload $vsixPath -publishManifest $(Build.StagingDirectory)/publish.manifest.json -personalAccessToken $aadToken -ignoreWarnings "VSIXValidatorWarning01,VSIXValidatorWarning02,VSIXValidatorWarning08"
+            workingDirectory: '$(Build.StagingDirectory)'
+        - task: GitHubRelease@1
+          displayName: Release to GitHub
+          inputs:
+            gitHubConnection: 'github.com_gfs'
+            repositoryName: 'microsoft/DevSkim'
+            action: 'create'
+            target: '$(Build.SourceVersion)'
+            tagSource: 'userSpecifiedTag'
+            tag: 'VS_v$(ReleaseVersion)'
+            title: 'DevSkim VS Extension v$(ReleaseVersion)'
+            assets: |
+              $(Build.StagingDirectory)/*.vsix
+            changeLogCompareToRelease: 'lastNonDraftRelease'
+            changeLogType: 'commitBased'
