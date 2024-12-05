@@ -9,6 +9,214 @@ namespace Microsoft.DevSkim.Tests;
 public class OptionsTests
 {
     [TestMethod]
+    public void TestExcludeGlobs()
+    {
+        var serializedOptsExcludeGlobs = new SerializedAnalyzeCommandOptions()
+        {
+            Severities = new[] { Severity.Critical | Severity.Important },
+            ExitCodeIsNumIssues = true,
+            Globs = new List<string>() {"*.js"}
+        };
+        var testContent = "Hello World";
+        var testRule =
+@"[
+{
+    ""name"": ""Weak/Broken Hash Algorithm"",
+    ""id"": ""JsonOptionParseTest"",
+    ""description"": ""A test that finds hello"",
+    ""tags"": [
+        ""Tests.JsonOptionsTest""
+    ],
+    ""severity"": ""critical"",
+    ""patterns"": [
+        {
+            ""pattern"": ""Hello"",
+            ""type"": ""regex"",
+            ""scopes"": [
+                ""code""
+            ]
+        }
+    ]
+}]";
+        var rulesPath = PathHelper.GetRandomTempFile("json");
+        var serializedJsonPath = PathHelper.GetRandomTempFile("json");
+        var csharpTestPath = PathHelper.GetRandomTempFile("cs");
+        var jsTestPath = PathHelper.GetRandomTempFile("js");
+        {
+            using var serializedJsonStream = File.Create(serializedJsonPath);
+            JsonSerializer.Serialize(serializedJsonStream, serializedOptsExcludeGlobs, new JsonSerializerOptions() { });
+            using var csharpStream = File.Create(csharpTestPath);
+            JsonSerializer.Serialize(csharpStream, testContent);
+            using var jsStream = File.Create(jsTestPath);
+            JsonSerializer.Serialize(jsStream, testContent);
+            File.WriteAllText(rulesPath, testRule);
+        }
+
+        // Create an AnalyzeCommandOptions object referencing our serialized options
+        var analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = csharpTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath
+        };
+
+        var analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // We set exit code is num issues so this should be 1, as csharp files aren't ignored
+        Assert.AreEqual(1, analyzerWithSerialized.Run());
+        
+        // Create an AnalyzeCommandOptions object referencing our serialized options
+        analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = jsTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath
+        };
+
+        analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // We set exit code is num issues so this should be 0, as js files are ignored
+        Assert.AreEqual(0, analyzerWithSerialized.Run());
+    }
+    
+    [TestMethod]
+    public void TestIncludeGlobs()
+    {
+        var serializedOptsExcludeGlobs = new SerializedAnalyzeCommandOptions()
+        {
+            Severities = new[] { Severity.Critical | Severity.Important },
+            ExitCodeIsNumIssues = true,
+            IncludeGlobs = new List<string>() {"*.js"}
+        };
+        var testContent = "Hello World";
+        var testRule =
+@"[
+{
+    ""name"": ""Weak/Broken Hash Algorithm"",
+    ""id"": ""JsonOptionParseTest"",
+    ""description"": ""A test that finds hello"",
+    ""tags"": [
+        ""Tests.JsonOptionsTest""
+    ],
+    ""severity"": ""critical"",
+    ""patterns"": [
+        {
+            ""pattern"": ""Hello"",
+            ""type"": ""regex"",
+            ""scopes"": [
+                ""code""
+            ]
+        }
+    ]
+}]";
+        var rulesPath = PathHelper.GetRandomTempFile("json");
+        var serializedJsonPath = PathHelper.GetRandomTempFile("json");
+        var csharpTestPath = PathHelper.GetRandomTempFile("cs");
+        var jsTestPath = PathHelper.GetRandomTempFile("js");
+        {
+            using var serializedJsonStream = File.Create(serializedJsonPath);
+            JsonSerializer.Serialize(serializedJsonStream, serializedOptsExcludeGlobs, new JsonSerializerOptions() { });
+            using var csharpStream = File.Create(csharpTestPath);
+            JsonSerializer.Serialize(csharpStream, testContent);
+            using var jsStream = File.Create(jsTestPath);
+            JsonSerializer.Serialize(jsStream, testContent);
+            File.WriteAllText(rulesPath, testRule);
+        }
+
+        // Create an AnalyzeCommandOptions object referencing our serialized options
+        var analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = csharpTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath
+        };
+
+        var analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // We set exit code is num issues so this should be 0, as csharp are implicitly ignored
+        Assert.AreEqual(0, analyzerWithSerialized.Run());
+        
+        // Create an AnalyzeCommandOptions object referencing our serialized options
+        analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = jsTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath
+        };
+
+        analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // We set exit code is num issues so this should be 1, as js files are included
+        Assert.AreEqual(1, analyzerWithSerialized.Run());
+    }
+    
+    [TestMethod]
+    public void TestIncludeAndExcludeGlobs()
+    {
+        var serializedOptsExcludeGlobs = new SerializedAnalyzeCommandOptions()
+        {
+            Severities = new[] { Severity.Critical | Severity.Important },
+            ExitCodeIsNumIssues = true,
+            IncludeGlobs = new List<string>() {"*.js"},
+            Globs = new List<string>() {"*hello.js"}
+        };
+        var testContent = "Hello World";
+        var testRule =
+@"[
+{
+    ""name"": ""Weak/Broken Hash Algorithm"",
+    ""id"": ""JsonOptionParseTest"",
+    ""description"": ""A test that finds hello"",
+    ""tags"": [
+        ""Tests.JsonOptionsTest""
+    ],
+    ""severity"": ""critical"",
+    ""patterns"": [
+        {
+            ""pattern"": ""Hello"",
+            ""type"": ""regex"",
+            ""scopes"": [
+                ""code""
+            ]
+        }
+    ]
+}]";
+        var rulesPath = PathHelper.GetRandomTempFile("json");
+        var serializedJsonPath = PathHelper.GetRandomTempFile("json");
+        var helloJsTestPath = PathHelper.GetRandomTempFile("hello.js");
+        var jsTestPath = PathHelper.GetRandomTempFile("js");
+        {
+            using var serializedJsonStream = File.Create(serializedJsonPath);
+            JsonSerializer.Serialize(serializedJsonStream, serializedOptsExcludeGlobs, new JsonSerializerOptions() { });
+            using var helloJsStream = File.Create(helloJsTestPath);
+            JsonSerializer.Serialize(helloJsStream, testContent);
+            using var jsStream = File.Create(jsTestPath);
+            JsonSerializer.Serialize(jsStream, testContent);
+            File.WriteAllText(rulesPath, testRule);
+        }
+
+        // Create an AnalyzeCommandOptions object referencing our serialized options
+        var analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = helloJsTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath
+        };
+
+        var analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // We set exit code is num issues so this should be 0, as hello.js files are ignored
+        Assert.AreEqual(0, analyzerWithSerialized.Run());
+        
+        // Create an AnalyzeCommandOptions object referencing our serialized options
+        analyzeOpts = new AnalyzeCommandOptions()
+        {
+            Path = jsTestPath,
+            Rules = new[] { rulesPath },
+            PathToOptionsJson = serializedJsonPath
+        };
+
+        analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
+        // We set exit code is num issues so this should be 1, as regular js files are included
+        Assert.AreEqual(1, analyzerWithSerialized.Run());
+    }
+    
+    [TestMethod]
     public void TestParsingJsonOptions()
     {
         var ruleIdToIgnore = "JsonOptionParseTest";
