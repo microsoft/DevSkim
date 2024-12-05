@@ -29,7 +29,8 @@ public class OptionsTests
             Globs = new List<string>() {"*.js"}
         };
         // Serialize it to a file
-        var testContent = "Hello World";
+        // Include world twice so we can disinguish between the two rules
+        var testContent = "Hello World World";
         var testRule =
 @"[
     {
@@ -95,8 +96,8 @@ public class OptionsTests
         };
 
         var analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
-        // We set exit code is num issues so this should be 1, from the 1 rule that isn't ignored
-        Assert.AreEqual(1, analyzerWithSerialized.Run());
+        // We set exit code is num issues so this should be 2, from the two matchs for the rule that isn't ignored
+        Assert.AreEqual(2, analyzerWithSerialized.Run());
         // Create an AnalyzeCommandOptions object that references the path to the file which ignores a specific rule
         analyzeOpts = new AnalyzeCommandOptions()
         {
@@ -117,8 +118,8 @@ public class OptionsTests
             PathToOptionsJson = serializedJsonPath
         };
         analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
-        // This should be 2, because 2 rules aren't ignored
-        Assert.AreEqual(2, analyzerWithSerialized.Run());
+        // This should be 3, because no rules are ignored
+        Assert.AreEqual(3, analyzerWithSerialized.Run());
         // Try the js which it should find both
         analyzeOpts = new AnalyzeCommandOptions()
         {
@@ -140,8 +141,8 @@ public class OptionsTests
             PathToOptionsJson = serializedJsonPath2
         };
         analyzerWithSerialized = new AnalyzeCommand(analyzeOpts);
-        // This should be 2, because the globs dont exclude cs files
-        Assert.AreEqual(2, analyzerWithSerialized.Run());
+        // This should be 3, because the globs dont exclude cs files
+        Assert.AreEqual(3, analyzerWithSerialized.Run());
         // set of options to test enumerable parsing
         analyzeOpts = new AnalyzeCommandOptions()
         {
