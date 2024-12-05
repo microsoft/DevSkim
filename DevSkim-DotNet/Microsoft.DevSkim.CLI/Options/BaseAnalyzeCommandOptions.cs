@@ -43,10 +43,10 @@ public record BaseAnalyzeCommandOptions : LogOptions
     public IEnumerable<Confidence> Confidences { get; set; } = new[] { Confidence.High, Confidence.Medium };
 
     [Option('g', "ignore-globs", HelpText = "Comma-separated Globs for files to skip analyzing", Separator = ',', Default = new[] { "**/.git/**", "**/bin/**" })]
-    public IEnumerable<string> Globs { get; set; } = new[] { "**/.git/**", "**/bin/**" };
+    public IEnumerable<string> DenyGlobs { get; set; } = new[] { "**/.git/**", "**/bin/**" };
 
     [Option("include-globs", HelpText = "If set, files must match one of these globs to be analyzed", Separator = ',', Default = new string[]{})]
-    public IEnumerable<string> IncludeGlobs { get; set; } = new string[]{};
+    public IEnumerable<string> AllowGlobs { get; set; } = new string[]{};
     
     [Option('d', "disable-supression", HelpText = "Disable comment suppressions", Default = false)]
     public bool DisableSuppression { get; set; }

@@ -15,7 +15,7 @@ public class OptionsTests
         {
             Severities = new[] { Severity.Critical | Severity.Important },
             ExitCodeIsNumIssues = true,
-            Globs = new List<string>() {"*.js"}
+            DenyGlobs = new List<string>() {"*.js"}
         };
         var testContent = "Hello World";
         var testRule =
@@ -84,7 +84,7 @@ public class OptionsTests
         {
             Severities = new[] { Severity.Critical | Severity.Important },
             ExitCodeIsNumIssues = true,
-            IncludeGlobs = new List<string>() {"*.js"}
+            AllowGlobs = new List<string>() {"*.js"}
         };
         var testContent = "Hello World";
         var testRule =
@@ -153,8 +153,8 @@ public class OptionsTests
         {
             Severities = new[] { Severity.Critical | Severity.Important },
             ExitCodeIsNumIssues = true,
-            IncludeGlobs = new List<string>() {"*.js"},
-            Globs = new List<string>() {"*hello.js"}
+            AllowGlobs = new List<string>() {"*.js"},
+            DenyGlobs = new List<string>() {"*hello.js"}
         };
         var testContent = "Hello World";
         var testRule =
@@ -234,7 +234,7 @@ public class OptionsTests
         {
             Severities = new[] { Severity.Critical | Severity.Important },
             ExitCodeIsNumIssues = true,
-            Globs = new List<string>() {"*.js"}
+            DenyGlobs = new List<string>() {"*.js"}
         };
         // Serialize it to a file
         // Include world twice so we can disinguish between the two rules

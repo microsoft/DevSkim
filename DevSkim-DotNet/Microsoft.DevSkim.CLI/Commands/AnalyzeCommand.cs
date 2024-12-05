@@ -65,7 +65,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
             IEnumerable<FileEntry> fileListing;
             Extractor extractor = new Extractor();
-            ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, AllowFilters = _opts.IncludeGlobs, DenyFilters = _opts.Globs };
+            ExtractorOptions extractorOpts = new ExtractorOptions() { ExtractSelfOnFail = false, AllowFilters = _opts.AllowGlobs, DenyFilters = _opts.DenyGlobs };
             // Analysing a single file
             if (!Directory.Exists(fullPath))
             {
