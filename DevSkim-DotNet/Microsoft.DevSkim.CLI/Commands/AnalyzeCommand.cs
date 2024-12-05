@@ -424,7 +424,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                         if (serializedAnalyzeCommandOptions.LanguageRuleIgnoreMap.TryGetValue(languageInfo.Name,
                                 out List<string>? maybeRulesToIgnore) && maybeRulesToIgnore is { } rulesToIgnore)
                         {
-                            var numRemoved = issues.RemoveAll(x => !rulesToIgnore.Contains(x.Rule.Id));
+                            var numRemoved = issues.RemoveAll(x => rulesToIgnore.Contains(x.Rule.Id));
                             _logger.LogDebug($"Removed {numRemoved} results because of language rule filters.");
                         }
                     }
