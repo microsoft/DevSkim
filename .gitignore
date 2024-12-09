@@ -17,3 +17,6 @@ DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/devskim-server-*.txt
 
 # Legacy Files
 DevSkim-VSCode-Plugin/server/
+
+# Mac OS Metadata
+**/.DS_Store
