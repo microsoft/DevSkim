@@ -17,6 +17,8 @@ namespace Microsoft.DevSkim
 
         public DevSkimRuleProcessor(DevSkimRuleSet ruleSet, DevSkimRuleProcessorOptions processorOptions)
         {
+            // Application Inspector Processor filters *patterns* based on confidence but not rules
+            ruleSet = ruleSet.WithConfidenceFilter(processorOptions.ConfidenceFilter);
             _aiProcessor = new RuleProcessor(ruleSet, processorOptions);
             _processorOptions = processorOptions;
         }
