@@ -461,18 +461,19 @@ public class OptionsTests
         ruleSet.AddRule(lowConfidenceRule);
         ruleSet.AddRule(unspecifiedConfidenceRule);
         Assert.AreEqual(4, ruleSet.Count());
-        Assert.AreEqual(1, 
+        // Unspecified always passes the confidence filter
+        Assert.AreEqual(2, 
             ruleSet.WithConfidenceFilter(Confidence.High)
-                .Count(x => x.Confidence.HasFlag(Confidence.High)));
-        Assert.AreEqual(1, 
+                .Count());
+        Assert.AreEqual(2, 
             ruleSet.WithConfidenceFilter(Confidence.Medium)
-                .Count(x => x.Confidence.HasFlag(Confidence.Medium)));
-        Assert.AreEqual(1, 
+                .Count());
+        Assert.AreEqual(2, 
             ruleSet.WithConfidenceFilter(Confidence.Low)
-                .Count(x => x.Confidence.HasFlag(Confidence.Low)));
+                .Count());
         Assert.AreEqual(1, 
             ruleSet.WithConfidenceFilter(Confidence.Unspecified)
-                .Count(x => x.Confidence.HasFlag(Confidence.Unspecified)));
+                .Count());
     }
 
     [TestMethod]
