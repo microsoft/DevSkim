@@ -40,6 +40,11 @@ namespace Microsoft.DevSkim
             return ruleSet;
         }
 
+        /// <summary>
+        /// Return a new RuleSet containing only rules that have one of the flags of the specified confidence enum
+        /// </summary>
+        /// <param name="filter">The Enum with flags set for which Confidence rules to use</param>
+        /// <returns>A new DevSkimRuleSet with only rules that have the specified confidence set at the Rule level</returns>
         public DevSkimRuleSet WithConfidenceFilter(Confidence filter)
         {
             DevSkimRuleSet newSet = new DevSkimRuleSet();
