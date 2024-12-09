@@ -41,6 +41,18 @@ namespace Microsoft.DevSkim
         }
 
         /// <summary>
+        /// Return a new RuleSet containing only rules that have one of the flags of the specified confidence enum, or Unspecified
+        /// </summary>
+        /// <param name="filter">The Enum with flags set for which Confidence rules to use</param>
+        /// <returns>A new DevSkimRuleSet with only rules that have the specified confidence set at the Rule level</returns>
+        public DevSkimRuleSet WithConfidenceFilter(Confidence filter)
+        {
+            DevSkimRuleSet newSet = new DevSkimRuleSet();
+            newSet.AddRange(this.Where(x => filter.HasFlag(x.Confidence)));
+            return newSet;
+        }
+
+        /// <summary>
         /// Returns a new <see cref="DevSkimRuleSet"/> with only rules that have an ID matching one of the ids provided in <paramref name="ruleIds"/>
         /// </summary>
         /// <param name="ruleIds"></param>
