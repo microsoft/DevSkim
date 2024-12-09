@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.51] - 2024-12-09
+## Fix
+Fixes confidence filter at rule level. #669
+
+## [1.0.50] - 2024-12-05
+## Fix
+Fixes #664 handling of options from IgnoreRuleMap when using OptionsJson
+## New Functionality
+Adds `include-globs` argument to require all scanned files match a specific glob pattern #663.
+
 ## [1.0.49] - 2024-12-03
 ## Rules
 Fixed false positives and false negatives in outdated/banned SSL/TLS protocols. #649
