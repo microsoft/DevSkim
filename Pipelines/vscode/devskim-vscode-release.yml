@@ -42,6 +42,11 @@ extends:
           inputs:
             packageType: 'sdk'
             version: '8.0.x'
+        - task: UseDotNet@2
+          displayName: Install Dotnet SDK
+          inputs:
+            packageType: 'sdk'
+            version: '9.0.x'
         - task: Npm@1
           displayName: Build VS Code Plugin
           inputs:
