@@ -7,7 +7,7 @@ resources:
     - repository: templates
       type: git
       name: Data/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v2.0.0
+      ref: refs/tags/v2.0.1
     - repository: 1esPipelines
       type: git
       name: 1ESPipelineTemplates/1ESPipelineTemplates
@@ -45,14 +45,11 @@ extends:
           extraArtifactLocation: 'extension'
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
-          # Workaround: Using the .NET 8 SDK doesn't install the right version of MSBuild for .NET 8
-          #   Using the .NET 7 SDK doesn't include the .NET 8 SDK so it can't build the project
-          #   Install both for now until the right version of MSBuild is included with .NET 8
           - task: UseDotNet@2
-            displayName: Install Dotnet 7 SDK
+            displayName: Install Dotnet 9 SDK
             inputs:
               packageType: 'sdk'
-              version: '7.0.x'
+              version: '9.0.x'
           onEnd:
           - task: PowerShell@2
             displayName: Mkdir for Extension
