@@ -8,6 +8,9 @@
 
 <ItemGroup>
 	<PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.19.9" />
+	<PackageReference Update="Nerdbank.GitVersioning">
+	  <Version>3.7.115</Version>
+	</PackageReference>
 </ItemGroup>
 
 </Project>
