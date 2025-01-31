@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.52] - 2024-12-09
+## Dependencies
+Updates Dependencies
+
+## .Net Targets
+CLI now targets .NET 8.0 and .NET 9.0, .NET 6.0/7.0 targeting removed. DevSkim Library component retains .Net Standard 2.1 support.
+
 ## [1.0.51] - 2024-12-09
 ## Fix
 Fix confidence filtering at rule level.
