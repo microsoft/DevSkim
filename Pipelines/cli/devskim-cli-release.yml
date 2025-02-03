@@ -40,6 +40,7 @@ extends:
           poolName: MSSecurity-1ES-Build-Agents-Pool
           poolImage: MSSecurity-1ES-Windows-2022
           poolOs: windows
+          dotnetTestArgs: '-- --coverage --report-trx'
       - template: dotnet-test-job.yml@templates
         parameters:
           jobName: 'dotnet_test_ubuntu'
@@ -48,6 +49,7 @@ extends:
           poolImage: MSSecurity-1ES-Ubuntu-2204
           poolOs: linux
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+          dotnetTestArgs: '-- --coverage --report-trx'
   
     - stage: Build
       dependsOn:
