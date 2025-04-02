@@ -136,3 +136,7 @@ To report a security vulnerability, please see [SECURITY.md](https://github.com/
 ## License
 
 DevSkim and its official plugins are licensed under the [MIT license](https://github.com/microsoft/DevSkim/blob/master/LICENSE.txt).
+
+## Privacy
+
+Usage of this application is governed by the [Microsoft Privacy Statement](https://https://go.microsoft.com/fwlink/?LinkId=521839).
