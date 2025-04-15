@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.LanguageP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.VisualStudio.SourceGenerator", "Microsoft.DevSkim.VisualStudio.SourceGenerator\Microsoft.DevSkim.VisualStudio.SourceGenerator.csproj", "{5D12BB81-B659-4CCB-9FAC-8224A6728196}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualGenerator", "ManualGenerator\ManualGenerator.csproj", "{C4722145-3CF5-431D-8F47-416F3E6CFB9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualGenerator", "ManualGenerator\ManualUpdateSettingsGenerator.csproj", "{C4722145-3CF5-431D-8F47-416F3E6CFB9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

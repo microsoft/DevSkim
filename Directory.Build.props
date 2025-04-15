@@ -6,4 +6,14 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <!-- Testing -->
+  <PropertyGroup>
+    <!-- More info about MSTest runner https://learn.microsoft.com/dotnet/core/testing/unit-testing-mstest-runner-intro -->
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <MSTestAnalysisMode>Recommended</MSTestAnalysisMode>
+    <!-- More info about dotnet test integration https://learn.microsoft.com/dotnet/core/testing/unit-testing-platform-integration-dotnet-test -->
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
+  </PropertyGroup>
 </Project>
