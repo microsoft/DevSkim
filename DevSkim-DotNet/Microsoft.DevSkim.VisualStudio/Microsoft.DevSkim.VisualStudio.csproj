@@ -85,17 +85,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client">
-      <Version>17.12.48</Version>
+      <Version>17.13.33</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol">
       <Version>17.2.8</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.12.40392" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.13.40008" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.12.2069">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.13.2126">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
