@@ -4,6 +4,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.56] - 2025-04-14
+## Tests
+Migrate to MTP
+
+## [1.0.55] - 2025-04-14
+## Dependencies
+Updates Dependencies
+
+## [1.0.54] - 2025-04-09
+## Dependencies
+Updates Dependencies
+
+## [1.0.53] - 2025-04-01
+## Documentation
+Adds a link to the Microsoft Privacy Statement to the Readme.
+
+## [1.0.52] - 2024-12-09
+## Dependencies
+Updates Dependencies
+
+## .Net Targets
+CLI now targets .NET 8.0 and .NET 9.0, .NET 6.0/7.0 targeting removed. DevSkim Library component retains .Net Standard 2.1 support.
+
+## [1.0.51] - 2024-12-09
+## Fix
+Fix confidence filtering at rule level.
+
+## [1.0.50] - 2024-12-05
+## Fix
+Fixes #664 handling of options from IgnoreRuleMap when using OptionsJson
+
+## New Functionality
+Adds `include-globs` argument to require all scanned files match a specific glob pattern #663.
+
+## [1.0.49] - 2024-12-03
+## Rules
+Fixed false positives and false negatives in outdated/banned SSL/TLS protocols. #649
+
+## [1.0.48] - 2024-11-20
+### Dependencies
+Update VS Code Extension Dependencies
+
+## [1.0.47] - 2024-11-12
+### Pipeline
+Pipeline only changes
+
+## [1.0.46] - 2024-11-05
+### Pipeline
+Pipeline only changes
+
+## [1.0.45] - 2024-11-01
+### Pipeline
+Pipeline only changes
+
+## [1.0.44] - 2024-11-01
+### Pipeline
+Pipeline only changes
+
+## [1.0.43] - 2024-10-29
+### Pipeline
+Pipeline only changes
+
+## [1.0.42] - 2024-08-26
+## Fix
+Fixes suppression command to not perturb line breaks, particularly when a file has findings which are not selected for suppression. #631
+
 ## [1.0.41] - 2024-08-23
 ## Rules
 Extend the false positive fix for the issue reported in #548 to Sdk-style msbuild projects.
