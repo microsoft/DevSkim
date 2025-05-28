@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.57] - 2025-05-28
+## Fix
+Fix an issue handling non-ascii paths when launching LSP in VS Code Extension
+
+## Dependencies
+Update Dependencies
+
 ## [1.0.56] - 2025-04-14
 ## Tests
 Migrate to MTP
