@@ -73,7 +73,8 @@ export function activate(context: ExtensionContext) {
 	);
 
 	// The server bridge is implemented in .NET
-	const serverModule = context.asAbsolutePath(path.join('devskimBinaries', 'Microsoft.DevSkim.LanguageServer.dll'));
+	const serverModule = vscode.Uri.joinPath(context.extensionUri, 'devskimBinaries', 'Microsoft.DevSkim.LanguageServer.dll');
+	
 	resolveDotNetPath().then((dotNetPath) =>
 	{
 		if (dotNetPath == undefined || dotNetPath == null)
@@ -83,17 +84,17 @@ export function activate(context: ExtensionContext) {
 		}
 		else
 		{
-			const workPath = path.dirname(serverModule);
+			const workPath = path.dirname(serverModule.fsPath);
 			const serverOptions: ServerOptions = {
 				run: { 
 					command: dotNetPath, 
-					args: [serverModule], 
+					args: [serverModule.fsPath], 
 					options: {cwd: workPath},
 					transport: TransportKind.pipe
 				},
 				debug: { 
 					command: dotNetPath, 
-					args: [serverModule], 
+					args: [serverModule.fsPath], 
 					options: {cwd: workPath},
 					transport: TransportKind.pipe
 				}

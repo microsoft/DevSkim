@@ -70,7 +70,7 @@
 		"onLanguage:python",
 		"onLanguage:json"
 	],
-	"main": "./client/out/extension",
+	"main": "./client/out/extension.js",
 	"contributes": {
 		"commands": [],
 		"configuration": [
@@ -305,8 +305,8 @@
 		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-		"pack-ext": "npm run pre-pack-clean && npm run setup:release && npm run set-version-and-pack",
-		"pack-ext:debug": "npm run pre-pack-clean && npm run setup && npm run set-version-and-pack",
+		"pack-ext": "npm run pre-pack-clean && npm run setup:release && npm run compile && npm run set-version-and-pack",
+		"pack-ext:debug": "npm run pre-pack-clean && npm run setup && npm run compile && npm run set-version-and-pack",
 		"pre-pack-clean": "npm run clean:out && npm run clean:modules",
 		"set-version-and-pack": "npm run set-version && npm run do-pack && npm run reset-version",
 		"do-pack": "(npm run check-pre-release && npm run vsce-pack-pre) || npm run vsce-pack",
@@ -320,7 +320,7 @@
 		"@types/node": "^14.x",
 		"@typescript-eslint/eslint-plugin": "^5.10.1",
 		"@typescript-eslint/parser": "^5.10.1",
-		"@vscode/vsce": "^2.18.0",
+		"@vscode/vsce": "^3.4.2",
 		"esbuild": "^0.25.2",
 		"eslint": "^8.8.0",
 		"nerdbank-gitversioning": "^3.4.255",
