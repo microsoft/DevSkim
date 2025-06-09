@@ -19,6 +19,9 @@ namespace Microsoft.DevSkim.CLI.Writers
                 case "_dummy":
                     return new DummyWriter();
 
+                case "vs":
+                    return new SimpleTextWriter("%F(%L,%l): %V %R: %D", output);
+                
                 case "json":
                     return new JsonWriter(format, output);
 
