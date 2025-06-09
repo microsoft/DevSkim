@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.58] - 2025-06-09
+## New Feature
+Adds a `vs` output format to leverage the DevSkim CLI as a build task in a csproj.
+
 ## [1.0.57] - 2025-05-28
 ## Fix
 Fix an issue handling non-ascii paths when launching LSP in VS Code Extension
