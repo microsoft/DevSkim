@@ -33,7 +33,7 @@ public record BaseAnalyzeCommandOptions : LogOptions
     [Option('o', "output-format", HelpText = "Format for output text.", Default = SimpleTextWriter.DefaultFormat)]
     public string OutputTextFormat { get; set; } = SimpleTextWriter.DefaultFormat;
 
-    [Option('f', "file-format", HelpText = "Format type for output. [text|sarif]", Default = "sarif")]
+    [Option('f', "file-format", HelpText = "Format type for output. [text|sarif|vs]", Default = "sarif")]
     public string OutputFileFormat { get; set; } = "sarif";
 
     [Option('s', "severity", HelpText = "Comma-separated Severities to match", Separator = ',', Default = new[] { Severity.Critical, Severity.Important, Severity.Moderate, Severity.BestPractice, Severity.ManualReview })]

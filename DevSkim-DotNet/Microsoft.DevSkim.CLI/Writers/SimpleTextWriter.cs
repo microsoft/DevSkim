@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using Microsoft.ApplicationInspector.RulesEngine;
 
 namespace Microsoft.DevSkim.CLI.Writers
 {
@@ -16,6 +17,7 @@ namespace Microsoft.DevSkim.CLI.Writers
     ///     - %R - rule id
     ///     - %N - rule name
     ///     - %S - severity (Critical, Important, etc.)
+    ///     - %V - Visual Studio style severity (only warning or error)
     ///     - %m - string match
     ///     - %T - tags(comma-separated)
     /// </summary>
@@ -62,10 +64,25 @@ namespace Microsoft.DevSkim.CLI.Writers
             output = output.Replace("%R", issue.Issue.Rule.Id);
             output = output.Replace("%N", issue.Issue.Rule.Name);
             output = output.Replace("%S", issue.Issue.Rule.Severity.ToString());
+            output = output.Replace("%V", DevSkimSevToVsSev(issue.Issue.Rule.Severity));
             output = output.Replace("%D", issue.Issue.Rule.Description);
             output = output.Replace("%m", issue.TextSample);
             output = output.Replace("%T", string.Join(",", issue.Issue.Rule.Tags ?? Array.Empty<string>()));
             TextWriter.WriteLine(output);
+        }
+
+        private string DevSkimSevToVsSev(Severity ruleSeverity)
+        {
+            return ruleSeverity switch
+            {
+                Severity.Unspecified => "unspecified",
+                Severity.Critical => "error",
+                Severity.Important => "warning",
+                Severity.Moderate => "warning",
+                Severity.BestPractice => "warning",
+                Severity.ManualReview => "warning",
+                _ => "unspecified"
+            };
         }
 
         private string _formatString;
