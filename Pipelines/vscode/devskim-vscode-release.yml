@@ -83,7 +83,7 @@ extends:
           outputs:
           - output: pipelineArtifact
             path: '$(Build.StagingDirectory)'
-            artifact: 'Signed_Binaries_$(System.JobId)_$(System.JobAttempt)'
+            artifact: 'Signed_Binaries'
         steps:
         - template: nbgv-set-version-steps.yml@templates
         # set-version-steps only sets it for current job, while adding isOutput only sets it for future jobs
