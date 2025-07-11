@@ -67,7 +67,7 @@ extends:
           inputs:
             command: 'custom'
             workingDir: 'DevSkim-VSCode-Plugin/'
-            customCommand: 'run pack-ext'
+            customCommand: 'run pipeline-pack'
         - task: PowerShell@2
           displayName: Move Plugin File
           inputs:
