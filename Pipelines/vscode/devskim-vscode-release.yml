@@ -29,6 +29,7 @@ extends:
     - stage: Build
       dependsOn: []
       jobs:
+      - task: NuGetAuthenticate@1
       - job: build_vscode_plugin
         displayName: Build VS Code Plugin
         templateContext:
