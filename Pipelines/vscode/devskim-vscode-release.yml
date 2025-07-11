@@ -29,7 +29,6 @@ extends:
     - stage: Build
       dependsOn: []
       jobs:
-      - task: NuGetAuthenticate@1
       - job: build_vscode_plugin
         displayName: Build VS Code Plugin
         templateContext:
@@ -38,6 +37,7 @@ extends:
             targetPath: $(Build.StagingDirectory)/packages
             artifactName: 'Unsigned_Plugin'
         steps:
+        - task: NuGetAuthenticate@1
         - task: UseDotNet@2
           displayName: Install Dotnet SDK
           inputs:
