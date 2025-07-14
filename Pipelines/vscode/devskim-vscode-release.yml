@@ -7,7 +7,7 @@ resources:
     - repository: templates
       type: git
       name: Data/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v2.0.1
+      ref: refs/tags/v2.0.4
     - repository: 1esPipelines
       type: git
       name: 1ESPipelineTemplates/1ESPipelineTemplates
@@ -37,6 +37,7 @@ extends:
             targetPath: $(Build.StagingDirectory)/packages
             artifactName: 'Unsigned_Plugin'
         steps:
+        - task: NuGetAuthenticate@1
         - task: UseDotNet@2
           displayName: Install Dotnet SDK
           inputs:
@@ -65,7 +66,7 @@ extends:
           inputs:
             command: 'custom'
             workingDir: 'DevSkim-VSCode-Plugin/'
-            customCommand: 'run pack-ext'
+            customCommand: 'run pipeline-pack'
         - task: PowerShell@2
           displayName: Move Plugin File
           inputs:

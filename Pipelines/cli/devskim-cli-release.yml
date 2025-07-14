@@ -7,7 +7,7 @@ resources:
     - repository: templates
       type: git
       name: Data/OSS-Tools-Pipeline-Templates
-      ref: refs/tags/v2.0.1
+      ref: refs/tags/v2.0.4
     - repository: 1esPipelines
       type: git
       name: 1ESPipelineTemplates/1ESPipelineTemplates
@@ -41,6 +41,11 @@ extends:
           poolImage: MSSecurity-1ES-Windows-2022
           poolOs: windows
           dotnetTestArgs: '-- --coverage --report-trx'
+          includeNuGetOrg: false
+          nugetFeedsToUse: 'config'
+          nugetConfigPath: 'nuget.config.azure'
+          onInit:
+            - task: NuGetAuthenticate@1
       - template: dotnet-test-job.yml@templates
         parameters:
           jobName: 'dotnet_test_ubuntu'
@@ -50,6 +55,11 @@ extends:
           poolOs: linux
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
           dotnetTestArgs: '-- --coverage --report-trx'
+          includeNuGetOrg: false
+          nugetFeedsToUse: 'config'
+          nugetConfigPath: 'nuget.config.azure'
+          onInit:
+            - task: NuGetAuthenticate@1
   
     - stage: Build
       dependsOn:
@@ -63,6 +73,11 @@ extends:
           projectName: 'DevSkim_CLI'
           exePath: 'devskim'
           artifactName: 'linux-mac-archive'
+          includeNuGetOrg: false
+          nugetFeedsToUse: 'config'
+          nugetConfigPath: 'nuget.config.azure'
+          onInit:
+            - task: NuGetAuthenticate@1
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
       - template: dotnet-publish-win-netcore-job.yml@templates
@@ -72,6 +87,11 @@ extends:
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
           projectName: 'DevSkim_CLI'
           artifactName: 'win-netcore-archive'
+          includeNuGetOrg: false
+          nugetFeedsToUse: 'config'
+          nugetConfigPath: 'nuget.config.azure'
+          onInit:
+            - task: NuGetAuthenticate@1
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
       - template: nuget-build-job.yml@templates
@@ -82,6 +102,11 @@ extends:
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim/Microsoft.DevSkim.csproj'
           projectName: 'DevSkim_Lib'
           artifactName: 'nuget-lib-archive'
+          includeNuGetOrg: false
+          nugetFeedsToUse: 'config'
+          nugetConfigPath: 'nuget.config.azure'
+          onInit:
+            - task: NuGetAuthenticate@1
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
       - template: nuget-build-job.yml@templates
@@ -92,6 +117,11 @@ extends:
           projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.CLI/Microsoft.DevSkim.CLI.csproj'
           projectName: 'DevSkim_CLI'
           artifactName: 'nuget-cli-archive'
+          includeNuGetOrg: false
+          nugetFeedsToUse: 'config'
+          nugetConfigPath: 'nuget.config.azure'
+          onInit:
+            - task: NuGetAuthenticate@1
           preBuild:
           - template: nbgv-set-version-steps.yml@templates
 
