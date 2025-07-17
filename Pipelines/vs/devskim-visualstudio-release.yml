@@ -6,7 +6,8 @@ resources:
   repositories:
     - repository: templates
       type: git
-      name: Data/OSS-Tools-Pipeline-Templates
+      name: SecurityEngineering/OSS-Tools-Pipeline-Templates
+      endpoint: oss-twcsa-repo-reader # service connection
       ref: refs/tags/v2.0.4
     - repository: 1esPipelines
       type: git
