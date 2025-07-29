@@ -205,7 +205,10 @@ namespace Microsoft.DevSkim.CLI.Writers
                 // If recommendation was present we should use that, but the description value was already set in the description field.
                 //  and also append the help uri if the rule_info is specified (for built-in rules)
                 StringBuilder markdownDescriptionBuilder = new();
-                markdownDescriptionBuilder.Append(devskimRule.Recommendation);
+                if (!string.IsNullOrEmpty(devskimRule.Recommendation))
+                {
+                    markdownDescriptionBuilder.Append(devskimRule.Recommendation);
+                }
                 if (!string.IsNullOrEmpty(devskimRule.RuleInfo))
                 {
                     // If a recommendation was set put a space before the rule info string.
