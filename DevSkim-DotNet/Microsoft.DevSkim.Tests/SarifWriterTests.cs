@@ -10,21 +10,6 @@ namespace Microsoft.DevSkim.Tests
     [TestClass]
     public class SarifWriterTests
     {
-        private StringWriter _writer = null!;
-        private SarifWriter _sarifWriter = null!;
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            _writer = new StringWriter();
-            _sarifWriter = new SarifWriter(_writer, null, null);
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            _writer?.Dispose();
-        }
 
         /// <summary>
         /// Test that rules with recommendations properly include the recommendation in the SARIF Help field
@@ -37,12 +22,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST001", "Test Rule", "Test description", expectedRecommendation);
             var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST001");
             
             Assert.IsNotNull(sarifRule);
@@ -60,12 +47,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST002", "Test Rule", expectedDescription, null);
             var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST002");
             
             Assert.IsNotNull(sarifRule);
@@ -84,12 +73,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST003", "Test Rule", "Test description", expectedRecommendation, ruleInfo);
             var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST003");
             
             Assert.IsNotNull(sarifRule);
@@ -115,12 +106,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST004", "Test Rule", "Test description", null, ruleInfo);
             var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST004");
             
             Assert.IsNotNull(sarifRule);
@@ -144,12 +137,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST005", "Test Rule", expectedDescription, "");
             var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST005");
             
             Assert.IsNotNull(sarifRule);
@@ -168,12 +163,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST006", "Test Rule", expectedDescription, whitespaceRecommendation);
             var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifJson = _writer.ToString();
+            var sarifJson = writer.ToString();
             var sarifOutput = ParseSarifOutput(sarifJson);
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST006");
             
@@ -203,12 +200,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST007", "Test Rule", null, null, ruleInfo);
             var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST007");
             
             Assert.IsNotNull(sarifRule);
@@ -229,13 +228,15 @@ namespace Microsoft.DevSkim.Tests
             var issue1 = CreateTestIssue(rule1, "test1.cs", "MD5 hash = MD5.Create();");
             var issue2 = CreateTestIssue(rule2, "test2.cs", "SHA1 hash = SHA1.Create();");
 
-            // Act
-            _sarifWriter.WriteIssue(issue1);
-            _sarifWriter.WriteIssue(issue2);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue1);
+            sarifWriter.WriteIssue(issue2);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             
             var sarifRule1 = GetRuleFromSarif(sarifOutput, "TEST008");
             var sarifRule2 = GetRuleFromSarif(sarifOutput, "TEST009");
@@ -262,12 +263,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST010", "Password Hashing", "Weak password hashing", recommendation, ruleInfo);
             var issue = CreateTestIssue(rule, "auth.cs", "MD5.HashData(password);");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST010");
             
             Assert.IsNotNull(sarifRule);
@@ -289,12 +292,14 @@ namespace Microsoft.DevSkim.Tests
             var rule = CreateTestRule("TEST011", "Test Rule", "Test description", null, ruleInfo);
             var issue = CreateTestIssue(rule, "test.cs", "some code");
 
-            // Act
-            _sarifWriter.WriteIssue(issue);
-            _sarifWriter.FlushAndClose();
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
 
-            // Assert
-            var sarifOutput = ParseSarifOutput(_writer.ToString());
+            var sarifOutput = ParseSarifOutput(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST011");
             
             Assert.IsNotNull(sarifRule);
