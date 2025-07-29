@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -200,13 +201,26 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifRule.Name = ToSarifFriendlyName(devskimRule.Name);
                 sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = $"{devskimRule.Name}: {devskimRule.Description}" };
+
+                // If recommendation or description are present we should use that,
+                //  and also append the help uri if the rule_info is specified (for built-in rules)
+                StringBuilder markdownDescriptionBuilder = new();
+                markdownDescriptionBuilder.Append(!string.IsNullOrEmpty(devskimRule.Recommendation)
+                    ? devskimRule.Recommendation
+                    : devskimRule.Description);
+                if (!string.IsNullOrEmpty(devskimRule.RuleInfo))
+                {
+                    markdownDescriptionBuilder.Append($"Visit [{helpUri}]({helpUri}) for guidance on this issue.");
+                }
+                
                 sarifRule.Help = new MultiformatMessageString()
                 {
                     // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
                     Text = !string.IsNullOrEmpty(devskimRule.Recommendation) ? devskimRule.Recommendation : 
                         (!string.IsNullOrEmpty(devskimRule.Description) ? devskimRule.Description : $"Visit {helpUri} for guidance on this issue."),
-                    Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue."
+                    Markdown = markdownDescriptionBuilder.ToString()
                 };
+                
                 sarifRule.HelpUri = helpUri;
                 sarifRule.DefaultConfiguration = new ReportingConfiguration()
                 {
