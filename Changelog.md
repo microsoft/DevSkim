@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Dependencies
 Update dependencies 
 
+## Fix
+Fixes Sarif Markdown failing to populate the rule provided recommendation value.
+
 ## [1.0.62] - 2025-07-23
 ## Pipelines
 Pipeline updates

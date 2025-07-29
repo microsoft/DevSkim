@@ -202,15 +202,18 @@ namespace Microsoft.DevSkim.CLI.Writers
                 sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = $"{devskimRule.Name}: {devskimRule.Description}" };
 
-                // If recommendation or description are present we should use that,
+                // If recommendation was present we should use that, but the description value was already set in the description field.
                 //  and also append the help uri if the rule_info is specified (for built-in rules)
                 StringBuilder markdownDescriptionBuilder = new();
-                markdownDescriptionBuilder.Append(!string.IsNullOrEmpty(devskimRule.Recommendation)
-                    ? devskimRule.Recommendation
-                    : devskimRule.Description);
+                markdownDescriptionBuilder.Append(devskimRule.Recommendation);
                 if (!string.IsNullOrEmpty(devskimRule.RuleInfo))
                 {
-                    markdownDescriptionBuilder.Append($"Visit [{helpUri}]({helpUri}) for guidance on this issue.");
+                    // If a recommendation was set put a space before the rule info string.
+                    if (markdownDescriptionBuilder.Length > 0)
+                    {
+                        markdownDescriptionBuilder.Append(' ');
+                    }
+                    markdownDescriptionBuilder.Append($"Visit [{helpUri}]({helpUri}) for additional guidance on this issue.");
                 }
                 
                 sarifRule.Help = new MultiformatMessageString()
