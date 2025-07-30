@@ -191,7 +191,7 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         public string? OutputPath { get; }
 
-        public const string BaseHelpUri = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
+        private const string BaseHelpUri = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
 
         private void AddRuleToSarifRule(DevSkimRule devskimRule)
         {
