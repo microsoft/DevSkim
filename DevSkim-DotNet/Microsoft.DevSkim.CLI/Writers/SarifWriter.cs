@@ -191,23 +191,25 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         public string? OutputPath { get; }
 
+        public const string baseHelpUri = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
+
         private void AddRuleToSarifRule(DevSkimRule devskimRule)
         {
             if (!_rules.ContainsKey(devskimRule.Id))
             {
-                Uri helpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo); ;
+                Uri helpUri = CreateHelpUri(devskimRule.RuleInfo);
                 ReportingDescriptor sarifRule = new ReportingDescriptor();
                 sarifRule.Id = devskimRule.Id;
                 sarifRule.Name = ToSarifFriendlyName(devskimRule.Name);
                 sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = $"{devskimRule.Name}: {devskimRule.Description}" };
-                
+
                 sarifRule.Help = new MultiformatMessageString()
                 {
                     Text = BuildTextDescription(devskimRule, helpUri),
                     Markdown = BuildMarkdownDescription(devskimRule, helpUri)
                 };
-                
+
                 sarifRule.HelpUri = helpUri;
                 sarifRule.DefaultConfiguration = new ReportingConfiguration()
                 {
@@ -316,6 +318,25 @@ namespace Microsoft.DevSkim.CLI.Writers
             {
                 resultItem.Tags.Add(tag);
             }
+        }
+
+        /// <summary>
+        /// Creates a help URI for a DevSkim rule, handling null or empty RuleInfo safely
+        /// </summary>
+        /// <param name="ruleInfo">The rule info filename, can be null or empty</param>
+        /// <returns>A properly formed URI</returns>
+        public static Uri CreateHelpUri(string? ruleInfo)
+        {
+            var baseUri = new Uri(baseHelpUri);
+            
+            if (string.IsNullOrEmpty(ruleInfo))
+            {
+                // Return base URI if no specific rule info is provided
+                return baseUri;
+            }
+            
+            // Use Uri constructor to safely combine base URI with relative path
+            return new Uri(baseUri, ruleInfo);
         }
 
         /// <summary>
