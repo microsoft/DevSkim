@@ -22,7 +22,7 @@ Pipeline updates
 ### Pipelines
 Pipeline updates
 
-## [1.0.60] - 2025-06-36
+## [1.0.60] - 2025-06-26
 ### Pipelines
 Pipeline updates
 
