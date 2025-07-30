@@ -310,6 +310,45 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(expectedMarkdown, markdown);
         }
 
+        /// <summary>
+        /// Test that rule with no recommendation and no rule info has empty markdown
+        /// </summary>
+        [TestMethod]
+        public void When_rule_has_no_recommendation_and_no_rule_info_then_markdown_is_empty()
+        {
+            // Arrange
+            var rule = CreateTestRule("TEST012", "Test Rule", "Test description", null, null);
+            var issue = CreateTestIssue(rule, "test.cs", "some code");
+
+            // Act & Assert
+            using var writer = new StringWriter();
+            using var sarifWriter = new SarifWriter(writer, null, null);
+            
+            sarifWriter.WriteIssue(issue);
+            sarifWriter.FlushAndClose();
+
+            var sarifOutput = JObject.Parse(writer.ToString());
+            var sarifRule = GetRuleFromSarif(sarifOutput, "TEST012");
+            
+            Assert.IsNotNull(sarifRule);
+            
+            // When there's no recommendation and no rule info, markdown should be empty or null
+            var markdown = sarifRule!["help"]!["markdown"];
+            if (markdown != null)
+            {
+                Assert.AreEqual(string.Empty, markdown.ToString());
+            }
+            else
+            {
+                // If the SARIF SDK doesn't serialize empty markdown, that's acceptable too
+                Assert.IsNull(markdown);
+            }
+            
+            // But text should still fall back to description
+            var helpText = sarifRule["help"]!["text"]!.ToString();
+            Assert.AreEqual("Test description", helpText);
+        }
+
         #region Helper Methods
 
         private DevSkimRule CreateTestRule(string id, string name, string? description, string? recommendation, string? ruleInfo = null)
