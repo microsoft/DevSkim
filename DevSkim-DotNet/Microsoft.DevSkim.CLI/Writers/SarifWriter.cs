@@ -325,7 +325,7 @@ namespace Microsoft.DevSkim.CLI.Writers
         /// </summary>
         /// <param name="ruleInfo">The rule info filename, can be null or empty</param>
         /// <returns>A properly formed URI</returns>
-        public static Uri CreateHelpUri(string? ruleInfo)
+        internal static Uri CreateHelpUri(string? ruleInfo)
         {
             var baseUri = new Uri(BaseHelpUri);
             
