@@ -89,7 +89,8 @@ namespace Microsoft.DevSkim.Tests
             
             // Markdown should still include help URI
             var markdown = sarifRule["help"]!["markdown"]!.ToString();
-            var expectedMarkdown = $"Visit [{SarifWriter.CreateHelpUri("DS126858.md")}]({SarifWriter.CreateHelpUri("DS126858.md")}) for additional guidance on this issue.";
+            var helpUri = SarifWriter.CreateHelpUri("DS126858.md");
+            var expectedMarkdown = $"Visit [{helpUri}]({helpUri}) for additional guidance on this issue.";
             Assert.AreEqual(expectedMarkdown, markdown);
         }
 
@@ -244,7 +245,8 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsNotNull(sarifRule);
             
             var markdown = sarifRule!["help"]!["markdown"]!.ToString();
-            var expectedMarkdown = $"{recommendation} Visit [{SarifWriter.CreateHelpUri(ruleInfo)}]({SarifWriter.CreateHelpUri(ruleInfo)}) for additional guidance on this issue.";
+            var helpUri = SarifWriter.CreateHelpUri(ruleInfo);
+            var expectedMarkdown = $"{recommendation} Visit [{helpUri}]({helpUri}) for additional guidance on this issue.";
             
             Assert.AreEqual(expectedMarkdown, markdown);
         }
@@ -273,7 +275,8 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsNotNull(sarifRule);
             
             var markdown = sarifRule!["help"]!["markdown"]!.ToString();
-            var expectedMarkdown = $"Visit [{SarifWriter.CreateHelpUri(ruleInfo)}]({SarifWriter.CreateHelpUri(ruleInfo)}) for additional guidance on this issue.";
+            var helpUri = SarifWriter.CreateHelpUri(ruleInfo);
+            var expectedMarkdown = $"Visit [{helpUri}]({helpUri}) for additional guidance on this issue.";
             
             Assert.AreEqual(expectedMarkdown, markdown);
         }
