@@ -89,7 +89,7 @@ namespace Microsoft.DevSkim.Tests
             
             // Markdown should still include help URI
             var markdown = sarifRule["help"]!["markdown"]!.ToString();
-            Assert.IsTrue(markdown.Contains($"Visit [{SarifWriter.baseHelpUri}DS126858.md]"));
+            Assert.IsTrue(markdown.Contains($"Visit [{SarifWriter.CreateHelpUri("DS126858.md")}]"));
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsNotNull(sarifRule);
             
             var helpText = sarifRule!["help"]!["text"]!.ToString();
-            Assert.IsTrue(helpText.Contains($"Visit {SarifWriter.baseHelpUri}DS126858.md for guidance on this issue"));
+            Assert.IsTrue(helpText.Contains($"Visit {SarifWriter.CreateHelpUri("DS126858.md")} for guidance on this issue"));
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsNotNull(sarifRule);
             
             var markdown = sarifRule!["help"]!["markdown"]!.ToString();
-            var expectedMarkdown = $"{recommendation} Visit [{SarifWriter.baseHelpUri}{ruleInfo}]({SarifWriter.baseHelpUri}{ruleInfo}) for additional guidance on this issue.";
+            var expectedMarkdown = $"{recommendation} Visit [{SarifWriter.CreateHelpUri(ruleInfo)}]({SarifWriter.CreateHelpUri(ruleInfo)}) for additional guidance on this issue.";
             
             Assert.AreEqual(expectedMarkdown, markdown);
         }
@@ -271,7 +271,7 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsNotNull(sarifRule);
             
             var markdown = sarifRule!["help"]!["markdown"]!.ToString();
-            var expectedMarkdown = $"Visit [{SarifWriter.baseHelpUri}{ruleInfo}]({SarifWriter.baseHelpUri}{ruleInfo}) for additional guidance on this issue.";
+            var expectedMarkdown = $"Visit [{SarifWriter.CreateHelpUri(ruleInfo)}]({SarifWriter.CreateHelpUri(ruleInfo)}) for additional guidance on this issue.";
             
             Assert.AreEqual(expectedMarkdown, markdown);
         }
