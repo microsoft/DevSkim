@@ -122,9 +122,10 @@ namespace Microsoft.DevSkim
                     Regex regex = new Regex(pattern.Pattern, options);
                     return regex;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // failed to construct regex for fix
+                    // TODO: would need to refactor to be able to log here because the logger is being passed in the constructor but this method is static
                 }    
             }
 
