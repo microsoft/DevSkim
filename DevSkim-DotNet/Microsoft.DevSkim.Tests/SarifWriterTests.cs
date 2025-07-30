@@ -15,7 +15,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rules with recommendations properly include the recommendation in the SARIF Help field
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RuleWithRecommendation_IncludesRecommendationInHelp()
+        public void When_rule_has_recommendation_then_sarif_help_text_matches_recommendation()
         {
             // Arrange
             const string expectedRecommendation = "Use a more secure hashing algorithm like SHA-256 instead of MD5.";
@@ -40,7 +40,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rules without recommendations fall back to description in the SARIF Help field
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RuleWithoutRecommendation_FallsBackToDescriptionInHelp()
+        public void When_rule_has_no_recommendation_then_sarif_help_text_falls_back_to_description()
         {
             // Arrange
             const string expectedDescription = "Test description for fallback";
@@ -65,7 +65,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rules with recommendations and rule info include both in markdown help
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RuleWithRecommendationAndRuleInfo_IncludesBothInMarkdown()
+        public void When_rule_has_recommendation_and_rule_info_then_markdown_includes_both()
         {
             // Arrange
             const string expectedRecommendation = "Use SHA-256 instead of MD5.";
@@ -99,7 +99,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rules without recommendations but with rule info still include help URI
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RuleWithoutRecommendationButWithRuleInfo_IncludesHelpUri()
+        public void When_rule_has_no_recommendation_but_has_rule_info_then_markdown_includes_help_uri()
         {
             // Arrange
             const string ruleInfo = "DS126858.md";
@@ -130,7 +130,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rules with empty recommendation string behave like rules without recommendations
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RuleWithEmptyRecommendation_FallsBackToDescription()
+        public void When_rule_has_empty_recommendation_then_sarif_help_text_falls_back_to_description()
         {
             // Arrange
             const string expectedDescription = "Test description for empty recommendation";
@@ -155,7 +155,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rules with whitespace-only recommendation string result in empty help due to SARIF SDK serialization behavior
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RuleWithWhitespaceRecommendation_ResultsInEmptyHelp()
+        public void When_rule_has_whitespace_only_recommendation_then_sarif_help_is_empty()
         {
             // Arrange
             const string expectedDescription = "Test description for whitespace recommendation";
@@ -193,7 +193,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rules without recommendation and without description fall back to generic help message
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RuleWithoutRecommendationAndDescription_FallsBackToGenericHelp()
+        public void When_rule_has_no_recommendation_and_no_description_then_sarif_help_contains_generic_message()
         {
             // Arrange
             const string ruleInfo = "DS126858.md";
@@ -220,7 +220,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that multiple rules with different recommendation states are handled correctly
         /// </summary>
         [TestMethod]
-        public void SarifWriter_MultipleRulesWithDifferentRecommendations_HandledCorrectly()
+        public void When_multiple_rules_have_different_recommendation_states_then_each_is_handled_correctly()
         {
             // Arrange
             var rule1 = CreateTestRule("TEST008", "Rule with recommendation", "Description 1", "Recommendation 1");
@@ -255,7 +255,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that markdown field is properly formatted when recommendation is present
         /// </summary>
         [TestMethod]
-        public void SarifWriter_RecommendationPresent_MarkdownFieldProperlyFormatted()
+        public void When_rule_has_recommendation_and_rule_info_then_markdown_is_properly_formatted()
         {
             // Arrange
             const string recommendation = "Use bcrypt for password hashing.";
@@ -285,7 +285,7 @@ namespace Microsoft.DevSkim.Tests
         /// Test that rule with only RuleInfo (no recommendation) has proper markdown
         /// </summary>
         [TestMethod]
-        public void SarifWriter_OnlyRuleInfo_MarkdownContainsHelpUri()
+        public void When_rule_has_only_rule_info_then_markdown_contains_help_uri()
         {
             // Arrange
             const string ruleInfo = "DS789012.md";
