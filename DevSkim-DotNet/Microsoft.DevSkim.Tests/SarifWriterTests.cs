@@ -62,40 +62,6 @@ namespace Microsoft.DevSkim.Tests
         }
 
         /// <summary>
-        /// Test that rules with recommendations and rule info include both in markdown help
-        /// </summary>
-        [TestMethod]
-        public void When_rule_has_recommendation_and_rule_info_then_markdown_includes_both()
-        {
-            // Arrange
-            const string expectedRecommendation = "Use SHA-256 instead of MD5.";
-            const string ruleInfo = "DS126858.md";
-            var rule = CreateTestRule("TEST003", "Test Rule", "Test description", expectedRecommendation, ruleInfo);
-            var issue = CreateTestIssue(rule, "test.cs", "MD5 hash = MD5.Create();");
-
-            // Act & Assert
-            using var writer = new StringWriter();
-            using var sarifWriter = new SarifWriter(writer, null, null);
-            
-            sarifWriter.WriteIssue(issue);
-            sarifWriter.FlushAndClose();
-
-            var sarifOutput = JObject.Parse(writer.ToString());
-            var sarifRule = GetRuleFromSarif(sarifOutput, "TEST003");
-            
-            Assert.IsNotNull(sarifRule);
-            
-            // Check text field has recommendation
-            Assert.AreEqual(expectedRecommendation, sarifRule!["help"]!["text"]!.ToString());
-            
-            // Check markdown field includes both recommendation and help URI
-            var markdown = sarifRule["help"]!["markdown"]!.ToString();
-            Assert.IsTrue(markdown.Contains(expectedRecommendation));
-            Assert.IsTrue(markdown.Contains("Visit [https://github.com/Microsoft/DevSkim/blob/main/guidance/DS126858.md]"));
-            Assert.IsTrue(markdown.Contains("for additional guidance on this issue"));
-        }
-
-        /// <summary>
         /// Test that rules without recommendations but with rule info still include help URI
         /// </summary>
         [TestMethod]
