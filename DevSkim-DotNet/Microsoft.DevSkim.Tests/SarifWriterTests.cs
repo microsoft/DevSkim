@@ -322,16 +322,7 @@ namespace Microsoft.DevSkim.Tests
                 Recommendation = recommendation,
                 RuleInfo = ruleInfo,
                 Severity = Severity.Important,
-                Confidence = Confidence.High,
-                Patterns = new[]
-                {
-                    new SearchPattern
-                    {
-                        Pattern = "MD5",
-                        PatternType = PatternType.Regex,
-                        Scopes = new[] { PatternScope.All }
-                    }
-                }
+                Confidence = Confidence.High
             };
         }
 
