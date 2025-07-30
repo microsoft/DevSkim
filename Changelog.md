@@ -5,75 +5,78 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.0.63] - 2025-07-29
-## Dependencies
+### Fix
+Fixes Sarif Markdown value failing to populate the rule provided recommendation value. #697
+
+### Dependencies
 Update dependencies 
 
-## Fix
-Fixes Sarif Markdown failing to populate the rule provided recommendation value.
+### Tests
+Adds test cases for SarifWriter
 
 ## [1.0.62] - 2025-07-23
-## Pipelines
+### Pipelines
 Pipeline updates
 
 ## [1.0.61] - 2025-07-11
-## Pipelines
+### Pipelines
 Pipeline updates
 
 ## [1.0.60] - 2025-06-36
-## Pipelines
+### Pipelines
 Pipeline updates
 
 ## [1.0.59] - 2025-06-10
-## Misc (non-code)
+### Misc (non-code)
 Removes old doc publish workflow. 
 
 ## [1.0.58] - 2025-06-09
-## New Feature
+### New Feature
 Adds a `vs` output format to leverage the DevSkim CLI as a build task in a csproj.
 
 ## [1.0.57] - 2025-05-28
-## Fix
+### Fix
 Fix an issue handling non-ascii paths when launching LSP in VS Code Extension
 
-## Dependencies
+### Dependencies
 Update Dependencies
 
 ## [1.0.56] - 2025-04-14
-## Tests
+### Tests
 Migrate to MTP
 
 ## [1.0.55] - 2025-04-14
-## Dependencies
+### Dependencies
 Updates Dependencies
 
 ## [1.0.54] - 2025-04-09
-## Dependencies
+### Dependencies
 Updates Dependencies
 
 ## [1.0.53] - 2025-04-01
-## Documentation
+### Documentation
 Adds a link to the Microsoft Privacy Statement to the Readme.
 
 ## [1.0.52] - 2024-12-09
-## Dependencies
+### Dependencies
 Updates Dependencies
 
-## .Net Targets
+### .Net Targets
 CLI now targets .NET 8.0 and .NET 9.0, .NET 6.0/7.0 targeting removed. DevSkim Library component retains .Net Standard 2.1 support.
 
 ## [1.0.51] - 2024-12-09
-## Fix
+### Fix
 Fix confidence filtering at rule level.
 
 ## [1.0.50] - 2024-12-05
-## Fix
+### Fix
 Fixes #664 handling of options from IgnoreRuleMap when using OptionsJson
 
-## New Functionality
+### New Functionality
 Adds `include-globs` argument to require all scanned files match a specific glob pattern #663.
 
 ## [1.0.49] - 2024-12-03
-## Rules
+### Rules
 Fixed false positives and false negatives in outdated/banned SSL/TLS protocols. #649
 
 ## [1.0.48] - 2024-11-20
