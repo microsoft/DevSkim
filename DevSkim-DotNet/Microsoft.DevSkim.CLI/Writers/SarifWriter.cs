@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using Microsoft.ApplicationInspector.RulesEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -190,23 +191,25 @@ namespace Microsoft.DevSkim.CLI.Writers
 
         public string? OutputPath { get; }
 
+        private const string BaseHelpUri = "https://github.com/Microsoft/DevSkim/blob/main/guidance/";
+
         private void AddRuleToSarifRule(DevSkimRule devskimRule)
         {
             if (!_rules.ContainsKey(devskimRule.Id))
             {
-                Uri helpUri = new Uri("https://github.com/Microsoft/DevSkim/blob/main/guidance/" + devskimRule.RuleInfo); ;
+                Uri helpUri = CreateHelpUri(devskimRule.RuleInfo);
                 ReportingDescriptor sarifRule = new ReportingDescriptor();
                 sarifRule.Id = devskimRule.Id;
                 sarifRule.Name = ToSarifFriendlyName(devskimRule.Name);
                 sarifRule.ShortDescription = new MultiformatMessageString() { Text = devskimRule.Description };
                 sarifRule.FullDescription = new MultiformatMessageString() { Text = $"{devskimRule.Name}: {devskimRule.Description}" };
+
                 sarifRule.Help = new MultiformatMessageString()
                 {
-                    // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
-                    Text = !string.IsNullOrEmpty(devskimRule.Recommendation) ? devskimRule.Recommendation : 
-                        (!string.IsNullOrEmpty(devskimRule.Description) ? devskimRule.Description : $"Visit {helpUri} for guidance on this issue."),
-                    Markdown = $"Visit [{helpUri}]({helpUri}) for guidance on this issue."
+                    Text = BuildTextDescription(devskimRule, helpUri),
+                    Markdown = BuildMarkdownDescription(devskimRule, helpUri)
                 };
+
                 sarifRule.HelpUri = helpUri;
                 sarifRule.DefaultConfiguration = new ReportingConfiguration()
                 {
@@ -315,6 +318,75 @@ namespace Microsoft.DevSkim.CLI.Writers
             {
                 resultItem.Tags.Add(tag);
             }
+        }
+
+        /// <summary>
+        /// Creates a help URI for a DevSkim rule, handling null or empty RuleInfo safely
+        /// </summary>
+        /// <param name="ruleInfo">The rule info filename, can be null or empty</param>
+        /// <returns>A properly formed URI</returns>
+        internal static Uri CreateHelpUri(string? ruleInfo)
+        {
+            var baseUri = new Uri(BaseHelpUri);
+            
+            if (string.IsNullOrEmpty(ruleInfo))
+            {
+                // Return base URI if no specific rule info is provided
+                return baseUri;
+            }
+            
+            // Use Uri constructor to safely combine base URI with relative path
+            return new Uri(baseUri, ruleInfo);
+        }
+
+        /// <summary>
+        /// Builds the text description for a SARIF rule based on the DevSkim rule properties
+        /// </summary>
+        /// <param name="devskimRule">The DevSkim rule containing recommendation and description</param>
+        /// <param name="helpUri">The help URI for the rule</param>
+        /// <returns>The text description string</returns>
+        private static string BuildTextDescription(DevSkimRule devskimRule, Uri helpUri)
+        {
+            // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
+            if (!string.IsNullOrEmpty(devskimRule.Recommendation))
+            {
+                return devskimRule.Recommendation;
+            }
+            
+            if (!string.IsNullOrEmpty(devskimRule.Description))
+            {
+                return devskimRule.Description;
+            }
+            
+            return $"Visit {helpUri} for guidance on this issue.";
+        }
+
+        /// <summary>
+        /// Builds the markdown description for a SARIF rule based on the DevSkim rule properties
+        /// </summary>
+        /// <param name="devskimRule">The DevSkim rule containing recommendation and rule info</param>
+        /// <param name="helpUri">The help URI for the rule</param>
+        /// <returns>The formatted markdown string</returns>
+        private static string BuildMarkdownDescription(DevSkimRule devskimRule, Uri helpUri)
+        {
+            StringBuilder markdownDescriptionBuilder = new();
+            
+            if (!string.IsNullOrEmpty(devskimRule.Recommendation))
+            {
+                markdownDescriptionBuilder.Append(devskimRule.Recommendation);
+            }
+            
+            if (!string.IsNullOrEmpty(devskimRule.RuleInfo))
+            {
+                // If a recommendation was set put a space before the rule info string.
+                if (markdownDescriptionBuilder.Length > 0)
+                {
+                    markdownDescriptionBuilder.Append(' ');
+                }
+                markdownDescriptionBuilder.Append($"Visit [{helpUri}]({helpUri}) for additional guidance on this issue.");
+            }
+            
+            return markdownDescriptionBuilder.ToString();
         }
     }
 }

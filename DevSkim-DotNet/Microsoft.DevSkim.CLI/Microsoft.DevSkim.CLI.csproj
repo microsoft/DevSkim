@@ -25,6 +25,10 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>Enable</Nullable>        
   </PropertyGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="Microsoft.DevSkim.Tests" />
+  </ItemGroup>
     <ItemGroup>
         <None Include="..\Content\LICENSE.txt" Pack="true" PackagePath="" />
         <None Include="..\Content\devskim-icon-128.png" Pack="true" PackagePath="" />

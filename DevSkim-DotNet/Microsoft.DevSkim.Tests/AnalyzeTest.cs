@@ -20,7 +20,6 @@ namespace Microsoft.DevSkim.Tests
             File.Delete(outFileName);
 
             string basePath = Path.GetTempPath();
-            string oneUpPath = Directory.GetParent(basePath).FullName;
             using FileStream file = File.Open(tempFileName, FileMode.Create);
             file.Write(Encoding.UTF8.GetBytes("MD5;\nhttp://contoso.com\n"));
             file.Close();
