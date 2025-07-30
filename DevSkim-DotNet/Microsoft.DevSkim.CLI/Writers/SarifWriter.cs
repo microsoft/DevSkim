@@ -204,9 +204,7 @@ namespace Microsoft.DevSkim.CLI.Writers
                 
                 sarifRule.Help = new MultiformatMessageString()
                 {
-                    // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
-                    Text = !string.IsNullOrEmpty(devskimRule.Recommendation) ? devskimRule.Recommendation : 
-                        (!string.IsNullOrEmpty(devskimRule.Description) ? devskimRule.Description : $"Visit {helpUri} for guidance on this issue."),
+                    Text = BuildTextDescription(devskimRule, helpUri),
                     Markdown = BuildMarkdownDescription(devskimRule, helpUri)
                 };
                 
@@ -318,6 +316,28 @@ namespace Microsoft.DevSkim.CLI.Writers
             {
                 resultItem.Tags.Add(tag);
             }
+        }
+
+        /// <summary>
+        /// Builds the text description for a SARIF rule based on the DevSkim rule properties
+        /// </summary>
+        /// <param name="devskimRule">The DevSkim rule containing recommendation and description</param>
+        /// <param name="helpUri">The help URI for the rule</param>
+        /// <returns>The text description string</returns>
+        private static string BuildTextDescription(DevSkimRule devskimRule, Uri helpUri)
+        {
+            // If recommendation is present use that, otherwise use description if present, otherwise use the HelpUri
+            if (!string.IsNullOrEmpty(devskimRule.Recommendation))
+            {
+                return devskimRule.Recommendation;
+            }
+            
+            if (!string.IsNullOrEmpty(devskimRule.Description))
+            {
+                return devskimRule.Description;
+            }
+            
+            return $"Visit {helpUri} for guidance on this issue.";
         }
 
         /// <summary>
