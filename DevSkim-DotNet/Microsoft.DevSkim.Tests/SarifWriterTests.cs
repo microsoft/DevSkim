@@ -89,7 +89,8 @@ namespace Microsoft.DevSkim.Tests
             
             // Markdown should still include help URI
             var markdown = sarifRule["help"]!["markdown"]!.ToString();
-            Assert.IsTrue(markdown.Contains($"Visit [{SarifWriter.CreateHelpUri("DS126858.md")}]"));
+            var expectedMarkdown = $"Visit [{SarifWriter.CreateHelpUri("DS126858.md")}]({SarifWriter.CreateHelpUri("DS126858.md")}) for additional guidance on this issue.";
+            Assert.AreEqual(expectedMarkdown, markdown);
         }
 
         /// <summary>
@@ -179,7 +180,8 @@ namespace Microsoft.DevSkim.Tests
             Assert.IsNotNull(sarifRule);
             
             var helpText = sarifRule!["help"]!["text"]!.ToString();
-            Assert.IsTrue(helpText.Contains($"Visit {SarifWriter.CreateHelpUri("DS126858.md")} for guidance on this issue"));
+            var expectedHelpText = $"Visit {SarifWriter.CreateHelpUri("DS126858.md")} for guidance on this issue.";
+            Assert.AreEqual(expectedHelpText, helpText);
         }
 
         /// <summary>
