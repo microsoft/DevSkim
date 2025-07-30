@@ -29,7 +29,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST001");
             
             Assert.IsNotNull(sarifRule);
@@ -54,7 +54,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST002");
             
             Assert.IsNotNull(sarifRule);
@@ -80,7 +80,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST003");
             
             Assert.IsNotNull(sarifRule);
@@ -113,7 +113,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST004");
             
             Assert.IsNotNull(sarifRule);
@@ -144,7 +144,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST005");
             
             Assert.IsNotNull(sarifRule);
@@ -171,7 +171,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.FlushAndClose();
 
             var sarifJson = writer.ToString();
-            var sarifOutput = ParseSarifOutput(sarifJson);
+            var sarifOutput = JObject.Parse(sarifJson);
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST006");
             
             Assert.IsNotNull(sarifRule, $"sarifRule should not be null. SARIF output: {sarifJson}");
@@ -207,7 +207,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST007");
             
             Assert.IsNotNull(sarifRule);
@@ -236,7 +236,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue2);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             
             var sarifRule1 = GetRuleFromSarif(sarifOutput, "TEST008");
             var sarifRule2 = GetRuleFromSarif(sarifOutput, "TEST009");
@@ -270,7 +270,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST010");
             
             Assert.IsNotNull(sarifRule);
@@ -299,7 +299,7 @@ namespace Microsoft.DevSkim.Tests
             sarifWriter.WriteIssue(issue);
             sarifWriter.FlushAndClose();
 
-            var sarifOutput = ParseSarifOutput(writer.ToString());
+            var sarifOutput = JObject.Parse(writer.ToString());
             var sarifRule = GetRuleFromSarif(sarifOutput, "TEST011");
             
             Assert.IsNotNull(sarifRule);
@@ -351,11 +351,6 @@ namespace Microsoft.DevSkim.Tests
             );
 
             return new IssueRecord(filename, 0, textSample, issue, "csharp", null);
-        }
-
-        private JObject ParseSarifOutput(string sarifJson)
-        {
-            return JObject.Parse(sarifJson);
         }
 
         private JToken? GetRuleFromSarif(JObject sarifOutput, string ruleId)
