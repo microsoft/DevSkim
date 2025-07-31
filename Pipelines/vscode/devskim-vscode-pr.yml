@@ -49,12 +49,6 @@ extends:
           inputs:
             packageType: 'sdk'
             version: '9.0.x'
-        - task: Npm@1
-          displayName: Build VS Code Plugin
-          inputs:
-            command: 'custom'
-            workingDir: 'DevSkim-VSCode-Plugin/'     
-            customCommand: 'run build'
         - template: nbgv-set-version-steps.yml@templates
         - task: PowerShell@2
           displayName: Mkdir for Manifests and Packages
