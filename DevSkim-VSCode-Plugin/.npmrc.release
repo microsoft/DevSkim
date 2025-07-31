@@ -1,0 +1,3 @@
+registry=https://twcdot.pkgs.visualstudio.com/Data/_packaging/Data_PublicPackages/npm/registry/ 
+                        
+always-auth=true

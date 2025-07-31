@@ -8,14 +8,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const filePath = process.argv[2];
+const newRegistryBase = process.argv[3];
 
-if (!filePath) {
-  console.error('❌ Please provide the path to the package-lock.json file.');
+if (!filePath || !newRegistryBase) {
+  console.error('❌ Please provide the path to the package-lock.json file and the new registry base URL.');
+  console.error('Usage: node updatePackageLock.js <path-to-package-lock.json> <new-registry-base-url>');
   process.exit(1);
 }
 
 const registryBase = 'https://registry.npmjs.org/';
-const newRegistryBase = 'https://twcsecurityassurance.pkgs.visualstudio.com/SecurityEngineering/_packaging/PublicRegistriesFeed/npm/registry/';
 
 try {
   const fullPath = path.resolve(__dirname, filePath);
