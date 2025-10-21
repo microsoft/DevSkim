@@ -7,16 +7,20 @@
         public void GenerateSuppressionByLanguage()
         {
             var languages = DevSkimLanguages.LoadEmbedded();
-
         }
 
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_BasicSuppression()
+        [DataTestMethod]
+        [DataRow("csharp", "DS123456", "// DevSkim: ignore DS123456", DisplayName = "C# Basic Suppression")]
+        [DataRow("python", "DS123456", "# DevSkim: ignore DS123456", DisplayName = "Python Basic Suppression")]
+        [DataRow("sql", "DS123456", "-- DevSkim: ignore DS123456", DisplayName = "SQL Basic Suppression")]
+        [DataRow("vb", "DS123456", "' DevSkim: ignore DS123456", DisplayName = "VB Basic Suppression")]
+        [DataRow("csharp", "DS123456,DS789012", "// DevSkim: ignore DS123456,DS789012", DisplayName = "Multiple Rule IDs")]
+        [DataRow("csharp", "", "// DevSkim: ignore ", DisplayName = "Empty Rule ID")]
+        public void GenerateSuppressionByLanguageTest_BasicSuppressions(string language, string ruleId, string expected)
         {
-            // Test basic suppression generation for C# (inline comment style)
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "DS123456");
-
-            Assert.AreEqual("// DevSkim: ignore DS123456", result);
+            // Test basic suppression generation for various languages
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, ruleId);
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
@@ -57,81 +61,16 @@
             Assert.IsTrue(result.EndsWith(" by JaneSmith"));
         }
 
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_MultiLinePreferred()
+        [DataTestMethod]
+        [DataRow("csharp", "DS123456", "/*", " */", DisplayName = "C# Multiline")]
+        [DataRow("python", "DS123456", "#", "\n", DisplayName = "Python Multiline")]
+        public void GenerateSuppressionByLanguageTest_MultiLinePreferred(string language, string ruleId, string expectedStart, string expectedEnd)
         {
-            // Test multiline comment preference for C# 
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "DS123456", preferMultiLine: true);
+            // Test multiline comment preference
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, ruleId, preferMultiLine: true);
 
-            Assert.IsTrue(result.StartsWith("/* DevSkim: ignore DS123456"));
-            Assert.IsTrue(result.EndsWith(" */"));
-        }
-
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_PythonLanguage()
-        {
-            // Test Python-style comments
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("python", "DS123456");
-
-            Assert.AreEqual("# DevSkim: ignore DS123456", result);
-        }
-
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_PythonMultiLine()
-        {
-            // Test Python multiline (should use prefix/suffix style)
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("python", "DS123456", preferMultiLine: true);
-
-            // Python uses # as both inline and prefix, with \n as suffix for multiline
-            Assert.IsTrue(result.StartsWith("# DevSkim: ignore DS123456"));
-            Assert.IsTrue(result.EndsWith("\n"));
-        }
-
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_SQLLanguage()
-        {
-            // Test SQL-style comments
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("sql", "DS123456");
-
-            Assert.AreEqual("-- DevSkim: ignore DS123456", result);
-        }
-
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_MultipleRuleIds()
-        {
-            // Test suppression with multiple rule IDs
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "DS123456,DS789012");
-
-            Assert.AreEqual("// DevSkim: ignore DS123456,DS789012", result);
-        }
-
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_UnsupportedLanguage()
-        {
-            // Test with a language that doesn't have comment configuration
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("unknownlang", "DS123456");
-
-            // Should return empty string or basic format depending on implementation
-            Assert.IsNotNull(result);
-            // The method should handle unknown languages gracefully
-        }
-
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_EmptyRuleId()
-        {
-            // Test with empty rule ID
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "");
-
-            Assert.AreEqual("// DevSkim: ignore ", result);
-        }
-
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_VBLanguage()
-        {
-            // Test Visual Basic style comments
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("vb", "DS123456");
-
-            Assert.AreEqual("' DevSkim: ignore DS123456", result);
+            Assert.IsTrue(result.StartsWith($"{expectedStart} DevSkim: ignore {ruleId}"));
+            Assert.IsTrue(result.EndsWith(expectedEnd));
         }
 
         [TestMethod]
@@ -143,18 +82,19 @@
             Console.WriteLine($"XML suppression result: '{result}'");
             Assert.AreEqual("<!-- DevSkim: ignore DS123456 -->", result);
 
-            // This test documents the current behavior for XML
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
-        public void GenerateSuppressionByLanguageTest_NullLanguage()
+        [DataTestMethod]
+        [DataRow(null, DisplayName = "Null Language")]
+        [DataRow("unknownlang", DisplayName = "Unknown Language")]
+        public void GenerateSuppressionByLanguageTest_InvalidLanguages(string language)
         {
-            // Test with null language parameter
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(null, "DS123456");
+            // Test with invalid language parameters
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, "DS123456");
 
             Assert.IsNotNull(result);
-            // Should handle null gracefully
+            // Should handle invalid languages gracefully
         }
 
         [TestMethod]
