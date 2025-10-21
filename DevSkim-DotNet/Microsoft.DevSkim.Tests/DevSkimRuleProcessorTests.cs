@@ -9,7 +9,7 @@
             var languages = DevSkimLanguages.LoadEmbedded();
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("csharp", "DS123456", "// DevSkim: ignore DS123456", DisplayName = "C# Basic Suppression")]
         [DataRow("python", "DS123456", "# DevSkim: ignore DS123456", DisplayName = "Python Basic Suppression")]
         [DataRow("sql", "DS123456", "-- DevSkim: ignore DS123456", DisplayName = "SQL Basic Suppression")]
@@ -24,44 +24,56 @@
         }
 
         [TestMethod]
-        public void GenerateSuppressionByLanguageTest_WithDuration()
+        [DataRow("csharp", "DS123456", 30, DisplayName = "C# with 30 days duration")]
+        [DataRow("python", "DS789012", 15, DisplayName = "Python with 15 days duration")]
+        [DataRow("sql", "DS111213", 60, DisplayName = "SQL with 60 days duration")]
+        [DataRow("vb", "DS141516", 7, DisplayName = "VB with 7 days duration")]
+        public void GenerateSuppressionByLanguageTest_WithDuration(string language, string ruleId, int duration)
         {
             // Test suppression with expiration date
-            DateTime testDate = DateTime.Now.AddDays(30);
+            DateTime testDate = DateTime.Now.AddDays(duration);
             string expectedDate = testDate.ToString("yyyy-MM-dd");
 
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "DS123456", duration: 30);
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, ruleId, duration: duration);
 
             Assert.IsTrue(result.Contains("until"));
             Assert.IsTrue(result.Contains(expectedDate));
-            Assert.IsTrue(result.StartsWith("// DevSkim: ignore DS123456 until"));
+            Assert.IsTrue(result.Contains($"ignore {ruleId} until"));
         }
 
         [TestMethod]
-        public void GenerateSuppressionByLanguageTest_WithReviewer()
+        [DataRow("csharp", "DS123456", "JohnDoe", "// DevSkim: ignore DS123456 by JohnDoe", DisplayName = "C# with reviewer")]
+        [DataRow("python", "DS789012", "JaneSmith", "# DevSkim: ignore DS789012 by JaneSmith", DisplayName = "Python with reviewer")]
+        [DataRow("sql", "DS111213", "BobJones", "-- DevSkim: ignore DS111213 by BobJones", DisplayName = "SQL with reviewer")]
+        [DataRow("vb", "DS141516", "AliceWilliams", "' DevSkim: ignore DS141516 by AliceWilliams", DisplayName = "VB with reviewer")]
+        public void GenerateSuppressionByLanguageTest_WithReviewer(string language, string ruleId, string reviewerName, string expected)
         {
             // Test suppression with reviewer name
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "DS123456", reviewerName: "JohnDoe");
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, ruleId, reviewerName: reviewerName);
 
-            Assert.AreEqual("// DevSkim: ignore DS123456 by JohnDoe", result);
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
-        public void GenerateSuppressionByLanguageTest_WithDurationAndReviewer()
+        [DataRow("csharp", "DS123456", 15, "JaneSmith", DisplayName = "C# with duration and reviewer")]
+        [DataRow("python", "DS789012", 30, "JohnDoe", DisplayName = "Python with duration and reviewer")]
+        [DataRow("sql", "DS111213", 7, "BobJones", DisplayName = "SQL with duration and reviewer")]
+        [DataRow("vb", "DS141516", 45, "AliceWilliams", DisplayName = "VB with duration and reviewer")]
+        public void GenerateSuppressionByLanguageTest_WithDurationAndReviewer(string language, string ruleId, int duration, string reviewerName)
         {
             // Test suppression with both duration and reviewer
-            DateTime testDate = DateTime.Now.AddDays(15);
+            DateTime testDate = DateTime.Now.AddDays(duration);
             string expectedDate = testDate.ToString("yyyy-MM-dd");
 
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "DS123456", duration: 15, reviewerName: "JaneSmith");
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, ruleId, duration: duration, reviewerName: reviewerName);
 
             Assert.IsTrue(result.Contains($"until {expectedDate}"));
-            Assert.IsTrue(result.Contains("by JaneSmith"));
-            Assert.IsTrue(result.StartsWith("// DevSkim: ignore DS123456 until"));
-            Assert.IsTrue(result.EndsWith(" by JaneSmith"));
+            Assert.IsTrue(result.Contains($"by {reviewerName}"));
+            Assert.IsTrue(result.Contains($"ignore {ruleId} until"));
+            Assert.IsTrue(result.EndsWith($" by {reviewerName}"));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("csharp", "DS123456", "/*", " */", DisplayName = "C# Multiline")]
         [DataRow("python", "DS123456", "#", "\n", DisplayName = "Python Multiline")]
         public void GenerateSuppressionByLanguageTest_MultiLinePreferred(string language, string ruleId, string expectedStart, string expectedEnd)
@@ -74,18 +86,18 @@
         }
 
         [TestMethod]
-        public void GenerateSuppressionByLanguageTest_XMLLanguage()
+        [DataRow("xml", "DS123456", "<!-- DevSkim: ignore DS123456 -->", DisplayName = "XML Language")]
+        public void GenerateSuppressionByLanguageTest_XMLLanguage(string language, string ruleId, string expected)
         {
-            // Test XML language
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("xml", "DS123456");
+            // Test XML-like languages
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, ruleId);
 
-            Console.WriteLine($"XML suppression result: '{result}'");
-            Assert.AreEqual("<!-- DevSkim: ignore DS123456 -->", result);
-
+            Console.WriteLine($"{language} suppression result: '{result}'");
+            Assert.AreEqual(expected, result);
             Assert.IsNotNull(result);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(null, DisplayName = "Null Language")]
         [DataRow("unknownlang", DisplayName = "Unknown Language")]
         public void GenerateSuppressionByLanguageTest_InvalidLanguages(string language)
@@ -98,13 +110,16 @@
         }
 
         [TestMethod]
-        public void GenerateSuppressionByLanguageTest_CustomLanguagesObject()
+        [DataRow("csharp", "DS123456", "// DevSkim: ignore DS123456", DisplayName = "C# with custom languages")]
+        [DataRow("python", "DS789012", "# DevSkim: ignore DS789012", DisplayName = "Python with custom languages")]
+        [DataRow("sql", "DS111213", "-- DevSkim: ignore DS111213", DisplayName = "SQL with custom languages")]
+        public void GenerateSuppressionByLanguageTest_CustomLanguagesObject(string language, string ruleId, string expected)
         {
             // Test with custom languages object
             var customLanguages = DevSkimLanguages.LoadEmbedded();
-            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage("csharp", "DS123456", languages: customLanguages);
+            string result = DevSkimRuleProcessor.GenerateSuppressionByLanguage(language, ruleId, languages: customLanguages);
 
-            Assert.AreEqual("// DevSkim: ignore DS123456", result);
+            Assert.AreEqual(expected, result);
         }
     }
 }
