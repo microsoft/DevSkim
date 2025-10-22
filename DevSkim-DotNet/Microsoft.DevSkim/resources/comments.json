@@ -25,7 +25,7 @@
     "language": [
       "plaintext"
     ],
-    "always":  true
+    "always": true
   },
   {
     "language": [
@@ -74,5 +74,12 @@
     "inline": "::",
     "prefix": "Rem",
     "suffix": "\n"
+  },
+  {
+    "language": [
+      "xml"
+    ],
+    "prefix": "<!--",
+    "suffix": "-->"
   }
 ]
