@@ -3,11 +3,6 @@
     [TestClass]
     public class DevSkimRuleProcessorTests
     {
-        [TestMethod]
-        public void GenerateSuppressionByLanguage()
-        {
-            var languages = DevSkimLanguages.LoadEmbedded();
-        }
 
         [TestMethod]
         [DataRow("csharp", "DS123456", "// DevSkim: ignore DS123456", DisplayName = "C# Basic Suppression")]
