@@ -6,7 +6,7 @@ resources:
   repositories:
     - repository: templates
       type: git
-      name: Data/OSS-Tools-Pipeline-Templates
+      name: General/OSS-Tools-Pipeline-Templates
       ref: refs/tags/v2.0.4
     - repository: 1esPipelines
       type: git
@@ -43,7 +43,7 @@ extends:
           dotnetTestArgs: '-- --coverage --report-trx'
           includeNuGetOrg: false
           nugetFeedsToUse: 'config'
-          nugetConfigPath: 'nuget.release.config'
+          nugetConfigPath: 'nuget.config'
           onInit:
             - task: NuGetAuthenticate@1
       - template: dotnet-test-job.yml@templates
@@ -57,7 +57,7 @@ extends:
           dotnetTestArgs: '-- --coverage --report-trx'
           includeNuGetOrg: false
           nugetFeedsToUse: 'config'
-          nugetConfigPath: 'nuget.release.config'
+          nugetConfigPath: 'nuget.config'
           onInit:
             - task: NuGetAuthenticate@1
   
@@ -75,7 +75,7 @@ extends:
           artifactName: 'linux-mac-archive'
           includeNuGetOrg: false
           nugetFeedsToUse: 'config'
-          nugetConfigPath: 'nuget.release.config'
+          nugetConfigPath: 'nuget.config'
           onInit:
             - task: NuGetAuthenticate@1
           preBuild:
@@ -89,7 +89,7 @@ extends:
           artifactName: 'win-netcore-archive'
           includeNuGetOrg: false
           nugetFeedsToUse: 'config'
-          nugetConfigPath: 'nuget.release.config'
+          nugetConfigPath: 'nuget.config'
           onInit:
             - task: NuGetAuthenticate@1
           preBuild:
@@ -104,7 +104,7 @@ extends:
           artifactName: 'nuget-lib-archive'
           includeNuGetOrg: false
           nugetFeedsToUse: 'config'
-          nugetConfigPath: 'nuget.release.config'
+          nugetConfigPath: 'nuget.config'
           onInit:
             - task: NuGetAuthenticate@1
           preBuild:
@@ -119,7 +119,7 @@ extends:
           artifactName: 'nuget-cli-archive'
           includeNuGetOrg: false
           nugetFeedsToUse: 'config'
-          nugetConfigPath: 'nuget.release.config'
+          nugetConfigPath: 'nuget.config'
           onInit:
             - task: NuGetAuthenticate@1
           preBuild:
@@ -150,6 +150,7 @@ extends:
           inputs:
             packageType: 'sdk'
             version: ${{ variables.DotnetVersion }}
+        - task: NuGetAuthenticate@1
         - template: nbgv-set-version-steps.yml@templates
         # set-version-steps only sets it for current job, while adding isOutput only sets it for future jobs
         # https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-variables-scripts?view=azure-devops&tabs=powershell#set-an-output-variable-for-use-in-future-jobs
