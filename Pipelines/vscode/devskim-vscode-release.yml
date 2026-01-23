@@ -108,7 +108,7 @@ extends:
         - task: EsrpCodeSigning@5
           displayName: Code Sign VSCode Plugin
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-v5-connection'
+            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
             AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
             AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
             AuthAKVName: 'oss-signing-vault'
