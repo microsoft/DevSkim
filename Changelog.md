@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.69] - 2026-01-23
+### Dependencies
+- Update lodash from 4.17.21 to 4.17.23 in /DevSkim-VSCode-Plugin (fixes Prototype Pollution vulnerability)
+- Update qs from 6.14.0 to 6.14.1 in /DevSkim-VSCode-Plugin (fixes DoS vulnerability)
+- Update undici from 6.21.3 to 6.23.0 in /DevSkim-VSCode-Plugin (fixes resource exhaustion vulnerability)
+
+### Fix
+- Rename .eslintrc.js to .eslintrc.cjs to fix linter compatibility with ES modules
+
 ## [1.0.68] - 2025-12-04
 ### Dependencies
 Bump jws from 3.2.2 to 3.2.3 in /DevSkim-VSCode-Plugin
