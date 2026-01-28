@@ -6,7 +6,7 @@ resources:
   repositories:
     - repository: templates
       type: git
-      name: Data/OSS-Tools-Pipeline-Templates
+      name: General/OSS-Tools-Pipeline-Templates
       ref: refs/tags/v2.0.4
     - repository: 1esPipelines
       type: git
@@ -80,6 +80,7 @@ extends:
             path: '$(Build.StagingDirectory)'
             artifact: 'Signed_Binaries'
         steps:
+        - task: NuGetAuthenticate@1
         - template: nbgv-set-version-steps.yml@templates
         # set-version-steps only sets it for current job, while adding isOutput only sets it for future jobs
         # https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-variables-scripts?view=azure-devops&tabs=powershell#set-an-output-variable-for-use-in-future-jobs
@@ -107,7 +108,7 @@ extends:
         - task: EsrpCodeSigning@5
           displayName: Code Sign VSCode Plugin
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-v5-connection'
+            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
             AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
             AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
             AuthAKVName: 'oss-signing-vault'
