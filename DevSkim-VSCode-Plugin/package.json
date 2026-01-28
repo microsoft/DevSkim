@@ -319,11 +319,10 @@
 		"pipeline-pack-release":"npm install --global @microsoft/artifacts-npm-credprovider --registry https://pkgs.dev.azure.com/artifacts-public/23934c1b-a3b5-4b70-9dd3-d1bef4cc72a0/_packaging/AzureArtifacts/npm/registry/ && cp .npmrc.release .npmrc && artifacts-npm-credprovider && npm run restore-net-release && npm run rewrite-registry:root-release && npm run rewrite-registry:client-release && npm run pack-ext",
 		"restore-net":"dotnet restore --configfile ../nuget.config.azure ../DevSkim-Dotnet/Microsoft.DevSkim.LanguageServer",
 		"restore-net-release":"dotnet restore --configfile ../nuget.release.config ../DevSkim-Dotnet/Microsoft.DevSkim.LanguageServer",
-		"rewrite-registry:root": "node scripts/updatePackageLock.js ../package-lock.json https://twcsecurityassurance.pkgs.visualstudio.com/SecurityEngineering/_packaging/PublicRegistriesFeed/npm/registry/",
-		"rewrite-registry:client": "node scripts/updatePackageLock.js ../client/package-lock.json https://twcsecurityassurance.pkgs.visualstudio.com/SecurityEngineering/_packaging/PublicRegistriesFeed/npm/registry/",
-		"rewrite-registry:root-release": "node scripts/updatePackageLock.js ../package-lock.json https://twcdot.pkgs.visualstudio.com/Data/_packaging/Data_PublicPackages/npm/registry/",
-		"rewrite-registry:client-release": "node scripts/updatePackageLock.js ../client/package-lock.json https://twcdot.pkgs.visualstudio.com/Data/_packaging/Data_PublicPackages/npm/registry/"
-
+		"rewrite-registry:root": "node scripts/updatePackageLock.js ../package-lock.json https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/PublicRegistriesFeed/npm/registry/",
+		"rewrite-registry:client": "node scripts/updatePackageLock.js ../client/package-lock.json https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/PublicRegistriesFeed/npm/registry/",
+		"rewrite-registry:root-release": "node scripts/updatePackageLock.js ../package-lock.json https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/Data_PublicPackages/npm/registry/",
+		"rewrite-registry:client-release": "node scripts/updatePackageLock.js ../client/package-lock.json https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/Data_PublicPackages/npm/registry/"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",
