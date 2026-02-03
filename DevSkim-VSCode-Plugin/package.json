@@ -318,7 +318,7 @@
 		"pipeline-pack": "npm install --global @microsoft/artifacts-npm-credprovider --registry https://pkgs.dev.azure.com/artifacts-public/23934c1b-a3b5-4b70-9dd3-d1bef4cc72a0/_packaging/AzureArtifacts/npm/registry/ && cp .npmrc.pipeline .npmrc && artifacts-npm-credprovider && npm run restore-net && npm run rewrite-registry:root && npm run rewrite-registry:client && npm run pack-ext",
 		"restore-net":"dotnet restore --configfile ../nuget.config ../DevSkim-Dotnet/Microsoft.DevSkim.LanguageServer",
 		"rewrite-registry:root": "node scripts/updatePackageLock.js ../package-lock.json https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/PublicRegistriesFeed/npm/registry/",
-		"rewrite-registry:client": "node scripts/updatePackageLock.js ../client/package-lock.json https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/PublicRegistriesFeed/npm/registry/",
+		"rewrite-registry:client": "node scripts/updatePackageLock.js ../client/package-lock.json https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/PublicRegistriesFeed/npm/registry/"
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",
