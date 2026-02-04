@@ -280,7 +280,8 @@ namespace Microsoft.DevSkim.Tests
                 OutputFileFormat = "sarif"
             };
             
-            new AnalyzeCommand(configOpts).Run();
+            int configResultCode = new AnalyzeCommand(configOpts).Run();
+            Assert.AreEqual((int)ExitCode.Okay, configResultCode);
             
             SarifLog configResults = SarifLog.Load(configOutFileName);
             var configRuleMatches = configResults.Runs[0].Results
@@ -303,7 +304,8 @@ namespace Microsoft.DevSkim.Tests
                 OutputFileFormat = "sarif"
             };
             
-            new AnalyzeCommand(configJsonOpts).Run();
+            int configJsonResultCode = new AnalyzeCommand(configJsonOpts).Run();
+            Assert.AreEqual((int)ExitCode.Okay, configJsonResultCode);
             
             SarifLog configJsonResults = SarifLog.Load(configJsonOutFileName);
             var configJsonRuleMatches = configJsonResults.Runs[0].Results
