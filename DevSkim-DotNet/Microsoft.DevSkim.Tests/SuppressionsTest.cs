@@ -471,18 +471,14 @@ namespace Microsoft.DevSkim.Tests
 
             // Verify suppression can be parsed
             string[] lines = File.ReadAllLines(sourceFile);
-            bool foundSuppression = false;
-            foreach (string line in lines)
+            var suppressionLines = lines.Where(line => line.Contains("<!-- DevSkim: ignore"));
+            Assert.IsTrue(suppressionLines.Any(), "At least one suppression should be found in the file");
+            foreach (string line in suppressionLines)
             {
-                if (line.Contains("<!-- DevSkim: ignore"))
-                {
-                    foundSuppression = true;
-                    Suppression suppression = new Suppression(line);
-                    Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
-                    Assert.IsTrue(suppression.GetSuppressedIds.Length > 0, "Should have at least one suppressed rule ID");
-                }
+                Suppression suppression = new Suppression(line);
+                Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
+                Assert.IsTrue(suppression.GetSuppressedIds.Length > 0, "Should have at least one suppressed rule ID");
             }
-            Assert.IsTrue(foundSuppression, "At least one suppression should be found in the file");
         }
 
         /// <summary>
@@ -517,23 +513,21 @@ namespace Microsoft.DevSkim.Tests
 
             // Verify suppression contains expected parts
             string[] lines = File.ReadAllLines(sourceFile);
-            foreach (string line in lines)
+            var suppressionLines = lines.Where(line => line.Contains("<!-- DevSkim: ignore"));
+            foreach (string line in suppressionLines)
             {
-                if (line.Contains("<!-- DevSkim: ignore"))
+                Suppression suppression = new Suppression(line);
+                Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
+                
+                if (!string.IsNullOrEmpty(reviewerName))
                 {
-                    Suppression suppression = new Suppression(line);
-                    Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
-                    
-                    if (!string.IsNullOrEmpty(reviewerName))
-                    {
-                        Assert.AreEqual(reviewerName, suppression.Reviewer, "Reviewer name should match");
-                    }
-                    
-                    if (duration > 0)
-                    {
-                        DateTime expectedExpiration = DateTime.Now.AddDays(duration);
-                        Assert.AreEqual(expectedExpiration.Date, suppression.ExpirationDate, "Expiration date should match");
-                    }
+                    Assert.AreEqual(reviewerName, suppression.Reviewer, "Reviewer name should match");
+                }
+                
+                if (duration > 0)
+                {
+                    DateTime expectedExpiration = DateTime.Now.AddDays(duration);
+                    Assert.AreEqual(expectedExpiration.Date, suppression.ExpirationDate, "Expiration date should match");
                 }
             }
         }
