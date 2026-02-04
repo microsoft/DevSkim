@@ -251,42 +251,64 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
-        public void TestConfigJsonFileNotParsedAsXml()
+        public void TestConfigXPathRulesApplyOnlyToConfigFiles()
         {
-            // Test that files like "file.test.config.json" are not matched by .config xpath rules
-            string tempFileName = PathHelper.GetRandomTempFile("config.json");
-            string outFileName = PathHelper.GetRandomTempFile("sarif");
+            // Test that .config xpath rules only apply to .config files, not .config.json files
+            // This validates the fix for issue where ".*\\.config" regex matched "file.config.json"
             
-            // Write valid JSON content to the file
-            string jsonContent = @"{
-    ""setting1"": ""value1"",
-    ""setting2"": ""value2""
-}";
-            using FileStream file = File.Open(tempFileName, FileMode.Create);
-            file.Write(Encoding.UTF8.GetBytes(jsonContent));
-            file.Close();
+            // XML content that would trigger the .config xpath rules if the file were treated as a .config file
+            string xmlContent = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<configuration>
+  <system.web>
+    <httpCookies requireSSL=""false"" />
+  </system.web>
+</configuration>";
 
-            AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
+            // Test 1: Verify the rule DOES apply to actual .config files
+            string configFileName = PathHelper.GetRandomTempFile("config");
+            string configOutFileName = PathHelper.GetRandomTempFile("sarif");
+            
+            using (FileStream file = File.Open(configFileName, FileMode.Create))
             {
-                Path = tempFileName,
-                OutputFile = outFileName,
+                file.Write(Encoding.UTF8.GetBytes(xmlContent));
+            }
+
+            AnalyzeCommandOptions configOpts = new AnalyzeCommandOptions()
+            {
+                Path = configFileName,
+                OutputFile = configOutFileName,
                 OutputFileFormat = "sarif"
             };
             
-            // Run the analyze command - it should not throw or log errors about XML parsing
-            int resultCode = new AnalyzeCommand(opts).Run();
+            new AnalyzeCommand(configOpts).Run();
             
-            // Verify that the command completed successfully
-            Assert.AreEqual((int)ExitCode.Okay, resultCode);
-            
-            // Verify that no .config-specific xpath rules were triggered
-            SarifLog resultsFile = SarifLog.Load(outFileName);
-            Assert.AreEqual(1, resultsFile.Runs.Count);
-            
-            // There should be no results for .config xpath rules (DS450001, DS450002, DS450003)
-            var configRuleResults = resultsFile.Runs[0].Results
+            SarifLog configResults = SarifLog.Load(configOutFileName);
+            var configRuleMatches = configResults.Runs[0].Results
                 .Where(r => r.RuleId == "DS450001" || r.RuleId == "DS450002" || r.RuleId == "DS450003");
-            Assert.AreEqual(0, configRuleResults.Count(), "Config xpath rules should not match .config.json files");
+            Assert.IsTrue(configRuleMatches.Any(), "Config xpath rules should match .config files");
+
+            // Test 2: Verify the rule does NOT apply to .config.json files (even with XML-like content)
+            string configJsonFileName = PathHelper.GetRandomTempFile("config.json");
+            string configJsonOutFileName = PathHelper.GetRandomTempFile("sarif");
+            
+            using (FileStream file = File.Open(configJsonFileName, FileMode.Create))
+            {
+                file.Write(Encoding.UTF8.GetBytes(xmlContent));
+            }
+
+            AnalyzeCommandOptions configJsonOpts = new AnalyzeCommandOptions()
+            {
+                Path = configJsonFileName,
+                OutputFile = configJsonOutFileName,
+                OutputFileFormat = "sarif"
+            };
+            
+            new AnalyzeCommand(configJsonOpts).Run();
+            
+            SarifLog configJsonResults = SarifLog.Load(configJsonOutFileName);
+            var configJsonRuleMatches = configJsonResults.Runs[0].Results
+                .Where(r => r.RuleId == "DS450001" || r.RuleId == "DS450002" || r.RuleId == "DS450003");
+            Assert.AreEqual(0, configJsonRuleMatches.Count(), "Config xpath rules should NOT match .config.json files");
         }
     }
 }
