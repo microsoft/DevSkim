@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.71] - 2026-02-03
+### Fix
+- Fixed invalid JSON in package.json (trailing comma in scripts section) that caused npm parse errors in Azure DevOps pipeline
+- Fixed @vscode/vsce package installation issue where `out/` folder was missing, causing "Cannot find module './out/main'" error
+
+### Dependencies
+- Updated @vscode/vsce from 3.4.2 to 3.7.1
+
 ## [1.0.70] - 2026-01-29
 ### Pipeline
 Fix release pipeline for VSCode extension
