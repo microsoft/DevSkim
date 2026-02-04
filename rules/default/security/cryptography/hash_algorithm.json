@@ -13,7 +13,7 @@
         "rule_info": "DS126858.md",
         "patterns": [
             {
-                "pattern": "(?<!no)(?<!no-)(?<!no_)(?<!disable_)(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+                "pattern": "(?<!\\bno)(?<!\\bno-)(?<!\\bno_)(?<!\\bdisable_)(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -27,7 +27,7 @@
                 "type": "RegexReplace",
                 "replacement": "SHA256",
                 "pattern": {
-                    "pattern": "(?<!no)(?<!no-)(?<!no_)(?<!disable_)(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+                    "pattern": "(?<!\\bno)(?<!\\bno-)(?<!\\bno_)(?<!\\bdisable_)(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -40,7 +40,7 @@
                 "type": "RegexReplace",
                 "replacement": "SHA512",
                 "pattern": {
-                    "pattern": "(?<!no)(?<!no-)(?<!no_)(?<!disable_)(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
+                    "pattern": "(?<!\\bno)(?<!\\bno-)(?<!\\bno_)(?<!\\bdisable_)(MD2|MD4|MD5|RIPEMD|RIPEMD(128|256|160|320)|(SHA0|SHA-0|SHA1|SHA-1))",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -53,7 +53,7 @@
                 "type": "RegexReplace",
                 "replacement": "sha512",
                 "pattern": {
-                    "pattern": "(?<!no)(?<!no-)(?<!no_)(?<!disable_)(md2|md4|md5|ripemd|ripemd(128|256|160|320)|(sha0|sha-0|sha1|sha-1))",
+                    "pattern": "(?<!\\bno)(?<!\\bno-)(?<!\\bno_)(?<!\\bdisable_)(md2|md4|md5|ripemd|ripemd(128|256|160|320)|(sha0|sha-0|sha1|sha-1))",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -66,7 +66,7 @@
                 "type": "RegexReplace",
                 "replacement": "sha256",
                 "pattern": {
-                    "pattern": "(?<!no)(?<!no-)(?<!no_)(?<!disable_)(md2|md4|md5|ripemd|ripemd(128|256|160|320)|(sha0|sha-0|sha1|sha-1))",
+                    "pattern": "(?<!\\bno)(?<!\\bno-)(?<!\\bno_)(?<!\\bdisable_)(md2|md4|md5|ripemd|ripemd(128|256|160|320)|(sha0|sha-0|sha1|sha-1))",
                     "type": "regex",
                     "scopes": [
                         "code"
