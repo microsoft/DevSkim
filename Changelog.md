@@ -4,9 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.67] - 2025-10-22
+## [1.0.72] - 2026-02-04
 ### Fix
 Enabling suppressions for XML files (addressing bug [#588](https://github.com/microsoft/DevSkim/issues/588))
+
+## [1.0.71] - 2026-02-03
+### Fix
+- Fixed invalid JSON in package.json (trailing comma in scripts section) that caused npm parse errors in Azure DevOps pipeline
+- Fixed @vscode/vsce package installation issue where `out/` folder was missing, causing "Cannot find module './out/main'" error
+
+### Dependencies
+- Updated @vscode/vsce from 3.4.2 to 3.7.1
+
+## [1.0.70] - 2026-01-29
+### Pipeline
+Fix release pipeline for VSCode extension
+
+## [1.0.69] - 2026-01-28
+### Pipeline
+Move PR and release pipelines to new ADO organization
+
+## [1.0.68] - 2025-12-04
+### Dependencies
+Bump jws from 3.2.2 to 3.2.3 in /DevSkim-VSCode-Plugin
+
+## [1.0.67] - 2025-11-18
+### Dependencies
+Update Dependencies for VS Code Extension
 
 ## [1.0.66] - 2025-09-04
 ### Dependencies
