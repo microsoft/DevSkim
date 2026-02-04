@@ -471,11 +471,12 @@ namespace Microsoft.DevSkim.Tests
 
             // Verify suppression can be parsed
             string[] lines = File.ReadAllLines(sourceFile);
-            var suppressionLines = lines.Where(line => line.Contains("<!-- DevSkim: ignore"));
-            Assert.IsTrue(suppressionLines.Any(), "At least one suppression should be found in the file");
-            foreach (string line in suppressionLines)
+            var suppressions = lines
+                .Where(line => line.Contains("<!-- DevSkim: ignore"))
+                .Select(line => new Suppression(line));
+            Assert.IsTrue(suppressions.Any(), "At least one suppression should be found in the file");
+            foreach (Suppression suppression in suppressions)
             {
-                Suppression suppression = new Suppression(line);
                 Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
                 Assert.IsTrue(suppression.GetSuppressedIds.Length > 0, "Should have at least one suppressed rule ID");
             }
@@ -504,6 +505,7 @@ namespace Microsoft.DevSkim.Tests
                 Duration = duration
             };
 
+            DateTime expectedExpiration = DateTime.Now.AddDays(duration);
             int resultCode = new SuppressionCommand(opts).Run();
             Assert.AreEqual(0, resultCode);
             
@@ -526,7 +528,6 @@ namespace Microsoft.DevSkim.Tests
                 
                 if (duration > 0)
                 {
-                    DateTime expectedExpiration = DateTime.Now.AddDays(duration);
                     Assert.AreEqual(expectedExpiration.Date, suppression.ExpirationDate, "Expiration date should match");
                 }
             }
@@ -544,20 +545,27 @@ namespace Microsoft.DevSkim.Tests
             string tempFileName = $"{Path.GetTempFileName()}.xml";
             File.WriteAllText(tempFileName, xmlContent);
 
-            DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
-            DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions()
+            try
             {
-                EnableSuppressions = true
-            });
+                DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
+                DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions()
+                {
+                    EnableSuppressions = true
+                });
 
-            IEnumerable<Issue> issues = processor.Analyze(xmlContent, tempFileName);
-            
-            // The DS126858 (MD5) issue should be suppressed
-            var unsuppressedIssues = issues.Where(i => !i.IsSuppressionInfo && i.Rule.Id == "DS126858");
-            Assert.AreEqual(0, unsuppressedIssues.Count(), "MD5 issue should be suppressed");
+                IEnumerable<Issue> issues = processor.Analyze(xmlContent, tempFileName);
 
-            // Cleanup
-            File.Delete(tempFileName);
+                // The DS126858 (MD5) issue should be suppressed
+                var unsuppressedIssues = issues.Where(i => !i.IsSuppressionInfo && i.Rule.Id == "DS126858");
+                Assert.AreEqual(0, unsuppressedIssues.Count(), "MD5 issue should be suppressed");
+            }
+            finally
+            {
+                if (File.Exists(tempFileName))
+                {
+                    File.Delete(tempFileName);
+                }
+            }
         }
 
         /// <summary>
