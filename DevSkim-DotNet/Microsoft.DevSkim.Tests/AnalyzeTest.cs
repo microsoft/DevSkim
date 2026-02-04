@@ -249,5 +249,44 @@ namespace Microsoft.DevSkim.Tests
             Assert.AreEqual(1, resultsFile.Runs[0].Results.Count);
             Assert.AreEqual(idToExpect, resultsFile.Runs[0].Results[0].RuleId);
         }
+
+        [TestMethod]
+        public void TestConfigJsonFileNotParsedAsXml()
+        {
+            // Test that files like "file.test.config.json" are not matched by .config xpath rules
+            string tempFileName = PathHelper.GetRandomTempFile("config.json");
+            string outFileName = PathHelper.GetRandomTempFile("sarif");
+            
+            // Write valid JSON content to the file
+            string jsonContent = @"{
+    ""setting1"": ""value1"",
+    ""setting2"": ""value2""
+}";
+            using FileStream file = File.Open(tempFileName, FileMode.Create);
+            file.Write(Encoding.UTF8.GetBytes(jsonContent));
+            file.Close();
+
+            AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
+            {
+                Path = tempFileName,
+                OutputFile = outFileName,
+                OutputFileFormat = "sarif"
+            };
+            
+            // Run the analyze command - it should not throw or log errors about XML parsing
+            int resultCode = new AnalyzeCommand(opts).Run();
+            
+            // Verify that the command completed successfully
+            Assert.AreEqual((int)ExitCode.Okay, resultCode);
+            
+            // Verify that no .config-specific xpath rules were triggered
+            SarifLog resultsFile = SarifLog.Load(outFileName);
+            Assert.AreEqual(1, resultsFile.Runs.Count);
+            
+            // There should be no results for .config xpath rules (DS450001, DS450002, DS450003)
+            var configRuleResults = resultsFile.Runs[0].Results
+                .Where(r => r.RuleId == "DS450001" || r.RuleId == "DS450002" || r.RuleId == "DS450003");
+            Assert.AreEqual(0, configRuleResults.Count(), "Config xpath rules should not match .config.json files");
+        }
     }
 }
