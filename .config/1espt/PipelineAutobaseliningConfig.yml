@@ -102,16 +102,9 @@ pipelines:
           lastModifiedDate: 2025-01-31
         spotbugs:
           lastModifiedDate: 2025-01-31
-  150:
+  154:
     usedNonDefaultBranch: true
     retail:
-      source:
-        eslint:
-          lastModifiedDate: 2026-02-04
-        psscriptanalyzer:
-          lastModifiedDate: 2026-02-04
-        armory:
-          lastModifiedDate: 2026-02-04
       binary:
         binskim:
           lastModifiedDate: 2026-02-04
