@@ -18,7 +18,34 @@ using Microsoft.DevSkim.VisualStudio;
 
 namespace Microsot.DevSkim.LanguageClient
 {
-    [ContentType("code")]
+    // NOTE: Visual Studio does NOT activate ILanguageClient for base content types like "code".
+    // Each specific content type must be explicitly registered for the language client to be activated
+    // when files of that type are opened. This list corresponds to the languages that DevSkim supports
+    // for security analysis. See also: DevSkim-VSCode-Plugin/client/common/selectors.ts
+    [ContentType("C/C++")]
+    [ContentType("CSharp")]
+    [ContentType("F#")]
+    [ContentType("JavaScript")]
+    [ContentType("TypeScript")]
+    [ContentType("HTML")]
+    [ContentType("JSON")]
+    [ContentType("XML")]
+    [ContentType("XAML")]
+    [ContentType("Python")]
+    [ContentType("Ruby")]
+    [ContentType("Perl")]
+    [ContentType("PHP")]
+    [ContentType("Java")]
+    [ContentType("Go")]
+    [ContentType("Rust")]
+    [ContentType("SQL")]
+    [ContentType("Lua")]
+    [ContentType("Swift")]
+    [ContentType("PowerShell")]
+    [ContentType("shellscript")]
+    [ContentType("yaml")]
+    [ContentType("plaintext")]
+    [ContentType("code")]  // Kept as fallback for any types not explicitly listed
     [Export(typeof(ILanguageClient))]
     public class DevSkimLanguageClient : ILanguageClient, ILanguageClientCustomMessage2
     {
