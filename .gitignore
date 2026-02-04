@@ -297,3 +297,4 @@ asa.sqlite
 *asa.log.txt
 *.sqlite
 *.litedb
+DevSkim-DotNet/nuget.config
