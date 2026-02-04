@@ -343,5 +343,239 @@ namespace Microsoft.DevSkim.Tests
             string result = File.ReadAllText(sourceFile);
             Assert.AreEqual(originalContent, result);
         }
+
+        /// <summary>
+        /// Test that XML suppression comments are generated correctly
+        /// </summary>
+        [TestMethod]
+        public void GenerateXmlSuppression()
+        {
+            // Test basic XML suppression generation
+            string suppression = DevSkimRuleProcessor.GenerateSuppressionByLanguage("xml", "DS123456");
+            Assert.IsTrue(suppression.StartsWith("<!--"), "XML suppression should start with <!--");
+            Assert.IsTrue(suppression.EndsWith("-->"), "XML suppression should end with -->");
+            Assert.IsTrue(suppression.Contains("DevSkim: ignore DS123456"), "XML suppression should contain DevSkim ignore directive");
+        }
+
+        /// <summary>
+        /// Test that XML suppression comments with duration are generated correctly
+        /// </summary>
+        [TestMethod]
+        public void GenerateXmlSuppressionWithDuration()
+        {
+            int duration = 30;
+            DateTime expectedDate = DateTime.Now.AddDays(duration);
+            string expectedDateStr = expectedDate.ToString("yyyy-MM-dd");
+            
+            string suppression = DevSkimRuleProcessor.GenerateSuppressionByLanguage("xml", "DS123456", duration: duration);
+            Assert.IsTrue(suppression.StartsWith("<!--"), "XML suppression should start with <!--");
+            Assert.IsTrue(suppression.EndsWith("-->"), "XML suppression should end with -->");
+            Assert.IsTrue(suppression.Contains($"until {expectedDateStr}"), "XML suppression should contain expiration date");
+        }
+
+        /// <summary>
+        /// Test that XML suppression comments with reviewer are generated correctly
+        /// </summary>
+        [TestMethod]
+        public void GenerateXmlSuppressionWithReviewer()
+        {
+            string suppression = DevSkimRuleProcessor.GenerateSuppressionByLanguage("xml", "DS123456", reviewerName: "TestReviewer");
+            Assert.IsTrue(suppression.StartsWith("<!--"), "XML suppression should start with <!--");
+            Assert.IsTrue(suppression.EndsWith("-->"), "XML suppression should end with -->");
+            Assert.IsTrue(suppression.Contains("by TestReviewer"), "XML suppression should contain reviewer name");
+        }
+
+        /// <summary>
+        /// Test that XML suppression comments are properly recognized by the Suppression parser
+        /// </summary>
+        [TestMethod]
+        public void ParseXmlSuppression()
+        {
+            string xmlLine = "<!-- DevSkim: ignore DS123456 -->";
+            Suppression suppression = new Suppression(xmlLine);
+            
+            Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
+            Assert.AreEqual("DS123456", suppression.GetSuppressedIds.First(), "Suppression should contain the correct rule ID");
+        }
+
+        /// <summary>
+        /// Test that XML suppression comments with expiration are properly recognized by the Suppression parser
+        /// </summary>
+        [TestMethod]
+        public void ParseXmlSuppressionWithExpiration()
+        {
+            string futureDate = DateTime.Now.AddDays(30).ToString("yyyy-MM-dd");
+            string xmlLine = $"<!-- DevSkim: ignore DS123456 until {futureDate} -->";
+            Suppression suppression = new Suppression(xmlLine);
+            
+            Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
+            Assert.AreEqual("DS123456", suppression.GetSuppressedIds.First(), "Suppression should contain the correct rule ID");
+            Assert.AreEqual(DateTime.ParseExact(futureDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), 
+                suppression.ExpirationDate, "Suppression should have the correct expiration date");
+        }
+
+        /// <summary>
+        /// Test that expired XML suppression comments are not in effect
+        /// </summary>
+        [TestMethod]
+        public void ParseExpiredXmlSuppression()
+        {
+            string pastDate = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+            string xmlLine = $"<!-- DevSkim: ignore DS123456 until {pastDate} -->";
+            Suppression suppression = new Suppression(xmlLine);
+            
+            Assert.IsFalse(suppression.IsInEffect, "Expired suppression should not be in effect");
+            Assert.IsTrue(suppression.IsExpired, "Suppression should be marked as expired");
+        }
+
+        /// <summary>
+        /// Test that XML suppression comments with reviewer are properly recognized by the Suppression parser
+        /// </summary>
+        [TestMethod]
+        public void ParseXmlSuppressionWithReviewer()
+        {
+            string xmlLine = "<!-- DevSkim: ignore DS123456 by TestReviewer -->";
+            Suppression suppression = new Suppression(xmlLine);
+            
+            Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
+            Assert.AreEqual("DS123456", suppression.GetSuppressedIds.First(), "Suppression should contain the correct rule ID");
+            Assert.AreEqual("TestReviewer", suppression.Reviewer, "Suppression should have the correct reviewer");
+        }
+
+        /// <summary>
+        /// Integration test: Execute suppressions for XML files
+        /// </summary>
+        [TestMethod]
+        public void ExecuteSuppressionsForXml()
+        {
+            // XML content with an MD5 reference that triggers DevSkim rule
+            string xmlContent = @"<config><algorithm>MD5</algorithm></config>";
+
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(xmlContent, "xml");
+
+            SuppressionCommandOptions opts = new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true
+            };
+
+            int resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            
+            string result = File.ReadAllText(sourceFile);
+            
+            // Verify that XML-style suppressions were added
+            Assert.IsTrue(result.Contains("<!-- DevSkim: ignore"), "XML suppression comment should be present");
+            Assert.IsTrue(result.Contains("-->"), "XML suppression comment should be properly closed");
+
+            // Verify suppression can be parsed
+            string[] lines = File.ReadAllLines(sourceFile);
+            bool foundSuppression = false;
+            foreach (string line in lines)
+            {
+                if (line.Contains("<!-- DevSkim: ignore"))
+                {
+                    foundSuppression = true;
+                    Suppression suppression = new Suppression(line);
+                    Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
+                    Assert.IsTrue(suppression.GetSuppressedIds.Length > 0, "Should have at least one suppressed rule ID");
+                }
+            }
+            Assert.IsTrue(foundSuppression, "At least one suppression should be found in the file");
+        }
+
+        /// <summary>
+        /// Integration test: Execute suppressions for XML files with reviewer and duration
+        /// </summary>
+        [TestMethod]
+        [DataRow("TestReviewer", 30)]
+        [DataRow("", 30)]
+        [DataRow("TestReviewer", 0)]
+        public void ExecuteSuppressionsForXmlWithReviewerAndDuration(string reviewerName, int duration)
+        {
+            // XML content with an MD5 reference that triggers DevSkim rule
+            string xmlContent = @"<config><algorithm>MD5</algorithm></config>";
+
+            (string basePath, string sourceFile, string sarifPath) = runAnalysis(xmlContent, "xml");
+
+            SuppressionCommandOptions opts = new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true,
+                Reviewer = reviewerName,
+                Duration = duration
+            };
+
+            int resultCode = new SuppressionCommand(opts).Run();
+            Assert.AreEqual(0, resultCode);
+            
+            string result = File.ReadAllText(sourceFile);
+            Assert.IsTrue(result.Contains("<!-- DevSkim: ignore"), "XML suppression comment should be present");
+            Assert.IsTrue(result.Contains("-->"), "XML suppression comment should be properly closed");
+
+            // Verify suppression contains expected parts
+            string[] lines = File.ReadAllLines(sourceFile);
+            foreach (string line in lines)
+            {
+                if (line.Contains("<!-- DevSkim: ignore"))
+                {
+                    Suppression suppression = new Suppression(line);
+                    Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
+                    
+                    if (!string.IsNullOrEmpty(reviewerName))
+                    {
+                        Assert.AreEqual(reviewerName, suppression.Reviewer, "Reviewer name should match");
+                    }
+                    
+                    if (duration > 0)
+                    {
+                        DateTime expectedExpiration = DateTime.Now.AddDays(duration);
+                        Assert.AreEqual(expectedExpiration.Date, suppression.ExpirationDate, "Expiration date should match");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Integration test: Verify that analysis respects XML suppressions in files
+        /// </summary>
+        [TestMethod]
+        public void AnalysisRespectsXmlSuppressions()
+        {
+            // XML content with MD5 that already has a suppression comment
+            string xmlContent = @"<config><algorithm>MD5 <!-- DevSkim: ignore DS126858 --></algorithm></config>";
+
+            string tempFileName = $"{Path.GetTempFileName()}.xml";
+            File.WriteAllText(tempFileName, xmlContent);
+
+            DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
+            DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions()
+            {
+                EnableSuppressions = true
+            });
+
+            IEnumerable<Issue> issues = processor.Analyze(xmlContent, tempFileName);
+            
+            // The DS126858 (MD5) issue should be suppressed
+            var unsuppressedIssues = issues.Where(i => !i.IsSuppressionInfo && i.Rule.Id == "DS126858");
+            Assert.AreEqual(0, unsuppressedIssues.Count(), "MD5 issue should be suppressed");
+
+            // Cleanup
+            File.Delete(tempFileName);
+        }
+
+        /// <summary>
+        /// Test that XML suppression is generated correctly via filename-based method
+        /// </summary>
+        [TestMethod]
+        public void GenerateXmlSuppressionByFilename()
+        {
+            string suppression = DevSkimRuleProcessor.GenerateSuppressionByFileName("test.xml", "DS123456");
+            Assert.IsTrue(suppression.StartsWith("<!--"), "XML suppression should start with <!--");
+            Assert.IsTrue(suppression.EndsWith("-->"), "XML suppression should end with -->");
+            Assert.IsTrue(suppression.Contains("DevSkim: ignore DS123456"), "XML suppression should contain DevSkim ignore directive");
+        }
     }
 }
