@@ -20,35 +20,33 @@ using Nerdbank.Streams;
 [VisualStudioContribution]
 internal class DevSkimLanguageServerProvider : LanguageServerProvider
 {
+    private Process? _serverProcess;
+
     /// <inheritdoc/>
     public override LanguageServerProviderConfiguration LanguageServerProviderConfiguration => new(
         "%DevSkim.LanguageServerProvider.DisplayName%",
         [
-            // Try using "text" base document type to activate for all text files
-            // The language server itself determines which files it can analyze
             DocumentFilter.FromDocumentType("text"),
         ]);
 
     /// <inheritdoc/>
     public override Task<IDuplexPipe?> CreateServerConnectionAsync(CancellationToken cancellationToken)
     {
-        // Log to a file for debugging since Debug.WriteLine may not be visible
         var logPath = Path.Combine(Path.GetTempPath(), "devskim-vs-extension.log");
         File.AppendAllText(logPath, $"[{DateTime.Now}] CreateServerConnectionAsync called\n");
         
+        // Kill any leftover process from a previous activation
+        StopServerProcess();
+        
         var serverPath = GetLanguageServerPath();
         File.AppendAllText(logPath, $"[{DateTime.Now}] Server path: {serverPath}\n");
-        File.AppendAllText(logPath, $"[{DateTime.Now}] Assembly location: {Assembly.GetExecutingAssembly().Location}\n");
         
         if (string.IsNullOrEmpty(serverPath) || !File.Exists(serverPath))
         {
             File.AppendAllText(logPath, $"[{DateTime.Now}] ERROR: Language server not found at: {serverPath}\n");
-            Debug.WriteLine($"DevSkim: Language server not found at: {serverPath}");
             return Task.FromResult<IDuplexPipe?>(null);
         }
 
-        File.AppendAllText(logPath, $"[{DateTime.Now}] Server exists, starting process...\n");
-        
         var startInfo = new ProcessStartInfo
         {
             FileName = serverPath,
@@ -60,11 +58,8 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
             WorkingDirectory = Path.GetDirectoryName(serverPath),
         };
 
-#pragma warning disable CA2000 // The process is disposed after Visual Studio sends the stop command.
         var process = new Process { StartInfo = startInfo };
-#pragma warning restore CA2000
 
-        // Log stderr for debugging
         process.ErrorDataReceived += (sender, e) =>
         {
             if (!string.IsNullOrEmpty(e.Data))
@@ -75,9 +70,9 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
 
         if (process.Start())
         {
+            _serverProcess = process;
             process.BeginErrorReadLine();
             File.AppendAllText(logPath, $"[{DateTime.Now}] Language server started (PID: {process.Id})\n");
-            Debug.WriteLine($"DevSkim: Language server started (PID: {process.Id})");
 
             return Task.FromResult<IDuplexPipe?>(new DuplexPipe(
                 PipeReader.Create(process.StandardOutput.BaseStream),
@@ -85,7 +80,6 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
         }
 
         File.AppendAllText(logPath, $"[{DateTime.Now}] ERROR: Failed to start language server process\n");
-        Debug.WriteLine("DevSkim: Failed to start language server process");
         return Task.FromResult<IDuplexPipe?>(null);
     }
 
@@ -100,17 +94,45 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
         if (serverInitializationResult == ServerInitializationResult.Failed)
         {
             File.AppendAllText(logPath, $"[{DateTime.Now}] ERROR: Language server initialization failed: {initializationFailureInfo?.StatusMessage}\n");
-            Debug.WriteLine($"DevSkim: Language server initialization failed: {initializationFailureInfo?.StatusMessage}");
-            // Disable the server from being activated again
             this.Enabled = false;
         }
         else
         {
             File.AppendAllText(logPath, $"[{DateTime.Now}] Language server initialized successfully\n");
-            Debug.WriteLine("DevSkim: Language server initialized successfully");
         }
 
         return base.OnServerInitializationResultAsync(serverInitializationResult, initializationFailureInfo, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    protected override void Dispose(bool isDisposing)
+    {
+        if (isDisposing)
+        {
+            StopServerProcess();
+        }
+
+        base.Dispose(isDisposing);
+    }
+
+    private void StopServerProcess()
+    {
+        try
+        {
+            if (_serverProcess is { HasExited: false })
+            {
+                _serverProcess.Kill();
+                _serverProcess.Dispose();
+            }
+        }
+        catch
+        {
+            // Best effort cleanup
+        }
+        finally
+        {
+            _serverProcess = null;
+        }
     }
 
     private static string GetLanguageServerPath()

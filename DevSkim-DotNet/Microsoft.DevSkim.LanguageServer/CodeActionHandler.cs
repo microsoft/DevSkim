@@ -23,6 +23,9 @@ namespace DevSkim.LanguageServer
         
         // Store code fixes keyed by document URI and diagnostic key
         private static readonly ConcurrentDictionary<string, ConcurrentDictionary<string, List<CodeFixMapping>>> _codeFixCache = new();
+        
+        // Store line lengths per document so we can compute exact end-of-line positions for suppressions
+        private static readonly ConcurrentDictionary<string, int[]> _lineLengthCache = new();
 
         public CodeActionHandler(ILogger<CodeActionHandler> logger)
         {
@@ -56,7 +59,6 @@ namespace DevSkim.LanguageServer
                 }
 
                 var diagnosticKey = CreateDiagnosticKey(documentUri, diagnostic);
-                _logger.LogDebug($"CodeActionHandler: Looking for fixes for diagnostic key: {diagnosticKey}");
 
                 if (_codeFixCache.TryGetValue(documentUri, out var documentFixes) &&
                     documentFixes.TryGetValue(diagnosticKey, out var fixes))
@@ -82,20 +84,26 @@ namespace DevSkim.LanguageServer
 
         private static WorkspaceEdit CreateWorkspaceEdit(DocumentUri uri, Diagnostic diagnostic, CodeFixMapping fix)
         {
-            var textEdit = fix.isSuppression
-                ? new TextEdit
+            TextEdit textEdit;
+            if (fix.isSuppression)
+            {
+                // For suppressions, insert at the actual end of the line
+                int line = diagnostic.Range.End.Line;
+                int lineLength = GetLineLength(uri, line);
+                textEdit = new TextEdit
                 {
-                    // For suppressions, insert at the end of the line
-                    Range = new OmniSharp.Extensions.LanguageServer.Protocol.Models.Range(
-                        diagnostic.Range.End.Line, int.MaxValue,
-                        diagnostic.Range.End.Line, int.MaxValue),
+                    Range = new OmniSharp.Extensions.LanguageServer.Protocol.Models.Range(line, lineLength, line, lineLength),
                     NewText = fix.replacement
-                }
-                : new TextEdit
+                };
+            }
+            else
+            {
+                textEdit = new TextEdit
                 {
                     Range = diagnostic.Range,
                     NewText = fix.replacement
                 };
+            }
 
             return new WorkspaceEdit
             {
@@ -104,6 +112,29 @@ namespace DevSkim.LanguageServer
                     [uri] = new[] { textEdit }
                 }
             };
+        }
+
+        /// <summary>
+        /// Store line lengths for a document, computed from the document text we already have during scanning.
+        /// </summary>
+        public static void SetLineLengths(DocumentUri uri, string text)
+        {
+            var lines = text.Split('\n');
+            var lengths = new int[lines.Length];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lengths[i] = lines[i].TrimEnd('\r').Length;
+            }
+            _lineLengthCache[uri.ToString()] = lengths;
+        }
+
+        private static int GetLineLength(DocumentUri uri, int line)
+        {
+            if (_lineLengthCache.TryGetValue(uri.ToString(), out var lengths) && line < lengths.Length)
+            {
+                return lengths[line];
+            }
+            return 0;
         }
 
         /// <summary>
@@ -129,6 +160,7 @@ namespace DevSkim.LanguageServer
         public static void ClearCodeFixes(DocumentUri uri)
         {
             _codeFixCache.TryRemove(uri.ToString(), out _);
+            _lineLengthCache.TryRemove(uri.ToString(), out _);
         }
 
         private static string CreateDiagnosticKey(string documentUri, Diagnostic diagnostic)

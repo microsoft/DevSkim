@@ -110,6 +110,9 @@ namespace DevSkim.LanguageServer
             // Clear previous code fixes for this document and register new ones
             CodeActionHandler.ClearCodeFixes(uri);
             
+            // Store line lengths so CodeActionHandler can compute exact end-of-line positions for suppressions
+            CodeActionHandler.SetLineLengths(uri, text);
+            
             _logger.LogDebug("\tPublishing diagnostics...");
             _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
             {
@@ -118,18 +121,18 @@ namespace DevSkim.LanguageServer
                 Version = version
             });
             
-            // Register code fixes with the CodeActionHandler for standard LSP code action requests
-            _logger.LogDebug($"\tRegistering {codeFixes.Count} code fixes...");
-            for (int i = 0; i < diagnostics.Count; i++)
+            // Send custom notifications for VS Code backward compatibility
+            _facade.TextDocument.SendNotification(DevSkimMessages.FileVersion, new MappingsVersion() { version = version, fileName = uri.ToUri() });
+            foreach (var mapping in codeFixes)
             {
-                var diag = diagnostics[i];
-                // Find matching code fixes for each diagnostic by comparing the string representation of the code
-                foreach (var mapping in codeFixes.Where(cf => 
-                    cf.diagnostic.Code?.String == diag.Code?.String && 
-                    cf.diagnostic.Range.Start.Line == diag.Range.Start.Line))
-                {
-                    CodeActionHandler.RegisterCodeFix(uri, diag, mapping);
-                }
+                _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, mapping);
+            }
+            
+            // Register code fixes with CodeActionHandler for standard LSP textDocument/codeAction (used by VS)
+            _logger.LogDebug($"\tRegistering {codeFixes.Count} code fixes...");
+            foreach (var mapping in codeFixes)
+            {
+                CodeActionHandler.RegisterCodeFix(uri, mapping.diagnostic, mapping);
             }
 
             return Unit.Value;
