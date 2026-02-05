@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.74] - 2026-02-05
 ### Fix
 - Fixed overly broad filename regex in .NET Framework configuration rules (DS450001, DS450002, DS450003) that incorrectly matched JSON files containing `.config` in their names (e.g., `file.test.config.json`), causing XML parsing errors
 
