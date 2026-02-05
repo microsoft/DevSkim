@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.72] - 2026-02-04
+## [1.0.73] - 2026-02-04
 ### Fix
 Suppress DS173237 on all-zero values
+
+## [1.0.72] - 2026-02-04
+### Added
+- Added Copilot instructions file (.github/copilot-instructions.md) with repository-specific guidance for AI coding agents
+- Documented build, test, and development workflows for C# and TypeScript components
+- Included special instructions for handling nuget.config and .npmrc files
+- Added mandatory Changelog.md update requirements for all PRs
 
 ## [1.0.71] - 2026-02-03
 ### Fix
