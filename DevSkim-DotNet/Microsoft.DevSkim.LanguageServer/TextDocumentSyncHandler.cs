@@ -20,7 +20,9 @@ namespace DevSkim.LanguageServer
     {
         private readonly ILogger<TextDocumentSyncHandler> _logger;
         private readonly ILanguageServerFacade _facade;
-        private readonly TextDocumentSelector _documentSelector = TextDocumentSelector.ForLanguage(StaticScannerSettings.RuleProcessorOptions.Languages.GetNames());
+        // Use a broad document selector to handle all common code file types
+        // The actual language detection happens in GetTextDocumentAttributes
+        private readonly TextDocumentSelector _documentSelector = TextDocumentSelector.ForPattern("**/*");
         private DevSkimRuleProcessor _processor => StaticScannerSettings.Processor;
 
         public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerFacade facade)
@@ -47,6 +49,8 @@ namespace DevSkim.LanguageServer
             }
             // Diagnostics are sent a document at a time
             _logger.LogDebug($"\tProcessing document: {filename}");
+            _logger.LogDebug($"\tRuleSet has {StaticScannerSettings.RuleSet.Count()} rules");
+            _logger.LogDebug($"\tScanOnOpen: {StaticScannerSettings.ScanOnOpen}, ScanOnChange: {StaticScannerSettings.ScanOnChange}");
             List<Issue> issues = await Task.Run(() => _processor.Analyze(text, filename).ToList());
             ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
             ImmutableArray<CodeFixMapping>.Builder codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
@@ -103,6 +107,9 @@ namespace DevSkim.LanguageServer
                 }
             }
 
+            // Clear previous code fixes for this document and register new ones
+            CodeActionHandler.ClearCodeFixes(uri);
+            
             _logger.LogDebug("\tPublishing diagnostics...");
             _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
             {
@@ -110,10 +117,19 @@ namespace DevSkim.LanguageServer
                 Uri = uri,
                 Version = version
             });
-            _facade.TextDocument.SendNotification(DevSkimMessages.FileVersion, new MappingsVersion() { version = version, fileName = uri.ToUri() });
-            foreach (var mapping in codeFixes)
+            
+            // Register code fixes with the CodeActionHandler for standard LSP code action requests
+            _logger.LogDebug($"\tRegistering {codeFixes.Count} code fixes...");
+            for (int i = 0; i < diagnostics.Count; i++)
             {
-                _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, mapping);
+                var diag = diagnostics[i];
+                // Find matching code fixes for each diagnostic by comparing the string representation of the code
+                foreach (var mapping in codeFixes.Where(cf => 
+                    cf.diagnostic.Code?.String == diag.Code?.String && 
+                    cf.diagnostic.Range.Start.Line == diag.Range.Start.Line))
+                {
+                    CodeActionHandler.RegisterCodeFix(uri, diag, mapping);
+                }
             }
 
             return Unit.Value;

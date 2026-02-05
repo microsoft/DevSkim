@@ -25,8 +25,20 @@ namespace DevSkim.LanguageServer
         internal static bool ScanOnChange { get; set; } = true;
         internal static bool RemoveFindingsOnClose { get; set; } = true;
         internal static DevSkimRuleSet RuleSet { get; set; } = new DevSkimRuleSet();
-        internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = new DevSkimRuleProcessorOptions();
-        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(), new DevSkimRuleProcessorOptions());
+        internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = CreateDefaultOptions();
+        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(), CreateDefaultOptions());
+
+        private static DevSkimRuleProcessorOptions CreateDefaultOptions()
+        {
+            return new DevSkimRuleProcessorOptions
+            {
+                // Include all severities by default
+                SeverityFilter = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice | Severity.ManualReview,
+                // Include all confidence levels by default
+                ConfidenceFilter = Confidence.High | Confidence.Medium | Confidence.Low,
+                EnableSuppressions = true
+            };
+        }
 
         public static void UpdateWith(PortableScannerSettings request)
         {

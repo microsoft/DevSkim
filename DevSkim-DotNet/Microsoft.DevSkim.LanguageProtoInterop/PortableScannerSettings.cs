@@ -21,14 +21,16 @@ namespace Microsoft.DevSkim.LanguageProtoInterop
         public bool RemoveFindingsOnClose { get; set; } = true;
         public string CustomLanguagesPath { get; set; } = string.Empty;
         public string CustomCommentsPath { get; set; } = string.Empty;
-        public string GuidanceBaseURL { get; set; }
-        public bool EnableCriticalSeverityRules { get; set; }
-        public bool EnableImportantSeverityRules { get; set; }
-        public bool EnableModerateSeverityRules { get; set; }
-        public bool EnableManualReviewSeverityRules { get; set; }
-        public bool EnableBestPracticeSeverityRules { get; set; }
-        public bool EnableHighConfidenceRules { get; set; }
-        public bool EnableLowConfidenceRules { get; set; }
-        public bool EnableMediumConfidenceRules { get; set; }
+        public string GuidanceBaseURL { get; set; } = "https://github.com/microsoft/devskim/tree/main/guidance";
+        // Default all severity rules to enabled
+        public bool EnableCriticalSeverityRules { get; set; } = true;
+        public bool EnableImportantSeverityRules { get; set; } = true;
+        public bool EnableModerateSeverityRules { get; set; } = true;
+        public bool EnableManualReviewSeverityRules { get; set; } = true;
+        public bool EnableBestPracticeSeverityRules { get; set; } = true;
+        // Default high and medium confidence to enabled, low disabled
+        public bool EnableHighConfidenceRules { get; set; } = true;
+        public bool EnableLowConfidenceRules { get; set; } = false;
+        public bool EnableMediumConfidenceRules { get; set; } = true;
     }
 }

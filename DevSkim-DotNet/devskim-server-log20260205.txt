@@ -1,0 +1,201 @@
+2026-02-05 12:13:58.280 -08:00 [DBG] Configuring server...
+2026-02-05 12:13:58.971 -08:00 [DBG] Finding descriptors for initialize
+2026-02-05 12:13:59.087 -08:00 [DBG] Queueing "Serial":initialize:2 request for processing
+2026-02-05 12:13:59.101 -08:00 [DBG] Starting: Processing request initialize 2
+2026-02-05 12:13:59.106 -08:00 [DBG] Starting: Routing Request (2) initialize
+2026-02-05 12:13:59.111 -08:00 [VRB] Converting params for Request (2) initialize to OmniSharp.Extensions.LanguageServer.Protocol.Models.InternalInitializeParams
+2026-02-05 12:13:59.112 -08:00 [VRB] Converting params for Notification initialize to OmniSharp.Extensions.LanguageServer.Protocol.Models.InternalInitializeParams
+2026-02-05 12:13:59.335 -08:00 [DBG] Server is starting...
+2026-02-05 12:13:59.380 -08:00 [DBG] Server started
+2026-02-05 12:13:59.383 -08:00 [VRB] Response value was OmniSharp.Extensions.LanguageServer.Protocol.Models.InitializeResult
+2026-02-05 12:13:59.384 -08:00 [DBG] Finished: Routing Request (2) initialize in 278ms
+2026-02-05 12:13:59.385 -08:00 [DBG] Finished: Processing request initialize 2 in 281ms
+2026-02-05 12:13:59.430 -08:00 [DBG] Finding descriptors for initialized
+2026-02-05 12:13:59.431 -08:00 [DBG] Queueing "Serial":initialized request for processing
+2026-02-05 12:13:59.433 -08:00 [DBG] Starting: Processing notification initialized
+2026-02-05 12:13:59.435 -08:00 [DBG] Starting: Routing Notification initialized
+2026-02-05 12:13:59.435 -08:00 [VRB] Converting params for Notification initialized to OmniSharp.Extensions.LanguageServer.Protocol.Models.InitializedParams
+2026-02-05 12:13:59.460 -08:00 [DBG] Beginning server routines...
+2026-02-05 12:13:59.461 -08:00 [DBG] Listening for client events...
+2026-02-05 12:13:59.478 -08:00 [DBG] Finished: Routing Notification initialized in 43ms
+2026-02-05 12:13:59.479 -08:00 [DBG] Finished: Processing notification initialized in 45ms
+2026-02-05 12:13:59.496 -08:00 [ERR] Unable to get configuration from client!
+OmniSharp.Extensions.JsonRpc.Server.MethodNotSupportedException: Method not found: 'workspace/configuration'.
+   at OmniSharp.Extensions.JsonRpc.ResponseRouter.ResponseRouterReturnsImpl.Returning[TResponse](CancellationToken cancellationToken)
+2026-02-05 12:13:59.516 -08:00 [ERR] Unable to get configuration from client!
+OmniSharp.Extensions.JsonRpc.Server.MethodNotSupportedException: Method not found: 'workspace/configuration'.
+   at OmniSharp.Extensions.JsonRpc.ResponseRouter.ResponseRouterReturnsImpl.Returning[TResponse](CancellationToken cancellationToken)
+2026-02-05 12:14:03.026 -08:00 [DBG] Finding descriptors for devskim/setSettings
+2026-02-05 12:14:03.030 -08:00 [DBG] Swapping from "Serial" to "Parallel"
+2026-02-05 12:14:03.030 -08:00 [DBG] Completing existing request process type "Serial"
+2026-02-05 12:14:03.032 -08:00 [DBG] Queueing "Parallel":devskim/setSettings request for processing
+2026-02-05 12:14:03.032 -08:00 [DBG] Starting: Processing notification devskim/setSettings
+2026-02-05 12:14:03.032 -08:00 [DBG] Starting: Routing Notification devskim/setSettings
+2026-02-05 12:14:03.032 -08:00 [VRB] Converting params for Notification devskim/setSettings to DevSkim.LanguageServer.DevSkimSetLanguageServerSettingsParams
+2026-02-05 12:14:03.077 -08:00 [DBG] Finished: Routing Notification devskim/setSettings in 45ms
+2026-02-05 12:14:03.078 -08:00 [DBG] Finished: Processing notification devskim/setSettings in 45ms
+2026-02-05 12:14:03.078 -08:00 [DBG] Finding descriptors for textDocument/didOpen
+2026-02-05 12:14:03.083 -08:00 [VRB] Created attribute csharp::file:///c:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageProtoInterop/PortableScannerSettings.cs
+2026-02-05 12:14:03.084 -08:00 [VRB] Looking for handler for descriptors textDocument/didOpen
+2026-02-05 12:14:03.084 -08:00 [VRB] Checking handler textDocument/didOpen:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:14:03.084 -08:00 [VRB] Registration options OmniSharp.Extensions.LanguageServer.Protocol.Models.TextDocumentOpenRegistrationOptions
+2026-02-05 12:14:03.084 -08:00 [VRB] Document Selector [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml]
+2026-02-05 12:14:03.085 -08:00 [VRB] Handler Selected: DevSkim.LanguageServer.TextDocumentSyncHandler  via [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml] (targeting OmniSharp.Extensions.JsonRpc.IJsonRpcNotificationHandler`1[[OmniSharp.Extensions.LanguageServer.Protocol.Models.DidOpenTextDocumentParams, OmniSharp.Extensions.LanguageProtocol, Version=0.19.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022]])
+2026-02-05 12:14:03.085 -08:00 [DBG] Swapping from "Parallel" to "Serial"
+2026-02-05 12:14:03.085 -08:00 [DBG] Cancelling any outstanding requests (switch from parallel to serial)
+2026-02-05 12:14:03.086 -08:00 [DBG] Completing existing request process type "Parallel"
+2026-02-05 12:14:03.086 -08:00 [DBG] Queueing "Serial":textDocument/didOpen request for processing
+2026-02-05 12:14:03.086 -08:00 [DBG] Starting: Processing notification textDocument/didOpen
+2026-02-05 12:14:03.086 -08:00 [DBG] Starting: Routing Notification textDocument/didOpen
+2026-02-05 12:14:03.086 -08:00 [VRB] Converting params for Notification textDocument/didOpen to OmniSharp.Extensions.LanguageServer.Protocol.Models.DidOpenTextDocumentParams
+2026-02-05 12:14:03.090 -08:00 [DBG] TextDocumentSyncHandler.cs: DidOpenTextDocumentParams
+2026-02-05 12:14:03.095 -08:00 [DBG] 	Processing document: /C:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageProtoInterop/PortableScannerSettings.cs
+2026-02-05 12:14:03.138 -08:00 [DBG] 	Adding 0 issues to diagnostics
+2026-02-05 12:14:03.139 -08:00 [DBG] 	Publishing diagnostics...
+2026-02-05 12:14:03.152 -08:00 [DBG] Finished: Routing Notification textDocument/didOpen in 66ms
+2026-02-05 12:14:03.153 -08:00 [DBG] Finished: Processing notification textDocument/didOpen in 66ms
+2026-02-05 12:14:03.205 -08:00 [DBG] Finding descriptors for NotificationReceived
+2026-02-05 12:14:03.205 -08:00 [DBG] Unable to find NotificationReceived, methods found include $/setTrace:OmniSharp.Extensions.LanguageServer.Server.Logging.LanguageServerLoggingManager, textDocument/didChange:DevSkim.LanguageServer.TextDocumentSyncHandler, devskim/setSettings:DevSkim.LanguageServer.VisualStudioConfigurationHandler, workspace/didChangeConfiguration:DevSkim.LanguageServer.DidChangeConfigurationHandler, window/workDoneProgress/cancel:OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.LanguageServerWorkDoneManager, workspace/didChangeWorkspaceFolders:OmniSharp.Extensions.LanguageServer.Server.LanguageServerWorkspaceFolderManager, exit:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, initialize:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, $/progress:OmniSharp.Extensions.LanguageServer.Protocol.Progress.ProgressManager, initialized:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, textDocument/didSave:DevSkim.LanguageServer.TextDocumentSyncHandler, shutdown:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, textDocument/didOpen:DevSkim.LanguageServer.TextDocumentSyncHandler, textDocument/didClose:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:14:03.205 -08:00 [DBG] Notification handler was not found (or not setup) NotificationReceived
+2026-02-05 12:14:15.683 -08:00 [DBG] Finding descriptors for textDocument/didSave
+2026-02-05 12:14:15.689 -08:00 [VRB] Found attributes 1, ["csharp::file:///c:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageProtoInterop/PortableScannerSettings.cs"]
+2026-02-05 12:14:15.690 -08:00 [VRB] Looking for handler for descriptors textDocument/didSave
+2026-02-05 12:14:15.690 -08:00 [VRB] Checking handler textDocument/didSave:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:14:15.690 -08:00 [VRB] Registration options OmniSharp.Extensions.LanguageServer.Protocol.Models.TextDocumentSaveRegistrationOptions
+2026-02-05 12:14:15.690 -08:00 [VRB] Document Selector [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml]
+2026-02-05 12:14:15.690 -08:00 [VRB] Handler Selected: DevSkim.LanguageServer.TextDocumentSyncHandler  via [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml] (targeting OmniSharp.Extensions.JsonRpc.IJsonRpcNotificationHandler`1[[OmniSharp.Extensions.LanguageServer.Protocol.Models.DidSaveTextDocumentParams, OmniSharp.Extensions.LanguageProtocol, Version=0.19.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022]])
+2026-02-05 12:14:15.690 -08:00 [DBG] Queueing "Serial":textDocument/didSave request for processing
+2026-02-05 12:14:15.691 -08:00 [DBG] Starting: Processing notification textDocument/didSave
+2026-02-05 12:14:15.691 -08:00 [DBG] Starting: Routing Notification textDocument/didSave
+2026-02-05 12:14:15.691 -08:00 [VRB] Converting params for Notification textDocument/didSave to OmniSharp.Extensions.LanguageServer.Protocol.Models.DidSaveTextDocumentParams
+2026-02-05 12:14:15.693 -08:00 [DBG] TextDocumentSyncHandler.cs: DidSaveTextDocumentParams
+2026-02-05 12:14:15.693 -08:00 [DBG] 	No content found
+2026-02-05 12:14:15.693 -08:00 [DBG] Finished: Routing Notification textDocument/didSave in 2ms
+2026-02-05 12:14:15.693 -08:00 [DBG] Finished: Processing notification textDocument/didSave in 2ms
+2026-02-05 12:14:23.823 -08:00 [DBG] Finding descriptors for textDocument/didSave
+2026-02-05 12:14:23.823 -08:00 [VRB] Found attributes 1, ["csharp::file:///c:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageProtoInterop/PortableScannerSettings.cs"]
+2026-02-05 12:14:23.823 -08:00 [VRB] Looking for handler for descriptors textDocument/didSave
+2026-02-05 12:14:23.823 -08:00 [VRB] Checking handler textDocument/didSave:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:14:23.823 -08:00 [VRB] Registration options OmniSharp.Extensions.LanguageServer.Protocol.Models.TextDocumentSaveRegistrationOptions
+2026-02-05 12:14:23.823 -08:00 [VRB] Document Selector [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml]
+2026-02-05 12:14:23.823 -08:00 [VRB] Handler Selected: DevSkim.LanguageServer.TextDocumentSyncHandler  via [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml] (targeting OmniSharp.Extensions.JsonRpc.IJsonRpcNotificationHandler`1[[OmniSharp.Extensions.LanguageServer.Protocol.Models.DidSaveTextDocumentParams, OmniSharp.Extensions.LanguageProtocol, Version=0.19.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022]])
+2026-02-05 12:14:23.823 -08:00 [DBG] Queueing "Serial":textDocument/didSave request for processing
+2026-02-05 12:14:23.823 -08:00 [DBG] Starting: Processing notification textDocument/didSave
+2026-02-05 12:14:23.823 -08:00 [DBG] Starting: Routing Notification textDocument/didSave
+2026-02-05 12:14:23.824 -08:00 [VRB] Converting params for Notification textDocument/didSave to OmniSharp.Extensions.LanguageServer.Protocol.Models.DidSaveTextDocumentParams
+2026-02-05 12:14:23.828 -08:00 [DBG] TextDocumentSyncHandler.cs: DidSaveTextDocumentParams
+2026-02-05 12:14:23.828 -08:00 [DBG] 	No content found
+2026-02-05 12:14:23.828 -08:00 [DBG] Finished: Routing Notification textDocument/didSave in 4ms
+2026-02-05 12:14:23.829 -08:00 [DBG] Finished: Processing notification textDocument/didSave in 5ms
+2026-02-05 12:14:26.054 -08:00 [DBG] Finding descriptors for textDocument/didClose
+2026-02-05 12:14:26.055 -08:00 [VRB] Found attributes 1, ["csharp::file:///c:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageProtoInterop/PortableScannerSettings.cs"]
+2026-02-05 12:14:26.055 -08:00 [VRB] Looking for handler for descriptors textDocument/didClose
+2026-02-05 12:14:26.055 -08:00 [VRB] Checking handler textDocument/didClose:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:14:26.055 -08:00 [VRB] Registration options OmniSharp.Extensions.LanguageServer.Protocol.Models.TextDocumentCloseRegistrationOptions
+2026-02-05 12:14:26.055 -08:00 [VRB] Document Selector [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml]
+2026-02-05 12:14:26.055 -08:00 [VRB] Handler Selected: DevSkim.LanguageServer.TextDocumentSyncHandler  via [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml] (targeting OmniSharp.Extensions.JsonRpc.IJsonRpcNotificationHandler`1[[OmniSharp.Extensions.LanguageServer.Protocol.Models.DidCloseTextDocumentParams, OmniSharp.Extensions.LanguageProtocol, Version=0.19.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022]])
+2026-02-05 12:14:26.055 -08:00 [DBG] Swapping from "Serial" to "Parallel"
+2026-02-05 12:14:26.055 -08:00 [DBG] Completing existing request process type "Serial"
+2026-02-05 12:14:26.055 -08:00 [DBG] Queueing "Parallel":textDocument/didClose request for processing
+2026-02-05 12:14:26.055 -08:00 [DBG] Starting: Processing notification textDocument/didClose
+2026-02-05 12:14:26.055 -08:00 [DBG] Starting: Routing Notification textDocument/didClose
+2026-02-05 12:14:26.056 -08:00 [VRB] Converting params for Notification textDocument/didClose to OmniSharp.Extensions.LanguageServer.Protocol.Models.DidCloseTextDocumentParams
+2026-02-05 12:14:26.057 -08:00 [DBG] TextDocumentSyncHandler.cs: DidCloseTextDocumentParams
+2026-02-05 12:14:26.058 -08:00 [DBG] Finished: Routing Notification textDocument/didClose in 2ms
+2026-02-05 12:14:26.058 -08:00 [DBG] Finished: Processing notification textDocument/didClose in 2ms
+2026-02-05 12:14:26.059 -08:00 [DBG] Finding descriptors for NotificationReceived
+2026-02-05 12:14:26.059 -08:00 [DBG] Unable to find NotificationReceived, methods found include $/setTrace:OmniSharp.Extensions.LanguageServer.Server.Logging.LanguageServerLoggingManager, textDocument/didChange:DevSkim.LanguageServer.TextDocumentSyncHandler, devskim/setSettings:DevSkim.LanguageServer.VisualStudioConfigurationHandler, workspace/didChangeConfiguration:DevSkim.LanguageServer.DidChangeConfigurationHandler, window/workDoneProgress/cancel:OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.LanguageServerWorkDoneManager, workspace/didChangeWorkspaceFolders:OmniSharp.Extensions.LanguageServer.Server.LanguageServerWorkspaceFolderManager, exit:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, initialize:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, $/progress:OmniSharp.Extensions.LanguageServer.Protocol.Progress.ProgressManager, initialized:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, textDocument/didSave:DevSkim.LanguageServer.TextDocumentSyncHandler, shutdown:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, textDocument/didOpen:DevSkim.LanguageServer.TextDocumentSyncHandler, textDocument/didClose:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:14:26.059 -08:00 [DBG] Notification handler was not found (or not setup) NotificationReceived
+2026-02-05 12:19:32.845 -08:00 [DBG] Configuring server...
+2026-02-05 12:19:33.489 -08:00 [DBG] Finding descriptors for initialize
+2026-02-05 12:19:33.593 -08:00 [DBG] Queueing "Serial":initialize:2 request for processing
+2026-02-05 12:19:33.609 -08:00 [DBG] Starting: Processing request initialize 2
+2026-02-05 12:19:33.614 -08:00 [DBG] Starting: Routing Request (2) initialize
+2026-02-05 12:19:33.619 -08:00 [VRB] Converting params for Request (2) initialize to OmniSharp.Extensions.LanguageServer.Protocol.Models.InternalInitializeParams
+2026-02-05 12:19:33.620 -08:00 [VRB] Converting params for Notification initialize to OmniSharp.Extensions.LanguageServer.Protocol.Models.InternalInitializeParams
+2026-02-05 12:19:33.940 -08:00 [DBG] Server is starting...
+2026-02-05 12:19:33.976 -08:00 [DBG] Server started
+2026-02-05 12:19:33.979 -08:00 [VRB] Response value was OmniSharp.Extensions.LanguageServer.Protocol.Models.InitializeResult
+2026-02-05 12:19:33.981 -08:00 [DBG] Finished: Routing Request (2) initialize in 367ms
+2026-02-05 12:19:33.981 -08:00 [DBG] Finished: Processing request initialize 2 in 370ms
+2026-02-05 12:19:34.028 -08:00 [DBG] Finding descriptors for initialized
+2026-02-05 12:19:34.029 -08:00 [DBG] Queueing "Serial":initialized request for processing
+2026-02-05 12:19:34.033 -08:00 [DBG] Starting: Processing notification initialized
+2026-02-05 12:19:34.036 -08:00 [DBG] Starting: Routing Notification initialized
+2026-02-05 12:19:34.036 -08:00 [VRB] Converting params for Notification initialized to OmniSharp.Extensions.LanguageServer.Protocol.Models.InitializedParams
+2026-02-05 12:19:34.076 -08:00 [DBG] Beginning server routines...
+2026-02-05 12:19:34.077 -08:00 [DBG] Listening for client events...
+2026-02-05 12:19:34.101 -08:00 [DBG] Finished: Routing Notification initialized in 65ms
+2026-02-05 12:19:34.102 -08:00 [DBG] Finished: Processing notification initialized in 68ms
+2026-02-05 12:19:34.103 -08:00 [DBG] Finding descriptors for devskim/setSettings
+2026-02-05 12:19:34.106 -08:00 [DBG] Swapping from "Serial" to "Parallel"
+2026-02-05 12:19:34.106 -08:00 [DBG] Completing existing request process type "Serial"
+2026-02-05 12:19:34.109 -08:00 [DBG] Queueing "Parallel":devskim/setSettings request for processing
+2026-02-05 12:19:34.109 -08:00 [DBG] Starting: Processing notification devskim/setSettings
+2026-02-05 12:19:34.109 -08:00 [DBG] Starting: Routing Notification devskim/setSettings
+2026-02-05 12:19:34.109 -08:00 [VRB] Converting params for Notification devskim/setSettings to DevSkim.LanguageServer.DevSkimSetLanguageServerSettingsParams
+2026-02-05 12:19:34.159 -08:00 [DBG] Finished: Routing Notification devskim/setSettings in 49ms
+2026-02-05 12:19:34.159 -08:00 [DBG] Finished: Processing notification devskim/setSettings in 49ms
+2026-02-05 12:19:34.159 -08:00 [DBG] Finding descriptors for textDocument/didOpen
+2026-02-05 12:19:34.164 -08:00 [VRB] Created attribute csharp::file:///c:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageServer/StaticScannerSettings.cs
+2026-02-05 12:19:34.165 -08:00 [VRB] Looking for handler for descriptors textDocument/didOpen
+2026-02-05 12:19:34.166 -08:00 [VRB] Checking handler textDocument/didOpen:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:19:34.166 -08:00 [VRB] Registration options OmniSharp.Extensions.LanguageServer.Protocol.Models.TextDocumentOpenRegistrationOptions
+2026-02-05 12:19:34.166 -08:00 [VRB] Document Selector [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml]
+2026-02-05 12:19:34.166 -08:00 [VRB] Handler Selected: DevSkim.LanguageServer.TextDocumentSyncHandler  via [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml] (targeting OmniSharp.Extensions.JsonRpc.IJsonRpcNotificationHandler`1[[OmniSharp.Extensions.LanguageServer.Protocol.Models.DidOpenTextDocumentParams, OmniSharp.Extensions.LanguageProtocol, Version=0.19.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022]])
+2026-02-05 12:19:34.167 -08:00 [DBG] Swapping from "Parallel" to "Serial"
+2026-02-05 12:19:34.167 -08:00 [DBG] Cancelling any outstanding requests (switch from parallel to serial)
+2026-02-05 12:19:34.167 -08:00 [DBG] Completing existing request process type "Parallel"
+2026-02-05 12:19:34.167 -08:00 [DBG] Queueing "Serial":textDocument/didOpen request for processing
+2026-02-05 12:19:34.167 -08:00 [DBG] Starting: Processing notification textDocument/didOpen
+2026-02-05 12:19:34.167 -08:00 [DBG] Starting: Routing Notification textDocument/didOpen
+2026-02-05 12:19:34.167 -08:00 [VRB] Converting params for Notification textDocument/didOpen to OmniSharp.Extensions.LanguageServer.Protocol.Models.DidOpenTextDocumentParams
+2026-02-05 12:19:34.170 -08:00 [DBG] TextDocumentSyncHandler.cs: DidOpenTextDocumentParams
+2026-02-05 12:19:34.175 -08:00 [DBG] 	Processing document: /C:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageServer/StaticScannerSettings.cs
+2026-02-05 12:19:34.194 -08:00 [ERR] Unable to get configuration from client!
+OmniSharp.Extensions.JsonRpc.Server.MethodNotSupportedException: Method not found: 'workspace/configuration'.
+   at OmniSharp.Extensions.JsonRpc.ResponseRouter.ResponseRouterReturnsImpl.Returning[TResponse](CancellationToken cancellationToken)
+2026-02-05 12:19:34.220 -08:00 [ERR] Unable to get configuration from client!
+OmniSharp.Extensions.JsonRpc.Server.MethodNotSupportedException: Method not found: 'workspace/configuration'.
+   at OmniSharp.Extensions.JsonRpc.ResponseRouter.ResponseRouterReturnsImpl.Returning[TResponse](CancellationToken cancellationToken)
+2026-02-05 12:19:34.220 -08:00 [DBG] 	Adding 0 issues to diagnostics
+2026-02-05 12:19:34.220 -08:00 [DBG] 	Publishing diagnostics...
+2026-02-05 12:19:34.232 -08:00 [DBG] Finished: Routing Notification textDocument/didOpen in 64ms
+2026-02-05 12:19:34.232 -08:00 [DBG] Finished: Processing notification textDocument/didOpen in 65ms
+2026-02-05 12:19:34.247 -08:00 [DBG] Finding descriptors for NotificationReceived
+2026-02-05 12:19:34.248 -08:00 [DBG] Unable to find NotificationReceived, methods found include exit:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, initialize:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, textDocument/didSave:DevSkim.LanguageServer.TextDocumentSyncHandler, textDocument/didOpen:DevSkim.LanguageServer.TextDocumentSyncHandler, textDocument/didClose:DevSkim.LanguageServer.TextDocumentSyncHandler, window/workDoneProgress/cancel:OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.LanguageServerWorkDoneManager, shutdown:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, $/progress:OmniSharp.Extensions.LanguageServer.Protocol.Progress.ProgressManager, workspace/didChangeConfiguration:DevSkim.LanguageServer.DidChangeConfigurationHandler, workspace/didChangeWorkspaceFolders:OmniSharp.Extensions.LanguageServer.Server.LanguageServerWorkspaceFolderManager, textDocument/didChange:DevSkim.LanguageServer.TextDocumentSyncHandler, $/setTrace:OmniSharp.Extensions.LanguageServer.Server.Logging.LanguageServerLoggingManager, devskim/setSettings:DevSkim.LanguageServer.VisualStudioConfigurationHandler, initialized:OmniSharp.Extensions.LanguageServer.Server.LanguageServer
+2026-02-05 12:19:34.249 -08:00 [DBG] Notification handler was not found (or not setup) NotificationReceived
+2026-02-05 12:19:47.195 -08:00 [DBG] Finding descriptors for textDocument/didSave
+2026-02-05 12:19:47.202 -08:00 [VRB] Found attributes 1, ["csharp::file:///c:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageServer/StaticScannerSettings.cs"]
+2026-02-05 12:19:47.203 -08:00 [VRB] Looking for handler for descriptors textDocument/didSave
+2026-02-05 12:19:47.203 -08:00 [VRB] Checking handler textDocument/didSave:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:19:47.203 -08:00 [VRB] Registration options OmniSharp.Extensions.LanguageServer.Protocol.Models.TextDocumentSaveRegistrationOptions
+2026-02-05 12:19:47.203 -08:00 [VRB] Document Selector [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml]
+2026-02-05 12:19:47.203 -08:00 [VRB] Handler Selected: DevSkim.LanguageServer.TextDocumentSyncHandler  via [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml] (targeting OmniSharp.Extensions.JsonRpc.IJsonRpcNotificationHandler`1[[OmniSharp.Extensions.LanguageServer.Protocol.Models.DidSaveTextDocumentParams, OmniSharp.Extensions.LanguageProtocol, Version=0.19.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022]])
+2026-02-05 12:19:47.203 -08:00 [DBG] Queueing "Serial":textDocument/didSave request for processing
+2026-02-05 12:19:47.203 -08:00 [DBG] Starting: Processing notification textDocument/didSave
+2026-02-05 12:19:47.203 -08:00 [DBG] Starting: Routing Notification textDocument/didSave
+2026-02-05 12:19:47.203 -08:00 [VRB] Converting params for Notification textDocument/didSave to OmniSharp.Extensions.LanguageServer.Protocol.Models.DidSaveTextDocumentParams
+2026-02-05 12:19:47.206 -08:00 [DBG] TextDocumentSyncHandler.cs: DidSaveTextDocumentParams
+2026-02-05 12:19:47.206 -08:00 [DBG] 	No content found
+2026-02-05 12:19:47.206 -08:00 [DBG] Finished: Routing Notification textDocument/didSave in 2ms
+2026-02-05 12:19:47.206 -08:00 [DBG] Finished: Processing notification textDocument/didSave in 2ms
+2026-02-05 12:20:02.278 -08:00 [DBG] Finding descriptors for textDocument/didClose
+2026-02-05 12:20:02.281 -08:00 [VRB] Found attributes 1, ["csharp::file:///c:/Users/gstocco/Repos/DevSkim/DevSkim-DotNet/Microsoft.DevSkim.LanguageServer/StaticScannerSettings.cs"]
+2026-02-05 12:20:02.281 -08:00 [VRB] Looking for handler for descriptors textDocument/didClose
+2026-02-05 12:20:02.281 -08:00 [VRB] Checking handler textDocument/didClose:DevSkim.LanguageServer.TextDocumentSyncHandler
+2026-02-05 12:20:02.281 -08:00 [VRB] Registration options OmniSharp.Extensions.LanguageServer.Protocol.Models.TextDocumentCloseRegistrationOptions
+2026-02-05 12:20:02.281 -08:00 [VRB] Document Selector [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml]
+2026-02-05 12:20:02.281 -08:00 [VRB] Handler Selected: DevSkim.LanguageServer.TextDocumentSyncHandler  via [batch], [c], [cpp], [csharp], [vb], [python], [javascript], [javascriptreact], [typescript], [typescriptreact], [coffeescript], [java], [objective-c], [swift], [perl], [perl6], [ruby], [lua], [groovy], [go], [rust], [jade], [clojure], [r], [yaml], [fsharp], [php], [powershell], [shellscript], [sql], [plaintext], [.config], [packages.config], [CSharp Project], [cobol], [json], [xml] (targeting OmniSharp.Extensions.JsonRpc.IJsonRpcNotificationHandler`1[[OmniSharp.Extensions.LanguageServer.Protocol.Models.DidCloseTextDocumentParams, OmniSharp.Extensions.LanguageProtocol, Version=0.19.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022]])
+2026-02-05 12:20:02.281 -08:00 [DBG] Swapping from "Serial" to "Parallel"
+2026-02-05 12:20:02.281 -08:00 [DBG] Completing existing request process type "Serial"
+2026-02-05 12:20:02.281 -08:00 [DBG] Queueing "Parallel":textDocument/didClose request for processing
+2026-02-05 12:20:02.281 -08:00 [DBG] Starting: Processing notification textDocument/didClose
+2026-02-05 12:20:02.281 -08:00 [DBG] Starting: Routing Notification textDocument/didClose
+2026-02-05 12:20:02.281 -08:00 [VRB] Converting params for Notification textDocument/didClose to OmniSharp.Extensions.LanguageServer.Protocol.Models.DidCloseTextDocumentParams
+2026-02-05 12:20:02.283 -08:00 [DBG] TextDocumentSyncHandler.cs: DidCloseTextDocumentParams
+2026-02-05 12:20:02.284 -08:00 [DBG] Finished: Routing Notification textDocument/didClose in 2ms
+2026-02-05 12:20:02.284 -08:00 [DBG] Finished: Processing notification textDocument/didClose in 2ms
+2026-02-05 12:20:02.286 -08:00 [DBG] Finding descriptors for NotificationReceived
+2026-02-05 12:20:02.286 -08:00 [DBG] Unable to find NotificationReceived, methods found include exit:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, initialize:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, textDocument/didSave:DevSkim.LanguageServer.TextDocumentSyncHandler, textDocument/didOpen:DevSkim.LanguageServer.TextDocumentSyncHandler, textDocument/didClose:DevSkim.LanguageServer.TextDocumentSyncHandler, window/workDoneProgress/cancel:OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.LanguageServerWorkDoneManager, shutdown:OmniSharp.Extensions.LanguageServer.Server.LanguageServer, $/progress:OmniSharp.Extensions.LanguageServer.Protocol.Progress.ProgressManager, workspace/didChangeConfiguration:DevSkim.LanguageServer.DidChangeConfigurationHandler, workspace/didChangeWorkspaceFolders:OmniSharp.Extensions.LanguageServer.Server.LanguageServerWorkspaceFolderManager, textDocument/didChange:DevSkim.LanguageServer.TextDocumentSyncHandler, $/setTrace:OmniSharp.Extensions.LanguageServer.Server.Logging.LanguageServerLoggingManager, devskim/setSettings:DevSkim.LanguageServer.VisualStudioConfigurationHandler, initialized:OmniSharp.Extensions.LanguageServer.Server.LanguageServer
+2026-02-05 12:20:02.286 -08:00 [DBG] Notification handler was not found (or not setup) NotificationReceived

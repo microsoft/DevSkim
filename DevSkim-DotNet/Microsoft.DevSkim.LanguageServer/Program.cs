@@ -1,11 +1,10 @@
 ﻿using CommandLine;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
-using System.Diagnostics;
 
 namespace DevSkim.LanguageServer;
 
@@ -46,20 +45,29 @@ internal class Program
                 options
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
+                    .WithServerInfo(new ServerInfo { Name = "DevSkim Language Server" })
                     .ConfigureLogging(
                         x => x
                             .AddSerilog(Log.Logger)
                             .AddLanguageProtocolLogging()
                     )
                     .WithHandler<TextDocumentSyncHandler>()
-                    .WithHandler<DidChangeConfigurationHandler>()
+                    .WithHandler<CodeActionHandler>()
+                    // Handle settings push from clients (devskim/setSettings custom method)
+                    // This works for both VS Code and VS - avoids workspace/configuration issues
                     .WithHandler<VisualStudioConfigurationHandler>()
                     .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Debug)))
-                    .WithConfigurationSection(ConfigHelpers.Section)
                     .OnInitialize(
                         async (server, request, token) =>
                         {
                             Log.Logger.Debug("Server is starting...");
+                            
+                            // Initialize with default settings immediately
+                            // This ensures rules are enabled even if the client
+                            // doesn't push settings via workspace/configuration
+                            StaticScannerSettings.UpdateWith(new Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings());
+                            Log.Logger.Debug("Default settings applied");
+                            
                             OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = server.WorkDoneManager.For(
                                 request, new WorkDoneProgressBegin
                                 {
