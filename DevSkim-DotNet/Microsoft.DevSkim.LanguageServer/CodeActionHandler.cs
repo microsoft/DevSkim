@@ -165,7 +165,7 @@ namespace DevSkim.LanguageServer
 
         private static string CreateDiagnosticKey(string documentUri, Diagnostic diagnostic)
         {
-            return $"{documentUri}: {diagnostic.Message}, {diagnostic.Code}, {diagnostic.Range.Start.Line}, {diagnostic.Range.Start.Character}, {diagnostic.Range.End.Line}, {diagnostic.Range.End.Character}";
+            return $"{diagnostic.Code}:{diagnostic.Range.Start.Line}:{diagnostic.Range.Start.Character}:{diagnostic.Range.End.Line}:{diagnostic.Range.End.Character}";
         }
     }
 }
