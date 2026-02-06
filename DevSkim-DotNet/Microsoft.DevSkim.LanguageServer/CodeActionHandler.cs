@@ -64,17 +64,14 @@ namespace DevSkim.LanguageServer
                     documentFixes.TryGetValue(diagnosticKey, out var fixes))
                 {
                     _logger.LogDebug($"CodeActionHandler: Found {fixes.Count} fixes");
-                    foreach (var fix in fixes)
+                    var codeActions = fixes.Select(fix => new CodeAction
                     {
-                        var codeAction = new CodeAction
-                        {
-                            Title = fix.friendlyString,
-                            Kind = CodeActionKind.QuickFix,
-                            Diagnostics = new Container<Diagnostic>(diagnostic),
-                            Edit = CreateWorkspaceEdit(request.TextDocument.Uri, diagnostic, fix)
-                        };
-                        result.Add(codeAction);
-                    }
+                        Title = fix.friendlyString,
+                        Kind = CodeActionKind.QuickFix,
+                        Diagnostics = new Container<Diagnostic>(diagnostic),
+                        Edit = CreateWorkspaceEdit(request.TextDocument.Uri, diagnostic, fix)
+                    });
+                    result.AddRange(codeActions);
                 }
             }
 
