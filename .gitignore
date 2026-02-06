@@ -11,6 +11,7 @@ DevSkim-DotNet/Microsoft.DevSkim.sln.DotSettings.user
 DevSkim-VSCode-Plugin/client/dist/*
 DevSkim-VSCode-Plugin/devskimBinaries/*
 DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/generatedLanguageServerBinaries/*
+DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Server/*
 
 # Debug artifacts
 DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/devskim-server-*.txt
