@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.75] - 2026-02-06
+### Changed
+- Removed unnecessary uninstall/reinstall of @vscode/vsce from postinstall script in VSCode plugin
+
+## [1.0.74] - 2026-02-05
+### Fix
+- Fixed overly broad filename regex in .NET Framework configuration rules (DS450001, DS450002, DS450003) that incorrectly matched JSON files containing `.config` in their names (e.g., `file.test.config.json`), causing XML parsing errors
+
+## [1.0.73] - 2026-02-04
+### Fix
+Suppress DS173237 on all-zero values
+
+## [1.0.72] - 2026-02-04
+### Added
+- Added Copilot instructions file (.github/copilot-instructions.md) with repository-specific guidance for AI coding agents
+- Documented build, test, and development workflows for C# and TypeScript components
+- Included special instructions for handling nuget.config and .npmrc files
+- Added mandatory Changelog.md update requirements for all PRs
+
 ## [1.0.71] - 2026-02-03
 ### Fix
 - Fixed invalid JSON in package.json (trailing comma in scripts section) that caused npm parse errors in Azure DevOps pipeline
