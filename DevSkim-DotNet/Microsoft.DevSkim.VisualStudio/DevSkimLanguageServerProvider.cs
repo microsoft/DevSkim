@@ -426,16 +426,23 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
         return Path.Combine(extensionDirectory, "Server", "Microsoft.DevSkim.LanguageServer.exe");
     }
 
+    /// <summary>
+    /// Native Windows API declarations for Job Object functionality.
+    /// Job Objects are required to ensure the language server child process is automatically
+    /// terminated when Visual Studio exits (even if killed unexpectedly). There is no managed
+    /// .NET equivalent for this Windows kernel feature, so P/Invoke is necessary.
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "SYSLIB1054:Use 'LibraryImportAttribute' instead of 'DllImportAttribute'", Justification = "DllImport is simpler for these few calls and works correctly")]
     private static class NativeMethods
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern SafeWaitHandle CreateJobObject(IntPtr lpJobAttributes, string? lpName);
+        internal static extern SafeWaitHandle CreateJobObject(IntPtr lpJobAttributes, string? lpName);
 
         [DllImport("kernel32.dll")]
-        public static extern bool SetInformationJobObject(SafeHandle hJob, int jobObjectInfoClass, IntPtr lpJobObjectInfo, uint cbJobObjectInfoLength);
+        internal static extern bool SetInformationJobObject(SafeHandle hJob, int jobObjectInfoClass, IntPtr lpJobObjectInfo, uint cbJobObjectInfoLength);
 
         [DllImport("kernel32.dll")]
-        public static extern bool AssignProcessToJobObject(SafeHandle hJob, IntPtr hProcess);
+        internal static extern bool AssignProcessToJobObject(SafeHandle hJob, IntPtr hProcess);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct JOBOBJECT_BASIC_LIMIT_INFORMATION
