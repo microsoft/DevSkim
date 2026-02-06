@@ -35,6 +35,7 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     private readonly System.Collections.Concurrent.ConcurrentBag<IDisposable> _settingsSubscriptions = [];
     private bool _initialPushDone;
     private CancellationTokenSource? _restartDebounce;
+    private readonly CancellationTokenSource _disposeCts = new();
 
     /// <inheritdoc/>
     public override LanguageServerProviderConfiguration LanguageServerProviderConfiguration => new(
@@ -144,6 +145,10 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     {
         if (isDisposing)
         {
+            // Cancel pending subscription operations first
+            _disposeCts.Cancel();
+            _disposeCts.Dispose();
+            
             foreach (var sub in _settingsSubscriptions)
             {
                 sub.Dispose();
@@ -236,11 +241,18 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     {
         _ = Task.Run(async () =>
         {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
+            try
+            {
+                var sub = await Extensibility.Settings().SubscribeAsync(
+                    setting,
+                    _disposeCts.Token,
+                    changeHandler: _ => OnSettingChanged());
+                _settingsSubscriptions.Add(sub);
+            }
+            catch (OperationCanceledException)
+            {
+                // Provider is being disposed, ignore
+            }
         });
     }
 
@@ -248,11 +260,18 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     {
         _ = Task.Run(async () =>
         {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
+            try
+            {
+                var sub = await Extensibility.Settings().SubscribeAsync(
+                    setting,
+                    _disposeCts.Token,
+                    changeHandler: _ => OnSettingChanged());
+                _settingsSubscriptions.Add(sub);
+            }
+            catch (OperationCanceledException)
+            {
+                // Provider is being disposed, ignore
+            }
         });
     }
 
@@ -260,11 +279,18 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     {
         _ = Task.Run(async () =>
         {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
+            try
+            {
+                var sub = await Extensibility.Settings().SubscribeAsync(
+                    setting,
+                    _disposeCts.Token,
+                    changeHandler: _ => OnSettingChanged());
+                _settingsSubscriptions.Add(sub);
+            }
+            catch (OperationCanceledException)
+            {
+                // Provider is being disposed, ignore
+            }
         });
     }
 
