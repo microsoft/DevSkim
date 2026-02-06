@@ -32,7 +32,7 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
 
     private Process? _serverProcess;
     private SafeHandle? _jobHandle;
-    private readonly List<IDisposable> _settingsSubscriptions = [];
+    private readonly System.Collections.Concurrent.ConcurrentBag<IDisposable> _settingsSubscriptions = [];
     private bool _initialPushDone;
     private CancellationTokenSource? _restartDebounce;
 
@@ -148,7 +148,7 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
             {
                 sub.Dispose();
             }
-            _settingsSubscriptions.Clear();
+            while (_settingsSubscriptions.TryTake(out _)) { }
             _restartDebounce?.Cancel();
             _restartDebounce?.Dispose();
             StopServerProcess();

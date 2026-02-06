@@ -71,7 +71,7 @@ namespace DevSkim.LanguageServer
                         Diagnostics = new Container<Diagnostic>(diagnostic),
                         Edit = CreateWorkspaceEdit(request.TextDocument.Uri, diagnostic, fix)
                     });
-                    result.AddRange(codeActions);
+                    result.AddRange(codeActions.Select(ca => new CommandOrCodeAction(ca)));
                 }
             }
 

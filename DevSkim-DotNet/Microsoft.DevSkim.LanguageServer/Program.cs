@@ -1,5 +1,4 @@
-﻿using CommandLine;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
@@ -10,17 +9,9 @@ namespace DevSkim.LanguageServer;
 
 internal class Program
 {
-    public class Options
-    {
-    }
-
     static async Task Main(string[] args)
     {
 #if DEBUG
-        //while (!Debugger.IsAttached)
-        //{
-        //    await Task.Delay(100);
-        //}
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .WriteTo.File("devskim-server-log.txt", rollingInterval: RollingInterval.Day)
@@ -30,12 +21,6 @@ internal class Program
         // Creates a "silent" logger
         Log.Logger = new LoggerConfiguration().CreateLogger();
 #endif
-        Options _options = new Options();
-        Parser.Default.ParseArguments<Options>(args)
-            .WithParsed<Options>(o =>
-            {
-                _options = o;
-            });
 
         Log.Logger.Debug("Configuring server...");
         IObserver<WorkDoneProgressReport> workDone = null!;
