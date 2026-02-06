@@ -121,14 +121,8 @@ namespace DevSkim.LanguageServer
                 Version = version
             });
             
-            // Send custom notifications for VS Code backward compatibility
-            _facade.TextDocument.SendNotification(DevSkimMessages.FileVersion, new MappingsVersion() { version = version, fileName = uri.ToUri() });
-            foreach (var mapping in codeFixes)
-            {
-                _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, mapping);
-            }
-            
-            // Register code fixes with CodeActionHandler for standard LSP textDocument/codeAction (used by VS)
+            // Register code fixes with CodeActionHandler for standard LSP textDocument/codeAction
+            // This works for both VS and VS Code — no custom notifications needed
             _logger.LogDebug($"\tRegistering {codeFixes.Count} code fixes...");
             foreach (var mapping in codeFixes)
             {
