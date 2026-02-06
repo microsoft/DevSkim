@@ -1,3 +1,90 @@
 {
-  "DevSkim.LanguageServerProvider.DisplayName": "DevSkim Security Analyzer"
+  "DevSkim.LanguageServerProvider.DisplayName": "DevSkim Security Analyzer",
+
+  "devskim.DisplayName": "DevSkim",
+  "devskim.Description": "DevSkim security analyzer settings.",
+
+  "devskim.rules.DisplayName": "Rules",
+  "devskim.rules.Description": "Settings for controlling which DevSkim rules are enabled and custom rule paths.",
+
+  "devskim.suppressions.DisplayName": "Suppressions",
+  "devskim.suppressions.Description": "Settings for controlling how DevSkim suppressions are created and managed.",
+
+  "devskim.triggers.DisplayName": "Triggers",
+  "devskim.triggers.Description": "Settings for controlling when DevSkim scans are triggered.",
+
+  "devskim.ignores.DisplayName": "Ignores",
+  "devskim.ignores.Description": "Settings for ignoring specific rules or files.",
+
+  "devskim.rules.enableCriticalSeverityRules.DisplayName": "Enable Critical Severity Rules",
+  "devskim.rules.enableCriticalSeverityRules.Description": "Enable rules with critical severity.",
+
+  "devskim.rules.enableImportantSeverityRules.DisplayName": "Enable Important Severity Rules",
+  "devskim.rules.enableImportantSeverityRules.Description": "Enable rules with important severity.",
+
+  "devskim.rules.enableModerateSeverityRules.DisplayName": "Enable Moderate Severity Rules",
+  "devskim.rules.enableModerateSeverityRules.Description": "Enable rules with moderate severity.",
+
+  "devskim.rules.enableManualReviewSeverityRules.DisplayName": "Enable Manual Review Severity Rules",
+  "devskim.rules.enableManualReviewSeverityRules.Description": "Enable rules that require manual review.",
+
+  "devskim.rules.enableBestPracticeSeverityRules.DisplayName": "Enable Best Practice Severity Rules",
+  "devskim.rules.enableBestPracticeSeverityRules.Description": "Enable rules for best practice recommendations.",
+
+  "devskim.rules.enableHighConfidenceRules.DisplayName": "Enable High Confidence Rules",
+  "devskim.rules.enableHighConfidenceRules.Description": "Enable rules with high confidence findings.",
+
+  "devskim.rules.enableMediumConfidenceRules.DisplayName": "Enable Medium Confidence Rules",
+  "devskim.rules.enableMediumConfidenceRules.Description": "Enable rules with medium confidence findings.",
+
+  "devskim.rules.enableLowConfidenceRules.DisplayName": "Enable Low Confidence Rules",
+  "devskim.rules.enableLowConfidenceRules.Description": "Enable rules with low confidence findings.",
+
+  "devskim.rules.ignoreDefaultRules.DisplayName": "Ignore Default Rules",
+  "devskim.rules.ignoreDefaultRules.Description": "When enabled, the built-in default rules are not loaded. Only custom rules will be used.",
+
+  "devskim.rules.customRulesPaths.DisplayName": "Custom Rules Paths",
+  "devskim.rules.customRulesPaths.Description": "Semicolon-separated list of paths to directories containing custom DevSkim rules.",
+
+  "devskim.rules.customLanguagesPath.DisplayName": "Custom Languages Path",
+  "devskim.rules.customLanguagesPath.Description": "Path to a custom language definitions file.",
+
+  "devskim.rules.customCommentsPath.DisplayName": "Custom Comments Path",
+  "devskim.rules.customCommentsPath.Description": "Path to a custom comment definitions file.",
+
+  "devskim.rules.guidanceBaseURL.DisplayName": "Guidance Base URL",
+  "devskim.rules.guidanceBaseURL.Description": "Base URL for rule guidance documentation.",
+
+  "devskim.suppressions.suppressionCommentStyle.DisplayName": "Suppression Comment Style",
+  "devskim.suppressions.suppressionCommentStyle.Description": "Comment style used for suppression comments. Valid values: Line, Block.",
+
+  "devskim.suppressions.manualReviewerName.DisplayName": "Manual Reviewer Name",
+  "devskim.suppressions.manualReviewerName.Description": "Name used to populate the reviewer field in suppression comments.",
+
+  "devskim.suppressions.suppressionDurationInDays.DisplayName": "Suppression Duration (Days)",
+  "devskim.suppressions.suppressionDurationInDays.Description": "Default number of days before a suppression expires.",
+
+  "devskim.triggers.scanOnOpen.DisplayName": "Scan on Open",
+  "devskim.triggers.scanOnOpen.Description": "Run DevSkim analysis when a file is opened.",
+
+  "devskim.triggers.scanOnSave.DisplayName": "Scan on Save",
+  "devskim.triggers.scanOnSave.Description": "Run DevSkim analysis when a file is saved.",
+
+  "devskim.triggers.scanOnChange.DisplayName": "Scan on Change",
+  "devskim.triggers.scanOnChange.Description": "Run DevSkim analysis when a file is modified.",
+
+  "devskim.triggers.removeFindingsOnClose.DisplayName": "Remove Findings on Close",
+  "devskim.triggers.removeFindingsOnClose.Description": "Remove DevSkim findings when a file is closed.",
+
+  "devskim.ignores.ignoreRulesList.DisplayName": "Ignore Rules List",
+  "devskim.ignores.ignoreRulesList.Description": "Comma-separated list of DevSkim rule IDs to ignore.",
+
+  "devskim.ignores.ignoreFiles.DisplayName": "Ignore Files",
+  "devskim.ignores.ignoreFiles.Description": "Comma-separated list of file glob patterns to exclude from scanning.",
+
+  "devskim.diagnostics.DisplayName": "Diagnostics",
+  "devskim.diagnostics.Description": "Settings for DevSkim extension diagnostics and logging.",
+
+  "devskim.diagnostics.enableFileLogging.DisplayName": "Enable File Logging",
+  "devskim.diagnostics.enableFileLogging.Description": "Write extension logs to a file in the temp directory (devskim-vs-extension.log). Useful for troubleshooting."
 }

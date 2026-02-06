@@ -5,6 +5,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
+using System.Security.Cryptography;
 
 namespace DevSkim.LanguageServer;
 
@@ -39,7 +40,8 @@ internal class Program
 
         Log.Logger.Debug("Configuring server...");
         IObserver<WorkDoneProgressReport> workDone = null!;
-
+        var thing = "http://test.com";
+        MD5 mD5 = MD5.Create();
         OmniSharp.Extensions.LanguageServer.Server.LanguageServer server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(
             options =>
                 options
@@ -62,11 +64,25 @@ internal class Program
                         {
                             Log.Logger.Debug("Server is starting...");
                             
-                            // Initialize with default settings immediately
-                            // This ensures rules are enabled even if the client
-                            // doesn't push settings via workspace/configuration
-                            StaticScannerSettings.UpdateWith(new Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings());
-                            Log.Logger.Debug("Default settings applied");
+                            // Check if the client sent settings via initializationOptions
+                            // (VS extension passes PortableScannerSettings here)
+                            Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings? clientSettings = null;
+                            try
+                            {
+                                if (request.InitializationOptions is Newtonsoft.Json.Linq.JToken initOptions)
+                                {
+                                    clientSettings = initOptions.ToObject<Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings>();
+                                    Log.Logger.Debug("Received settings from initializationOptions");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Logger.Warning(ex, "Failed to parse initializationOptions as settings");
+                            }
+
+                            // Apply client settings if provided, otherwise use defaults
+                            StaticScannerSettings.UpdateWith(clientSettings ?? new Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings());
+                            Log.Logger.Debug("Settings applied");
                             
                             OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = server.WorkDoneManager.For(
                                 request, new WorkDoneProgressBegin
