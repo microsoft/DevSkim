@@ -299,7 +299,7 @@
 		"compile": "tsc -b",
 		"build": "npm run setup && npm run compile",
 		"watch": "tsc -b -w",
-		"lint": "eslint ./client --ext .ts,.tsx",
+		"lint": "eslint ./client",
 		"postinstall": "cd client && npm install && cd .. && npm uninstall @vscode/vsce && npm install --save-dev @vscode/vsce",
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
 		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node",
@@ -322,12 +322,13 @@
 	},
 	"devDependencies": {
 		"@types/node": "^14.x",
-		"@typescript-eslint/eslint-plugin": "^5.10.1",
-		"@typescript-eslint/parser": "^5.10.1",
+		"@typescript-eslint/eslint-plugin": "^8.0.0",
+		"@typescript-eslint/parser": "^8.0.0",
 		"@vscode/vsce": "^3.7.1",
 		"esbuild": "^0.25.2",
-		"eslint": "^8.8.0",
+		"eslint": "^9.0.0",
 		"nerdbank-gitversioning": "^3.4.255",
-		"typescript": "^4.5.5"
+		"typescript": "^4.5.5",
+		"typescript-eslint": "^8.54.0"
 	}
 }
