@@ -20,7 +20,11 @@ internal class DevSkimExtension : Extension
             version: new Version(ThisAssembly.AssemblyFileVersion),
             publisherName: "Microsoft DevLabs",
             displayName: "Microsoft DevSkim",
-            description: "Security-focused static analysis tool for identifying vulnerabilities in source code."),
+            description: "DevSkim is a highly configurable security linter with a default ruleset focused on common security related issues.")
+        {
+            MoreInfo = "https://github.com/Microsoft/DevSkim",
+            Tags = ["linter", "linters", "coding", "security", "static analysis"],
+        },
     };
 
     /// <inheritdoc />
