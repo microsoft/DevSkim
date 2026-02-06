@@ -39,8 +39,6 @@ internal class Program
 
         Log.Logger.Debug("Configuring server...");
         IObserver<WorkDoneProgressReport> workDone = null!;
-        var thing = "http://test.com";
-        MD5 mD5 = MD5.Create();
         OmniSharp.Extensions.LanguageServer.Server.LanguageServer server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(
             options =>
                 options
