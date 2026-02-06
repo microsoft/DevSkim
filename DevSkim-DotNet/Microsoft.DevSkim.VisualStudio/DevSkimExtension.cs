@@ -5,7 +5,6 @@ namespace Microsoft.DevSkim.VisualStudio;
 
 using global::Microsoft.Extensions.DependencyInjection;
 using global::Microsoft.VisualStudio.Extensibility;
-using System.Security.Cryptography;
 
 /// <summary>
 /// Extension entry point for the DevSkim Visual Studio extension.
@@ -18,7 +17,7 @@ internal class DevSkimExtension : Extension
     {
         Metadata = new(
             id: "Microsoft.DevSkim.VisualStudio.f3a2c5e8-7d9b-4a1c-8e6f-2b3d4c5e6f7a",
-            version: this.ExtensionAssemblyVersion,
+            version: new Version(ThisAssembly.AssemblyFileVersion),
             publisherName: "Microsoft DevLabs",
             displayName: "Microsoft DevSkim",
             description: "Security-focused static analysis tool for identifying vulnerabilities in source code."),
