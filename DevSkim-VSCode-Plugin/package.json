@@ -300,7 +300,7 @@
 		"build": "npm run setup && npm run compile",
 		"watch": "tsc -b -w",
 		"lint": "eslint ./client --ext .ts,.tsx",
-		"postinstall": "cd client && npm install && cd .. && npm uninstall @vscode/vsce && npm install --save-dev @vscode/vsce",
+		"postinstall": "cd client && npm install",
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
 		"esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
