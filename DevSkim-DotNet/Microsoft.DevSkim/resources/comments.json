@@ -74,5 +74,12 @@
     "inline": "::",
     "prefix": "Rem",
     "suffix": "\n"
+  },
+  {
+    "language": [
+      "xml"
+    ],
+    "prefix": "<!--",
+    "suffix": "-->"
   }
 ]
