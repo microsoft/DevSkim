@@ -9,5 +9,6 @@
         public const string FileVersion = "devskim/fileversion";
         public const string CodeFixMapping = "devskim/codefixmapping";
         public const string SetServerSettings = "devskim/setSettings";
+        public const string RescanDocument = "devskim/rescanDocument";
     }
 }

@@ -54,6 +54,7 @@ internal class Program
                     .WithHandler<TextDocumentSyncHandler>()
                     .WithHandler<DidChangeConfigurationHandler>()
                     .WithHandler<VisualStudioConfigurationHandler>()
+                    .WithHandler<RescanHandler>()
                     .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Debug)))
                     .WithConfigurationSection(ConfigHelpers.Section)
                     .OnInitialize(
