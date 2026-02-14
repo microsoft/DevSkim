@@ -31,6 +31,8 @@ function rescanOpenDocuments() {
 				uri: doc.uri.toString(),
 				text: doc.getText(),
 				version: doc.version
+			}).catch(err => {
+				console.error(`DevSkim: Failed to rescan ${doc.uri.toString()}`, err);
 			});
 		});
 }
