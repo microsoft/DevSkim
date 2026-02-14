@@ -16,7 +16,7 @@ using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace DevSkim.LanguageServer
 {
-    internal class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
+    public class TextDocumentSyncHandler : TextDocumentSyncHandlerBase
     {
         private readonly ILogger<TextDocumentSyncHandler> _logger;
         private readonly ILanguageServerFacade _facade;
@@ -30,6 +30,14 @@ namespace DevSkim.LanguageServer
         }
 
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
+
+        /// <summary>
+        /// Public method to trigger document scanning on demand
+        /// </summary>
+        public async Task ScanDocumentAsync(string text, int? version, DocumentUri uri)
+        {
+            await GenerateDiagnosticsForTextDocumentAsync(text, version, uri);
+        }
 
         private async Task<Unit> GenerateDiagnosticsForTextDocumentAsync(string text, int? version, DocumentUri uri)
         {

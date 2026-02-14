@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.0.76] - 2026-02-14
+### Added
+- Added on-demand scan command `DevSkim: Scan All Open Files` for VS Code extension to manually trigger rescanning of all open documents
+- Automatically rescan all open documents when DevSkim settings are changed
+- Added custom LSP request handler `devskim/rescanDocument` to Language Server to support on-demand rescanning
+
+
 ## [1.0.75] - 2026-02-06
 ### Changed
 - Removed unnecessary uninstall/reinstall of @vscode/vsce from postinstall script in VSCode plugin

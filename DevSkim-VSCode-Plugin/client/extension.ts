@@ -22,6 +22,21 @@ import { FileVersion } from './common/fileVersion';
 
 let client: LanguageClient;
 
+// Helper to rescan documents via custom server request
+function rescanOpenDocuments() {
+	vscode.workspace.textDocuments
+		.filter(doc => selectors.some(s => vscode.languages.match(s, doc) > 0))
+		.forEach(doc => {
+			client?.sendRequest('devskim/rescanDocument', {
+				uri: doc.uri.toString(),
+				text: doc.getText(),
+				version: doc.version
+			}).catch(err => {
+				console.error(`DevSkim: Failed to rescan ${doc.uri.toString()}`, err);
+			});
+		});
+}
+
 async function resolveDotNetPath(): Promise<string> {
 	const result = await vscode.commands.executeCommand<any>(
 		"dotnet.acquire",
@@ -69,6 +84,14 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(
 		vscode.languages.registerCodeActionsProvider(selectors, fixer, {
 			providedCodeActionKinds: DevSkimFixer.providedCodeActionKinds
+		})
+	);
+
+	// Register manual scan command
+	context.subscriptions.push(
+		vscode.commands.registerCommand('devskim.scanWorkspace', () => {
+			rescanOpenDocuments();
+			vscode.window.showInformationMessage('DevSkim: Rescanned all open files');
 		})
 	);
 
@@ -136,6 +159,7 @@ export function activate(context: ExtensionContext) {
 					// Triggers server to query for client config.
 					// Hacky, but vscode insists a pull model should be used over a push model for transmitting settings.
 					client.sendNotification(DidChangeConfigurationNotification.type, { settings: "" });
+					rescanOpenDocuments();
 				}
 			});
 

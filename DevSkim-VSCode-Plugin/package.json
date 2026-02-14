@@ -72,7 +72,12 @@
 	],
 	"main": "./client/out/extension.js",
 	"contributes": {
-		"commands": [],
+		"commands": [
+			{
+				"command": "devskim.scanWorkspace",
+				"title": "DevSkim: Scan All Open Files"
+			}
+		],
 		"configuration": [
 			{
 				"order": 10,
