@@ -50,9 +50,9 @@ internal class ConfigHelpers
             {
                 fileIgnoreRegexes.Add(new Glob(potentialRegex));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                // TODO: Log issue with provided regex
+                // Invalid glob pattern — skip
             }
         }
         StaticScannerSettings.IgnoreFiles = fileIgnoreRegexes;
@@ -72,9 +72,9 @@ internal class ConfigHelpers
             {
                 ruleSet.AddPath(path);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                // TODO: Log issue with provided path
+                // Invalid rule path — skip
             }
         }
         ruleSet = ruleSet.WithoutIds(StaticScannerSettings.IgnoreRuleIds);

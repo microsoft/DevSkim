@@ -20,7 +20,9 @@ namespace DevSkim.LanguageServer
     {
         private readonly ILogger<TextDocumentSyncHandler> _logger;
         private readonly ILanguageServerFacade _facade;
-        private readonly TextDocumentSelector _documentSelector = TextDocumentSelector.ForLanguage(StaticScannerSettings.RuleProcessorOptions.Languages.GetNames());
+        // Use a broad document selector to handle all common code file types
+        // The actual language detection happens in GetTextDocumentAttributes
+        private readonly TextDocumentSelector _documentSelector = TextDocumentSelector.ForPattern("**/*");
         private DevSkimRuleProcessor _processor => StaticScannerSettings.Processor;
 
         public TextDocumentSyncHandler(ILogger<TextDocumentSyncHandler> logger, ILanguageServerFacade facade)
@@ -47,6 +49,8 @@ namespace DevSkim.LanguageServer
             }
             // Diagnostics are sent a document at a time
             _logger.LogDebug($"\tProcessing document: {filename}");
+            _logger.LogDebug($"\tRuleSet has {StaticScannerSettings.RuleSet.Count()} rules");
+            _logger.LogDebug($"\tScanOnOpen: {StaticScannerSettings.ScanOnOpen}, ScanOnChange: {StaticScannerSettings.ScanOnChange}");
             List<Issue> issues = await Task.Run(() => _processor.Analyze(text, filename).ToList());
             ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray<Diagnostic>.Empty.ToBuilder();
             ImmutableArray<CodeFixMapping>.Builder codeFixes = ImmutableArray<CodeFixMapping>.Empty.ToBuilder();
@@ -103,6 +107,12 @@ namespace DevSkim.LanguageServer
                 }
             }
 
+            // Clear previous code fixes for this document and register new ones
+            CodeActionHandler.ClearCodeFixes(uri);
+            
+            // Store line lengths so CodeActionHandler can compute exact end-of-line positions for suppressions
+            CodeActionHandler.SetLineLengths(uri, text);
+            
             _logger.LogDebug("\tPublishing diagnostics...");
             _facade.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams()
             {
@@ -110,10 +120,13 @@ namespace DevSkim.LanguageServer
                 Uri = uri,
                 Version = version
             });
-            _facade.TextDocument.SendNotification(DevSkimMessages.FileVersion, new MappingsVersion() { version = version, fileName = uri.ToUri() });
+            
+            // Register code fixes with CodeActionHandler for standard LSP textDocument/codeAction
+            // This works for both VS and VS Code — no custom notifications needed
+            _logger.LogDebug($"\tRegistering {codeFixes.Count} code fixes...");
             foreach (var mapping in codeFixes)
             {
-                _facade.TextDocument.SendNotification(DevSkimMessages.CodeFixMapping, mapping);
+                CodeActionHandler.RegisterCodeFix(uri, mapping.diagnostic, mapping);
             }
 
             return Unit.Value;
