@@ -54,7 +54,11 @@ internal class Program
                                 if (request.InitializationOptions is Newtonsoft.Json.Linq.JToken initOptions)
                                 {
                                     clientSettings = initOptions.ToObject<Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings>();
-                                    Log.Logger.Debug("Received settings from initializationOptions");
+                                    Log.Logger.Debug("Received settings from initializationOptions: IgnoreDefaultRules={IgnoreDefaultRules}", clientSettings?.IgnoreDefaultRules);
+                                }
+                                else
+                                {
+                                    Log.Logger.Warning("No initializationOptions received (type: {Type}), using defaults", request.InitializationOptions?.GetType().Name ?? "null");
                                 }
                             }
                             catch (Exception ex)
@@ -63,8 +67,9 @@ internal class Program
                             }
 
                             // Apply client settings if provided, otherwise use defaults
-                            StaticScannerSettings.UpdateWith(clientSettings ?? new Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings());
-                            Log.Logger.Debug("Settings applied");
+                            var effectiveSettings = clientSettings ?? new Microsoft.DevSkim.LanguageProtoInterop.PortableScannerSettings();
+                            StaticScannerSettings.UpdateWith(effectiveSettings);
+                            Log.Logger.Debug("Settings applied: IgnoreDefaultRules={IgnoreDefaultRules}, RuleCount={RuleCount}", effectiveSettings.IgnoreDefaultRules, StaticScannerSettings.RuleSet.Count());
                             
                             OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone.IWorkDoneObserver manager = server.WorkDoneManager.For(
                                 request, new WorkDoneProgressBegin

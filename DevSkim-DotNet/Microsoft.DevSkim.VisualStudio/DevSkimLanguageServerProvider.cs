@@ -32,8 +32,9 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
 
     private Process? _serverProcess;
     private SafeHandle? _jobHandle;
-    private readonly System.Collections.Concurrent.ConcurrentBag<IDisposable> _settingsSubscriptions = [];
+    private readonly List<IDisposable> _settingsSubscriptions = [];
     private bool _initialPushDone;
+    private bool _settingsSubscribed;
     private CancellationTokenSource? _restartDebounce;
 
     /// <inheritdoc/>
@@ -65,12 +66,12 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
 
         // Read current settings and pass them as LSP initializationOptions
         // so the server applies them during the initialize handshake.
+        // IMPORTANT: Modify the existing LanguageServerOptions instance instead of replacing it.
+        // The framework caches the reference returned from InitializeAsync, so a new object
+        // would be invisible to the framework.
         var currentSettings = await ReadAllSettingsAsync(cancellationToken);
-        LanguageServerOptions = new LanguageServerOptions
-        {
-            InitializationOptions = JToken.FromObject(currentSettings),
-        };
-        Log.Debug("InitializationOptions set with current settings");
+        LanguageServerOptions.InitializationOptions = JToken.FromObject(currentSettings);
+        Log.Debug("InitializationOptions set: IgnoreDefaultRules={IgnoreDefaultRules}", currentSettings.IgnoreDefaultRules);
 
         // Create a Windows Job Object so the server process is killed when the host process exits
         EnsureJobObject();
@@ -126,14 +127,11 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
         else
         {
             Log.Information("Language server initialized successfully");
-            SubscribeToSettingsChanges();
-            // Delay enabling change detection so SubscribeAsync initial callbacks are ignored
-            _ = Task.Run(async () =>
+            if (!_settingsSubscribed)
             {
-                await Task.Delay(5000);
-                _initialPushDone = true;
-                Log.Debug("Settings change detection enabled");
-            });
+                _settingsSubscribed = true;
+                _ = SubscribeToSettingsChangesAsync();
+            }
         }
 
         await base.OnServerInitializationResultAsync(serverInitializationResult, initializationFailureInfo, cancellationToken);
@@ -148,7 +146,7 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
             {
                 sub.Dispose();
             }
-            while (_settingsSubscriptions.TryTake(out _)) { }
+            _settingsSubscriptions.Clear();
             _restartDebounce?.Cancel();
             _restartDebounce?.Dispose();
             StopServerProcess();
@@ -205,67 +203,64 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     /// <summary>
     /// Subscribes to all settings changes. On change, restarts the server so it picks up
     /// new settings via initializationOptions during the LSP handshake.
+    /// Called only once; subscriptions survive server restarts.
     /// </summary>
-    private void SubscribeToSettingsChanges()
+    private async Task SubscribeToSettingsChangesAsync()
     {
-        SubscribeSetting(DevSkimSettingDefinitions.EnableCriticalSeverityRules);
-        SubscribeSetting(DevSkimSettingDefinitions.EnableImportantSeverityRules);
-        SubscribeSetting(DevSkimSettingDefinitions.EnableModerateSeverityRules);
-        SubscribeSetting(DevSkimSettingDefinitions.EnableManualReviewSeverityRules);
-        SubscribeSetting(DevSkimSettingDefinitions.EnableBestPracticeSeverityRules);
-        SubscribeSetting(DevSkimSettingDefinitions.EnableHighConfidenceRules);
-        SubscribeSetting(DevSkimSettingDefinitions.EnableMediumConfidenceRules);
-        SubscribeSetting(DevSkimSettingDefinitions.EnableLowConfidenceRules);
-        SubscribeSetting(DevSkimSettingDefinitions.IgnoreDefaultRules);
-        SubscribeSetting(DevSkimSettingDefinitions.ScanOnOpen);
-        SubscribeSetting(DevSkimSettingDefinitions.ScanOnSave);
-        SubscribeSetting(DevSkimSettingDefinitions.ScanOnChange);
-        SubscribeSetting(DevSkimSettingDefinitions.RemoveFindingsOnClose);
-        SubscribeStringSetting(DevSkimSettingDefinitions.CustomRulesPaths);
-        SubscribeStringSetting(DevSkimSettingDefinitions.CustomLanguagesPath);
-        SubscribeStringSetting(DevSkimSettingDefinitions.CustomCommentsPath);
-        SubscribeStringSetting(DevSkimSettingDefinitions.GuidanceBaseURL);
-        SubscribeStringSetting(DevSkimSettingDefinitions.SuppressionCommentStyle);
-        SubscribeStringSetting(DevSkimSettingDefinitions.ManualReviewerName);
-        SubscribeStringSetting(DevSkimSettingDefinitions.IgnoreRulesList);
-        SubscribeStringSetting(DevSkimSettingDefinitions.IgnoreFiles);
-        SubscribeIntSetting(DevSkimSettingDefinitions.SuppressionDurationInDays);
+        var subscriptions = await Task.WhenAll(
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableCriticalSeverityRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableImportantSeverityRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableModerateSeverityRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableManualReviewSeverityRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableBestPracticeSeverityRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableHighConfidenceRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableMediumConfidenceRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.EnableLowConfidenceRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.IgnoreDefaultRules),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.ScanOnOpen),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.ScanOnSave),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.ScanOnChange),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.RemoveFindingsOnClose),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.CustomRulesPaths),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.CustomLanguagesPath),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.CustomCommentsPath),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.GuidanceBaseURL),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.SuppressionCommentStyle),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.ManualReviewerName),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.IgnoreRulesList),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.IgnoreFiles),
+            CreateSubscriptionAsync(DevSkimSettingDefinitions.SuppressionDurationInDays));
+
+        _settingsSubscriptions.AddRange(subscriptions);
+
+        // All initial callbacks from SubscribeAsync have now been processed (and skipped
+        // because _initialPushDone was still false). Enable change handling going forward.
+        _initialPushDone = true;
+        Log.Debug("Settings subscriptions active, changes will now trigger server restart");
     }
 
-    private void SubscribeSetting(Setting.Boolean setting)
+    private async Task<IDisposable> CreateSubscriptionAsync(Setting.Boolean setting)
     {
-        _ = Task.Run(async () =>
-        {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
-        });
+        return await Extensibility.Settings().SubscribeAsync(
+            setting,
+            CancellationToken.None,
+            changeHandler: _ => OnSettingChanged());
     }
 
-    private void SubscribeStringSetting(Setting.String setting)
+    private async Task<IDisposable> CreateSubscriptionAsync(Setting.String setting)
     {
-        _ = Task.Run(async () =>
-        {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
-        });
+        return await Extensibility.Settings().SubscribeAsync(
+            setting,
+            CancellationToken.None,
+            changeHandler: _ => OnSettingChanged());
     }
 
-    private void SubscribeIntSetting(Setting.Integer setting)
+    private async Task<IDisposable> CreateSubscriptionAsync(Setting.Integer setting)
     {
-        _ = Task.Run(async () =>
-        {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
-        });
+        return await Extensibility.Settings().SubscribeAsync(
+            setting,
+            CancellationToken.None,
+            changeHandler: _ => OnSettingChanged());
     }
 
     private void OnSettingChanged()
@@ -275,11 +270,13 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
             return;
         }
 
-        // Debounce: cancel any pending restart and start a new 2-second timer.
+        // Debounce: cancel any pending restart and start a new timer.
         // This way rapid changes (e.g. toggling multiple settings) cause only one restart.
-        _restartDebounce?.Cancel();
-        _restartDebounce = new CancellationTokenSource();
-        var token = _restartDebounce.Token;
+        var cts = new CancellationTokenSource();
+        var oldCts = Interlocked.Exchange(ref _restartDebounce, cts);
+        oldCts?.Cancel();
+        oldCts?.Dispose();
+        var token = cts.Token;
 
         _ = Task.Run(async () =>
         {
