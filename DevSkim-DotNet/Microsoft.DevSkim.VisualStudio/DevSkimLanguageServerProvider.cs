@@ -36,6 +36,7 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     private bool _initialPushDone;
     private bool _settingsSubscribed;
     private CancellationTokenSource? _restartDebounce;
+    private readonly CancellationTokenSource _disposeCts = new();
 
     /// <inheritdoc/>
     public override LanguageServerProviderConfiguration LanguageServerProviderConfiguration => new(
@@ -142,6 +143,10 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
     {
         if (isDisposing)
         {
+            // Cancel pending subscription operations first
+            _disposeCts.Cancel();
+            _disposeCts.Dispose();
+            
             foreach (var sub in _settingsSubscriptions)
             {
                 sub.Dispose();
@@ -239,28 +244,40 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
         Log.Debug("Settings subscriptions active, changes will now trigger server restart");
     }
 
-    private async Task<IDisposable> CreateSubscriptionAsync(Setting.Boolean setting)
+    private void SubscribeSetting(Setting.Boolean setting)
     {
-        return await Extensibility.Settings().SubscribeAsync(
-            setting,
-            CancellationToken.None,
-            changeHandler: _ => OnSettingChanged());
+        _ = Task.Run(async () =>
+        {
+            var sub = await Extensibility.Settings().SubscribeAsync(
+                setting,
+                CancellationToken.None,
+                changeHandler: _ => OnSettingChanged());
+            _settingsSubscriptions.Add(sub);
+        });
     }
 
-    private async Task<IDisposable> CreateSubscriptionAsync(Setting.String setting)
+    private void SubscribeStringSetting(Setting.String setting)
     {
-        return await Extensibility.Settings().SubscribeAsync(
-            setting,
-            CancellationToken.None,
-            changeHandler: _ => OnSettingChanged());
+        _ = Task.Run(async () =>
+        {
+            var sub = await Extensibility.Settings().SubscribeAsync(
+                setting,
+                CancellationToken.None,
+                changeHandler: _ => OnSettingChanged());
+            _settingsSubscriptions.Add(sub);
+        });
     }
 
-    private async Task<IDisposable> CreateSubscriptionAsync(Setting.Integer setting)
+    private void SubscribeIntSetting(Setting.Integer setting)
     {
-        return await Extensibility.Settings().SubscribeAsync(
-            setting,
-            CancellationToken.None,
-            changeHandler: _ => OnSettingChanged());
+        _ = Task.Run(async () =>
+        {
+            var sub = await Extensibility.Settings().SubscribeAsync(
+                setting,
+                CancellationToken.None,
+                changeHandler: _ => OnSettingChanged());
+            _settingsSubscriptions.Add(sub);
+        });
     }
 
     private void OnSettingChanged()

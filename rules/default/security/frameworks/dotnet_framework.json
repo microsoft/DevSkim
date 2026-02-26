@@ -40,7 +40,7 @@
         "severity": "important",
         "rule_info": "DS450001.md",
         "applies_to_file_regex": [
-            ".*\\.config"
+            ".*\\.config$"
         ],
         "tags": [
             "Framework.NET"
@@ -88,7 +88,7 @@
         "description": "Having traces enabled could leak sensitive application information in production.",
         "recommendation": "Disable tracing before deploying to production.",
         "applies_to_file_regex": [
-            ".*\\.config"
+            ".*\\.config$"
         ],
         "tags": [
             "Framework.NET"
@@ -133,7 +133,7 @@
         "description": "Having debug mode enabled is inefficient and could leak sensitive application information in production.",
         "recommendation": "Disable debug mode.",
         "applies_to_file_regex": [
-            ".*\\.config"
+            ".*\\.config$"
         ],
         "tags": [
             "Framework.NET"
