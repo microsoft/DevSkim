@@ -40,6 +40,9 @@ internal class Program
                     // Handle settings push from clients (devskim/setSettings custom method)
                     // This works for both VS Code and VS - avoids workspace/configuration issues
                     .WithHandler<VisualStudioConfigurationHandler>()
+                    // Handle workspace/didChangeConfiguration from VS Code
+                    // VS Code sends this notification; the handler pulls settings via workspace/configuration
+                    .WithHandler<DidChangeConfigurationHandler>()
                     .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Debug)))
                     .OnInitialize(
                         async (server, request, token) =>

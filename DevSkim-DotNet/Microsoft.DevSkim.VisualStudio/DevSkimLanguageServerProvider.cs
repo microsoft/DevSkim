@@ -244,40 +244,28 @@ internal class DevSkimLanguageServerProvider : LanguageServerProvider
         Log.Debug("Settings subscriptions active, changes will now trigger server restart");
     }
 
-    private void SubscribeSetting(Setting.Boolean setting)
+    private async Task<IDisposable> CreateSubscriptionAsync(Setting.Boolean setting)
     {
-        _ = Task.Run(async () =>
-        {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
-        });
+        return await Extensibility.Settings().SubscribeAsync(
+            setting,
+            _disposeCts.Token,
+            changeHandler: _ => OnSettingChanged());
     }
 
-    private void SubscribeStringSetting(Setting.String setting)
+    private async Task<IDisposable> CreateSubscriptionAsync(Setting.String setting)
     {
-        _ = Task.Run(async () =>
-        {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
-        });
+        return await Extensibility.Settings().SubscribeAsync(
+            setting,
+            _disposeCts.Token,
+            changeHandler: _ => OnSettingChanged());
     }
 
-    private void SubscribeIntSetting(Setting.Integer setting)
+    private async Task<IDisposable> CreateSubscriptionAsync(Setting.Integer setting)
     {
-        _ = Task.Run(async () =>
-        {
-            var sub = await Extensibility.Settings().SubscribeAsync(
-                setting,
-                CancellationToken.None,
-                changeHandler: _ => OnSettingChanged());
-            _settingsSubscriptions.Add(sub);
-        });
+        return await Extensibility.Settings().SubscribeAsync(
+            setting,
+            _disposeCts.Token,
+            changeHandler: _ => OnSettingChanged());
     }
 
     private void OnSettingChanged()
