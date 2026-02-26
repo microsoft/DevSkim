@@ -4,13 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.76] - 2026-02-06
+## [1.0.77] - 2026-02-26
 ### Changed
 - Rewrote Visual Studio extension using VisualStudio.Extensibility SDK for VS2022/2026 compatibility
 - Replaced legacy MEF-based ILanguageClient with LanguageServerProvider from new VS Extensibility SDK
 - Implemented Windows Job Object for reliable language server process cleanup when VS exits
 - Added settings management using VS Extensibility SDK settings API with localized string resources
 - Enhanced code actions and fixes handling for better VS compatibility
+
+## [1.0.76] - 2026-02-12
+### Fix
+- Fixed DS126858 rule (Weak/Broken Hash Algorithm) false positive when MD5 is explicitly disabled via flags like `--nomd5`, `nomd5`, `no-md5`, `no_md5`, or `disable_md5_check`
 
 ## [1.0.75] - 2026-02-06
 ### Changed
