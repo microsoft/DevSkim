@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Dependencies
 - Updated VS Code plugin npm dependencies to resolve security vulnerabilities (consolidates dependabot PRs #725, #727, #728, #729, #730, #731):
   - Bumped `picomatch` from 2.3.1 to 2.3.2
-  - Bumped `undici` to 7.24.1
-  - Bumped `qs` to 6.14.2
+  - Bumped `undici` to 7.24.6
+  - Bumped `qs` to 6.15.0
   - Bumped `minimatch` to latest patched versions (3.1.5 / 10.2.4)
   - Bumped `@vscode/test-electron` from 1.6.1 to 2.5.2 (removes vulnerable `@tootallnate/once`)
   - Additional transitive dependency updates via `npm audit fix`
