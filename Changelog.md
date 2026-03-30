@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Bumped `@vscode/test-electron` from 1.6.1 to 2.5.2 (removes vulnerable `@tootallnate/once`)
   - Additional transitive dependency updates via `npm audit fix`
 
+## [1.0.77] - 2026-03-26
+### Pipeline
+Try to fix VS Code Publishing Pipeline issue with VSCE tool install
+
 ## [1.0.76] - 2026-02-12
 ### Fix
 - Fixed DS126858 rule (Weak/Broken Hash Algorithm) false positive when MD5 is explicitly disabled via flags like `--nomd5`, `nomd5`, `no-md5`, `no_md5`, or `disable_md5_check`
