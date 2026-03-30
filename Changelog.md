@@ -4,13 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.77] - 2026-03-26
+## [1.0.78] - 2026-03-30
 ### Dependencies
-- Updated VS Code plugin npm dependencies to resolve security vulnerabilities (consolidates dependabot PRs #725, #727, #728, #729, #730, #731):
+- Updated VS Code plugin npm dependencies to resolve security vulnerabilities (consolidates dependabot PRs #725, #727, #728, #729, #730, #731, #735):
   - Bumped `picomatch` from 2.3.1 to 2.3.2
   - Bumped `undici` to 7.24.6
   - Bumped `qs` to 6.15.0
   - Bumped `minimatch` to latest patched versions (3.1.5 / 10.2.4)
+  - Bumped `flatted` from 3.3.2 to 3.4.2
   - Bumped `@vscode/test-electron` from 1.6.1 to 2.5.2 (removes vulnerable `@tootallnate/once`)
   - Additional transitive dependency updates via `npm audit fix`
 
