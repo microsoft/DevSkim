@@ -150,6 +150,11 @@ extends:
             script: 'mv $env:BUILD_BINARIESDIRECTORY/Unsigned_Plugin/*.vsix $env:BUILD_STAGINGDIRECTORY/'
 
         - task: CmdLine@2
+          displayName: 'Copy .npmrc to staging dir'
+          inputs:
+            script: copy "$(Build.SourcesDirectory)\DevSkim-VSCode-Plugin\.npmrc.pipeline" "$(Build.StagingDirectory)\.npmrc"
+
+        - task: CmdLine@2
           displayName: 'List files in StagingDirectory'
           inputs:
             script: dir /B
@@ -158,7 +163,9 @@ extends:
         # Install dependencies and VS Code Extension Manager (vsce >= v2.26.1 needed)
         - script: |
               cd $(Build.StagingDirectory)
-              npm install -g @vscode/vsce --registry https://pkgs.dev.azure.com/artifacts-public/23934c1b-a3b5-4b70-9dd3-d1bef4cc72a0/_packaging/AzureArtifacts/npm/registry/
+              npm install -g @microsoft/artifacts-npm-credprovider --registry https://pkgs.dev.azure.com/artifacts-public/PublicTools/_packaging/AzureArtifacts/npm/registry/
+              artifacts-npm-credprovider
+              npm install -g @vscode/vsce --registry https://pkgs.dev.azure.com/microsoft-sdl/General/_packaging/PublicRegistriesFeed/npm/registry/ 
               npm install
           displayName: "Install vsce and dependencies"
 
