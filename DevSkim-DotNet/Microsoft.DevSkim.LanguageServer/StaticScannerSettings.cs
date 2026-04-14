@@ -25,15 +25,29 @@ namespace DevSkim.LanguageServer
         internal static bool ScanOnChange { get; set; } = true;
         internal static bool RemoveFindingsOnClose { get; set; } = true;
         internal static DevSkimRuleSet RuleSet { get; set; } = new DevSkimRuleSet();
-        internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = new DevSkimRuleProcessorOptions();
-        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(), new DevSkimRuleProcessorOptions());
+        internal static DevSkimRuleProcessorOptions RuleProcessorOptions { get; set; } = CreateDefaultOptions();
+        internal static DevSkimRuleProcessor Processor { get; set; } = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(), CreateDefaultOptions());
+
+        private static DevSkimRuleProcessorOptions CreateDefaultOptions()
+        {
+            return new DevSkimRuleProcessorOptions
+            {
+                // Include all severities by default
+                SeverityFilter = Severity.Critical | Severity.Important | Severity.Moderate | Severity.BestPractice | Severity.ManualReview,
+                // Include all confidence levels by default
+                ConfidenceFilter = Confidence.High | Confidence.Medium | Confidence.Low,
+                EnableSuppressions = true
+            };
+        }
 
         public static void UpdateWith(PortableScannerSettings request)
         {
             SuppressionStyle = ToSuppressionStyle(request.SuppressionCommentStyle);
-            CustomRulePaths = request.CustomRulesPathsString.Split(',');
-            IgnoreRuleIds = request.IgnoreRulesListString.Split(',');
-            IgnoreFiles = request.IgnoreFilesString.Split(',').Select(x => new Glob(x)).ToArray();
+            CustomRulePaths = request.CustomRulesPathsString.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            IgnoreRuleIds = request.IgnoreRulesListString.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            IgnoreFiles = request.IgnoreFilesString
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(x => new Glob(x)).ToArray();
             ReviewerName = request.ManualReviewerName;
             SuppressionDuration = request.SuppressionDurationInDays;
             IgnoreDefaultRuleSet = request.IgnoreDefaultRules;

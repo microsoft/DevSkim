@@ -1,6 +1,9 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Workspace;
@@ -13,10 +16,9 @@ internal class DidChangeConfigurationHandler : DidChangeConfigurationHandlerBase
     private readonly ILanguageServerConfiguration _configuration;
 
     /// <summary>
-    /// Handle configuration changes from vscode
+    /// Handle configuration changes from VS Code via workspace/didChangeConfiguration.
+    /// When notified, pulls settings from the client and applies them.
     /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="configuration"></param>
     public DidChangeConfigurationHandler(ILogger<DidChangeConfigurationHandler> logger, ILanguageServerConfiguration configuration)
     {
         _logger = logger;

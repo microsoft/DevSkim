@@ -1,0 +1,94 @@
+# Azure Pipelines
+# https://aka.ms/yaml
+
+name: DevSkim_VisualStudio_PR_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger: none
+pr:
+  branches:
+    include:
+    - main
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: General/OSS-Tools-Pipeline-Templates
+      ref: refs/tags/v2.0.4
+    - repository: 1esPipelines
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/release
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  parameters:
+    pool:
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Windows-2022
+      os: windows
+    stages:
+    - stage: Test
+      jobs:
+      - template: dotnet-test-job.yml@templates
+        parameters:
+          jobName: 'dotnet_test_windows'
+          dotnetVersions: ['8.0.x','9.0.x']
+          projectPath: 'DevSkim-DotNet/Microsoft.DevSkim.Tests/Microsoft.DevSkim.Tests.csproj'
+          poolName: MSSecurity-1ES-Build-Agents-Pool
+          poolImage: MSSecurity-1ES-Windows-2022
+          poolOs: windows
+          dotnetTestArgs: '-- --coverage --report-trx'
+          includeNuGetOrg: false
+          nugetFeedsToUse: 'config'
+          nugetConfigPath: 'nuget.config'
+          onInit:
+            - task: NuGetAuthenticate@1
+    - stage: Build
+      dependsOn:
+      - Test
+      jobs:
+      - job: build_vs_extension
+        displayName: Build VS Extension
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            targetPath: $(Build.StagingDirectory)/extension
+            artifactName: 'Unsigned_Extension'
+        steps:
+        - task: NuGetAuthenticate@1
+        - task: UseDotNet@2
+          displayName: Install Dotnet 8 SDK
+          inputs:
+            packageType: 'sdk'
+            version: '8.0.x'
+        - task: UseDotNet@2
+          displayName: Install Dotnet 9 SDK
+          inputs:
+            packageType: 'sdk'
+            version: '9.0.x'
+        - template: nbgv-set-version-steps.yml@templates
+        - task: PowerShell@2
+          displayName: Mkdir for Extension
+          inputs:
+            targetType: 'inline'
+            script: mkdir extension
+            workingDirectory: '$(Build.StagingDirectory)'
+        - task: DotNetCoreCLI@2
+          displayName: Build VS Extension
+          inputs:
+            command: 'build'
+            projects: 'DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/Microsoft.DevSkim.VisualStudio.csproj'
+            arguments: '-c Release'
+        - task: PowerShell@2
+          displayName: Move Extension File
+          inputs:
+            targetType: 'inline'
+            script: |
+              $vsix = Get-ChildItem -Path 'DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/bin/Release/*.vsix' -Recurse | Select-Object -First 1
+              if ($vsix) {
+                Copy-Item $vsix.FullName "$env:BUILD_STAGINGDIRECTORY/extension/"
+                Write-Host "Copied $($vsix.Name) to staging directory"
+              } else {
+                Write-Error "No .vsix file found in build output"
+                exit 1
+              }

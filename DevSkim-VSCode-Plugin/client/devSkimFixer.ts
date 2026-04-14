@@ -16,8 +16,8 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 	
 	removeFindingsForOtherVersions(fileVersion: FileVersion)
 	{
-		var keyNames = this.fixMapping.get(fileVersion.fileName)?.keys() ?? new Array<number>();
-		for(let key of keyNames)
+		const keyNames = this.fixMapping.get(fileVersion.fileName)?.keys() ?? new Array<number>();
+		for(const key of keyNames)
 		{
 			if (key != fileVersion.version)
 			{
@@ -68,7 +68,7 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
 		else
 		{
 			const line = document.lineAt(diagnostic.range.end.line);
-			fix.edit.insert(document.uri, line.range.end, codeFix.replacement)
+			fix.edit.insert(document.uri, line.range.end, codeFix.replacement);
 		}
 		return fix;
 	}

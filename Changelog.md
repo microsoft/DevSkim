@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.79] - 2026-04-14
+### Changed
+- Rewrote Visual Studio extension using VisualStudio.Extensibility SDK for VS2022/2026 compatibility
+- Replaced legacy MEF-based ILanguageClient with LanguageServerProvider from new VS Extensibility SDK
+- Implemented Windows Job Object for reliable language server process cleanup when VS exits
+- Added settings management using VS Extensibility SDK settings API with localized string resources
+- Enhanced code actions and fixes handling for better VS compatibility
+
+### Pipeline
+- Reintroduced build and release pipelines for the Visual Studio extension
+- Added `Pipelines/vs/devskim-visualstudio-pr.yml` for PR validation builds
+- Added `Pipelines/vs/devskim-visualstudio-release.yml` for release signing, VS Marketplace publishing, and GitHub releases
+
 ## [1.0.78] - 2026-03-30
 ### Dependencies
 - Updated VS Code plugin npm dependencies to resolve security vulnerabilities (consolidates dependabot PRs #725, #727, #728, #729, #730, #731, #735):
@@ -418,3 +431,4 @@ New: `devskim analyze -I path/to/src -O path/to/out.sarif`
 
 ### Fixes
 - Rule improvements and DevSkim engine performance and reliablity improvements.
+
