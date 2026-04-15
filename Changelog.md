@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.80] - 2026-04-15
+### Dependencies
+- Run Npm Audit Fix to update VS Code Dependencies.
+
+
 ## [1.0.79] - 2026-04-14
 ### Changed
 - Rewrote Visual Studio extension using VisualStudio.Extensibility SDK for VS2022/2026 compatibility
