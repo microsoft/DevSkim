@@ -78,6 +78,9 @@
         "severity": "important",
         "_comment": "Applies to all languages since many just wrap OpenSSL constructs.",
         "rule_info": "DS440000.md",
+        "must-not-match": [
+            "<Cipher Name=\"SCPDES_ANNO_SHAPE_1\" />"
+        ],
         "patterns": [
             {
                 "pattern": "SSLv2?3_method|D?TLSv1_([123]_)?(client_|server_)?method",
@@ -127,7 +130,7 @@
                 "_comment": "OpenSSL extension / options"
             },
             {
-                "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK|SSL|RSA|TLS)_?([A-Z0-9]+_)+((SHA[0-9]*)|(MD5)|(GOST)[[A-Z0-9\\-]*)",
+                "pattern": "(?<![A-Z0-9_])(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK|SSL|RSA|TLS)_?([A-Z0-9]+_)+((SHA[0-9]*)|(MD5)|(GOST)[[A-Z0-9\\-]*)(?![A-Z0-9_])",
                 "type": "regex",
                 "scopes": [
                     "code"
