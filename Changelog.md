@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.82] - 2026-05-06
 ### Fix
-- Narrowed DES weak-cipher detection rule DS106863 to require standalone `DES` token matching, avoiding false positives when `DES` only appears as a substring in larger XML identifiers.
+- Narrowed OpenSSL hardcoded TLS detection rule DS440010 to require standalone token matching, avoiding false positives when `DES` only appears as a substring in larger XML identifiers.
 - Added a negative built-in self-test case for XML identifier `SCPDES_ANNO_SHAPE_1` to prevent regressions.
 
 ## [1.0.81] - 2026-04-16
