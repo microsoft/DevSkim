@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.82] - 2026-05-06
+### Fix
+- Narrowed OpenSSL hardcoded TLS detection rule DS440010 to require standalone token matching, avoiding false positives when `DES` only appears as a substring in larger XML identifiers.
+- Added a negative built-in self-test case for XML identifier `SCPDES_ANNO_SHAPE_1` to prevent regressions.
+
 ## [1.0.81] - 2026-04-16
 ### Pipeline
 - Updates to fix release pipeline for VSCode extension.
@@ -440,4 +445,3 @@ New: `devskim analyze -I path/to/src -O path/to/out.sarif`
 
 ### Fixes
 - Rule improvements and DevSkim engine performance and reliablity improvements.
-
