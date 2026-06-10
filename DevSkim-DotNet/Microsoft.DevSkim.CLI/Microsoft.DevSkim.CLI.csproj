@@ -5,7 +5,11 @@
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <AssemblyName>devskim</AssemblyName>
     <StartupObject>Microsoft.DevSkim.CLI.Program</StartupObject>
-    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
+    <!-- Required by the standalone CLI publish jobs (dotnet-publish-linux-mac-job.yml /
+         dotnet-publish-win-netcore-job.yml) that produce the per-platform GitHub Release zips.
+         Suppressed during `dotnet pack` so the tool package is built as a portable
+         (framework-dependent) package and _ToolPackageShouldIncludeImplementation stays true. -->
+    <RuntimeIdentifiers Condition="'$(_IsPacking)' != 'true'">win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <Product>Microsoft DevSkim Command Line Interface</Product>
     <Version>0.0.0</Version>
     <Authors>Microsoft</Authors>
@@ -13,6 +17,11 @@
     <copyright>© Microsoft Corporation. All rights reserved.</copyright> 
     <Description>DevSkim is a framework and language analyzer that provides inline security analysis. This is a Dotnet Tool package. For the library package, see Microsoft.CST.DevSkim.</Description>
     <PackAsTool>true</PackAsTool>
+    <!-- .NET 10 SDK otherwise emits RID-specific tool packages plus an empty outer
+         marker package whose empty .snupkg trips NU5017 during pack. Keeping the
+         dotnet tool portable (framework-dependent) also preserves arm64 and
+         pre-.NET 10 SDK `dotnet tool install` support. -->
+    <CreateRidSpecificToolPackages>false</CreateRidSpecificToolPackages>
     <ToolCommandName>devskim</ToolCommandName>
     <PackageId>Microsoft.CST.DevSkim.CLI</PackageId>
     <PackageTags>Security Linter</PackageTags>
