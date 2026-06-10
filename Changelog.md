@@ -4,15 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.83] - 2026-06-09
+## [1.0.86] - 2026-06-10
 ### Added
 - Added .NET 10 as a publishing target for the DevSkim library, CLI, and Language Server.
 
 ### Changed
 - Swapped the VS Code extension language server to publish against .NET 10.
+- Kept the DevSkim CLI dotnet tool portable (framework-dependent) by setting `CreateRidSpecificToolPackages=false`, avoiding the .NET 10 SDK's new RID-specific tool packaging that broke `dotnet pack` with NU5017 and would have dropped arm64 and pre-.NET 10 SDK install support.
 
 ### Pipeline
 - Added .NET 10 (`10.0.x`) SDK to the CLI, VS Code, and Visual Studio build pipelines.
+
+## [1.0.85] - 2026-06-10
+### Dependencies
+- Bump qs from 6.15.0 to 6.15.2 in /DevSkim-VSCode-Plugin (#753)
+
+## [1.0.84] - 2026-06-10
+### Dependencies
+- Bump @azure/identity from 4.13.0 to 4.13.1 and remove the now-unused uuid transitive dependency in /DevSkim-VSCode-Plugin (#752)
+
+## [1.0.83] - 2026-06-10
+### Dependencies
+- Bump tmp from 0.2.5 to 0.2.7 in /DevSkim-VSCode-Plugin (#754)
 
 ## [1.0.82] - 2026-05-12
 ### Dependencies
