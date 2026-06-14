@@ -325,7 +325,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.0.0",
 		"@typescript-eslint/parser": "^8.0.0",
 		"@vscode/vsce": "^3.9.1",
-		"esbuild": "^0.25.2",
+		"esbuild": "^0.28.1",
 		"eslint": "^9.0.0",
 		"nerdbank-gitversioning": "^3.4.255",
 		"typescript": "^4.5.5",
