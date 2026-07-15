@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.87] - 2026-07-15
+### Pipeline
+- Updated the CLI release pipeline to use the .NET 10 SDK when restoring, building, packaging, and releasing .NET 10 targets.
+
 ## [1.0.86] - 2026-06-10
 ### Added
 - Added .NET 10 as a publishing target for the DevSkim library, CLI, and Language Server.
@@ -467,4 +471,3 @@ New: `devskim analyze -I path/to/src -O path/to/out.sarif`
 
 ### Fixes
 - Rule improvements and DevSkim engine performance and reliablity improvements.
-
