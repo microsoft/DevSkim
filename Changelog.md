@@ -471,3 +471,4 @@ New: `devskim analyze -I path/to/src -O path/to/out.sarif`
 
 ### Fixes
 - Rule improvements and DevSkim engine performance and reliablity improvements.
+
