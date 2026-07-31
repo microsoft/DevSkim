@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.95] - 2026-07-31
+### Pipeline
+- Added `.github/dependabot.yml` so Dependabot consolidates npm, NuGet, and GitHub Actions version updates into a single weekly pull request via a multi-ecosystem group, groups security updates per ecosystem into one pull request each, and labels its pull requests `no changelog` so the changelog gate passes.
+
+### Documentation
+- Corrected the changelog guidance in `.github/copilot-instructions.md` to derive the version heading from Nerdbank.GitVersioning (`nbgv get-version`) instead of incrementing the previous entry, which had let the changelog headings drift behind the versions actually built, and documented the `no changelog` label as the gate's escape hatch.
+
 ## [1.0.87] - 2026-07-15
 ### Pipeline
 - Updated the CLI release pipeline to use the .NET 10 SDK when restoring, building, packaging, and releasing .NET 10 targets.

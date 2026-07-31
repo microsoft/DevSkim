@@ -32,16 +32,23 @@ DevSkim is a framework of IDE extensions and language analyzers that provide inl
 - This project uses **squash merges**
 - PR gate checks verify `Changelog.md` is updated
 - Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
-- Use semantic versioning: `[MAJOR.MINOR.PATCH]`
+- Version headings are `[MAJOR.MINOR.PATCH]` and must match the version the build actually produces
+
+**Versioning**: this repo versions with [Nerdbank.GitVersioning](https://github.com/dotnet/Nerdbank.GitVersioning). `version.json` pins `MAJOR.MINOR` (currently `1.0`) and the patch number is the **git height**, which is the commit count since `version.json` last changed. Do **not** guess it by incrementing the previous changelog entry: an open PR's height shifts every time another PR merges ahead of it, and blindly incrementing bakes that drift in permanently.
 
 **When making changes**:
 1. Add a new entry at the top of `Changelog.md` (after the header)
-2. Use the **next patch version** (increment last number by 1)
+2. Determine the version by asking Nerdbank.GitVersioning what this commit produces, rather than incrementing the previous entry:
+   ```bash
+   dotnet tool install --global nbgv   # once
+   nbgv get-version -v SimpleVersion   # e.g. 1.0.95
+   ```
+   Run this **after** committing your change and with your branch rebased on the latest `main`, since the height includes your own commit. If your PR sits open while other PRs merge, re-run it and update the heading before merging.
 3. Use today's date in YYYY-MM-DD format
 4. Group changes by type: `### Fix`, `### Added`, `### Changed`, `### Dependencies`, `### Pipeline`, etc.
 5. Write clear, actionable descriptions
 
-**Example**:
+**Example** (assuming `nbgv get-version -v SimpleVersion` reported `1.0.72`):
 ```markdown
 ## [1.0.72] - 2026-02-04
 ### Added
@@ -50,6 +57,8 @@ DevSkim is a framework of IDE extensions and language analyzers that provide inl
 ### Changed
 - Updated build documentation
 ```
+
+**Exception**: the gate ([`tarides/changelog-check-action`](https://github.com/tarides/changelog-check-action)) is skipped on PRs carrying the `no changelog` label. That is reserved for changes that are not user-visible, and Dependabot applies it automatically via `.github/dependabot.yml`. Do not use it to avoid writing an entry for a real change.
 
 ## Building and Testing
 
