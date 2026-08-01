@@ -118,6 +118,44 @@ public class DefaultRulesTests
         Assert.AreEqual(1, analysis.Count());
     }
 
+    [TestMethod]
+    [DataRow("html")]
+    [DataRow("htm")]
+    public void HtmlRulesApplyToHtmlFiles(string extension)
+    {
+        const string content = "<a href=\"https://example.com\" target=\"_blank\">Unsafe Link</a>";
+        const string rule = """
+        [{
+          "name": "HTML target blank without noopener",
+          "id": "HTML000001",
+          "description": "Detects target blank links without noopener",
+          "applies_to": [
+            "html"
+          ],
+          "tags": [
+            "security"
+          ],
+          "severity": "bestpractice",
+          "confidence": "high",
+          "patterns": [
+            {
+              "pattern": "target\\s*=\\s*[\\\"']_blank[\\\"']",
+              "type": "regex"
+            }
+          ]
+        }]
+        """;
+        DevSkimRuleSet devSkimRuleSet = new DevSkimRuleSet();
+        devSkimRuleSet.AddString(rule, "testRules");
+        DevSkimRuleProcessor analyzer = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions());
+
+        IEnumerable<Issue> analysis = analyzer.Analyze(content, $"thing.{extension}");
+
+        Assert.HasCount(1, analysis);
+        string suppression = DevSkimRuleProcessor.GenerateSuppressionByFileName($"thing.{extension}", "HTML000001");
+        Assert.AreEqual("<!-- DevSkim: ignore HTML000001 -->", suppression);
+    }
+
     public static IEnumerable<object[]> DefaultRules
     {
         get

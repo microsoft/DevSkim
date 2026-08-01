@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.96] - 2026-08-01
+### Added
+- Added HTML analysis and suppression support for `.html` and `.htm` files, including VS Code integration.
+
 ## [1.0.95] - 2026-07-31
 ### Pipeline
 - Added `.github/dependabot.yml` so Dependabot consolidates npm, NuGet, and GitHub Actions version updates into a single weekly pull request via a multi-ecosystem group, groups security updates per ecosystem into one pull request each, and labels its pull requests `no changelog` so the changelog gate passes.
