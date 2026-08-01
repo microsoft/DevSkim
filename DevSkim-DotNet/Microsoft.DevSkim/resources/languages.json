@@ -144,6 +144,10 @@
     "extensions": [ ".json" ]
   },
   {
+    "name": "html",
+    "extensions": [ ".html", ".htm" ]
+  },
+  {
     "name": "xml",
     "extensions": [ ".xml" ]
   }
