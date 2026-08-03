@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.96] - 2026-08-03
+### Dependencies
+- Consolidated the open Dependabot pull requests (#765, #766, #767, #768, #769) into a single update for the VS Code extension: `linkify-it` 5.0.1 to 5.0.2, `fast-uri` 3.1.2 to 3.1.4, `undici` 7.24.6 to 7.29.0, and `brace-expansion` 1.1.14 to 1.1.16 and 5.0.5 to 5.0.8.
+- Bumped `vscode-languageclient` from 7.0.0 to 10.1.0 in the extension client, which pulls `vscode-languageserver-protocol` up to 3.18.2 and replaces the transitive `minimatch` 3.1.5 chain with 10.2.5.
+- Bumped `@types/vscode` from 1.77.0 to 1.91.0 to match the new minimum VS Code version.
+- Bumped `typescript` from 4.9.5 to 5.9.3; the `vscode-languageclient` 10 type declarations use the `NoInfer` utility type, which requires TypeScript 5.4 or newer.
+- Pinned `brace-expansion` to 1.1.16 and 5.0.8 and `minimatch` to 10.2.5 rather than the 1.1.18, 5.0.9, and 10.2.6 that Dependabot had selected. Those three releases have since been removed from the npm registry, so the packages could no longer be restored and the build failed with a 404 while fetching them.
+
+### Changed
+- Raised the minimum VS Code version supported by the extension from 1.63 to 1.91, which `vscode-languageclient` 10 requires.
+- Migrated `client/extension.ts` to the `vscode-languageclient` 8+ client lifecycle: `LanguageClient.start()` returns a promise instead of a disposable and `onReady()` no longer exists, so notification handlers are now registered before the client starts and the client is disposed through the extension context.
+- Switched the VS Code extension TypeScript projects to `node16` module resolution, which `vscode-languageclient` 10 requires because it declares its entry points only through `exports`.
+
 ## [1.0.95] - 2026-07-31
 ### Pipeline
 - Added `.github/dependabot.yml` so Dependabot consolidates npm, NuGet, and GitHub Actions version updates into a single weekly pull request via a multi-ecosystem group, groups security updates per ecosystem into one pull request each, and labels its pull requests `no changelog` so the changelog gate passes.

@@ -23,7 +23,7 @@
 		"theme": "dark"
 	},
 	"engines": {
-		"vscode": "^1.63.0"
+		"vscode": "^1.91.0"
 	},
 	"bugs": {
 		"url": "https://github.com/Microsoft/DevSkim/issues"
@@ -328,7 +328,7 @@
 		"esbuild": "^0.28.1",
 		"eslint": "^9.0.0",
 		"nerdbank-gitversioning": "^3.4.255",
-		"typescript": "^4.5.5",
+		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.54.0"
 	}
 }
