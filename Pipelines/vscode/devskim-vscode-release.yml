@@ -183,11 +183,20 @@ extends:
             scriptLocation: 'inlineScript'
             workingDirectory: '$(Build.StagingDirectory)'
             inlineScript: |
-                $packPath = Resolve-Path $env:BUILD_STAGINGDIRECTORY\*.vsix
+                # Fail fast if signing/staging did not produce exactly one artifact, rather than
+                # passing a null or multi-element Resolve-Path result to --packagePath.
+                $vsixFiles = @(Get-ChildItem -Path $env:BUILD_STAGINGDIRECTORY -Filter '*.vsix' -File)
+                if ($vsixFiles.Count -ne 1)
+                {
+                    throw "Expected exactly one .vsix in $env:BUILD_STAGINGDIRECTORY, found $($vsixFiles.Count)"
+                }
+                $packPath = $vsixFiles[0].FullName
                 # Invoke the vsce installed globally in the previous step by its full path.
                 # `npx @vscode/vsce` cannot be used here: npx only short circuits to an already
                 # installed binary when the argument matches a bin name, so a package name always
                 # forces a manifest fetch from the npm registry, which fails with E401 in this task.
+                # On Windows npm's global bin directory is the global prefix itself, so `npm prefix -g`
+                # locates the shim (`npm bin` was removed in npm v9 and is not an option).
                 $vsce = Join-Path (npm prefix -g) 'vsce.cmd'
                 if (-not (Test-Path $vsce))
                 {
