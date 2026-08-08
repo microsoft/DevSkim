@@ -55,6 +55,8 @@ DevSkim is also available as a [GitHub Action](https://github.com/microsoft/DevS
 
 Platform specific binaries of the DevSkim CLI are also available on our GitHub [releases page](https://github.com/microsoft/DevSkim/releases).
 
+DevSkim is also embedded in [MegaLinter](https://megalinter.io/), an open-source aggregator of linters for CI, which runs DevSkim out of the box on analyzed repositories (see the [DevSkim descriptor](https://megalinter.io/latest/descriptors/repository_devskim/)).
+
 ## Installation
 
 ### Visual Studio Extension
