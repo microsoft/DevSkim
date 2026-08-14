@@ -10,6 +10,6 @@ jobs:
     name: Check Changelog Action
     runs-on: ubuntu-latest
     steps:
-      - uses: tarides/changelog-check-action@v2
+      - uses: tarides/changelog-check-action@47122075af50b17dbf68f7d059c88c99f082ac43 # v2
         with:
           changelog: Changelog.md
