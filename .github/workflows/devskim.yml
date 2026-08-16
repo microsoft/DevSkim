@@ -1,0 +1,47 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: DevSkim
+
+on:
+  push:
+    branches: [ "main", v/* ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '45 17 * * 5'
+
+jobs:
+  lint:
+    name: DevSkim
+    runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run DevSkim scanner
+        uses: microsoft/DevSkim-Action@v1.0.10
+        with:
+          directory-to-scan: DevSkim-DotNet
+          exclude-rules: DS1234,DS126858
+          extra-options: -x Verbose
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          # Artifact name
+          name: devskim-results.sarif # optional, default is artifact
+          # A file, directory or wildcard pattern that describes what to upload
+          path: devskim-results.sarif
+          # The desired behavior if no files are found using the provided path.
+          if-no-files-found: error # optional, default is warn
+          # Duration after which artifact will expire in days. 0 means using default retention.
+#      - name: Upload DevSkim scan results to GitHub Security tab
+#        uses: github/codeql-action/upload-sarif@v2
+#        with:
+#          sarif_file: devskim-results.sarif
