@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.97] - 2026-08-11
+### Pipeline
+- Fixed the VS Code extension release pipeline failing at the publish step with `npm error code E401`. The step ran `npx @vscode/vsce`, and because the argument is a package name rather than a bin name, npx cannot short circuit to the copy installed by the preceding `npm install -g @vscode/vsce` step and always fetches the package manifest from the npm registry, which is not authenticated inside the `AzureCLI@2` task. The step now invokes the globally installed `vsce.cmd` by its full path, so publishing needs no registry access, and fails with an explicit message if the binary is missing.
+- Removed the `npm_config_registry` environment variable from the publish step. It was only there to make the `npx` fetch resolve, is redundant with the `.npmrc` copied into the staging directory, and does not affect where the extension is published - `vsce publish` uploads to the Visual Studio Marketplace, not to an npm registry.
+- Hardened the VS Code publish step against an unexpected artifact count. It previously passed a `Resolve-Path` result straight to `--packagePath`, which yields `$null` when signing produced no `.vsix` and an array that splats into multiple arguments when it produced more than one. The step now resolves the artifact explicitly and fails with a clear message unless exactly one is present.
+
 ## [1.0.96] - 2026-08-03
 ### Dependencies
 - Consolidated the open Dependabot pull requests (#765, #766, #767, #768, #769) into a single update for the VS Code extension: `linkify-it` 5.0.1 to 5.0.2, `fast-uri` 3.1.2 to 3.1.4, `undici` 7.24.6 to 7.29.0, and `brace-expansion` 1.1.14 to 1.1.16 and 5.0.5 to 5.0.8.
