@@ -76,4 +76,7 @@ public record BaseAnalyzeCommandOptions : LogOptions
 
     [Option("skip-excerpts", HelpText = "Set to skip gathering excerpts and samples to include in the report.", Default = false)]
     public bool SkipExcerpts { get; set; }
+
+    [Option("analyze-unknown-file-types", HelpText = "Set to analyze files with unknown language/file types.", Default = false)]
+    public bool AnalyzeUnknownFileTypes { get; set; }
 }
