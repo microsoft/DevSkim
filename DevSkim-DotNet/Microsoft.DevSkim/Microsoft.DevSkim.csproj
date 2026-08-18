@@ -50,6 +50,9 @@
       <EmbeddedResource Include="..\..\rules\default\security\attack_surface\outbound_network.json">
         <Link>rules\default\security\attack_surface\outbound_network.json</Link>
       </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\containers\kubernetes.json">
+        <Link>rules\default\security\containers\kubernetes.json</Link>
+      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\control_flow\dynamic_execution.json">
         <Link>rules\default\security\control_flow\dynamic_execution.json</Link>
       </EmbeddedResource>
@@ -64,6 +67,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\ciphers.json">
         <Link>rules\default\security\cryptography\ciphers.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\connection_strings.json">
+        <Link>rules\default\security\cryptography\connection_strings.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\general.json">
         <Link>rules\default\security\cryptography\general.json</Link>
@@ -121,6 +127,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\storage\secure_storage.json">
         <Link>rules\default\security\storage\secure_storage.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\supplychain\package_sources.json">
+        <Link>rules\default\security\supplychain\package_sources.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_appconfig.json">
         <Link>rules\default\security\TLS\tls_appconfig.json</Link>
