@@ -104,8 +104,7 @@
         "must-match": [
             "http.verify_mode = OpenSSL::SSL::VERIFY_NONE"
         ],
-        "must-not-match": [
-        ]
+        "must-not-match": []
     },
     {
         "name": "Disabled certificate validation",
@@ -257,8 +256,7 @@
         "must-match": [
             "<authentication certificateValidationMode = \"None\" revocationMode=\"NoCheck\" />"
         ],
-        "must-not-match": [
-        ]
+        "must-not-match": []
     },
     {
         "name": "Disabled certificate validation",
@@ -266,7 +264,8 @@
         "description": "Extend default certificate validation, but do not disable or override default rules.",
         "recommendation": "Always use a valid certificate, even during testing.",
         "applies_to": [
-            "javascript"
+            "javascript",
+            "javascriptreact"
         ],
         "tags": [
             "Cryptography.Certificate.Validation"
@@ -366,8 +365,7 @@
         ],
         "conditions": [
             {
-                "pattern" :
-                {
+                "pattern": {
                     "pattern": "requests.",
                     "type": "substring",
                     "scopes": [
@@ -483,12 +481,10 @@
                     "code"
                 ]
             }
-
         ],
         "must-match": [
             "@kubectl config --kubeconfig=config/development set-cluster scratch --server=https://5.6.7.8 --insecure-skip-tls-verify",
             "@kubectl config --kubeconfig=config/development set-cluster scratch --server=https://5.6.7.8 --insecure-skip-tls-verify=true"
-
         ],
         "must-not-match": [
             "@kubectl config --kubeconfig=config/development set-cluster scratch --server=https://5.6.7.8 --insecure-skip-tls-verify=false"

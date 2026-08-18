@@ -6,7 +6,9 @@
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "applies_to": [
             "javascript",
-            "typescript"
+            "typescript",
+            "javascriptreact",
+            "typescriptreact"
         ],
         "overrides": [
             "DS440000"

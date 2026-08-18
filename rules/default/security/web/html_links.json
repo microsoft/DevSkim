@@ -1,0 +1,51 @@
+[
+    {
+        "name": "HTML link missing noopener or noreferrer",
+        "id": "DS610000",
+        "description": "An anchor with target=\"_blank\" gives the opened page a window.opener reference back to this one. The opened page can use it to navigate this tab to a site of its choosing, which is the reverse tabnabbing phishing technique.",
+        "recommendation": "Add rel=\"noopener noreferrer\" to the anchor.",
+        "applies_to": [
+            "html",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "php"
+        ],
+        "tags": [
+            "Web.HTML"
+        ],
+        "confidence": "medium",
+        "severity": "BestPractice",
+        "rule_info": "DS610000.md",
+        "patterns": [
+            {
+                "pattern": "<a\\s[^>]*target\\s*=\\s*[\"']?_blank",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "(noopener|noreferrer)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
+        ],
+        "must-match": [
+            "<a href=\"https://example.com\" target=\"_blank\">Open</a>"
+        ],
+        "must-not-match": [
+            "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Open</a>",
+            "<a href=\"/about\">About</a>"
+        ]
+    }
+]

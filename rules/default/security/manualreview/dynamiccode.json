@@ -8,7 +8,9 @@
             "python",
             "javascript",
             "typescript",
-            "php"
+            "php",
+            "javascriptreact",
+            "typescriptreact"
         ],
         "tags": [
             "Python.DangerousFunctionCall",
@@ -31,8 +33,7 @@
         "must-match": [
             "c = eval(a+b)"
         ],
-        "must-not-match": [
-        ]
+        "must-not-match": []
     },
     {
         "name": "Review setTimeout for untrusted data",
@@ -41,7 +42,9 @@
         "recommendation": "Edit the setTimeout so that no untrusted data is included. If untrusted data is absolutely necessary a great deal of care should be taken to ensure it is properly escaped so that it cannot be executed. This is not as simple as just escaping quotes.",
         "applies_to": [
             "javascript",
-            "typescript"
+            "typescript",
+            "javascriptreact",
+            "typescriptreact"
         ],
         "tags": [
             "JavaScript.DangerousFunctionCall",
@@ -62,8 +65,7 @@
         "must-match": [
             "setTimeout(500);"
         ],
-        "must-not-match": [
-        ]
+        "must-not-match": []
     },
     {
         "name": "Review unsafe code",
@@ -92,7 +94,6 @@
         "must-match": [
             "    unsafe static void Main()\n"
         ],
-        "must-not-match": [
-        ]
+        "must-not-match": []
     }
 ]

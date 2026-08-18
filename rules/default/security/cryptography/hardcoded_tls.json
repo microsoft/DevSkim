@@ -18,7 +18,7 @@
             "SecurityProtocolType.Tls11"
         ],
         "must-not-match": [
-            "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCg==", 
+            "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCg==",
             "curl --tlsv1.3",
             "axolotls"
         ],
@@ -29,39 +29,39 @@
                 "scopes": [
                     "code"
                 ],
-                "modifiers" : ["i"],
+                "modifiers": [
+                    "i"
+                ],
                 "_comment": "Generic reference to a SSL/TLS version"
             }
         ],
-        "conditions" : [
-        {
-            "pattern" :
+        "conditions": [
             {
-                "pattern": "--tlsv1.3",
-                "type": "substring",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "The --tlsv1.3 argument for Curl sets a minimum version, not a specific version"
+                "pattern": {
+                    "pattern": "--tlsv1.3",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "The --tlsv1.3 argument for Curl sets a minimum version, not a specific version"
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
             },
-            "negate_finding": true,
-            "search_in": "same-line"
-        },
-        {
-            "pattern" :
             {
-                "pattern": "LS0tLS",
-                "type": "substring",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "A base 64 encoded cert will start with `LS0tLS`"
-            },
-            "negate_finding": true,
-            "search_in": "same-line"
-        }
+                "pattern": {
+                    "pattern": "LS0tLS",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "A base 64 encoded cert will start with `LS0tLS`"
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
         ]
-    },    
+    },
     {
         "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
         "id": "DS440010",
@@ -156,20 +156,23 @@
             {
                 "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
                 "type": "regex",
-                "modifiers":[ "i" ],
+                "modifiers": [
+                    "i"
+                ],
                 "scopes": [
                     "code"
                 ],
                 "_comment": "OpenSSL external call"
             }
         ],
-        "conditions" : [
+        "conditions": [
             {
-                "pattern" : 
-                {
+                "pattern": {
                     "pattern": "openssl",
                     "type": "regex",
-                    "modifiers":[ "i" ],
+                    "modifiers": [
+                        "i"
+                    ],
                     "scopes": [
                         "code"
                     ]
@@ -229,10 +232,9 @@
                 ]
             }
         ],
-        "conditions" : [
+        "conditions": [
             {
-                "pattern" :
-                {
+                "pattern": {
                     "pattern": ".min_protocol_version\\s*\\(\\s*Some\\(\\s*Protocol::Tlsv1[2-9]\\s*\\)\\s*\\)",
                     "type": "regex",
                     "scopes": [
@@ -244,12 +246,12 @@
                 "search_in": "finding-region(0, 1)"
             }
         ],
-        "must-match" : [
+        "must-match": [
             "let acceptor = native_tls::TlsAcceptor::builder(identity);",
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv10))\n\t.build()?;",
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv11))\n\t.build()?;"
         ],
-        "must-not-match" : [
+        "must-not-match": [
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv12))\n\t.build()?;",
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv13))\n\t.build()?;"
         ]
@@ -261,7 +263,9 @@
         "recommendation": "",
         "applies_to": [
             "javascript",
-            "typescript"
+            "typescript",
+            "javascriptreact",
+            "typescriptreact"
         ],
         "tags": [
             "Cryptography.Protocol.TLS.Hardcoded"
@@ -269,10 +273,8 @@
         "severity": "critical",
         "_comment": "These rules are all encompassed by DS440000 and DS440010.",
         "rule_info": "DS440000.md",
-        "patterns": [
-        ],
-        "fix_its": [
-        ]
+        "patterns": [],
+        "fix_its": []
     },
     {
         "name": "Python- Do not hardcode TLS protocol versions.",
@@ -304,15 +306,16 @@
                 ]
             }
         ],
-        "fix_its": [
-        ]
+        "fix_its": []
     },
     {
         "name": "Win32- Do not hardcode TLS protocol versions.",
         "id": "DS440071",
         "description": "Win32- Do not hardcode TLS protocol versions.",
         "recommendation": "",
-        "overrides": ["DS440000"],
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
             "c",
             "cpp",
@@ -334,8 +337,6 @@
                 ]
             }
         ],
-        "fix_its": [
-        ]
-    }    
+        "fix_its": []
+    }
 ]
-    

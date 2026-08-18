@@ -1,150 +1,358 @@
 [
   {
+    "name": ".config",
+    "extensions": [
+      ".config"
+    ]
+  },
+  {
     "name": "batch",
-    "extensions": [ ".bat" ]
+    "extensions": [
+      ".bat"
+    ]
+  },
+  {
+    "name": "bicep",
+    "extensions": [
+      ".bicep"
+    ]
   },
   {
     "name": "c",
-    "extensions": [ ".c", ".h" ]
-  },
-  {
-    "name": "cpp",
-    "extensions": [ ".cpp", ".hpp", ".cc", ".hh", ".cxx", ".hxx", ".inl", ".h" ]
-  },
-  {
-    "name": "csharp",
-    "extensions": [ ".cs", ".cshtml", ".razor" ]
-  },
-  {
-    "name": "vb",
-    "extensions": [ ".vb" ]
-  },
-  {
-    "name": "python",
-    "extensions": [ ".py" ]
-  },
-  {
-    "name": "javascript",
-    "extensions": [ ".js" ]
-  },
-  {
-    "name": "javascriptreact",
-    "extensions": [ ".jsx" ]
-  },
-  {
-    "name": "typescript",
-    "extensions": [ ".ts" ]
-  },
-  {
-    "name": "typescriptreact",
-    "extensions": [ ".tsx" ]
-  },
-  {
-    "name": "coffeescript",
-    "extensions": [ ".coffee" ]
-  },
-  {
-    "name": "java",
-    "extensions": [ ".java" ]
-  },
-  {
-    "name": "objective-c",
-    "extensions": [ ".m" ]
-  },
-  {
-    "name": "swift",
-    "extensions": [ ".swift" ]
-  },
-  {
-    "name": "perl",
-    "extensions": [ ".pl", ".pm", ".t", ".pod" ]
-  },
-  {
-    "name": "perl6",
-    "extensions": [ ".pl6", ".p6", ".pm6" ]
-  },
-  {
-    "name": "ruby",
-    "extensions": [ ".rb" ]
-  },
-  {
-    "name": "lua",
-    "extensions": [ ".lua" ]
-  },
-  {
-    "name": "groovy",
-    "extensions": [ ".groovy" ]
-  },
-  {
-    "name": "go",
-    "extensions": [ ".go" ]
-  },
-  {
-    "name": "rust",
-    "extensions": [ ".rs" ]
-  },
-  {
-    "name": "jade",
-    "extensions": [ ".jade" ]
+    "extensions": [
+      ".c",
+      ".h"
+    ]
   },
   {
     "name": "clojure",
-    "extensions": [ ".clj", ".cljs", ".cljc", ".edn" ]
-  },
-  {
-    "name": "r",
-    "extensions": [ ".r" ]
-  },
-  {
-    "name": "yaml",
-    "extensions": [ ".yaml", ".yml" ]
-  },
-  {
-    "name": "fsharp",
-    "extensions": [ ".fs" ]
-  },
-  {
-    "name": "php",
-    "extensions": [ ".php" ]
-  },
-  {
-    "name": "powershell",
-    "extensions": [ ".ps1", ".psm1", ".psd1" ]
-  },
-  {
-    "name": "shellscript",
-    "extensions": [ ".sh" ]
-  },
-  {
-    "name": "sql",
-    "extensions": [ ".sql" ]
-  },
-  {
-    "name": "plaintext",
-    "extensions": [ ".txt" ]
-  },
-  {
-    "name": ".config",
-    "extensions": [ ".config" ]
-  },
-  {
-    "name": "packages.config",
-    "extensions": [ "packages.config" ]
-  },
-  {
-    "name": "CSharp Project",
-    "extensions": [ ".csproj" ]
+    "extensions": [
+      ".clj",
+      ".cljs",
+      ".cljc",
+      ".edn"
+    ]
   },
   {
     "name": "cobol",
-    "extensions": [ ".cbl", ".cob", ".cpy" ]
+    "extensions": [
+      ".cbl",
+      ".cob",
+      ".cpy"
+    ]
+  },
+  {
+    "name": "coffeescript",
+    "extensions": [
+      ".coffee"
+    ]
+  },
+  {
+    "name": "cpp",
+    "extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".hh",
+      ".cxx",
+      ".hxx",
+      ".inl",
+      ".h"
+    ]
+  },
+  {
+    "name": "csharp",
+    "extensions": [
+      ".cs",
+      ".cshtml",
+      ".razor"
+    ]
+  },
+  {
+    "name": "CSharp Project",
+    "extensions": [
+      ".csproj"
+    ]
+  },
+  {
+    "name": "dart",
+    "extensions": [
+      ".dart"
+    ]
+  },
+  {
+    "name": "dockerfile",
+    "extensions": [
+      ".dockerfile"
+    ],
+    "file-names": [
+      "dockerfile",
+      "containerfile"
+    ]
+  },
+  {
+    "name": "dotenv",
+    "extensions": [
+      ".env"
+    ],
+    "file-names": [
+      ".env",
+      ".env.local",
+      ".env.production",
+      ".env.development"
+    ]
+  },
+  {
+    "name": "fsharp",
+    "extensions": [
+      ".fs"
+    ]
+  },
+  {
+    "name": "go",
+    "extensions": [
+      ".go"
+    ]
+  },
+  {
+    "name": "gradle",
+    "extensions": [
+      ".gradle"
+    ],
+    "file-names": [
+      "gradlew"
+    ]
+  },
+  {
+    "name": "groovy",
+    "extensions": [
+      ".groovy"
+    ]
+  },
+  {
+    "name": "html",
+    "extensions": [
+      ".html",
+      ".htm",
+      ".xhtml",
+      ".cshtml",
+      ".vbhtml",
+      ".razor"
+    ]
+  },
+  {
+    "name": "jade",
+    "extensions": [
+      ".jade"
+    ]
+  },
+  {
+    "name": "java",
+    "extensions": [
+      ".java"
+    ]
+  },
+  {
+    "name": "javascript",
+    "extensions": [
+      ".js"
+    ]
+  },
+  {
+    "name": "javascriptreact",
+    "extensions": [
+      ".jsx"
+    ]
   },
   {
     "name": "json",
-    "extensions": [ ".json" ]
+    "extensions": [
+      ".json"
+    ]
+  },
+  {
+    "name": "kotlin",
+    "extensions": [
+      ".kt",
+      ".kts"
+    ]
+  },
+  {
+    "name": "lua",
+    "extensions": [
+      ".lua"
+    ]
+  },
+  {
+    "name": "makefile",
+    "extensions": [
+      ".mk"
+    ],
+    "file-names": [
+      "makefile",
+      "gnumakefile"
+    ]
+  },
+  {
+    "name": "msbuild",
+    "extensions": [
+      ".props",
+      ".targets"
+    ]
+  },
+  {
+    "name": "objective-c",
+    "extensions": [
+      ".m"
+    ]
+  },
+  {
+    "name": "packages.config",
+    "extensions": [
+      "packages.config"
+    ]
+  },
+  {
+    "name": "perl",
+    "extensions": [
+      ".pl",
+      ".pm",
+      ".t",
+      ".pod"
+    ]
+  },
+  {
+    "name": "perl6",
+    "extensions": [
+      ".pl6",
+      ".p6",
+      ".pm6"
+    ]
+  },
+  {
+    "name": "php",
+    "extensions": [
+      ".php"
+    ]
+  },
+  {
+    "name": "plaintext",
+    "extensions": [
+      ".txt"
+    ]
+  },
+  {
+    "name": "powershell",
+    "extensions": [
+      ".ps1",
+      ".psm1",
+      ".psd1"
+    ]
+  },
+  {
+    "name": "python",
+    "extensions": [
+      ".py"
+    ]
+  },
+  {
+    "name": "r",
+    "extensions": [
+      ".r"
+    ]
+  },
+  {
+    "name": "ruby",
+    "extensions": [
+      ".rb"
+    ]
+  },
+  {
+    "name": "rust",
+    "extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "name": "scala",
+    "extensions": [
+      ".scala",
+      ".sc"
+    ]
+  },
+  {
+    "name": "shellscript",
+    "extensions": [
+      ".sh"
+    ],
+    "file-names": [
+      ".bashrc",
+      ".bash_profile",
+      ".profile",
+      ".zshrc"
+    ]
+  },
+  {
+    "name": "sql",
+    "extensions": [
+      ".sql"
+    ]
+  },
+  {
+    "name": "swift",
+    "extensions": [
+      ".swift"
+    ]
+  },
+  {
+    "name": "terraform",
+    "extensions": [
+      ".tf",
+      ".tfvars"
+    ]
+  },
+  {
+    "name": "toml",
+    "extensions": [
+      ".toml"
+    ],
+    "file-names": [
+      "cargo.toml",
+      "pyproject.toml"
+    ]
+  },
+  {
+    "name": "typescript",
+    "extensions": [
+      ".ts"
+    ]
+  },
+  {
+    "name": "typescriptreact",
+    "extensions": [
+      ".tsx"
+    ]
+  },
+  {
+    "name": "vb",
+    "extensions": [
+      ".vb"
+    ]
   },
   {
     "name": "xml",
-    "extensions": [ ".xml" ]
+    "extensions": [
+      ".xml"
+    ]
+  },
+  {
+    "name": "yaml",
+    "extensions": [
+      ".yaml",
+      ".yml"
+    ],
+    "file-names": [
+      ".gitlab-ci.yml"
+    ]
   }
 ]

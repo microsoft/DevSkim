@@ -15,7 +15,12 @@
       "javascript",
       "java",
       "typescript",
-      "php"
+      "php",
+      "kotlin",
+      "scala",
+      "dart",
+      "bicep",
+      "gradle"
     ],
     "inline": "//",
     "prefix": "/*",
@@ -25,7 +30,7 @@
     "language": [
       "plaintext"
     ],
-    "always":  true
+    "always": true
   },
   {
     "language": [
@@ -36,7 +41,12 @@
       "ruby",
       "yaml",
       "powershell",
-      "python"
+      "python",
+      "dockerfile",
+      "terraform",
+      "toml",
+      "dotenv",
+      "makefile"
     ],
     "inline": "#",
     "prefix": "#",
@@ -74,5 +84,13 @@
     "inline": "::",
     "prefix": "Rem",
     "suffix": "\n"
+  },
+  {
+    "language": [
+      "html",
+      "msbuild"
+    ],
+    "prefix": "<!--",
+    "suffix": "-->"
   }
 ]

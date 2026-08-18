@@ -15,7 +15,9 @@
             "php",
             "java",
             "javascript",
-            "typescript"
+            "typescript",
+            "javascriptreact",
+            "typescriptreact"
         ],
         "confidence": "high",
         "severity": "important",

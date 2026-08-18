@@ -176,6 +176,9 @@
       <EmbeddedResource Include="..\..\rules\default\security\vulnerable_libraries\microsoft_nuget.json">
         <Link>rules\default\security\vulnerable_libraries\microsoft_nuget.json</Link>
       </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\web\html_links.json">
+        <Link>rules\default\security\web\html_links.json</Link>
+      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\xml\external_entities.json">
         <Link>rules\default\security\xml\external_entities.json</Link>
       </EmbeddedResource>
