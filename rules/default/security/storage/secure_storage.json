@@ -41,8 +41,7 @@
         "must-match": [
             "ProtectedData.Protect(data ,null, DataProtectionScope.CurrentUser)"
         ],
-        "must-not-match": [
-        ]
+        "must-not-match": []
     },
     {
         "name": "Do not store sensitive data in NSUserDefaults.",
@@ -60,12 +59,18 @@
         "rule_info": "DS191340.md",
         "patterns": [
             {
-                "pattern": "NSUserDefaults \\*(.*) = \\[NSUserDefaults standardUserDefaults\\];(\\n.*){1,5}$1 .*setString:(password|key)",
+                "pattern": "NSUserDefaults \\*(.*) = \\[NSUserDefaults standardUserDefaults\\];(\\n.*){1,5}\\1 .*setString:(password|key)",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];\n[defaults setString:password forKey:@\"pw\"];"
+        ],
+        "must-not-match": [
+            "[[A2Keychain sharedKeychain] setString:password forKey:@\"pw\"];"
         ]
     }
 ]

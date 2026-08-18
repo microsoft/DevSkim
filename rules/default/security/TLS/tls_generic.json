@@ -25,14 +25,15 @@
                 "scopes": [
                     "code"
                 ],
-                "modifiers" : ["i"],
+                "modifiers": [
+                    "i"
+                ],
                 "_comment": "Generic reference to a SSL/TLS version"
             }
         ],
-        "conditions" : [
+        "conditions": [
             {
-                "pattern" :
-                {
+                "pattern": {
                     "pattern": "--tlsv1.3",
                     "type": "string",
                     "scopes": [
@@ -42,6 +43,13 @@
                 "negate_finding": true,
                 "search_in": "same-line"
             }
+        ],
+        "must-match": [
+            "curl --tlsv1.1 https://example.com",
+            "context = SSL.Context(SSL.TLSv1_METHOD)"
+        ],
+        "must-not-match": [
+            "curl --tlsv1.3 https://example.com"
         ]
     },
     {
@@ -112,6 +120,17 @@
                 ],
                 "_comment": "OpenSSL cipher suite"
             }
+        ],
+        "must-match": [
+            "const SSL_METHOD *m = SSLv23_method();",
+            "SSL_stateless(ssl);",
+            "SSL_CTX_set_max_proto_version(ctx, TLS1_1_VERSION);",
+            "flags |= SSL_EXT_TLS_ONLY;",
+            "options |= SSL_OP_NO_SSLv3;",
+            "SSL_CTX_set_cipher_list(ctx, \"AES256-SHA\");"
+        ],
+        "must-not-match": [
+            "const SSL_METHOD *m = DTLS_method();"
         ]
     },
     {
@@ -142,8 +161,14 @@
                 ],
                 "_comment": "BoringSSL functions that implement specific protocol versions"
             }
+        ],
+        "must-match": [
+            "if (version == TLS1_2_VERSION) { return 0; }"
+        ],
+        "must-not-match": [
+            "if (version == best_version) { return 0; }"
         ]
-    },    
+    },
     {
         "name": "GnuTLS: Hard-coded SSL/TLS Protocol",
         "id": "DS440013",
@@ -172,8 +197,14 @@
                 ],
                 "_comment": "GnuTLS functions that implement specific protocol versions"
             }
+        ],
+        "must-match": [
+            "gnutls_priority_set_direct(session, \"GNUTLS_SSL3\", NULL);"
+        ],
+        "must-not-match": [
+            "gnutls_priority_set_direct(session, \"NORMAL\", NULL);"
         ]
-    },        
+    },
     {
         "name": "LibreSSL: Hard-coded SSL/TLS Protocol",
         "id": "DS440014",
@@ -202,8 +233,14 @@
                 ],
                 "_comment": "LibreSSL functions that implement specific protocol versions"
             }
+        ],
+        "must-match": [
+            "ctx->min_version = TLS1_VERSION;"
+        ],
+        "must-not-match": [
+            "ctx->min_version = best_version;"
         ]
-    },         
+    },
     {
         "name": "mbedTLS: Hard-coded SSL/TLS Protocol",
         "id": "DS440015",
@@ -239,7 +276,14 @@
                     "code"
                 ],
                 "_comment": "mbedTLS functions that implement specific protocol versions"
-            }            
+            }
+        ],
+        "must-match": [
+            "mbedtls_ssl_conf_min_version(&conf, MBEDTLS_SSL_PROTO_TLS1_1, 0);",
+            "conf.max_major_ver = MBEDTLS_SSL_MAJOR_VERSION_3;"
+        ],
+        "must-not-match": [
+            "mbedtls_ssl_conf_min_tls_version(&conf, MBEDTLS_SSL_VERSION_TLS1_3);"
         ]
     },
     {
@@ -270,10 +314,9 @@
                 "_comment": "curl"
             }
         ],
-        "conditions" : [
+        "conditions": [
             {
-                "pattern" :
-                {
+                "pattern": {
                     "pattern": "--tlsv1.3",
                     "type": "substring",
                     "scopes": [
@@ -283,6 +326,12 @@
                 "negate_finding": true,
                 "search_in": "same-line"
             }
+        ],
+        "must-match": [
+            "curl --tlsv1.1 https://example.com"
+        ],
+        "must-not-match": [
+            "curl --tlsv1.3 https://example.com"
         ]
     },
     {
@@ -292,7 +341,7 @@
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
             "DS440000"
-        ],        
+        ],
         "does_not_apply_to": [
             "json",
             "yaml"
@@ -306,7 +355,7 @@
         "patterns": [
             {
                 "pattern": "--secure-protocol=",
-                "type": "string",
+                "type": "substring",
                 "scopes": [
                     "code"
                 ],
@@ -341,7 +390,7 @@
                 "scopes": [
                     "code"
                 ]
-            },            
+            },
             {
                 "pattern": "SSLProtocol\\s.+",
                 "type": "regex",
@@ -358,6 +407,18 @@
                 ],
                 "_comment": "Generic"
             }
+        ],
+        "must-match": [
+            "wget --secure-protocol=SSLv3 https://example.com",
+            "curl_easy_setopt(h, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_1);",
+            "ssl_protocols TLSv1 TLSv1.1;",
+            "conn = HTTPSConnection(host, ssl_version=3)",
+            "export DISABLE_SSL_VERIFY=1",
+            "SSLProtocol -all +TLSv1",
+            "sslEnabledProtocols = TLSv1.1"
+        ],
+        "must-not-match": [
+            "wget https://example.com"
         ]
     },
     {
@@ -384,6 +445,12 @@
                 ],
                 "_comment": "Named curves from RustTLS, CNG, and others."
             }
+        ],
+        "must-match": [
+            "SSL_CTX_set1_curves_list(ctx, \"brainpoolP160r1\");"
+        ],
+        "must-not-match": [
+            "SSL_CTX_set_ciphersuites(ctx, \"TLS_AES_256_GCM_SHA384\");"
         ]
     }
 ]

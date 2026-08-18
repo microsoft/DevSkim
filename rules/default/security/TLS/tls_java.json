@@ -40,6 +40,13 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "SSLContext ctx = SSLContext.getInstance(\"TLSv1\");",
+            "System.setProperty(\"https.protocols\", \"TLSv1\");"
+        ],
+        "must-not-match": [
+            "SSLContext ctx = SSLContext.getDefault();"
         ]
     },
     {
@@ -68,6 +75,12 @@
                 ],
                 "_comment": "https://square.github.io/okhttp/4.x/okhttp/okhttp3/-tls-version/"
             }
+        ],
+        "must-match": [
+            "ConnectionSpec spec = new ConnectionSpec.Builder(true).tlsVersions(TlsVersion.TLS_1_0).build();"
+        ],
+        "must-not-match": [
+            "ConnectionSpec spec = ConnectionSpec.MODERN_TLS;"
         ]
-    }    
+    }
 ]

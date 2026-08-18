@@ -134,6 +134,18 @@
                 ],
                 "_comment": "OpenSSL constants"
             }
+        ],
+        "must-match": [
+            "const SSL_METHOD *m = SSLv23_method();",
+            "SSL_stateless(ssl);",
+            "SSL_CTX_set_min_proto_version(ctx, TLS1_VERSION);",
+            "options |= SSL_EXT_TLS_ONLY;",
+            "options |= SSL_OP_NO_TLSv1_1;",
+            "options |= SSL_OP_NO_COMPRESSION;",
+            "SSL_CTX_set_cipher_list(ctx, \"DHE_RSA_AES128_SHA\");"
+        ],
+        "must-not-match": [
+            "SSL *ssl = SSL_new(ctx);"
         ]
     },
     {
@@ -180,6 +192,12 @@
                 "negate_finding": false,
                 "search_in": "finding-region(-5, 5)"
             }
+        ],
+        "must-match": [
+            "/* openssl configuration */\nSSL_CTX_set_cipher_list(ctx, \"AES256-SHA256\");"
+        ],
+        "must-not-match": [
+            "SSL_CTX_set_ciphersuites(ctx, \"TLS_AES_256_GCM_SHA384\");"
         ]
     },
     {
@@ -207,6 +225,13 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;",
+            "var opts = SslProtocols.Tls;"
+        ],
+        "must-not-match": [
+            "var client = new HttpClient();"
         ]
     },
     {
@@ -257,26 +282,6 @@
         ]
     },
     {
-        "name": "Node- Do not hardcode TLS protocol versions.",
-        "id": "DS440060",
-        "description": "Node- Do not hardcode TLS protocol versions.",
-        "recommendation": "",
-        "applies_to": [
-            "javascript",
-            "typescript",
-            "javascriptreact",
-            "typescriptreact"
-        ],
-        "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
-        ],
-        "severity": "critical",
-        "_comment": "These rules are all encompassed by DS440000 and DS440010.",
-        "rule_info": "DS440000.md",
-        "patterns": [],
-        "fix_its": []
-    },
-    {
         "name": "Python- Do not hardcode TLS protocol versions.",
         "id": "DS440070",
         "description": "Python- Do not hardcode TLS protocol versions.",
@@ -306,7 +311,14 @@
                 ]
             }
         ],
-        "fix_its": []
+        "fix_its": [],
+        "must-match": [
+            "context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_1)",
+            "conn = http.client.HTTPSConnection(host, ssl_version=ssl.PROTOCOL_SSLv3)"
+        ],
+        "must-not-match": [
+            "context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)"
+        ]
     },
     {
         "name": "Win32- Do not hardcode TLS protocol versions.",
@@ -337,6 +349,12 @@
                 ]
             }
         ],
-        "fix_its": []
+        "fix_its": [],
+        "must-match": [
+            "cred.grbitEnabledProtocols = SP_PROT_SSL3_SERVER;"
+        ],
+        "must-not-match": [
+            "cred.grbitEnabledProtocols = 0;"
+        ]
     }
 ]
