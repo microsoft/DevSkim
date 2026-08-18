@@ -138,7 +138,7 @@
     },
     {
         "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
-        "id": "DS440011",
+        "id": "DS440017",
         "description": "SSL/TLS version usage should be based on an OS or external configuration.",
         "recommendation": "",
         "does_not_apply_to": [
