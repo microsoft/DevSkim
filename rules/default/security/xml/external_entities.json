@@ -88,8 +88,7 @@
         "must-match": [
             "shouldResolveExternalEntities=TRUE"
         ],
-        "must-not-match": [
-        ]
+        "must-not-match": []
     },
     {
         "name": "Do not enable external entity resolution.",
@@ -132,7 +131,262 @@
         "must-match": [
             "setShouldResolveExternalEntities: YES"
         ],
+        "must-not-match": []
+    },
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132782",
+        "description": "DtdProcessing.Parse, or ProhibitDtd set to false, allows the XML parser to process a DTD. A DTD can declare external entities that read local files or make network requests, and can expand recursively to exhaust memory.",
+        "recommendation": "Set DtdProcessing to Prohibit, as shown in the worked example in ADM.10010.",
+        "applies_to": [
+            "csharp",
+            "fsharp",
+            "vb"
+        ],
+        "tags": [
+            "XML.XXE"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS132782.md",
+        "patterns": [
+            {
+                "pattern": "DtdProcessing\\s*[=.]\\s*(DtdProcessing\\s*\\.\\s*)?Parse",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            },
+            {
+                "pattern": "ProhibitDtd\\s*=\\s*false",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "reader.DtdProcessing = DtdProcessing.Parse;",
+            "settings.ProhibitDtd = false;"
+        ],
         "must-not-match": [
+            "reader.DtdProcessing = DtdProcessing.Prohibit;",
+            "settings.DtdProcessing = DtdProcessing.Ignore;"
+        ]
+    },
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132783",
+        "description": "Assigning an XmlResolver lets the parser follow external references in the document, including file:// and http:// URIs. ADM.10010's worked example sets XmlResolver to null.",
+        "recommendation": "Set XmlResolver to null, or leave it unset on frameworks where the default is already null.",
+        "applies_to": [
+            "csharp",
+            "fsharp",
+            "vb"
+        ],
+        "tags": [
+            "XML.XXE"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS132783.md",
+        "patterns": [
+            {
+                "pattern": "XmlResolver\\s*=\\s*new\\s+Xml(Url|Secure)Resolver",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "reader.XmlResolver = new XmlUrlResolver();",
+            "settings.XmlResolver = new XmlSecureResolver(new XmlUrlResolver(), url);"
+        ],
+        "must-not-match": [
+            "reader.XmlResolver = null;"
+        ]
+    },
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132784",
+        "description": "Java XML factories resolve external entities by default. This file constructs a parser factory and contains none of the hardening features that disable that behaviour.",
+        "recommendation": "Call setFeature(\"http://apache.org/xml/features/disallow-doctype-decl\", true), or set XMLConstants.FEATURE_SECURE_PROCESSING, before parsing untrusted input.",
+        "applies_to": [
+            "java"
+        ],
+        "tags": [
+            "XML.XXE"
+        ],
+        "confidence": "medium",
+        "severity": "ManualReview",
+        "rule_info": "DS132784.md",
+        "patterns": [
+            {
+                "pattern": "(DocumentBuilderFactory|SAXParserFactory|XMLInputFactory|TransformerFactory|SchemaFactory)\\s*\\.\\s*new(Instance|Factory)\\s*\\(",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "disallow-doctype-decl",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-file"
+            },
+            {
+                "pattern": {
+                    "pattern": "FEATURE_SECURE_PROCESSING",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-file"
+            },
+            {
+                "pattern": {
+                    "pattern": "(IS_SUPPORTING_EXTERNAL_ENTITIES|SUPPORT_DTD)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-file"
+            },
+            {
+                "pattern": {
+                    "pattern": "ACCESS_EXTERNAL_(DTD|SCHEMA|STYLESHEET)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-file"
+            },
+            {
+                "pattern": {
+                    "pattern": "setXIncludeAware\\s*\\(\\s*false",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-file"
+            },
+            {
+                "pattern": {
+                    "pattern": "setExpandEntityReferences\\s*\\(\\s*false",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();\nDocumentBuilder db = dbf.newDocumentBuilder();",
+            "XMLInputFactory factory = XMLInputFactory.newInstance();"
+        ],
+        "must-not-match": [
+            "DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();\ndbf.setFeature(\"http://apache.org/xml/features/disallow-doctype-decl\", true);",
+            "TransformerFactory tf = TransformerFactory.newInstance();\ntf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);"
+        ]
+    },
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132785",
+        "description": "libxml_disable_entity_loader(false) re-enables the external entity loader, which allows a document to read local files through the file:// scheme.",
+        "recommendation": "Leave the entity loader disabled. On libxml2 2.9 and later it is off by default, so the call is usually unnecessary.",
+        "applies_to": [
+            "php"
+        ],
+        "tags": [
+            "XML.XXE"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS132785.md",
+        "patterns": [
+            {
+                "pattern": "libxml_disable_entity_loader\\s*\\(\\s*(false|FALSE|0)\\s*\\)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            },
+            {
+                "pattern": "LIBXML_NOENT",
+                "type": "RegexWord",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "libxml_disable_entity_loader(false);",
+            "$doc = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOENT);"
+        ],
+        "must-not-match": [
+            "libxml_disable_entity_loader(true);"
+        ]
+    },
+    {
+        "name": "Do not enable external entity resolution.",
+        "id": "DS132786",
+        "description": "lxml resolves entities when resolve_entities is left enabled or a DTD is loaded, which allows a document to read local files or reach network resources.",
+        "recommendation": "Construct the parser with resolve_entities=False, no_network=True, and load_dtd=False.",
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "XML.XXE"
+        ],
+        "confidence": "medium",
+        "severity": "ManualReview",
+        "rule_info": "DS132786.md",
+        "patterns": [
+            {
+                "pattern": "(resolve_entities|load_dtd|no_network)\\s*=\\s*(True|False)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "resolve_entities\\s*=\\s*False",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
+        ],
+        "must-match": [
+            "parser = etree.XMLParser(resolve_entities=True)",
+            "parser = etree.XMLParser(load_dtd=True, no_network=False)"
+        ],
+        "must-not-match": [
+            "parser = etree.XMLParser(resolve_entities=False, no_network=True)"
         ]
     }
 ]
