@@ -4,7 +4,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.96] - 2026-08-03
+## [1.0.106] - 2026-08-18
+### Added
+- Added Kubernetes Security Baseline rules (`DS200000`-`DS200007`) covering privileged containers, privilege escalation, host namespace sharing, writable root filesystems, running as root, unpinned images, dangerous Linux capabilities, and `hostPath` volumes. These are the first rules to use the engine's `ymlpaths` support, which no shipped rule had used.
+- Added package source rules `DS205000` (a `nuget.config` `<packageSources>` with no `<clear />`, so the sources are added to those inherited from machine and user level configuration rather than replacing them) and `DS205001` (`--extra-index-url` and `PIP_EXTRA_INDEX_URL`).
+- Added `DS114352`, which detects connection strings that leave transport encryption optional (`Encrypt=False`, `TrustServerCertificate=True`, `sslmode=prefer`/`allow`/`disable`, MySQL `SslMode=Preferred`/`None`, JDBC `useSSL=false`). Guidance for this rule was already in the repository but no rule referenced it.
+- Added secret detection for PEM private key blocks (`DS173238`), provider access tokens from GitHub, AWS, Google, Slack, Stripe, npm, SendGrid and GitLab (`DS173239`), and Azure Storage account keys and shared access signatures (`DS173240`). The two existing secret rules keyed on 30 or more lowercase hex characters and matched none of these formats.
+- Added `DS610000` for anchors using `target="_blank"` without `rel="noopener noreferrer"`. Its guidance was already present but the rule could not be written because no `html` language existed.
+- Added deserialization rules for the libraries ADM.10010 names as unapproved: Python `torch.load`, `joblib.load`, `dill.load` and `marshal` (`DS425050`); PyYAML `yaml.load` without a safe loader (`DS425060`); .NET `BinaryFormatter`, `SoapFormatter`, `NetDataContractSerializer`, `LosFormatter` and `ObjectStateFormatter` (`DS425070`); `JavaScriptSerializer` and `SimpleTypeResolver` (`DS425080`); and Boost Property Tree (`DS425090`).
+- Added XXE rules for .NET `DtdProcessing.Parse` and `ProhibitDtd = false` (`DS132782`), .NET `XmlResolver` assignment (`DS132783`), Java parser factories with no hardening feature anywhere in the file (`DS132784`), PHP `libxml_disable_entity_loader(false)` and `LIBXML_NOENT` (`DS132785`), and lxml entity resolution (`DS132786`). Previous coverage was Objective-C and Swift only.
+- Added `DS154190` (the `IsBad*Ptr` family), `DS154191` (`CopyMemory` and `RtlCopyMemory`), `DS154192` (`strlen`, `wcslen`, `_tcslen`, `lstrlen`) and `DS154193` (Objective-C method swizzling).
+- Added `html`, `dockerfile`, `terraform`, `bicep`, `kotlin`, `scala`, `dart`, `toml`, `gradle`, `msbuild` (`.props`/`.targets`), `dotenv`, `makefile` and `pem` language definitions with matching comment syntax. 32 rules declare no `applies_to` and so apply to every known language, meaning each addition extends those rules to a file type that was previously skipped.
+- Added `file-names` entries so extensionless files are scanned. `Dockerfile`, `Makefile`, `Cargo.toml`, `id_rsa` and the shell dotfiles have no extension, so extension-based matching alone never reached them.
+- Added `must-match` self-tests to the 32 rules that had none. Every rule now has a positive self-test.
+
+### Fix
+- Fixed the four rules that were never shipped. `android.json` (`DS180000`, `DS180001`, `DS180002`) and `xslt_scripting.json` (`DS132781`) were missing from the hand-maintained `<EmbeddedResource>` list in `Microsoft.DevSkim.csproj`, so they were absent from the default rule set. This is also why their dangling `rule_info` references never failed CI, since the tests iterate the shipped set. Their missing guidance has been written.
+- Fixed `DS180000`, which bound the default XML namespace to the Maven POM namespace and matched `//default:application`. A real `AndroidManifest.xml` has no default namespace, so the rule could not fire on one; its self-test used a manifest with the Maven namespace and therefore passed while testing a document shape that does not occur.
+- Fixed `DS132781`, which declared `applies_to: ["CSharp"]`. Language names are matched exactly against `languages.json`, which defines `csharp`, so the rule reported nothing.
+- Fixed `DS191340`, which used `$1` as a backreference. .NET spells that `\1`, and `$` is an end-of-line anchor, so the pattern could never match.
+- Fixed `DS440016`'s `--secure-protocol=` pattern, which was typed as `string` and therefore word-boundary anchored. A leading hyphen is not a word character, so `wget --secure-protocol=SSLv3` was not reported.
+- Gave the two unrelated rules that both used the ID `DS440011` distinct IDs. SARIF emits one `tool.driver.rules` entry per rule ID, so findings from the `hardcoded_tls.json` rule were reported with the other rule's name and a `helpUri` pointing at the wrong guidance document, and suppressing either ID suppressed both. The `hardcoded_tls.json` rule is now `DS440017`.
+- Removed `DS440060`, which had an empty `patterns` array and so could not produce a finding while still occupying an entry in SARIF tool metadata.
+- Normalised `DS450003`'s severity from `manualreview` to `ManualReview`.
+
+### Changed
+- Extended `DS154189` from 80 to 178 alternatives. Comparing the shipped rules against the 194 APIs enumerated in ADM.10082 found 113 that DevSkim did not report: 108 absent, and 5 present only in the wrong case, which `RegexWord` does not match.
+- Moved `wcslen` and `_tcslen` from `DS154189` into `DS154192` so the same defect is not reported at two different severities depending on which variant is used.
+- Added `javascriptreact` and `typescriptreact` to the 7 rules that target `javascript` or `typescript`. Both languages were already defined and mapped to `.jsx` and `.tsx`, but no rule named them, so React source received none of those rules.
+
 ### Dependencies
 - Consolidated the open Dependabot pull requests (#765, #766, #767, #768, #769) into a single update for the VS Code extension: `linkify-it` 5.0.1 to 5.0.2, `fast-uri` 3.1.2 to 3.1.4, `undici` 7.24.6 to 7.29.0, and `brace-expansion` 1.1.14 to 1.1.16 and 5.0.5 to 5.0.8.
 - Bumped `vscode-languageclient` from 7.0.0 to 10.1.0 in the extension client, which pulls `vscode-languageserver-protocol` up to 3.18.2 and replaces the transitive `minimatch` 3.1.5 chain with 10.2.5.
