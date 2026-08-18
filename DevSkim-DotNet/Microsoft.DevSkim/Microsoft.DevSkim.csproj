@@ -89,6 +89,9 @@
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\weak_cipher_modes.json">
         <Link>rules\default\security\cryptography\weak_cipher_modes.json</Link>
       </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\android.json">
+        <Link>rules\default\security\frameworks\android.json</Link>
+      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\frameworks\aspnet5.json">
         <Link>rules\default\security\frameworks\aspnet5.json</Link>
       </EmbeddedResource>
@@ -166,6 +169,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\xml\external_entities.json">
         <Link>rules\default\security\xml\external_entities.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\xml\xslt_scripting.json">
+        <Link>rules\default\security\xml\xslt_scripting.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\correctness\datetime.json">
         <Link>rules\default\correctness\datetime.json</Link>
