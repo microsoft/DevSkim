@@ -46,7 +46,8 @@
       "terraform",
       "toml",
       "dotenv",
-      "makefile"
+      "makefile",
+      "pem"
     ],
     "inline": "#",
     "prefix": "#",

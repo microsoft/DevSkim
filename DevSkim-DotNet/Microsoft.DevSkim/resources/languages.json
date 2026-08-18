@@ -213,6 +213,25 @@
     ]
   },
   {
+    "name": "pem",
+    "extensions": [
+      ".pem",
+      ".key",
+      ".crt",
+      ".cer",
+      ".csr",
+      ".p7b",
+      ".asc"
+    ],
+    "file-names": [
+      "id_rsa",
+      "id_dsa",
+      "id_ecdsa",
+      "id_ed25519",
+      "identity"
+    ]
+  },
+  {
     "name": "perl",
     "extensions": [
       ".pl",
