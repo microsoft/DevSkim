@@ -306,7 +306,7 @@
         "rule_info": "DS440001.md",
         "patterns": [
             {
-                "pattern": "--(sslv2|sslv3|tlsv1|tlsv11|tlsv1\\.1|tlsv1\\.2)",
+                "pattern": "--(sslv2|sslv3|tlsv1\\.1|tlsv1\\.2|tlsv11|tlsv1)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -328,7 +328,9 @@
             }
         ],
         "must-match": [
-            "curl --tlsv1.1 https://example.com"
+            "curl --tlsv1.1 https://example.com",
+            "curl --tlsv1.2 https://example.com",
+            "curl --sslv3 https://example.com"
         ],
         "must-not-match": [
             "curl --tlsv1.3 https://example.com"
@@ -354,8 +356,8 @@
         "rule_info": "DS440001.md",
         "patterns": [
             {
-                "pattern": "--secure-protocol=",
-                "type": "substring",
+                "pattern": "--secure-protocol=\\S*",
+                "type": "regex",
                 "scopes": [
                     "code"
                 ],
