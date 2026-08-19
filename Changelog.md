@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.106] - 2026-08-18
+## [1.0.108] - 2026-08-19
 ### Added
 - Added Kubernetes Security Baseline rules (`DS200000`-`DS200007`) covering privileged containers, privilege escalation, host namespace sharing, writable root filesystems, running as root, unpinned images, dangerous Linux capabilities, and `hostPath` volumes. These are the first rules to use the engine's `ymlpaths` support, which no shipped rule had used.
 - Added package source rules `DS205000` (a `nuget.config` `<packageSources>` with no `<clear />`, so the sources are added to those inherited from machine and user level configuration rather than replacing them) and `DS205001` (`--extra-index-url` and `PIP_EXTRA_INDEX_URL`).
@@ -23,7 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed `DS180000`, which bound the default XML namespace to the Maven POM namespace and matched `//default:application`. A real `AndroidManifest.xml` has no default namespace, so the rule could not fire on one; its self-test used a manifest with the Maven namespace and therefore passed while testing a document shape that does not occur.
 - Fixed `DS132781`, which declared `applies_to: ["CSharp"]`. Language names are matched exactly against `languages.json`, which defines `csharp`, so the rule reported nothing.
 - Fixed `DS191340`, which used `$1` as a backreference. .NET spells that `\1`, and `$` is an end-of-line anchor, so the pattern could never match.
-- Fixed `DS440016`'s `--secure-protocol=` pattern, which was typed as `string` and therefore word-boundary anchored. A leading hyphen is not a word character, so `wget --secure-protocol=SSLv3` was not reported.
+- Fixed `DS440016`'s `--(sslv2|sslv3|tlsv1|tlsv11|tlsv1\.1|tlsv1\.2)` alternation, which was ordered shortest-first. .NET alternation is leftmost-first rather than longest-match, so `tlsv1` always won and the `tlsv11`, `tlsv1\.1` and `tlsv1\.2` branches were unreachable; `curl --tlsv1.1` reported a span covering only `--tlsv1`.
+- Fixed `DS440016`'s `--secure-protocol=` pattern, which was typed as `string` and therefore word-boundary anchored. A leading hyphen is not a word character, so `wget --secure-protocol=SSLv3` was not reported at all. It is now a regex that also covers the protocol value following the flag.
+- Repointed `DS140021` (`strlen`) from `DS154189` to `DS154192`. `strlen` moved into `DS154192` in this release, which left the old override inert and made `strlen(s)` report twice at the same severity.
 - Gave the two unrelated rules that both used the ID `DS440011` distinct IDs. SARIF emits one `tool.driver.rules` entry per rule ID, so findings from the `hardcoded_tls.json` rule were reported with the other rule's name and a `helpUri` pointing at the wrong guidance document, and suppressing either ID suppressed both. The `hardcoded_tls.json` rule is now `DS440017`.
 - Removed `DS440060`, which had an empty `patterns` array and so could not produce a finding while still occupying an entry in SARIF tool metadata.
 - Normalised `DS450003`'s severity from `manualreview` to `ManualReview`.
