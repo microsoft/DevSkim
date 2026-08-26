@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.110] - 2026-08-26
+### Changed
+- Moved to `Microsoft.CST.ApplicationInspector.RulesEngine` and `...Logging` 1.10.1. This is the first release carrying the boolean expression support from [ApplicationInspector#654](https://github.com/microsoft/ApplicationInspector/pull/654), plus four rules-engine fixes: string patterns always reported pattern index 0, conditions were only judged against the first capture, the async path over-reported by taking a union rather than an intersection, and override suppression used different overlap rules on the sync and async paths. The last of these affects DevSkim in particular, since 38 rules use `overrides` and the sync path now requires full containment; the preceding release brought every DevSkim override pair into containment ahead of this change.
+
+### Fix
+- Made `DS440017`'s `must-match` sample independent of comment styling. Its condition looks for `openssl` in `code` scope, but the sample placed it in a `/* */` comment, which passed under 1.9.50 only because the verifier's fallback language has no comment syntax. The sample now puts `openssl` in a string literal.
+
 ## [1.0.108] - 2026-08-19
 ### Added
 - Added Kubernetes Security Baseline rules (`DS200000`-`DS200007`) covering privileged containers, privilege escalation, host namespace sharing, writable root filesystems, running as root, unpinned images, dangerous Linux capabilities, and `hostPath` volumes. These are the first rules to use the engine's `ymlpaths` support, which no shipped rule had used.
