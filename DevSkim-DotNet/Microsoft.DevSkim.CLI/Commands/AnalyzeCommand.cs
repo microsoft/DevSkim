@@ -100,7 +100,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     if (IsGitPresent())
                     {
                         List<FileEntry> innerList = new List<FileEntry>();
-                        IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*.*", SearchOption.AllDirectories)
+                        IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*", SearchOption.AllDirectories)
                             .Where(fileName => !IsGitIgnored(fileName));
                         foreach (string? notIgnoredFileName in files)
                         {
@@ -119,7 +119,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 else
                 {
                     List<FileEntry> innerList = new List<FileEntry>();
-                    IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*.*", SearchOption.AllDirectories);
+                    IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*", SearchOption.AllDirectories);
                     foreach (string file in files)
                     {
                         innerList.AddRange(FilePathToFileEntries(_opts, file, extractor, extractorOpts));
@@ -393,8 +393,9 @@ namespace Microsoft.DevSkim.CLI.Commands
             {
                 devSkimLanguages.FromFileNameOut(fileEntry.Name, out LanguageInfo languageInfo);
 
-                // Skip files written in unknown language
-                if (string.IsNullOrEmpty(languageInfo.Name))
+                // Skip files written in unknown language unless explicitly configured not to
+                bool isUnknownLanguage = string.IsNullOrEmpty(languageInfo.Name);
+                if (isUnknownLanguage && !_opts.AnalyzeUnknownFileTypes)
                 {
                     Interlocked.Increment(ref filesSkipped);
                 }
@@ -457,7 +458,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                                     Filesize: fileText.Length,
                                     TextSample: _opts.SkipExcerpts ? string.Empty : issueText,
                                     Issue: issue,
-                                    Language: languageInfo.Name,
+                                    Language: isUnknownLanguage ? "unknown" : languageInfo.Name,
                                     Fixes: issue.Rule.Fixes?.Where(x => DevSkimRuleProcessor.IsFixable(issueText, x)).ToList());
 
                                 outputWriter.WriteIssue(record);
