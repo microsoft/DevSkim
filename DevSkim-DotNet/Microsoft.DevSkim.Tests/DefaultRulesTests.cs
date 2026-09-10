@@ -220,6 +220,17 @@ public class DefaultRulesTests
     [DataRow("DS610001", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nSet-Cookie: sid=one; Secure; HttpOnly; SameSite=Lax\\r\\nSet-Cookie: other=two; Secure; HttpOnly; SameSite=Strict\\r\\n\\r\\n\");", 0)]
     [DataRow("DS610002", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nStrict-Transport-Security: max-age=0\\r\\nX-Other: max-age=31536000; includeSubDomains; extra=value\\r\\n\\r\\n\");", 1)]
     [DataRow("DS610002", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nStrict-Transport-Security: max-age=31536000; includeSubDomains\\r\\n\\r\\n\");", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=0; max-age=31536000; includeSubDomains\");", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; MAX-AGE=63072000; includeSubDomains\");", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; includeSubDomains; INCLUDESUBDOMAINS\");", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'max-age=300; custom=\"max-age=31536000; includeSubDomains\"');", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'max-age=31536000; custom=\"includeSubDomains\"');", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'custom=\"max-age=0; unrelated\"; max-age=31536000; includeSubDomains');", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; custom=\"max-age=0; unrelated\"');", 0)]
+    [DataRow("DS610002", "headers.php", "<?php header('Strict-Transport-Security: custom=\"max-age=0; unrelated\"; max-age=31536000; includeSubDomains');", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"custom=\\\"max-age=0; unrelated\\\"; max-age=31536000; includeSubDomains\");", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \";; max-age=31536000;; includeSubDomains; ;\");", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000 includeSubDomains\");", 1)]
     public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
     {
         DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });

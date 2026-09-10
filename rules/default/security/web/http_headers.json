@@ -119,7 +119,7 @@
     {
         "name": "HSTS missing required directives",
         "id": "DS610002",
-        "description": "A literal Strict-Transport-Security header has a max-age shorter than one year or is missing includeSubDomains. A long lifetime alone does not protect subdomains, and includeSubDomains alone does not provide a durable policy.",
+        "description": "A literal Strict-Transport-Security header is missing a max-age of at least one year or includeSubDomains, or repeats a required directive. Quoted extension values do not supply these protections.",
         "recommendation": "Send Strict-Transport-Security over HTTPS with max-age of at least 31536000 seconds and includeSubDomains after ensuring all affected hosts support HTTPS.",
         "tags": [
             "Web.HTTP.HSTS"
@@ -129,7 +129,7 @@
         "rule_info": "DS610002.md",
         "patterns": [
             {
-                "pattern": "(?:(?<![\\w-])|(?<=\\\\[rn]))Strict-Transport-Security[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>\\\\?\"[0-9]+\\\\?\"|\\\\(?![rn]).|[^\\\\\\r\\n\"'])+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
+                "pattern": "(?:(?<doubleQuotedSource>\")|'|(?<![\\w\"'-])|(?<=\\\\[rn]))Strict-Transport-Security[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>=[ \\t]*(?(doubleQuotedSource)(?=\\\\\"))(?<directiveQuote>\\\\?\")(?:(?!\\k<directiveQuote>)(?:\\\\(?![rn]).|[^\\\\\\r\\n]))*\\k<directiveQuote>|\\\\(?![rn]).|[^\\\\\\r\\n\"'])+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -154,7 +154,7 @@
         "conditions": [
             {
                 "pattern": {
-                    "pattern": "(?:^|[;:\"'])[ \\t]*max-age[ \\t]*=[ \\t]*(?<ageQuote>\\\\?\"|)0*(?:3153[6-9][0-9]{3}|315[4-9][0-9]{4}|31[6-9][0-9]{5}|3[2-9][0-9]{6}|[4-9][0-9]{7}|[1-9][0-9]{8,})\\k<ageQuote>[ \\t]*(?=;|[\"'\\r\\n]|$)",
+                    "pattern": "^[\"']?Strict-Transport-Security(?:[ \\t]*:[ \\t]*(?=[^\\s\"'])|(?:[\"']\\s*(?:,|:|\\]\\s*=)|[ \\t]*:|[ \\t]+)\\s*(?<valueQuote>[\"']))[ \\t;]*(?:(?:(?(maxAge)(?!))(?<maxAge>max-age[ \\t]*=[ \\t]*(?<ageQuote>\\\\?\"|)0*(?:3153[6-9][0-9]{3}|315[4-9][0-9]{4}|31[6-9][0-9]{5}|3[2-9][0-9]{6}|[4-9][0-9]{7}|[1-9][0-9]{8,})\\k<ageQuote>)|(?(subdomains)(?!))(?<subdomains>includeSubDomains)|(?!(?:max-age|includeSubDomains)(?=[ \\t=;\"']|$))[!#$%&'*+.^_`|~0-9A-Za-z-]+(?:[ \\t]*=[ \\t]*(?:[!#$%&'*+.^_`|~0-9A-Za-z-]+|(?<extensionQuote>\\\\?\")(?:(?!\\k<extensionQuote>)(?:\\\\(?![rn]).|[^\\\\\\r\\n]))*\\k<extensionQuote>))?)[ \\t]*(?:;[ \\t;]*|(?=(?(valueQuote)\\k<valueQuote>|$))))+(?(valueQuote)\\k<valueQuote>)$(?(maxAge)|(?!))(?(subdomains)|(?!))",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -165,26 +165,14 @@
                 },
                 "negate_finding": false,
                 "search_in": "finding-only",
-                "label": "longMaxAge"
-            },
-            {
-                "pattern": {
-                    "pattern": "(?:^|[;:\"'])[ \\t]*includeSubDomains[ \\t]*(?=;|[\"'\\r\\n]|$)",
-                    "type": "regex",
-                    "scopes": [
-                        "code"
-                    ],
-                    "modifiers": [
-                        "i"
-                    ]
-                },
-                "negate_finding": false,
-                "search_in": "finding-only",
-                "label": "subdomains"
+                "label": "validPolicy"
             }
         ],
-        "expression": "(rawHeader OR literalHeader) AND NOT (longMaxAge AND subdomains)",
+        "expression": "(rawHeader OR literalHeader) AND NOT validPolicy",
         "must-match": [
+            "Strict-Transport-Security: max-age=0; max-age=31536000; includeSubDomains",
+            "Strict-Transport-Security: max-age=31536000; includeSubDomains; includeSubDomains",
+            "Strict-Transport-Security: max-age=300; custom=\"max-age=31536000; includeSubDomains\"",
             "Strict-Transport-Security: max-age=0",
             "Strict-Transport-Security: max-age=31536000",
             "Strict-Transport-Security: includeSubDomains",
@@ -200,6 +188,7 @@
             "Strict-Transport-Security: \"max-age=31536000\""
         ],
         "must-not-match": [
+            "Strict-Transport-Security: custom=\"max-age=0; unrelated\"; max-age=31536000; includeSubDomains",
             "Strict-Transport-Security: max-age=31536000; includeSubDomains",
             "Strict-Transport-Security: max-age=31539999; includeSubDomains",
             "Strict-Transport-Security: max-age=31540000; includeSubDomains",
