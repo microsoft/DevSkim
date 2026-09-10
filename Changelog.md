@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.118] - 2026-09-10
+### Fix
+- Keep raw cookie and HSTS findings within physical or escaped header line boundaries, including headers after escaped CRLF sequences.
+- Accept quoted cookie values without truncating their security attributes, while continuing to skip dynamically concatenated header values.
+
 ## [1.0.117] - 2026-09-10
 ### Fix
 - Restrict HTML link protection checks to the same opening anchor tag and its actual attributes, including multiline attributes and case-insensitive HTML names.

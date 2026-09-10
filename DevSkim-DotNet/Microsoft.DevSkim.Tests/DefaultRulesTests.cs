@@ -210,6 +210,16 @@ public class DefaultRulesTests
     [DataRow("DS610000", "links.html", "<a title=\"x > y\" target=_blank rel=noreferrer>Open</a>", 0)]
     [DataRow("DS610000", "links.html", "<a target=\"_blank\" rel=\"external\nnoopener noreferrer\">Open</a>", 0)]
     [DataRow("DS610000", "links.tsx", "<a {...props}\n target=\"_blank\"\n rel=\"noopener noreferrer\">Open</a>", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=\"value\"; Secure; HttpOnly; SameSite=Lax');", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=\"value\"; Secure');", 1)]
+    [DataRow("DS610001", "headers.js", "response.write(\"Set-Cookie: sid=\\\"value\\\"; Secure; HttpOnly; SameSite=Lax\");", 0)]
+    [DataRow("DS610001", "headers.js", "response.write(\"Set-Cookie: sid=\\\"value\\\"; Secure\");", 1)]
+    [DataRow("DS610001", "headers.js", "response.write(\"Set-Cookie: sid=\"+value+\"; Secure\");", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: sid=\".$value);", 0)]
+    [DataRow("DS610001", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nSet-Cookie: sid=one\\r\\nSet-Cookie: other=two; Secure; HttpOnly; SameSite=Lax; Path=/\\r\\n\\r\\n\");", 1)]
+    [DataRow("DS610001", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nSet-Cookie: sid=one; Secure; HttpOnly; SameSite=Lax\\r\\nSet-Cookie: other=two; Secure; HttpOnly; SameSite=Strict\\r\\n\\r\\n\");", 0)]
+    [DataRow("DS610002", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nStrict-Transport-Security: max-age=0\\r\\nX-Other: max-age=31536000; includeSubDomains; extra=value\\r\\n\\r\\n\");", 1)]
+    [DataRow("DS610002", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nStrict-Transport-Security: max-age=31536000; includeSubDomains\\r\\n\\r\\n\");", 0)]
     public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
     {
         DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });

@@ -12,7 +12,7 @@
         "rule_info": "DS610001.md",
         "patterns": [
             {
-                "pattern": "(?<![\\w-])Set-Cookie[ \\t]*:[ \\t]*(?=[^\\s\"'])[^\\r\\n\"']+(?=[\\r\\n\"']|$)(?![\"']\\s*[+.])",
+                "pattern": "(?:(?<doubleQuotedSource>\")|'|(?<![\\w\"'-])|(?<=\\\\[rn]))Set-Cookie[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>=[ \\t]*(?(doubleQuotedSource)(?=\\\\\"))(?<cookieQuote>\\\\?\")[^\\s\"\\\\;,]*\\k<cookieQuote>|\\\\(?![rn]).|[^\\\\\\r\\n\"'])+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -83,6 +83,7 @@
         ],
         "expression": "(rawHeader OR literalHeader) AND NOT (secure AND httpOnly AND sameSite)",
         "must-match": [
+            "Set-Cookie: session=\"value\"; Secure",
             "Set-Cookie: session=value",
             "Set-Cookie: session=value; Secure",
             "Set-Cookie: session=value; HttpOnly",
@@ -100,6 +101,7 @@
             "response.setHeader(\"Set-Cookie\", \"session=value; Secure\"); response.setHeader(\"Set-Cookie\", \"other=value; Secure; HttpOnly; SameSite=Lax\");"
         ],
         "must-not-match": [
+            "Set-Cookie: session=\"value\"; Secure; HttpOnly; SameSite=Lax",
             "Set-Cookie: session=value; Secure; HttpOnly; SameSite=Lax",
             "set-cookie: session=value; samesite=Strict; HTTPONLY; SECURE",
             "Set-Cookie: session=value; Path=/; Secure; SameSite=None; HttpOnly",
@@ -127,7 +129,7 @@
         "rule_info": "DS610002.md",
         "patterns": [
             {
-                "pattern": "(?<![\\w-])Strict-Transport-Security[ \\t]*:[ \\t]*(?=[^\\s\"'])(?:[^\\r\\n\"']|\\\\?\"[0-9]+\\\\?\")+(?=[\\r\\n\"']|$)(?![\"']\\s*[+.])",
+                "pattern": "(?:(?<![\\w-])|(?<=\\\\[rn]))Strict-Transport-Security[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>\\\\?\"[0-9]+\\\\?\"|\\\\(?![rn]).|[^\\\\\\r\\n\"'])+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
                 "type": "regex",
                 "scopes": [
                     "code"
