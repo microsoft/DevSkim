@@ -56,6 +56,8 @@
             "shellscript",
             "powershell",
             "yaml",
+            "dockerfile",
+            "pip-requirements",
             ".config"
         ],
         "tags": [
@@ -75,6 +77,8 @@
         ],
         "must-match": [
             "pip install --extra-index-url https://pypi.org/simple contoso-lib",
+            "RUN pip install --extra-index-url https://pypi.org/simple contoso-lib",
+            "--extra-index-url https://pypi.org/simple\ncontoso-lib",
             "PIP_EXTRA_INDEX_URL=https://pypi.org/simple"
         ],
         "must-not-match": [

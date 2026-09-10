@@ -157,6 +157,39 @@ public class DefaultRulesTests
             }
 
     [TestMethod]
+    [DataRow("DS189424", "component.jsx", "// eval(input)", 0)]
+    [DataRow("DS189424", "component.tsx", "/* eval(input) */", 0)]
+    [DataRow("DS189424", "component.jsx", "eval(input)", 1)]
+    [DataRow("DS189424", "component.tsx", "eval(input); // DevSkim: ignore DS189424", 0)]
+    [DataRow("DS205001", "Dockerfile", "RUN pip install --extra-index-url https://pypi.org/simple contoso-lib", 1)]
+    [DataRow("DS205001", "Dockerfile", "# RUN pip install --extra-index-url https://pypi.org/simple contoso-lib", 0)]
+    [DataRow("DS205001", "requirements.txt", "--extra-index-url https://pypi.org/simple\ncontoso-lib", 1)]
+    [DataRow("DS205001", "requirements-dev.txt", "--extra-index-url https://pypi.org/simple\ncontoso-lib", 1)]
+    [DataRow("DS205001", "constraints.txt", "--extra-index-url https://pypi.org/simple\ncontoso-lib", 1)]
+    [DataRow("DS205001", "requirements.txt", "# --extra-index-url https://pypi.org/simple\ncontoso-lib", 0)]
+    [DataRow("DS205001", "requirements.txt", "--index-url https://example.com/simple\ncontoso-lib", 0)]
+    [DataRow("DS205001", "notes.txt", "--extra-index-url https://pypi.org/simple", 0)]
+    public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
+    {
+        DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });
+        Assert.AreEqual(1, ruleSet.Count(), $"Rule {ruleId} must be embedded exactly once.");
+        var analyzer = new DevSkimRuleProcessor(ruleSet, new DevSkimRuleProcessorOptions()
+        {
+            SeverityFilter = ruleSet.Single().Severity
+        });
+        Assert.AreEqual(expectedFindings, analyzer.Analyze(content, fileName).Count(issue => !issue.IsSuppressionInfo));
+    }
+
+    [TestMethod]
+    [DataRow("component.jsx")]
+    [DataRow("component.tsx")]
+    public void ReactSuppressionUsesCommentSyntax(string fileName)
+    {
+        Assert.AreEqual("// DevSkim: ignore DS189424", DevSkimRuleProcessor.GenerateSuppressionByFileName(fileName, "DS189424"));
+        Assert.AreEqual("/* DevSkim: ignore DS189424 */", DevSkimRuleProcessor.GenerateSuppressionByFileName(fileName, "DS189424", preferMultiLine: true));
+    }
+
+    [TestMethod]
     public void DenamespacedRule()
     {
         string content = @"<?xml version=""1.0"" encoding=""UTF-8""?>

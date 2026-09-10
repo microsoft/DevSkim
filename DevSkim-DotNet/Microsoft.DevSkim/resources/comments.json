@@ -13,8 +13,10 @@
       "rust",
       "swift",
       "javascript",
+      "javascriptreact",
       "java",
       "typescript",
+      "typescriptreact",
       "php",
       "kotlin",
       "scala",
@@ -47,7 +49,8 @@
       "toml",
       "dotenv",
       "makefile",
-      "pem"
+      "pem",
+      "pip-requirements"
     ],
     "inline": "#",
     "prefix": "#",

@@ -255,6 +255,17 @@
     ]
   },
   {
+    "name": "pip-requirements",
+    "extensions": [],
+    "file-names": [
+      "requirements.txt",
+      "requirements-dev.txt",
+      "requirements-test.txt",
+      "requirements.in",
+      "constraints.txt"
+    ]
+  },
+  {
     "name": "plaintext",
     "extensions": [
       ".txt"
