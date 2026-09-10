@@ -50,6 +50,7 @@
 		"onLanguage:sql",
 		"onLanguage:rust",
 		"onLanguage:groovy",
+		"onLanguage:html",
 		"onLanguage:typescript",
 		"onLanguage:typescriptreact",
 		"onLanguage:jade",
