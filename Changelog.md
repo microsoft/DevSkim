@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.98] - 2026-09-10
+### Dependencies
+- Consolidated the five open Dependabot pull requests (#769, #778, #781, #782, and #783) into one update, resolving nine npm security alerts by upgrading `brace-expansion` 1.1.16 to 1.1.18 and 5.0.8 to 5.0.9, `fast-uri` 3.1.4 to 3.1.7, `@humanfs/node` 0.16.7 to 0.16.8, and `js-yaml` 4.3.0 to 4.3.2.
+- Upgraded `qs` from 6.15.2 to 6.16.0 through `npm audit fix`, resolving the remaining moderate npm audit finding.
+
+### Pipeline
+- Changed each Dependabot security-update group to omit the catch-all `patterns: ["*"]` selector, which Dependabot can incorrectly treat as matching no dependencies and then fall back to independent pull requests (dependabot/dependabot-core#13919).
+
 ## [1.0.97] - 2026-08-11
 ### Pipeline
 - Fixed the VS Code extension release pipeline failing at the publish step with `npm error code E401`. The step ran `npx @vscode/vsce`, and because the argument is a package name rather than a bin name, npx cannot short circuit to the copy installed by the preceding `npm install -g @vscode/vsce` step and always fetches the package manifest from the npm registry, which is not authenticated inside the `AzureCLI@2` task. The step now invokes the globally installed `vsce.cmd` by its full path, so publishing needs no registry access, and fails with an explicit message if the binary is missing.
@@ -497,4 +505,3 @@ New: `devskim analyze -I path/to/src -O path/to/out.sarif`
 
 ### Fixes
 - Rule improvements and DevSkim engine performance and reliablity improvements.
-

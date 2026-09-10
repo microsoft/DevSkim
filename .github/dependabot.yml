@@ -6,8 +6,9 @@
 #   the `all-dependencies` multi-ecosystem group, so Dependabot consolidates them --
 #   across every directory it monitors -- into a single weekly pull request.
 # * Security updates cannot join a multi-ecosystem group, so each ecosystem also
-#   declares a `*-security-updates` group. Advisory-driven bumps then arrive as one
-#   grouped pull request per ecosystem instead of one per advisory.
+#   declares a catch-all `*-security-updates` group. These groups intentionally omit
+#   `patterns`: Dependabot currently can treat `patterns: ["*"]` as matching nothing
+#   and fall back to one pull request per dependency (dependabot/dependabot-core#13919).
 # * `open-pull-requests-limit: 1` caps each ecosystem at a single open version-update
 #   pull request, so nothing slips out of the grouping.
 # * The `no changelog` label lets the required "Check Changelog Action" gate pass on
@@ -51,8 +52,6 @@ updates:
     groups:
       npm-security-updates:
         applies-to: security-updates
-        patterns:
-          - "*"
 
   # .NET: library, CLI, language server, and Visual Studio extension projects
   # discovered through Microsoft.DevSkim.sln.
@@ -74,8 +73,6 @@ updates:
     groups:
       nuget-security-updates:
         applies-to: security-updates
-        patterns:
-          - "*"
 
   # GitHub Actions used by the workflows in .github/workflows.
   - package-ecosystem: "github-actions"
@@ -96,7 +93,5 @@ updates:
     groups:
       github-actions-security-updates:
         applies-to: security-updates
-        patterns:
-          - "*"
     cooldown:
       default-days: 7
