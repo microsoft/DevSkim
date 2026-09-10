@@ -1,0 +1,223 @@
+[
+    {
+        "name": "Cookie missing security attributes",
+        "id": "DS610001",
+        "description": "A literal Set-Cookie header is missing Secure, HttpOnly, or an explicit valid SameSite attribute. Setting only some of these attributes leaves other cookie protections unenforced.",
+        "recommendation": "Set Secure and HttpOnly, and explicitly choose SameSite=Lax, SameSite=Strict, or SameSite=None as appropriate for the application.",
+        "tags": [
+            "Web.HTTP.Cookie"
+        ],
+        "confidence": "medium",
+        "severity": "BestPractice",
+        "rule_info": "DS610001.md",
+        "patterns": [
+            {
+                "pattern": "(?<![\\w-])Set-Cookie[ \\t]*:[ \\t]*(?=[^\\s\"'])[^\\r\\n\"']+(?=[\\r\\n\"']|$)(?![\"']\\s*[+.])",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": [
+                    "i"
+                ],
+                "label": "rawHeader"
+            },
+            {
+                "pattern": "(?<![\\w-])Set-Cookie(?:[\"']\\s*(?:,|:|\\]\\s*=)|[ \\t]*:|[ \\t]+)\\s*([\"'])(?:\\\\.|(?!\\1)[^\\\\\\r\\n])*\\1(?!\\s*[+.])(?=\\s*(?:(?:always\\s*)?[);,}\\]]|$)|[ \\t]*\\r?\\n)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": [
+                    "i"
+                ],
+                "label": "literalHeader"
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": ";[ \\t]*Secure[ \\t]*(?=;|[\"'\\r\\n]|$)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": [
+                        "i"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "finding-only",
+                "label": "secure"
+            },
+            {
+                "pattern": {
+                    "pattern": ";[ \\t]*HttpOnly[ \\t]*(?=;|[\"'\\r\\n]|$)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": [
+                        "i"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "finding-only",
+                "label": "httpOnly"
+            },
+            {
+                "pattern": {
+                    "pattern": ";[ \\t]*SameSite[ \\t]*=[ \\t]*(?:Lax|Strict|None)[ \\t]*(?=;|[\"'\\r\\n]|$)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": [
+                        "i"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "finding-only",
+                "label": "sameSite"
+            }
+        ],
+        "expression": "(rawHeader OR literalHeader) AND NOT (secure AND httpOnly AND sameSite)",
+        "must-match": [
+            "Set-Cookie: session=value",
+            "Set-Cookie: session=value; Secure",
+            "Set-Cookie: session=value; HttpOnly",
+            "Set-Cookie: session=value; SameSite=Lax",
+            "Set-Cookie: session=value; Secure; HttpOnly",
+            "Set-Cookie: session=value; Secure; SameSite=Strict",
+            "Set-Cookie: session=value; HttpOnly; SameSite=None",
+            "Set-Cookie: session=value; Secure; HttpOnly; SameSite=invalid",
+            "Set-Cookie: Secure=HttpOnly; SameSite=Lax",
+            "Set-Cookie: session=value; NotSecure; NotHttpOnly; SameSite=Lax",
+            "response.setHeader(\"Set-Cookie\", \"session=value; Secure\");",
+            "Response.Headers[\"Set-Cookie\"] = \"session=value; HttpOnly; SameSite=Lax\";",
+            "{\"Set-Cookie\": \"session=value; Secure; HttpOnly\"}",
+            "Set-Cookie: \"session=value; Secure\"",
+            "response.setHeader(\"Set-Cookie\", \"session=value; Secure\"); response.setHeader(\"Set-Cookie\", \"other=value; Secure; HttpOnly; SameSite=Lax\");"
+        ],
+        "must-not-match": [
+            "Set-Cookie: session=value; Secure; HttpOnly; SameSite=Lax",
+            "set-cookie: session=value; samesite=Strict; HTTPONLY; SECURE",
+            "Set-Cookie: session=value; Path=/; Secure; SameSite=None; HttpOnly",
+            "response.setHeader(\"Set-Cookie\", \"session=value; Secure; HttpOnly; SameSite=Strict\");",
+            "Response.Headers[\"Set-Cookie\"] = \"session=value; Secure; HttpOnly; SameSite=Lax\";",
+            "{\"Set-Cookie\": \"session=value; Secure; HttpOnly; SameSite=Lax\"}",
+            "Set-Cookie: \"session=value; Secure; HttpOnly; SameSite=Lax\"\nX-Other: value",
+            "response.setHeader(\"Set-Cookie\", cookieValue);",
+            "response.setHeader(\"Set-Cookie\", \"session=\" + cookieValue);",
+            "header(\"Set-Cookie: session=\" . $cookieValue);",
+            "X-Set-Cookie: session=value",
+            "Cookie: session=value"
+        ]
+    },
+    {
+        "name": "HSTS missing required directives",
+        "id": "DS610002",
+        "description": "A literal Strict-Transport-Security header has a max-age shorter than one year or is missing includeSubDomains. A long lifetime alone does not protect subdomains, and includeSubDomains alone does not provide a durable policy.",
+        "recommendation": "Send Strict-Transport-Security over HTTPS with max-age of at least 31536000 seconds and includeSubDomains after ensuring all affected hosts support HTTPS.",
+        "tags": [
+            "Web.HTTP.HSTS"
+        ],
+        "confidence": "medium",
+        "severity": "BestPractice",
+        "rule_info": "DS610002.md",
+        "patterns": [
+            {
+                "pattern": "(?<![\\w-])Strict-Transport-Security[ \\t]*:[ \\t]*(?=[^\\s\"'])(?:[^\\r\\n\"']|\\\\?\"[0-9]+\\\\?\")+(?=[\\r\\n\"']|$)(?![\"']\\s*[+.])",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": [
+                    "i"
+                ],
+                "label": "rawHeader"
+            },
+            {
+                "pattern": "(?<![\\w-])Strict-Transport-Security(?:[\"']\\s*(?:,|:|\\]\\s*=)|[ \\t]*:|[ \\t]+)\\s*([\"'])(?:\\\\.|(?!\\1)[^\\\\\\r\\n])*\\1(?!\\s*[+.])(?=\\s*(?:(?:always\\s*)?[);,}\\]]|$)|[ \\t]*\\r?\\n)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": [
+                    "i"
+                ],
+                "label": "literalHeader"
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "(?:^|[;:\"'])[ \\t]*max-age[ \\t]*=[ \\t]*(?<ageQuote>\\\\?\"|)0*(?:3153[6-9][0-9]{3}|315[4-9][0-9]{4}|31[6-9][0-9]{5}|3[2-9][0-9]{6}|[4-9][0-9]{7}|[1-9][0-9]{8,})\\k<ageQuote>[ \\t]*(?=;|[\"'\\r\\n]|$)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": [
+                        "i"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "finding-only",
+                "label": "longMaxAge"
+            },
+            {
+                "pattern": {
+                    "pattern": "(?:^|[;:\"'])[ \\t]*includeSubDomains[ \\t]*(?=;|[\"'\\r\\n]|$)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": [
+                        "i"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "finding-only",
+                "label": "subdomains"
+            }
+        ],
+        "expression": "(rawHeader OR literalHeader) AND NOT (longMaxAge AND subdomains)",
+        "must-match": [
+            "Strict-Transport-Security: max-age=0",
+            "Strict-Transport-Security: max-age=31536000",
+            "Strict-Transport-Security: includeSubDomains",
+            "Strict-Transport-Security: max-age=31535999; includeSubDomains",
+            "Strict-Transport-Security: max-age=00031535999; includeSubDomains",
+            "Strict-Transport-Security: max-age=-31536000; includeSubDomains",
+            "Strict-Transport-Security: max-age=31536000invalid; includeSubDomains",
+            "Strict-Transport-Security: max-age=31536000; includeSubDomainsSuffix",
+            "Strict-Transport-Security: max-age=\"31535999\"; includeSubDomains",
+            "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000\");",
+            "response.setHeader(\"Strict-Transport-Security\", \"max-age=300; includeSubDomains\"); response.setHeader(\"Strict-Transport-Security\", \"max-age=63072000; includeSubDomains\");",
+            "add_header Strict-Transport-Security \"max-age=63072000\" always;",
+            "Strict-Transport-Security: \"max-age=31536000\""
+        ],
+        "must-not-match": [
+            "Strict-Transport-Security: max-age=31536000; includeSubDomains",
+            "Strict-Transport-Security: max-age=31539999; includeSubDomains",
+            "Strict-Transport-Security: max-age=31540000; includeSubDomains",
+            "Strict-Transport-Security: max-age=31600000; includeSubDomains",
+            "Strict-Transport-Security: max-age=32000000; includeSubDomains",
+            "Strict-Transport-Security: max-age=40000000; includeSubDomains",
+            "Strict-Transport-Security: max-age=63072000; includeSubDomains; preload",
+            "Strict-Transport-Security: max-age=100000000; includeSubDomains",
+            "Strict-Transport-Security: max-age=00031536000; includeSubDomains",
+            "strict-transport-security: INCLUDESUBDOMAINS; MAX-AGE = 31536000",
+            "Strict-Transport-Security: max-age=\"31536000\"; includeSubDomains",
+            "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; includeSubDomains\");",
+            "response.setHeader(\"Strict-Transport-Security\", \"max-age=\\\"31536000\\\"; includeSubDomains\");",
+            "header('Strict-Transport-Security: max-age=\"31536000\"; includeSubDomains');",
+            "add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;",
+            "Strict-Transport-Security: \"max-age=31536000; includeSubDomains\"\nX-Other: value",
+            "response.setHeader(\"Strict-Transport-Security\", headerValue);",
+            "response.setHeader(\"Strict-Transport-Security\", \"max-age=\" + maxAge);",
+            "X-Strict-Transport-Security: max-age=0",
+            "response.setHeader(\"X-Frame-Options\", \"DENY\");"
+        ]
+    }
+]

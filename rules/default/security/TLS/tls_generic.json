@@ -289,7 +289,7 @@
     {
         "name": "Generic: Hard-coded SSL/TLS Protocol",
         "id": "DS440016",
-        "description": "Curl: Hard-coded SSL/TLS Protocol",
+        "description": "Generic: Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "overrides": [
             "DS440000"
@@ -311,7 +311,69 @@
                 "scopes": [
                     "code"
                 ],
-                "_comment": "curl"
+                "_comment": "curl",
+                "label": "curlFlag"
+            },
+            {
+                "pattern": "--secure-protocol=\\S*",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "wget",
+                "label": "p0"
+            },
+            {
+                "pattern": "CURL_SSLVERSION_(MAX_)?(SSL|TLS)v[0123_]+",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "curl (library)",
+                "label": "p1"
+            },
+            {
+                "pattern": "ssl_protocols\\s+[^;]+;",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Nginx",
+                "label": "p2"
+            },
+            {
+                "pattern": "ssl_version",
+                "type": "string",
+                "scopes": [
+                    "code"
+                ],
+                "label": "p3"
+            },
+            {
+                "pattern": "DISABLE_SSL_([^\\b]+)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "label": "p4"
+            },
+            {
+                "pattern": "SSLProtocol\\s.+",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Apache",
+                "label": "p5"
+            },
+            {
+                "pattern": "sslEnabledProtocols\\s*=",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "_comment": "Generic",
+                "label": "p6"
             }
         ],
         "conditions": [
@@ -323,94 +385,18 @@
                         "code"
                     ]
                 },
-                "negate_finding": true,
-                "search_in": "same-line"
+                "negate_finding": false,
+                "search_in": "same-line",
+                "label": "tls13"
             }
         ],
+        "expression": "(curlFlag AND NOT tls13) OR p0 OR p1 OR p2 OR p3 OR p4 OR p5 OR p6",
         "must-match": [
+            "curl --sslv3 https://example.com",
             "curl --tlsv1.1 https://example.com",
             "curl --tlsv1.2 https://example.com",
-            "curl --sslv3 https://example.com"
-        ],
-        "must-not-match": [
-            "curl --tlsv1.3 https://example.com"
-        ]
-    },
-    {
-        "name": "Generic: Hard-coded SSL/TLS Protocol",
-        "id": "DS440016",
-        "description": "Generic: Hard-coded SSL/TLS Protocol",
-        "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
-        "overrides": [
-            "DS440000"
-        ],
-        "does_not_apply_to": [
-            "json",
-            "yaml"
-        ],
-        "tags": [
-            "Cryptography.Protocol.TLS.Hard-Coded"
-        ],
-        "confidence": "high",
-        "severity": "ManualReview",
-        "rule_info": "DS440001.md",
-        "patterns": [
-            {
-                "pattern": "--secure-protocol=\\S*",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "wget"
-            },
-            {
-                "pattern": "CURL_SSLVERSION_(MAX_)?(SSL|TLS)v[0123_]+",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "curl (library)"
-            },
-            {
-                "pattern": "ssl_protocols\\s+[^;]+;",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "Nginx"
-            },
-            {
-                "pattern": "ssl_version",
-                "type": "string",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
-                "pattern": "DISABLE_SSL_([^\\b]+)",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
-                "pattern": "SSLProtocol\\s.+",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "Apache"
-            },
-            {
-                "pattern": "sslEnabledProtocols\\s*=",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "Generic"
-            }
-        ],
-        "must-match": [
+            "curl --tlsv1.2 https://example.com\ncurl --tlsv1.3 https://example.com",
+            "wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com",
             "wget --secure-protocol=SSLv3 https://example.com",
             "curl_easy_setopt(h, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_1);",
             "ssl_protocols TLSv1 TLSv1.1;",
@@ -420,6 +406,8 @@
             "sslEnabledProtocols = TLSv1.1"
         ],
         "must-not-match": [
+            "curl --tlsv1.3 https://example.com",
+            "curl --tlsv1.2 --tlsv1.3 https://example.com",
             "wget https://example.com"
         ]
     },

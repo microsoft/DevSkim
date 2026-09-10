@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.112] - 2026-09-10
+### Added
+- Added `DS610001` for literal `Set-Cookie` headers missing any of `Secure`, `HttpOnly`, or a valid explicit `SameSite` attribute. Boolean conditions report partially hardened cookies and require all protections on the same header.
+- Added `DS610002` for literal `Strict-Transport-Security` headers missing a `max-age` of at least one year or `includeSubDomains`, with conditions confined to the matched header and guidance for deployment and rollout considerations.
+
+### Fix
+- Consolidated the two `DS440016` entries into one boolean-expression rule, preserving the shared suppression ID while applying the same-line TLS 1.3 exemption only to curl flags. Other hard-coded protocol patterns still report when TLS 1.3 appears on that line.
+
+### Dependencies
+- Updated `Microsoft.CST.ApplicationInspector.RulesEngine` and `Microsoft.CST.ApplicationInspector.Logging` from 1.10.1 to 1.10.2, fixing verifier and analyzer agreement for rules combining expressions and conditions.
+
 ## [1.0.110] - 2026-08-26
 ### Changed
 - Moved to `Microsoft.CST.ApplicationInspector.RulesEngine` and `...Logging` 1.10.1. This is the first release carrying the boolean expression support from [ApplicationInspector#654](https://github.com/microsoft/ApplicationInspector/pull/654), plus four rules-engine fixes: string patterns always reported pattern index 0, conditions were only judged against the first capture, the async path over-reported by taking a union rather than an intersection, and override suppression used different overlap rules on the sync and async paths. The last of these affects DevSkim in particular, since 38 rules use `overrides` and the sync path now requires full containment; the preceding release brought every DevSkim override pair into containment ahead of this change.

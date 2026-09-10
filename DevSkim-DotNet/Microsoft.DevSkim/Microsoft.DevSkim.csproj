@@ -24,7 +24,7 @@
   </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.10.1" />
+      <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.10.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Update="Nerdbank.GitVersioning">
         <Version>3.7.115</Version>
@@ -178,6 +178,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\web\html_links.json">
         <Link>rules\default\security\web\html_links.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\web\http_headers.json">
+        <Link>rules\default\security\web\http_headers.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\xml\external_entities.json">
         <Link>rules\default\security\xml\external_entities.json</Link>
