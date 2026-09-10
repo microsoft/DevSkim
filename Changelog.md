@@ -4,9 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.96] - 2026-08-01
+## [1.0.98] - 2026-09-10
 ### Added
 - Added HTML analysis and suppression support for `.html` and `.htm` files, including VS Code integration.
+
+## [1.0.97] - 2026-08-11
+### Pipeline
+- Fixed the VS Code extension release pipeline failing at the publish step with `npm error code E401`. The step ran `npx @vscode/vsce`, and because the argument is a package name rather than a bin name, npx cannot short circuit to the copy installed by the preceding `npm install -g @vscode/vsce` step and always fetches the package manifest from the npm registry, which is not authenticated inside the `AzureCLI@2` task. The step now invokes the globally installed `vsce.cmd` by its full path, so publishing needs no registry access, and fails with an explicit message if the binary is missing.
+- Removed the `npm_config_registry` environment variable from the publish step. It was only there to make the `npx` fetch resolve, is redundant with the `.npmrc` copied into the staging directory, and does not affect where the extension is published - `vsce publish` uploads to the Visual Studio Marketplace, not to an npm registry.
+- Hardened the VS Code publish step against an unexpected artifact count. It previously passed a `Resolve-Path` result straight to `--packagePath`, which yields `$null` when signing produced no `.vsix` and an array that splats into multiple arguments when it produced more than one. The step now resolves the artifact explicitly and fails with a clear message unless exactly one is present.
+
+## [1.0.96] - 2026-08-03
+### Dependencies
+- Consolidated the open Dependabot pull requests (#765, #766, #767, #768, #769) into a single update for the VS Code extension: `linkify-it` 5.0.1 to 5.0.2, `fast-uri` 3.1.2 to 3.1.4, `undici` 7.24.6 to 7.29.0, and `brace-expansion` 1.1.14 to 1.1.16 and 5.0.5 to 5.0.8.
+- Bumped `vscode-languageclient` from 7.0.0 to 10.1.0 in the extension client, which pulls `vscode-languageserver-protocol` up to 3.18.2 and replaces the transitive `minimatch` 3.1.5 chain with 10.2.5.
+- Bumped `@types/vscode` from 1.77.0 to 1.91.0 to match the new minimum VS Code version.
+- Bumped `typescript` from 4.9.5 to 5.9.3; the `vscode-languageclient` 10 type declarations use the `NoInfer` utility type, which requires TypeScript 5.4 or newer.
+- Pinned `brace-expansion` to 1.1.16 and 5.0.8 and `minimatch` to 10.2.5 rather than the 1.1.18, 5.0.9, and 10.2.6 that Dependabot had selected. Those three releases have since been removed from the npm registry, so the packages could no longer be restored and the build failed with a 404 while fetching them.
+
+### Changed
+- Raised the minimum VS Code version supported by the extension from 1.63 to 1.91, which `vscode-languageclient` 10 requires.
+- Migrated `client/extension.ts` to the `vscode-languageclient` 8+ client lifecycle: `LanguageClient.start()` returns a promise instead of a disposable and `onReady()` no longer exists, so notification handlers are now registered before the client starts and the client is disposed through the extension context.
+- Switched the VS Code extension TypeScript projects to `node16` module resolution, which `vscode-languageclient` 10 requires because it declares its entry points only through `exports`.
 
 ## [1.0.95] - 2026-07-31
 ### Pipeline

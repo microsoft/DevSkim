@@ -113,19 +113,21 @@ export function activate(context: ExtensionContext) {
 				clientOptions
 			);
 
-			 // Start the client. This will also launch the server
 			client.registerProposedFeatures();
-			const disposable = client.start();
-			
-			client.onReady().then(() => 
+
+			// Notification handlers must be registered before the client starts so no
+			// message sent during initialization is missed.
+			client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) =>
+			{
+				fixer.ensureMapHasMappings(mapping);
+			});
+			client.onNotification(getFileVersion(), (fileversion: FileVersion) =>{
+				fixer.removeFindingsForOtherVersions(fileversion);
+			});
+
+			// Start the client. This will also launch the server
+			client.start().then(() =>
 				{
-					client.onNotification(getCodeFixMapping(), (mapping: CodeFixMapping) => 
-					{
-						fixer.ensureMapHasMappings(mapping);
-					});
-					client.onNotification(getFileVersion(), (fileversion: FileVersion) =>{
-						fixer.removeFindingsForOtherVersions(fileversion);
-					});
 					client.sendNotification(DidChangeConfigurationNotification.type, { settings: ""});
 				}
 			);
@@ -140,7 +142,7 @@ export function activate(context: ExtensionContext) {
 			});
 
 			// For disposal of the client
-			context.subscriptions.push(disposable);
+			context.subscriptions.push(client);
 		}
 	});
 }
