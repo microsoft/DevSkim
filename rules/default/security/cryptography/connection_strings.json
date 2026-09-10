@@ -31,7 +31,7 @@
         "rule_info": "DS114352.md",
         "patterns": [
             {
-                "pattern": "(Encrypt\\s*=\\s*(False|false|no|0)\\b|TrustServerCertificate\\s*=\\s*(True|true|yes|1)\\b|sslmode\\s*=\\s*(prefer|allow|disable)\\b|SslMode\\s*=\\s*(Preferred|None)\\b|useSSL\\s*=\\s*false\\b)",
+                "pattern": "((?i:Encrypt\\s*=\\s*(false|no|0)\\b|TrustServerCertificate\\s*=\\s*(true|yes|1)\\b)|sslmode\\s*=\\s*(prefer|allow|disable)\\b|SslMode\\s*=\\s*(Preferred|None)\\b|useSSL\\s*=\\s*false\\b)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -43,6 +43,8 @@
             "{\n  \"ConnectionStrings\": {\n    \"Pg\": \"Host=db;Username=u;sslmode=prefer\"\n  }\n}",
             "<add name=\"Default\" connectionString=\"Server=db;Encrypt=False;\" />",
             "var cs = \"Server=db;Database=app;TrustServerCertificate=True;\";",
+            "var cs = \"Server=db;encrypt=false;\";",
+            "var cs = \"Server=db;TRUSTSERVERCERTIFICATE=TRUE;\";",
             "DATABASE_URL=postgres://u:p@db/app?sslmode=disable"
         ],
         "must-not-match": [

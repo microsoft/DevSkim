@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.115] - 2026-09-10
+### Fix
+- Recognize supported YAML boolean spellings in Kubernetes security settings and distinguish image registry ports from version tags.
+- Match SQL Server encryption and certificate-validation connection-string options without regard to case.
+- Restrict the NuGet inherited-source exemption to a real `<clear />` child of `<packageSources>`.
+
 ## [1.0.114] - 2026-09-10
 ### Fix
 - Added JavaScript and TypeScript React comment syntax so rules ignore comments and generated suppressions remain valid source code.

@@ -17,7 +17,7 @@
         "patterns": [
             {
                 "xpaths": [
-                    "/configuration/packageSources/add/@key"
+                    "/configuration/packageSources[not(clear)]/add/@key"
                 ],
                 "pattern": "^.+$",
                 "type": "regex",
@@ -26,20 +26,8 @@
                 ]
             }
         ],
-        "conditions": [
-            {
-                "pattern": {
-                    "pattern": "<clear",
-                    "type": "substring",
-                    "scopes": [
-                        "code"
-                    ]
-                },
-                "negate_finding": true,
-                "search_in": "same-file"
-            }
-        ],
         "must-match": [
+            "<configuration><packageSources><add key=\"contoso\" value=\"https://example.com/v3/index.json\" /></packageSources><disabledPackageSources><clear /></disabledPackageSources></configuration>",
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>"
         ],
         "must-not-match": [

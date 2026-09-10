@@ -23,7 +23,7 @@
                     "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/privileged",
                     "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/privileged"
                 ],
-                "pattern": "true",
+                "pattern": "^(true|True|TRUE)$",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -74,7 +74,7 @@
                     "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
                     "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation"
                 ],
-                "pattern": "true",
+                "pattern": "^(true|True|TRUE)$",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -128,7 +128,7 @@
                     "/spec/template/spec/hostNetwork",
                     "/spec/jobTemplate/spec/template/spec/hostNetwork"
                 ],
-                "pattern": "true",
+                "pattern": "^(true|True|TRUE)$",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -180,7 +180,7 @@
                     "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/readOnlyRootFilesystem",
                     "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/readOnlyRootFilesystem"
                 ],
-                "pattern": "false",
+                "pattern": "^(false|False|FALSE)$",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -234,7 +234,7 @@
                     "/spec/template/spec/securityContext/runAsNonRoot",
                     "/spec/jobTemplate/spec/template/spec/securityContext/runAsNonRoot"
                 ],
-                "pattern": "false",
+                "pattern": "^(false|False|FALSE)$",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -285,7 +285,7 @@
                     "/spec/jobTemplate/spec/template/spec/containers/*/image",
                     "/spec/jobTemplate/spec/template/spec/initContainers/*/image"
                 ],
-                "pattern": "^([^@:\\s]+|[^@\\s]*:latest)$",
+                "pattern": "^(?:(?:[^@\\s]+/)?[^@:\\s/]+|[^@\\s]*:latest)$",
                 "type": "regex",
                 "scopes": [
                     "code"
