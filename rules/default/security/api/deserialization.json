@@ -210,7 +210,7 @@
         "rule_info": "DS425060.md",
         "patterns": [
             {
-                "pattern": "yaml\\.load(_all)?\\s*\\(",
+                "pattern": "\\byaml\\.load(?:_all)?\\s*\\((?>[^()\"'#]+|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|#[^\\r\\n]*(?:\\r?\\n|$)|(?<nestedCall>\\()|(?<-nestedCall>\\)))*(?(nestedCall)(?!))\\)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -220,14 +220,14 @@
         "conditions": [
             {
                 "pattern": {
-                    "pattern": "(SafeLoader|CSafeLoader|BaseLoader)",
+                    "pattern": "^yaml\\.load(?:_all)?\\s*\\((?>[^()\"'#,]+|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|#[^\\r\\n]*(?:\\r?\\n|$)|(?<nestedCall>\\()|(?<-nestedCall>\\))|,(?(nestedCall)|(?<argument>)))*(?(nestedCall)(?!))(?<=\\(|,)(?:\\s|#[^\\r\\n]*(?:\\r?\\n|$))*(?(argument)(?:Loader\\s*=\\s*)?|Loader\\s*=\\s*)(?:yaml\\.)?(?:SafeLoader|CSafeLoader|BaseLoader)\\s*(?=,|\\))",
                     "type": "regex",
                     "scopes": [
                         "code"
                     ]
                 },
                 "negate_finding": true,
-                "search_in": "same-line"
+                "search_in": "finding-only"
             }
         ],
         "must-match": [
@@ -236,7 +236,9 @@
         ],
         "must-not-match": [
             "config = yaml.safe_load(open('config.yml'))",
-            "config = yaml.load(stream, Loader=yaml.SafeLoader)"
+            "config = yaml.load(stream, Loader=yaml.SafeLoader)",
+            "config = yaml.load(\n    open('config.yml'),\n    Loader=yaml.SafeLoader,\n)",
+            "config = yaml.load(stream, yaml.CSafeLoader)"
         ]
     },
     {

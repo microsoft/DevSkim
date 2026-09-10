@@ -187,6 +187,19 @@ public class DefaultRulesTests
     [DataRow("DS205000", "NuGet.config", "<configuration><packageSources><add key=\"private\" value=\"https://example.com/v3/index.json\" /></packageSources><disabledPackageSources><clear /></disabledPackageSources></configuration>", 1)]
     [DataRow("DS205000", "NuGet.config", "<configuration><packageSources><!-- <clear /> --><add key=\"private\" value=\"https://example.com/v3/index.json\" /></packageSources></configuration>", 1)]
     [DataRow("DS205000", "NuGet.config", "<configuration><packageSources><clear /><add key=\"private\" value=\"https://example.com/v3/index.json\" /></packageSources><disabledPackageSources><clear /></disabledPackageSources></configuration>", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(\n    resolve_entities=False,\n    load_dtd=False,\n    no_network=True,\n)", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(load_dtd=False)", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(no_network=True)", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(resolve_entities=True, no_network=True)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(\n    stream,\n    Loader=yaml.SafeLoader\n)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(\n    open('config.yml'),\n    Loader=yaml.CSafeLoader,\n)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream, yaml.BaseLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream,\n    # Select a safe loader\n    Loader=yaml.SafeLoader\n)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream); other = yaml.load(stream, Loader=yaml.SafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream, Loader=get_loader(Loader=yaml.SafeLoader))", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load('Loader=yaml.SafeLoader', Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream,\n    # Loader=yaml.SafeLoader\n    Loader=yaml.UnsafeLoader\n)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(SafeLoader, Loader=yaml.UnsafeLoader)", 1)]
     public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
     {
         DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });

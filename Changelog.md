@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.116] - 2026-09-10
+### Fix
+- Report only unsafe lxml option values, allowing the documented safe configuration to span multiple lines.
+- Scope PyYAML safe-loader exemptions to the matching call and its loader argument, including multiline calls, nested arguments, and positional loaders.
+
 ## [1.0.115] - 2026-09-10
 ### Fix
 - Recognize supported YAML boolean spellings in Kubernetes security settings and distinguish image registry ports from version tags.
