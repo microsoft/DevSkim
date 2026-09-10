@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.98] - 2026-09-10
+## [1.0.99] - 2026-09-10
 ### Dependencies
 - Consolidated the five open Dependabot pull requests (#769, #778, #781, #782, and #783) into one update, resolving nine npm security alerts by upgrading `brace-expansion` 1.1.16 to 1.1.18 and 5.0.8 to 5.0.9, `fast-uri` 3.1.4 to 3.1.7, `@humanfs/node` 0.16.7 to 0.16.8, and `js-yaml` 4.3.0 to 4.3.2.
 - Upgraded `qs` from 6.15.2 to 6.16.0 through `npm audit fix`, resolving the remaining moderate npm audit finding.
