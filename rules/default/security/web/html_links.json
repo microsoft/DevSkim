@@ -20,30 +20,52 @@
         "rule_info": "DS610000.md",
         "patterns": [
             {
-                "pattern": "<a\\s[^>]*target\\s*=\\s*[\"']?_blank",
+                "pattern": "<a(?=\\s)(?:[^\"'>]|\"[^\"]*\"|'[^']*')*>",
                 "type": "regex",
                 "scopes": [
                     "code"
+                ],
+                "modifiers": [
+                    "i"
                 ]
             }
         ],
         "conditions": [
             {
                 "pattern": {
-                    "pattern": "(noopener|noreferrer)",
+                    "pattern": "^<a(?=\\s)(?:[^\"'>]|\"[^\"]*\"|'[^']*')*?\\s+target\\s*=\\s*(?:\"_blank\"|'_blank'|_blank(?=[\\s>]))",
                     "type": "regex",
                     "scopes": [
                         "code"
+                    ],
+                    "modifiers": [
+                        "i"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "finding-only"
+            },
+            {
+                "pattern": {
+                    "pattern": "^<a(?=\\s)(?:[^\"'>]|\"[^\"]*\"|'[^']*')*?\\s+rel\\s*=\\s*(?:\"\\s*(?:[^\"\\s]+\\s+)*(?:noopener|noreferrer)(?=\\s|\")[^\"]*\"|'\\s*(?:[^'\\s]+\\s+)*(?:noopener|noreferrer)(?=\\s|')[^']*'|(?:noopener|noreferrer)(?=[\\s>]))",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": [
+                        "i"
                     ]
                 },
                 "negate_finding": true,
-                "search_in": "same-line"
+                "search_in": "finding-only"
             }
         ],
         "must-match": [
+            "<a href=\"https://example.com\" target=\"_blank\">Open</a><a rel=\"noopener\" href=\"/about\">About</a>",
             "<a href=\"https://example.com\" target=\"_blank\">Open</a>"
         ],
         "must-not-match": [
+            "<a href=\"https://example.com\"\n   target=\"_blank\"\n   rel=\"noopener noreferrer\">Open</a>",
             "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Open</a>",
             "<a href=\"/about\">About</a>"
         ]

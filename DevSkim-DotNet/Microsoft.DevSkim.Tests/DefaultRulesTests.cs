@@ -200,6 +200,16 @@ public class DefaultRulesTests
     [DataRow("DS425060", "loader.py", "config = yaml.load('Loader=yaml.SafeLoader', Loader=yaml.UnsafeLoader)", 1)]
     [DataRow("DS425060", "loader.py", "config = yaml.load(stream,\n    # Loader=yaml.SafeLoader\n    Loader=yaml.UnsafeLoader\n)", 1)]
     [DataRow("DS425060", "loader.py", "config = yaml.load(SafeLoader, Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\">Open</a><a href=\"/about\" rel=\"noopener\">About</a>", 1)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\"\n   target=\"_blank\"\n   rel=\"noopener noreferrer\">Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\" title=\"noopener\">Open</a>", 1)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\" rel=\"notnoopener\">Open</a>", 1)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" data-target=\"_blank\">Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" title=\"target='_blank'\">Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<A HREF=\"https://example.com\" TARGET=\"_blank\" REL=\"NOOPENER\">Open</A>", 0)]
+    [DataRow("DS610000", "links.html", "<a title=\"x > y\" target=_blank rel=noreferrer>Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<a target=\"_blank\" rel=\"external\nnoopener noreferrer\">Open</a>", 0)]
+    [DataRow("DS610000", "links.tsx", "<a {...props}\n target=\"_blank\"\n rel=\"noopener noreferrer\">Open</a>", 0)]
     public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
     {
         DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });
