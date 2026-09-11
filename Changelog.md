@@ -4,13 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.112] - 2026-09-10
+## [1.0.119] - 2026-09-11
 ### Added
 - Added `DS610001` for literal `Set-Cookie` headers missing any of `Secure`, `HttpOnly`, or a valid explicit `SameSite` attribute. Boolean conditions report partially hardened cookies and require all protections on the same header.
 - Added `DS610002` for literal `Strict-Transport-Security` headers missing a `max-age` of at least one year or `includeSubDomains`, with conditions confined to the matched header and guidance for deployment and rollout considerations.
 
 ### Fix
 - Consolidated the two `DS440016` entries into one boolean-expression rule, preserving the shared suppression ID while applying the same-line TLS 1.3 exemption only to curl flags. Other hard-coded protocol patterns still report when TLS 1.3 appears on that line.
+- Registered JSX and TSX comment syntax, and routed `.cshtml` and `.razor` through a dedicated Razor language that preserves C# rule coverage while enabling HTML analysis.
+- Corrected rule edge cases for untagged images from registries with ports, case-insensitive connection-string options, NuGet `<clear />` scoping, pip extra indexes in dotenv and Dockerfile inputs, and `rel` tokens scoped to individual HTML anchors.
+- Added F# assignment syntax to the .NET XXE rules and made the lxml rule report each unsafe parser option independently.
 
 ### Dependencies
 - Updated `Microsoft.CST.ApplicationInspector.RulesEngine` and `Microsoft.CST.ApplicationInspector.Logging` from 1.10.1 to 1.10.2, fixing verifier and analyzer agreement for rules combining expressions and conditions.
