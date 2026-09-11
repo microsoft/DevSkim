@@ -6,8 +6,8 @@
   "baselines": {
     "default": {
       "name": "default",
-      "createdDate": "2026-09-11 01:35:23Z",
-      "lastUpdatedDate": "2026-09-11 01:35:23Z"
+      "createdDate": "2026-09-11 01:42:09Z",
+      "lastUpdatedDate": "2026-09-11 01:42:09Z"
     }
   },
   "results": {
@@ -26,9 +26,28 @@
       ],
       "tool": "roslynanalyzers",
       "ruleId": "CA1310",
-      "createdDate": "2026-09-11 01:35:23Z",
-      "expirationDate": "2027-02-28 01:36:51Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2026-09-11 01:36:51Z"
+      "createdDate": "2026-09-11 01:42:09Z",
+      "expirationDate": "2027-02-28 01:43:41Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-09-11 01:43:41Z"
+    },
+    "9a5b7a20a5f8c4190ae0a8a4d25b47c65edfd037495cb1a494c188e441990664": {
+      "signature": "9a5b7a20a5f8c4190ae0a8a4d25b47c65edfd037495cb1a494c188e441990664",
+      "alternativeSignatures": [
+        "f7bc37e5e7fd7993e5bfc2df57d61cb6767e6b428c226b762d138da3f35018b8",
+        "bcb23453136009eb3c190e99caebfefe6eb9bbd329b7a74736b64ce12c243b2f",
+        "7fe4c648a554fd7529a9e04e1cb8c7f59d31fef4a66f67cc5e6d1118036f92c8"
+      ],
+      "target": "DevSkim-DotNet/Microsoft.DevSkim.CLI/Commands/SuppressionCommand.cs",
+      "line": 102,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-09-11 01:42:09Z",
+      "expirationDate": "2027-02-28 01:43:41Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-09-11 01:43:41Z"
     }
   }
 }
