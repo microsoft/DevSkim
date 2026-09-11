@@ -91,7 +91,7 @@
         "description": "If a string is missing a null terminator, strlen will read past the end of the buffer",
         "recommendation": "In instances where you know the maximum size of a string's buffer, use strlen_s or strnlen to prevent over-reading",
         "overrides": [
-            "DS154189"
+            "DS154192"
         ],
         "applies_to": [
             "c",
@@ -141,6 +141,9 @@
         ],
         "must-match": [
             "int main () {\\n   const char src[50] = \"www.tutorialspoint.com\";\\n   int a = strlen(src)+1;\\n}"
+        ],
+        "must-not-match": [
+            "size_t n = strnlen_s(s, sizeof(s));"
         ]
     }
 ]

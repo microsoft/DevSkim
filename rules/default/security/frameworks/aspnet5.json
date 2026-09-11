@@ -5,7 +5,8 @@
         "description": "All Controllers Should Derive From Controller.",
         "recommendation": "Ensure this class derives from Controller.",
         "applies_to": [
-            "csharp"
+            "csharp",
+            "razor"
         ],
         "tags": [
             "Implementation.Web.ASPNET.ControllerWithoutExtendingController"

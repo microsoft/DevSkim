@@ -66,6 +66,132 @@ public class DefaultRulesTests
     }
 
     [TestMethod]
+    public void RazorLanguagePreservesCSharpAndHtmlCoverage()
+    {
+        var languages = DevSkimLanguages.LoadEmbedded();
+        Assert.IsTrue(languages.FromFileNameOut("view.cshtml", out var cshtml));
+        Assert.AreEqual("razor", cshtml.Name);
+        Assert.IsTrue(languages.FromFileNameOut("component.razor", out var razor));
+        Assert.AreEqual("razor", razor.Name);
+        Assert.AreEqual("//", languages.GetCommentInline("razor"));
+        Assert.AreEqual("<!--", languages.GetCommentPrefix("razor"));
+        Assert.AreEqual("-->", languages.GetCommentSuffix("razor"));
+
+        DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet();
+        string[] missingRazorCoverage = ruleSet
+            .Where(rule => rule.AppliesTo?.Contains("csharp") == true && rule.AppliesTo?.Contains("razor") != true)
+            .Select(rule => rule.Id)
+            .ToArray();
+        Assert.AreEqual(0, missingRazorCoverage.Length, $"C# rules missing Razor coverage: {string.Join(", ", missingRazorCoverage)}");
+        CollectionAssert.Contains(ruleSet.Single(rule => rule.Id == "DS610000").AppliesTo?.ToList(), "razor");
+    }
+
+        [TestMethod]
+        [DataRow("curl --tlsv1.2 https://example.com", 1)]
+        [DataRow("curl --tlsv1.3 https://example.com", 0)]
+        [DataRow("curl --tlsv1.2 --tlsv1.3 https://example.com", 0)]
+        [DataRow("curl --tlsv1.2 https://example.com\ncurl --tlsv1.3 https://example.com", 1)]
+        [DataRow("wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com", 1)]
+        public void BooleanExpressionVerifierMatchesAnalyzer(string content, int expectedFindings)
+        {
+                string rule = @"[{
+    ""name"": ""Boolean TLS condition"",
+    ""id"": ""DS440016"",
+    ""description"": ""Match guarded curl flags and unguarded wget flags."",
+    ""recommendation"": ""Maintain TLS protocol agility."",
+    ""severity"": ""ManualReview"",
+    ""confidence"": ""high"",
+    ""tags"": [ ""Cryptography.Protocol.TLS.Hard-Coded"" ],
+    ""patterns"": [
+        { ""pattern"": ""--tlsv1"", ""type"": ""substring"", ""scopes"": [ ""code"" ], ""label"": ""curlFlag"" },
+        { ""pattern"": ""--secure-protocol=\\S*"", ""type"": ""regex"", ""scopes"": [ ""code"" ], ""label"": ""wgetFlag"" }
+    ],
+    ""conditions"": [
+        {
+            ""pattern"": { ""pattern"": ""--tlsv1.3"", ""type"": ""substring"", ""scopes"": [ ""code"" ] },
+            ""negate_finding"": false,
+            ""search_in"": ""same-line"",
+            ""label"": ""tls13""
+        }
+    ],
+    ""expression"": ""(curlFlag AND NOT tls13) OR wgetFlag"",
+    ""must-match"": [
+        ""curl --tlsv1.2 https://example.com"",
+        ""wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com""
+    ],
+    ""must-not-match"": [ ""curl --tlsv1.3 https://example.com"" ]
+}]";
+                DevSkimRuleSet ruleSet = new DevSkimRuleSet();
+                ruleSet.AddString(rule, "testRules");
+                var verifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+                {
+                        LanguageSpecs = DevSkimLanguages.LoadEmbedded()
+                });
+                DevSkimRulesVerificationResult result = verifier.Verify(ruleSet);
+                Assert.IsTrue(result.Verified, string.Join(Environment.NewLine, result.Errors.SelectMany(status => status.Errors)));
+
+                var analyzer = new DevSkimRuleProcessor(ruleSet, new DevSkimRuleProcessorOptions()
+                {
+                    SeverityFilter = ApplicationInspector.RulesEngine.Severity.ManualReview
+                });
+                Assert.AreEqual(expectedFindings, analyzer.Analyze(content, "test.sh").Count());
+        }
+
+            [TestMethod]
+            [DataRow("DS440016", "test.sh", "curl --tlsv1.2 https://example.com", 1)]
+            [DataRow("DS440016", "test.sh", "curl --tlsv1.3 https://example.com", 0)]
+            [DataRow("DS440016", "test.sh", "wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com", 1)]
+            [DataRow("DS205001", ".env", "PIP_EXTRA_INDEX_URL=https://pypi.org/simple", 1)]
+            [DataRow("DS205001", "Dockerfile", "ENV PIP_EXTRA_INDEX_URL=https://pypi.org/simple", 1)]
+            [DataRow("DS132782", "parser.fs", "settings.DtdProcessing <- DtdProcessing.Parse", 1)]
+            [DataRow("DS132782", "parser.fs", "settings.ProhibitDtd <- false", 1)]
+            [DataRow("DS132783", "parser.fs", "settings.XmlResolver <- new XmlUrlResolver()", 1)]
+            [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(resolve_entities=False, load_dtd=True)", 1)]
+            [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(load_dtd=False, no_network=True)", 0)]
+            [DataRow("DS610000", "view.cshtml", "<a href=\"https://example.com\" target=\"_blank\">Open</a>", 1)]
+            [DataRow("DS610000", "view.razor", "<!-- <a href=\"https://example.com\" target=\"_blank\">Open</a> -->", 0)]
+            [DataRow("DS610000", "view.razor", "// <a href=\"https://example.com\" target=\"_blank\">Open</a>", 0)]
+            [DataRow("DS610000", "index.html", "<a target=\"_blank\" href=\"/unsafe\">Unsafe</a> <a target=\"_blank\" rel=\"noopener\" href=\"/safe\">Safe</a>", 1)]
+            [DataRow("DS610000", "index.html", "noopener <a target=\"_blank\" href=\"/unsafe\">Unsafe</a>", 1)]
+            [DataRow("DS610000", "index.html", "<a target=\"_blank\" rel=\"noopenerish\" href=\"/unsafe\">Unsafe</a>", 1)]
+            [DataRow("DS610000", "index.html", "<A TARGET='_BLANK' REL='external NOOPENER' HREF='/safe'>Safe</A>", 0)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\");", 1)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure; HttpOnly; SameSite=Lax\");", 0)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\"); response.setHeader(\"Set-Cookie\", \"other=two; HttpOnly; SameSite=Lax\");", 2)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\"); response.setHeader(\"Set-Cookie\", \"other=two; Secure; HttpOnly; SameSite=Lax\");", 1)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\n  \"Set-Cookie\",\n  \"sid=one; Secure; HttpOnly; SameSite=Strict\"\n);", 0)]
+            [DataRow("DS610001", "headers.cs", "Response.Headers[\"Set-Cookie\"] = \"sid=one; HttpOnly; SameSite=Lax\";", 1)]
+            [DataRow("DS610001", "headers.json", "{\"Set-Cookie\": \"sid=one; Secure; HttpOnly; SameSite=Lax\"}", 0)]
+            [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=one; Secure');", 1)]
+            [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=one; Secure; HttpOnly; SameSite=Lax');", 0)]
+            [DataRow("DS610001", "headers.js", "const partial = \"Set-Cookie: sid=one; Secure\";\nconst hardened = \"Set-Cookie: other=two; Secure; HttpOnly; SameSite=Lax\";", 1)]
+            [DataRow("DS610001", "headers.js", "// response.setHeader(\"Set-Cookie\", \"sid=one\");", 0)]
+            [DataRow("DS610001", "headers.yaml", "Set-Cookie: \"sid=one; Secure\"\nX-Other: value", 1)]
+            [DataRow("DS610001", "headers.yaml", "Set-Cookie: \"sid=one; Secure; HttpOnly; SameSite=Lax\"\nX-Other: value", 0)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000\");", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"includeSubDomains\");", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31535999; includeSubDomains\");", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; includeSubDomains\");", 0)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=63072000; includeSubDomains\");", 0)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000\"); response.setHeader(\"Strict-Transport-Security\", \"includeSubDomains\");", 2)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=300; includeSubDomains\"); response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; includeSubDomains\");", 1)]
+            [DataRow("DS610002", "headers.cs", "Response.Headers[\"Strict-Transport-Security\"] = \"max-age=31536000; includeSubDomains\";", 0)]
+            [DataRow("DS610002", "headers.php", "<?php header('Strict-Transport-Security: max-age=\"31536000\"; includeSubDomains');", 0)]
+            [DataRow("DS610002", "headers.php", "<?php header('Strict-Transport-Security: max-age=\"31535999\"; includeSubDomains');", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=\\\"31536000\\\"; includeSubDomains\");", 0)]
+            [DataRow("DS610002", "headers.yaml", "Strict-Transport-Security: \"max-age=31536000; includeSubDomains\"\nX-Other: value", 0)]
+            public void BooleanExpressionDefaultRulesScanFixtures(string ruleId, string fileName, string content, int expectedFindings)
+            {
+                DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });
+                Assert.AreEqual(1, ruleSet.Count(), $"Rule {ruleId} must be embedded exactly once.");
+                var analyzer = new DevSkimRuleProcessor(ruleSet, new DevSkimRuleProcessorOptions()
+                {
+                    SeverityFilter = ruleSet.Single().Severity
+                });
+                Assert.AreEqual(expectedFindings, analyzer.Analyze(content, fileName).Count());
+            }
+
+    [TestMethod]
     public void DenamespacedRule()
     {
         string content = @"<?xml version=""1.0"" encoding=""UTF-8""?>

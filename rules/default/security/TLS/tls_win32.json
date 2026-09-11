@@ -1,15 +1,17 @@
- [
-  {
-
+[
+    {
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440075",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
-        "overrides": ["DS440000"],
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
             "c",
             "cpp",
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [
@@ -27,16 +29,22 @@
                 ]
             }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "cred.grbitEnabledProtocols = SP_PROT_TLS1_0_CLIENT;"
+        ],
+        "must-not-match": [
+            "cred.grbitEnabledProtocols = 0;"
         ]
     },
     {
-
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440074",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
-        "overrides": ["DS440000"],
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
             "c",
             "cpp"
@@ -56,16 +64,22 @@
                 ]
             }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);"
+        ],
+        "must-not-match": [
+            "boost::asio::ssl::context ctx(boost::asio::ssl::context::tlsv13);"
         ]
     },
     {
-
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440076",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
-        "overrides": ["DS440000"],
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
             "c",
             "cpp"
@@ -104,7 +118,7 @@
                 "scopes": [
                     "code"
                 ]
-            },            
+            },
             {
                 "pattern": "SEED-SHA|DH-DSS-SEED-SHA|DH-RSA-SEED-SHA|DHE-DSS-SEED-SHA|DHE-RSA-SEED-SHA|ADH-SEED-SHA",
                 "type": "regex",
@@ -125,14 +139,14 @@
                 "scopes": [
                     "code"
                 ]
-            },            
+            },
             {
                 "pattern": "EXP1024-DES-CBC-SHA|EXP1024-RC4-SHA|EXP1024-DHE-DSS-DES-CBC-SHA|EXP1024-DHE-DSS-RC4-SHA|DHE-DSS-RC4-SHA",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
-            },            
+            },
             {
                 "pattern": "NULL-SHA256NULL-SHA256|AES128-SHA256|AES256-SHA256|AES128-GCM-SHA256|AES256-GCM-SHA384|DH-RSA-AES128-SHA256|DH-RSA-AES256-SHA256|DH-RSA-AES128-GCM-SHA256|DH-RSA-AES256-GCM-SHA384|DH-DSS-AES128-SHA256|DH-DSS-AES256-SHA256|DH-DSS-AES128-GCM-SHA256|DH-DSS-AES256-GCM-SHA384|DHE-RSA-AES128-SHA256|DHE-RSA-AES256-SHA256|DHE-RSA-AES128-GCM-SHA256|DHE-RSA-AES256-GCM-SHA384|DHE-DSS-AES128-SHA256|DHE-DSS-AES256-SHA256|DHE-DSS-AES128-GCM-SHA256|DHE-DSS-AES256-GCM-SHA384|ECDH-RSA-AES128-SHA256|ECDH-RSA-AES256-SHA384|ECDH-RSA-AES128-GCM-SHA256|ECDH-RSA-AES256-GCM-SHA384|ECDH-ECDSA-AES128-SHA256|ECDH-ECDSA-AES256-SHA384|ECDH-ECDSA-AES128-GCM-SHA256|ECDH-ECDSA-AES256-GCM-SHA384|ECDHE-RSA-AES128-SHA256|ECDHE-RSA-AES256-SHA384|ECDHE-RSA-AES128-GCM-SHA256|ECDHE-RSA-AES256-GCM-SHA384|ECDHE-ECDSA-AES128-SHA256|ECDHE-ECDSA-AES256-SHA384|ECDHE-ECDSA-AES128-GCM-SHA256|ECDHE-ECDSA-AES256-GCM-SHA384|ADH-AES128-SHA256|ADH-AES256-SHA256|ADH-AES128-GCM-SHA256|ADH-AES256-GCM-SHA384",
                 "type": "regex",
@@ -141,16 +155,28 @@
                 ]
             }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "SSL_CTX_set_cipher_list(ctx, \"RC4-MD5\");",
+            "SSL_CTX_set_cipher_list(ctx, \"AES128-SHA\");",
+            "SSL_CTX_set_cipher_list(ctx, \"CAMELLIA128-SHA\");",
+            "SSL_CTX_set_cipher_list(ctx, \"SEED-SHA\");",
+            "SSL_CTX_set_cipher_list(ctx, \"GOST94-GOST89-GOST89\");",
+            "SSL_CTX_set_cipher_list(ctx, \"EXP1024-RC4-SHA\");",
+            "SSL_CTX_set_cipher_list(ctx, \"AES128-SHA256\");"
+        ],
+        "must-not-match": [
+            "SSL_CTX_set_ciphersuites(ctx, \"TLS_AES_256_GCM_SHA384\");"
         ]
     },
     {
-
         "name": "Win32 - Hard-coded SSL/TLS Protocol",
         "id": "DS440077",
         "description": "Win32 - Hard-coded SSL/TLS Protocol",
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
-        "overrides": ["DS440000"],
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
             "c",
             "cpp"
@@ -189,7 +215,7 @@
                 "scopes": [
                     "code"
                 ]
-            },            
+            },
             {
                 "pattern": "SSLv3_method|SSLv3_server_method|SSLv3_client_method|SSLv23_method|SSLv23_server_method|SSLv23_client_method|TLSv1_method|TLSv1_server_method|TLSv1_client_method|TLSv1_1_method|TLSv1_1_server_method|TLSv1_1_client_method|TLSv1_2_method|TLSv1_2_server_method|TLSv1_2_client_method|DTLSv1_method|DTLSv1_server_method|DTLSv1_client_method|DTLSv1_2_method|DTLSv1_2_server_method|DTLSv1_2_client_method",
                 "type": "regex",
@@ -210,9 +236,20 @@
                 "scopes": [
                     "code"
                 ]
-            }         
+            }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "SSL_CTX_config(ctx, \"system_default\");",
+            "SSL_CTX_set_security_level(ctx, 0);",
+            "SSL_CTX_set_min_proto_version(ctx, TLS1_VERSION);",
+            "const SSL_METHOD *m = TLS_client_method();",
+            "const SSL_METHOD *m = SSLv3_method();",
+            "ctx = SSL_CTX_new(method);",
+            "SSL_stateless(ssl);"
+        ],
+        "must-not-match": [
+            "SSL *ssl = SSL_new(ctx);"
         ]
     }
 ]

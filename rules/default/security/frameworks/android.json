@@ -15,9 +15,8 @@
         "rule_info": "DS180000.md",
         "patterns": [
             {
-                "xpaths": ["//default:application/@android:debuggable"],
+                "xpaths": ["//application/@android:debuggable"],
 	    	    "xpathnamespaces": {
-                    "default": "http://maven.apache.org/POM/4.0.0",
                     "android": "http://schemas.android.com/apk/res/android"
                 },
                 "pattern": "true",
@@ -44,10 +43,11 @@
             }
         ],
         "must-match": [
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?><manifest xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:android=\"http://schemas.android.com/apk/res/android\"><application android:debuggable='true' /></manifest>"
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"com.example.app\"><application android:debuggable=\"true\" android:label=\"Example\" /></manifest>"
         ],
         "must-not-match": [
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?><manifest xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:android=\"http://schemas.android.com/apk/res/android\"><application android:debuggable='false' /></manifest>"
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"com.example.app\"><application android:debuggable=\"false\" android:label=\"Example\" /></manifest>",
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"com.example.app\"><application android:label=\"Example\" /></manifest>"
         ]
     },
 	{
@@ -63,7 +63,7 @@
         ],
         "confidence": "high",
         "severity": "ManualReview",
-        "rule_info": "DS180000.md",
+        "rule_info": "DS180001.md",
         "patterns": [
             {
                 "pattern": "setWebContentsDebuggingEnabled\\(true\\)",
@@ -109,7 +109,7 @@
         ],
         "confidence": "high",
         "severity": "ManualReview",
-        "rule_info": "DS180001.md",
+        "rule_info": "DS180002.md",
         "patterns": [
             {
                 "pattern": "StrictMode.setThreadPolicy(",

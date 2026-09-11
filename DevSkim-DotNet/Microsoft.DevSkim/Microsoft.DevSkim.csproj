@@ -24,7 +24,7 @@
   </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.9.50" />
+      <PackageReference Include="Microsoft.CST.ApplicationInspector.RulesEngine" Version="1.10.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Update="Nerdbank.GitVersioning">
         <Version>3.7.115</Version>
@@ -50,6 +50,9 @@
       <EmbeddedResource Include="..\..\rules\default\security\attack_surface\outbound_network.json">
         <Link>rules\default\security\attack_surface\outbound_network.json</Link>
       </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\containers\kubernetes.json">
+        <Link>rules\default\security\containers\kubernetes.json</Link>
+      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\control_flow\dynamic_execution.json">
         <Link>rules\default\security\control_flow\dynamic_execution.json</Link>
       </EmbeddedResource>
@@ -64,6 +67,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\ciphers.json">
         <Link>rules\default\security\cryptography\ciphers.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\cryptography\connection_strings.json">
+        <Link>rules\default\security\cryptography\connection_strings.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\general.json">
         <Link>rules\default\security\cryptography\general.json</Link>
@@ -88,6 +94,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\cryptography\weak_cipher_modes.json">
         <Link>rules\default\security\cryptography\weak_cipher_modes.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\frameworks\android.json">
+        <Link>rules\default\security\frameworks\android.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\frameworks\aspnet5.json">
         <Link>rules\default\security\frameworks\aspnet5.json</Link>
@@ -118,6 +127,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\storage\secure_storage.json">
         <Link>rules\default\security\storage\secure_storage.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\supplychain\package_sources.json">
+        <Link>rules\default\security\supplychain\package_sources.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\TLS\tls_appconfig.json">
         <Link>rules\default\security\TLS\tls_appconfig.json</Link>
@@ -164,8 +176,17 @@
       <EmbeddedResource Include="..\..\rules\default\security\vulnerable_libraries\microsoft_nuget.json">
         <Link>rules\default\security\vulnerable_libraries\microsoft_nuget.json</Link>
       </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\web\html_links.json">
+        <Link>rules\default\security\web\html_links.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\web\http_headers.json">
+        <Link>rules\default\security\web\http_headers.json</Link>
+      </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\security\xml\external_entities.json">
         <Link>rules\default\security\xml\external_entities.json</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\..\rules\default\security\xml\xslt_scripting.json">
+        <Link>rules\default\security\xml\xslt_scripting.json</Link>
       </EmbeddedResource>
       <EmbeddedResource Include="..\..\rules\default\correctness\datetime.json">
         <Link>rules\default\correctness\datetime.json</Link>

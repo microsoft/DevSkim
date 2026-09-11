@@ -6,6 +6,7 @@
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "applies_to": [
             "csharp",
+            "razor",
             "powershell",
             "vb",
             "fsharp"

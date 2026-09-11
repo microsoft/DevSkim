@@ -25,6 +25,12 @@
                 ],
                 "_comment": "https://www.ibm.com/support/knowledgecenter/SSLTBW_2.1.0/com.ibm.zos.v2r1.gska100/sssl2env999503.htm"
             }
+        ],
+        "must-match": [
+            "           MOVE GSK_PROTOCOL_TLSV1 TO GSK-ATTR-ID."
+        ],
+        "must-not-match": [
+            "           MOVE GSK-PROTOCOL-TLSV13 TO GSK-ATTR-ID."
         ]
     }
 ]

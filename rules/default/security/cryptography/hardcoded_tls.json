@@ -18,7 +18,7 @@
             "SecurityProtocolType.Tls11"
         ],
         "must-not-match": [
-            "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCg==", 
+            "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCg==",
             "curl --tlsv1.3",
             "axolotls"
         ],
@@ -29,39 +29,39 @@
                 "scopes": [
                     "code"
                 ],
-                "modifiers" : ["i"],
+                "modifiers": [
+                    "i"
+                ],
                 "_comment": "Generic reference to a SSL/TLS version"
             }
         ],
-        "conditions" : [
-        {
-            "pattern" :
+        "conditions": [
             {
-                "pattern": "--tlsv1.3",
-                "type": "substring",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "The --tlsv1.3 argument for Curl sets a minimum version, not a specific version"
+                "pattern": {
+                    "pattern": "--tlsv1.3",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "The --tlsv1.3 argument for Curl sets a minimum version, not a specific version"
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
             },
-            "negate_finding": true,
-            "search_in": "same-line"
-        },
-        {
-            "pattern" :
             {
-                "pattern": "LS0tLS",
-                "type": "substring",
-                "scopes": [
-                    "code"
-                ],
-                "_comment": "A base 64 encoded cert will start with `LS0tLS`"
-            },
-            "negate_finding": true,
-            "search_in": "same-line"
-        }
+                "pattern": {
+                    "pattern": "LS0tLS",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ],
+                    "_comment": "A base 64 encoded cert will start with `LS0tLS`"
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
         ]
-    },    
+    },
     {
         "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
         "id": "DS440010",
@@ -134,11 +134,23 @@
                 ],
                 "_comment": "OpenSSL constants"
             }
+        ],
+        "must-match": [
+            "const SSL_METHOD *m = SSLv23_method();",
+            "SSL_stateless(ssl);",
+            "SSL_CTX_set_min_proto_version(ctx, TLS1_VERSION);",
+            "options |= SSL_EXT_TLS_ONLY;",
+            "options |= SSL_OP_NO_TLSv1_1;",
+            "options |= SSL_OP_NO_COMPRESSION;",
+            "SSL_CTX_set_cipher_list(ctx, \"DHE_RSA_AES128_SHA\");"
+        ],
+        "must-not-match": [
+            "SSL *ssl = SSL_new(ctx);"
         ]
     },
     {
         "name": "OpenSSL: Do not hardcode SSL/TLS versions within an application.",
-        "id": "DS440011",
+        "id": "DS440017",
         "description": "SSL/TLS version usage should be based on an OS or external configuration.",
         "recommendation": "",
         "does_not_apply_to": [
@@ -156,20 +168,23 @@
             {
                 "pattern": "(AES|DH|DHE|ADH|CAMELLIA|EDH|EXP|DES|IDEA|RC4|NULL|GOST|EXP|ECDH|ECDHE|AECDH|PSK)[A-Z0-9\\-]+-?(SHA|MD|GOST)[A-Z0-9\\-]*",
                 "type": "regex",
-                "modifiers":[ "i" ],
+                "modifiers": [
+                    "i"
+                ],
                 "scopes": [
                     "code"
                 ],
                 "_comment": "OpenSSL external call"
             }
         ],
-        "conditions" : [
+        "conditions": [
             {
-                "pattern" : 
-                {
+                "pattern": {
                     "pattern": "openssl",
                     "type": "regex",
-                    "modifiers":[ "i" ],
+                    "modifiers": [
+                        "i"
+                    ],
                     "scopes": [
                         "code"
                     ]
@@ -177,6 +192,12 @@
                 "negate_finding": false,
                 "search_in": "finding-region(-5, 5)"
             }
+        ],
+        "must-match": [
+            "const char *engine = \"openssl\";\nSSL_CTX_set_cipher_list(ctx, \"AES256-SHA256\");"
+        ],
+        "must-not-match": [
+            "SSL_CTX_set_ciphersuites(ctx, \"TLS_AES_256_GCM_SHA384\");"
         ]
     },
     {
@@ -186,6 +207,7 @@
         "recommendation": "",
         "applies_to": [
             "csharp",
+            "razor",
             "powershell",
             "vb",
             "fsharp"
@@ -204,6 +226,13 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;",
+            "var opts = SslProtocols.Tls;"
+        ],
+        "must-not-match": [
+            "var client = new HttpClient();"
         ]
     },
     {
@@ -229,10 +258,9 @@
                 ]
             }
         ],
-        "conditions" : [
+        "conditions": [
             {
-                "pattern" :
-                {
+                "pattern": {
                     "pattern": ".min_protocol_version\\s*\\(\\s*Some\\(\\s*Protocol::Tlsv1[2-9]\\s*\\)\\s*\\)",
                     "type": "regex",
                     "scopes": [
@@ -244,34 +272,14 @@
                 "search_in": "finding-region(0, 1)"
             }
         ],
-        "must-match" : [
+        "must-match": [
             "let acceptor = native_tls::TlsAcceptor::builder(identity);",
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv10))\n\t.build()?;",
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv11))\n\t.build()?;"
         ],
-        "must-not-match" : [
+        "must-not-match": [
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv12))\n\t.build()?;",
             "let acceptor = native_tls::TlsAcceptor::builder(identity)\n\t.min_protocol_version(Some(Protocol::Tlsv13))\n\t.build()?;"
-        ]
-    },
-    {
-        "name": "Node- Do not hardcode TLS protocol versions.",
-        "id": "DS440060",
-        "description": "Node- Do not hardcode TLS protocol versions.",
-        "recommendation": "",
-        "applies_to": [
-            "javascript",
-            "typescript"
-        ],
-        "tags": [
-            "Cryptography.Protocol.TLS.Hardcoded"
-        ],
-        "severity": "critical",
-        "_comment": "These rules are all encompassed by DS440000 and DS440010.",
-        "rule_info": "DS440000.md",
-        "patterns": [
-        ],
-        "fix_its": [
         ]
     },
     {
@@ -304,7 +312,13 @@
                 ]
             }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_1)",
+            "conn = http.client.HTTPSConnection(host, ssl_version=ssl.PROTOCOL_SSLv3)"
+        ],
+        "must-not-match": [
+            "context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)"
         ]
     },
     {
@@ -312,11 +326,14 @@
         "id": "DS440071",
         "description": "Win32- Do not hardcode TLS protocol versions.",
         "recommendation": "",
-        "overrides": ["DS440000"],
+        "overrides": [
+            "DS440000"
+        ],
         "applies_to": [
             "c",
             "cpp",
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [
@@ -334,8 +351,12 @@
                 ]
             }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "cred.grbitEnabledProtocols = SP_PROT_SSL3_SERVER;"
+        ],
+        "must-not-match": [
+            "cred.grbitEnabledProtocols = 0;"
         ]
-    }    
+    }
 ]
-    

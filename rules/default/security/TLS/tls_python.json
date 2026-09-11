@@ -25,7 +25,12 @@
                 ]
             }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)"
+        ],
+        "must-not-match": [
+            "context = ssl.create_default_context()"
         ]
     }
 ]

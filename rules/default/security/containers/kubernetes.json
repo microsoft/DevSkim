@@ -1,0 +1,418 @@
+[
+    {
+        "name": "Kubernetes container runs privileged",
+        "id": "DS200000",
+        "description": "A container is configured with securityContext.privileged: true, which disables container isolation and gives the process effectively full access to the host.",
+        "recommendation": "Remove privileged: true and grant only the specific Linux capabilities the workload needs.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "high",
+        "severity": "critical",
+        "rule_info": "DS200000.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/containers/*/securityContext/privileged",
+                    "/spec/initContainers/*/securityContext/privileged",
+                    "/spec/template/spec/containers/*/securityContext/privileged",
+                    "/spec/template/spec/initContainers/*/securityContext/privileged",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/privileged",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/privileged"
+                ],
+                "pattern": "true",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        privileged: true\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        privileged: false\n"
+        ]
+    },
+    {
+        "name": "Kubernetes container allows privilege escalation",
+        "id": "DS200001",
+        "description": "allowPrivilegeEscalation is true, so a process in the container can gain more privileges than its parent, for example through a setuid binary. The Restricted Pod Security Standard requires this to be false.",
+        "recommendation": "Set allowPrivilegeEscalation: false in the container securityContext.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS200001.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation"
+                ],
+                "pattern": "true",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: true\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: false\n"
+        ]
+    },
+    {
+        "name": "Kubernetes pod shares a host namespace",
+        "id": "DS200002",
+        "description": "hostPID, hostIPC or hostNetwork is enabled. Sharing a host namespace lets the container inspect host processes through /proc, attach to host shared memory, or observe host network traffic. All three are disallowed by the Baseline and Restricted Pod Security Standards.",
+        "recommendation": "Remove the setting. If a node-level agent genuinely requires it, isolate that workload to a dedicated node pool.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS200002.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/hostPID",
+                    "/spec/template/spec/hostPID",
+                    "/spec/jobTemplate/spec/template/spec/hostPID",
+                    "/spec/hostIPC",
+                    "/spec/template/spec/hostIPC",
+                    "/spec/jobTemplate/spec/template/spec/hostIPC",
+                    "/spec/hostNetwork",
+                    "/spec/template/spec/hostNetwork",
+                    "/spec/jobTemplate/spec/template/spec/hostNetwork"
+                ],
+                "pattern": "true",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  hostPID: true\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  hostNetwork: true\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  hostPID: false\n"
+        ]
+    },
+    {
+        "name": "Kubernetes container root filesystem is writable",
+        "id": "DS200003",
+        "description": "readOnlyRootFilesystem is explicitly false, so an attacker who achieves execution can modify the container image at runtime, for example by replacing a binary on the PATH.",
+        "recommendation": "Set readOnlyRootFilesystem: true and mount an emptyDir or a volume for the paths that must be writable.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "high",
+        "severity": "moderate",
+        "rule_info": "DS200003.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/containers/*/securityContext/readOnlyRootFilesystem",
+                    "/spec/initContainers/*/securityContext/readOnlyRootFilesystem",
+                    "/spec/template/spec/containers/*/securityContext/readOnlyRootFilesystem",
+                    "/spec/template/spec/initContainers/*/securityContext/readOnlyRootFilesystem",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/readOnlyRootFilesystem",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/readOnlyRootFilesystem"
+                ],
+                "pattern": "false",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        readOnlyRootFilesystem: false\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        readOnlyRootFilesystem: true\n"
+        ]
+    },
+    {
+        "name": "Kubernetes container may run as root",
+        "id": "DS200004",
+        "description": "runAsNonRoot is explicitly false, which permits the container to run as uid 0. The requirement states containers must run as a non-root user, and gives 10001 as the default uid and gid.",
+        "recommendation": "Set runAsNonRoot: true and give runAsUser a high, non-zero uid such as 10001.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS200004.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/containers/*/securityContext/runAsNonRoot",
+                    "/spec/initContainers/*/securityContext/runAsNonRoot",
+                    "/spec/template/spec/containers/*/securityContext/runAsNonRoot",
+                    "/spec/template/spec/initContainers/*/securityContext/runAsNonRoot",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/runAsNonRoot",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/runAsNonRoot",
+                    "/spec/securityContext/runAsNonRoot",
+                    "/spec/template/spec/securityContext/runAsNonRoot",
+                    "/spec/jobTemplate/spec/template/spec/securityContext/runAsNonRoot"
+                ],
+                "pattern": "false",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        runAsNonRoot: false\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        runAsNonRoot: true\n"
+        ]
+    },
+    {
+        "name": "Kubernetes container image is unpinned",
+        "id": "DS200005",
+        "description": "The image tag is latest, or no tag is given, so the image that runs is whatever the registry resolves at pull time. That defeats the verified-image requirement and makes a deployment unreproducible.",
+        "recommendation": "Pin the image by digest, for example image: contoso/app@sha256:..., or at minimum to an immutable version tag.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "medium",
+        "severity": "moderate",
+        "rule_info": "DS200005.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/containers/*/image",
+                    "/spec/initContainers/*/image",
+                    "/spec/template/spec/containers/*/image",
+                    "/spec/template/spec/initContainers/*/image",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/image",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/image"
+                ],
+                "pattern": "^(?:(?:[^@\\s]*/)?[^@:/\\s]+|[^@\\s]*:latest)$",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app:latest\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: localhost:5000/team/app\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app@sha256:0123456789abcdef\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app:1.2.3\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: localhost:5000/team/app:1.2.3\n"
+        ]
+    },
+    {
+        "name": "Kubernetes container adds a dangerous capability",
+        "id": "DS200006",
+        "description": "SYS_ADMIN grants a large fraction of root's powers, and SYS_PTRACE allows attaching to and reading the memory of other processes. The requirement calls for both to be dropped.",
+        "recommendation": "Drop ALL capabilities and add back only the minimum the workload needs.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS200006.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/containers/*/securityContext/capabilities/add/*",
+                    "/spec/initContainers/*/securityContext/capabilities/add/*",
+                    "/spec/template/spec/containers/*/securityContext/capabilities/add/*",
+                    "/spec/template/spec/initContainers/*/securityContext/capabilities/add/*",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/capabilities/add/*",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/capabilities/add/*"
+                ],
+                "pattern": "(SYS_ADMIN|SYS_PTRACE|SYS_MODULE|NET_RAW|ALL)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        capabilities:\n          add:\n            - SYS_ADMIN\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        capabilities:\n          drop:\n            - ALL\n"
+        ]
+    },
+    {
+        "name": "Kubernetes pod mounts a host path",
+        "id": "DS200007",
+        "description": "A hostPath volume mounts a file or directory from the node into the pod, which bypasses container isolation. Writing to it can affect other pods or persist on the node.",
+        "recommendation": "Use a ConfigMap, Secret, emptyDir or PersistentVolumeClaim. Where a host path is unavoidable, restrict it with an allowed-paths policy.",
+        "applies_to": [
+            "yaml"
+        ],
+        "tags": [
+            "Container.Kubernetes"
+        ],
+        "confidence": "high",
+        "severity": "ManualReview",
+        "rule_info": "DS200007.md",
+        "patterns": [
+            {
+                "ymlpaths": [
+                    "/spec/volumes/*/hostPath/path",
+                    "/spec/template/spec/volumes/*/hostPath/path",
+                    "/spec/jobTemplate/spec/template/spec/volumes/*/hostPath/path"
+                ],
+                "pattern": "^.+$",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "apiVersion",
+                    "type": "substring",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  volumes:\n    - name: hostvol\n      hostPath:\n        path: /var/log\n"
+        ],
+        "must-not-match": [
+            "apiVersion: v1\nkind: Pod\nspec:\n  volumes:\n    - name: cfg\n      configMap:\n        name: app-config\n"
+        ]
+    }
+]

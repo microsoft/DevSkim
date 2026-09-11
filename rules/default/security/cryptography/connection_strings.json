@@ -1,0 +1,60 @@
+[
+    {
+        "name": "Encryption marked optional",
+        "id": "DS114352",
+        "description": "The connection string leaves transport encryption optional or disables certificate validation. Encrypt=False sends credentials and data in the clear, and TrustServerCertificate=True encrypts but accepts any certificate, so the connection is not authenticated and can be intercepted. The PostgreSQL and MySQL modes prefer, allow and disable all fall back to plaintext without error.",
+        "recommendation": "Require encryption and validate the certificate: Encrypt=True with TrustServerCertificate=False, or sslmode=verify-full.",
+        "applies_to": [
+            "json",
+            "xml",
+            ".config",
+            "csharp",
+            "razor",
+            "vb",
+            "fsharp",
+            "python",
+            "java",
+            "javascript",
+            "typescript",
+            "php",
+            "go",
+            "ruby",
+            "yaml",
+            "dotenv",
+            "powershell",
+            "shellscript"
+        ],
+        "tags": [
+            "Cryptography.Protocol.TLS"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS114352.md",
+        "patterns": [
+            {
+                "pattern": "(Encrypt\\s*=\\s*(False|false|no|0)\\b|TrustServerCertificate\\s*=\\s*(True|true|yes|1)\\b|sslmode\\s*=\\s*(prefer|allow|disable)\\b|SslMode\\s*=\\s*(Preferred|None)\\b|useSSL\\s*=\\s*false\\b)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": [
+                    "i"
+                ]
+            }
+        ],
+        "must-match": [
+            "{\n  \"ConnectionStrings\": {\n    \"Default\": \"Server=db;Database=app;Encrypt=False;\"\n  }\n}",
+            "{\n  \"ConnectionStrings\": {\n    \"Pg\": \"Host=db;Username=u;sslmode=prefer\"\n  }\n}",
+            "<add name=\"Default\" connectionString=\"Server=db;Encrypt=False;\" />",
+            "var cs = \"Server=db;Database=app;TrustServerCertificate=True;\";",
+            "DATABASE_URL=postgres://u:p@db/app?sslmode=disable",
+            "server=db;encrypt=false",
+            "Server=db;TRUSTSERVERCERTIFICATE=true",
+            "Server=db;SslMode=preferred"
+        ],
+        "must-not-match": [
+            "{\n  \"ConnectionStrings\": {\n    \"Default\": \"Server=db;Database=app;Encrypt=True;TrustServerCertificate=False;\"\n  }\n}",
+            "server=db;encrypt=TRUE;trustservercertificate=FALSE;sslmode=verify-full"
+        ]
+    }
+]

@@ -108,7 +108,7 @@
                 "scopes": [
                     "code"
                 ]
-            }            
+            }
         ],
         "must-match": [
             "thing = YAML.load_file('some.yml')",
@@ -123,6 +123,7 @@
         "recommendation": "Use TypeNameHandling.None",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [
@@ -159,6 +160,186 @@
             "TypeNameHandling = TypeNameHandling.Objects",
             "TypeNameHandling = TypeNameHandling.Arrays",
             "TypeNameHandling = TypeNameHandling.All"
+        ]
+    },
+    {
+        "name": "Do not deserialize untrusted data.",
+        "id": "DS425050",
+        "description": "torch.load, joblib.load and the marshal module execute arbitrary code while deserializing. ADM.10010 names these explicitly for AI model files obtained from public sources such as GitHub or Hugging Face.",
+        "recommendation": "Load model weights with a format that does not execute code, such as safetensors, or verify provenance and load only in a sandbox.",
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "Deserialization"
+        ],
+        "confidence": "high",
+        "severity": "ManualReview",
+        "rule_info": "DS425050.md",
+        "patterns": [
+            {
+                "pattern": "(torch|joblib|dill|marshal)\\.loads?\\s*\\(",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "model = torch.load('model.pt')",
+            "clf = joblib.load(path)",
+            "obj = marshal.loads(data)"
+        ],
+        "must-not-match": [
+            "from safetensors.torch import load_file",
+            "weights = load_file('model.safetensors')"
+        ]
+    },
+    {
+        "name": "Do not deserialize untrusted data.",
+        "id": "DS425060",
+        "description": "yaml.load constructs arbitrary Python objects and can execute code. ADM.10010 states it cannot be used to safely deserialize untrusted data and that safe_load must be used instead.",
+        "recommendation": "Use yaml.safe_load, or pass Loader=yaml.SafeLoader explicitly.",
+        "applies_to": [
+            "python"
+        ],
+        "tags": [
+            "Deserialization"
+        ],
+        "confidence": "high",
+        "severity": "ManualReview",
+        "rule_info": "DS425060.md",
+        "patterns": [
+            {
+                "pattern": "yaml\\.load(_all)?\\s*\\(",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "(SafeLoader|CSafeLoader|BaseLoader)",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-line"
+            }
+        ],
+        "must-match": [
+            "config = yaml.load(open('config.yml'))",
+            "data = yaml.load_all(stream)"
+        ],
+        "must-not-match": [
+            "config = yaml.safe_load(open('config.yml'))",
+            "config = yaml.load(stream, Loader=yaml.SafeLoader)"
+        ]
+    },
+    {
+        "name": "Do not deserialize untrusted data.",
+        "id": "DS425070",
+        "description": "BinaryFormatter, SoapFormatter, NetDataContractSerializer, LosFormatter and ObjectStateFormatter reconstruct arbitrary types named in the payload, which allows an attacker who controls the input to run code. ADM.10010 approves only System.Text.Json, XmlSerializer, DataContractSerializer, DataContractJsonSerializer, Newtonsoft.Json and protobuf.",
+        "recommendation": "Use System.Text.Json or another approved serializer. BinaryFormatter is obsolete and was removed in .NET 9.",
+        "applies_to": [
+            "csharp",
+            "razor",
+            "fsharp",
+            "vb"
+        ],
+        "tags": [
+            "Deserialization"
+        ],
+        "confidence": "high",
+        "severity": "critical",
+        "rule_info": "DS425070.md",
+        "patterns": [
+            {
+                "pattern": "(BinaryFormatter|SoapFormatter|NetDataContractSerializer|LosFormatter|ObjectStateFormatter)",
+                "type": "RegexWord",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "var formatter = new BinaryFormatter();",
+            "NetDataContractSerializer s = new NetDataContractSerializer();",
+            "return (T)new LosFormatter().Deserialize(input);"
+        ],
+        "must-not-match": [
+            "var result = JsonSerializer.Deserialize<T>(json);",
+            "var s = new DataContractSerializer(typeof(T));"
+        ]
+    },
+    {
+        "name": "Do not deserialize untrusted data.",
+        "id": "DS425080",
+        "description": "JavaScriptSerializer stopped being an approved safe deserializer on 2023-03-10. With a type resolver such as SimpleTypeResolver it reconstructs types named in the payload, which allows code execution.",
+        "recommendation": "Use System.Text.Json. If JavaScriptSerializer cannot be removed, never construct it with a JavaScriptTypeResolver.",
+        "applies_to": [
+            "csharp",
+            "razor",
+            "fsharp",
+            "vb"
+        ],
+        "tags": [
+            "Deserialization"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS425080.md",
+        "patterns": [
+            {
+                "pattern": "(JavaScriptSerializer|SimpleTypeResolver)",
+                "type": "RegexWord",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "var s = new JavaScriptSerializer(new SimpleTypeResolver());",
+            "JavaScriptSerializer serializer = new JavaScriptSerializer();"
+        ],
+        "must-not-match": [
+            "var result = JsonSerializer.Deserialize<Order>(json);"
+        ]
+    },
+    {
+        "name": "Do not deserialize untrusted data.",
+        "id": "DS425090",
+        "description": "ADM.10010 approves Boost but singles out Boost Property Tree, whose JSON and XML readers have known denial-of-service behaviour on deeply nested payloads because they recurse without a depth limit.",
+        "recommendation": "Use nlohmann/json, or bound both input size and nesting depth before parsing.",
+        "applies_to": [
+            "c",
+            "cpp"
+        ],
+        "tags": [
+            "Deserialization"
+        ],
+        "confidence": "medium",
+        "severity": "ManualReview",
+        "rule_info": "DS425090.md",
+        "patterns": [
+            {
+                "pattern": "(boost::property_tree|read_json|read_xml)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "boost::property_tree::ptree pt;",
+            "read_json(stream, pt);"
+        ],
+        "must-not-match": [
+            "nlohmann::json j = nlohmann::json::parse(input);"
         ]
     }
 ]

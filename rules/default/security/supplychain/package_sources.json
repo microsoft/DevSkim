@@ -1,0 +1,91 @@
+[
+    {
+        "name": "Package source is not restricted to an approved feed",
+        "id": "DS205000",
+        "description": "ADM.10205 requires dependencies to be retrieved only from approved repositories, and recommends a single internal source because package managers behave inconsistently when several are configured. This file declares package sources without a <clear /> element, so the sources here are added to any inherited from a machine or user level NuGet.config rather than replacing them.",
+        "recommendation": "Add <clear /> as the first child of <packageSources> so that only the sources declared in this file are used.",
+        "applies_to": [
+            ".config",
+            "xml"
+        ],
+        "tags": [
+            "SupplyChain.PackageSource"
+        ],
+        "confidence": "medium",
+        "severity": "important",
+        "rule_info": "DS205000.md",
+        "patterns": [
+            {
+                "xpaths": [
+                    "/configuration/packageSources/add/@key"
+                ],
+                "pattern": "^.+$",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "xpaths": [
+                        "/configuration/packageSources[clear]/add/@key"
+                    ],
+                    "pattern": "^.+$",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "same-file"
+            }
+        ],
+        "must-match": [
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>",
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <disabledPackageSources>\n    <clear />\n  </disabledPackageSources>\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>",
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <!-- <clear /> does not clear inherited package sources. -->\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>"
+        ],
+        "must-not-match": [
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <packageSources>\n    <clear />\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>"
+        ]
+    },
+    {
+        "name": "Additional package index configured",
+        "id": "DS205001",
+        "description": "ADM.10205 states that --extra-index-url and PIP_EXTRA_INDEX_URL must not be used. pip treats every extra index as equal in priority to the primary one, so an attacker who publishes a higher version of an internal package name on a public index can have it installed instead.",
+        "recommendation": "Use a single --index-url pointing at your Azure Artifacts feed, and configure public packages as an upstream source on that feed.",
+        "applies_to": [
+            "python",
+            "shellscript",
+            "powershell",
+            "yaml",
+            "dotenv",
+            "dockerfile",
+            ".config"
+        ],
+        "tags": [
+            "SupplyChain.PackageSource"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS205001.md",
+        "patterns": [
+            {
+                "pattern": "(--extra-index-url|PIP_EXTRA_INDEX_URL|extra-index-url\\s*=)",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "pip install --extra-index-url https://pypi.org/simple contoso-lib",
+            "PIP_EXTRA_INDEX_URL=https://pypi.org/simple"
+        ],
+        "must-not-match": [
+            "pip install --index-url https://pkgs.dev.azure.com/contoso/_packaging/feed/pypi/simple contoso-lib"
+        ]
+    }
+]

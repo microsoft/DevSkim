@@ -1,0 +1,61 @@
+[
+    {
+        "name": "HTML link missing noopener or noreferrer",
+        "id": "DS610000",
+        "description": "An anchor with target=\"_blank\" gives the opened page a window.opener reference back to this one. The opened page can use it to navigate this tab to a site of its choosing, which is the reverse tabnabbing phishing technique.",
+        "recommendation": "Add rel=\"noopener noreferrer\" to the anchor.",
+        "applies_to": [
+            "html",
+            "razor",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "php"
+        ],
+        "tags": [
+            "Web.HTML"
+        ],
+        "confidence": "medium",
+        "severity": "BestPractice",
+        "rule_info": "DS610000.md",
+        "patterns": [
+            {
+                "pattern": "<a\\b(?=[^>]*\\btarget\\s*=\\s*(?:\"_blank\"|'_blank'|_blank(?=\\s|>)))[^>]*>",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "modifiers": [
+                    "i"
+                ]
+            }
+        ],
+        "conditions": [
+            {
+                "pattern": {
+                    "pattern": "\\brel\\s*=\\s*(?:\"(?:[^\"]*\\s)?(?:noopener|noreferrer)(?=\\s|\")[^\"]*\"|'(?:[^']*\\s)?(?:noopener|noreferrer)(?=\\s|')[^']*'|(?:noopener|noreferrer)(?=\\s|>))",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ],
+                    "modifiers": [
+                        "i"
+                    ]
+                },
+                "negate_finding": true,
+                "search_in": "finding-only"
+            }
+        ],
+        "must-match": [
+            "<a href=\"https://example.com\" target=\"_blank\">Open</a>",
+            "noopener <a href=\"https://example.com\" target=\"_blank\">Open</a>",
+            "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopenerish\">Open</a>"
+        ],
+        "must-not-match": [
+            "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Open</a>",
+            "<A TARGET='_BLANK' REL='external NOOPENER'>Open</A>",
+            "<a href=\"/about\">About</a>"
+        ]
+    }
+]

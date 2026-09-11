@@ -21,7 +21,7 @@
                 "scopes": [
                     "code"
                 ]
-            }        
+            }
         ],
         "fix_its": [
             {
@@ -36,6 +36,12 @@
                     ]
                 }
             }
+        ],
+        "must-match": [
+            "NSString *msg = [NSString stringWithFormat:userInput];"
+        ],
+        "must-not-match": [
+            "NSString *msg = [NSString stringWithFormat:@\"%@\", userInput];"
         ]
     }
 ]

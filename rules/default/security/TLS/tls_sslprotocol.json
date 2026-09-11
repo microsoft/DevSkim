@@ -9,6 +9,7 @@
         ],
         "applies_to": [
             "csharp",
+            "razor",
             "powershell",
             "vb",
             "fsharp"

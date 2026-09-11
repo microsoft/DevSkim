@@ -4,6 +4,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.120] - 2026-09-11
+### Added
+- Added `DS610001` for literal `Set-Cookie` headers missing any of `Secure`, `HttpOnly`, or a valid explicit `SameSite` attribute. Boolean conditions report partially hardened cookies and require all protections on the same header.
+- Added `DS610002` for literal `Strict-Transport-Security` headers missing a `max-age` of at least one year or `includeSubDomains`, with conditions confined to the matched header and guidance for deployment and rollout considerations.
+
+### Fix
+- Consolidated the two `DS440016` entries into one boolean-expression rule, preserving the shared suppression ID while applying the same-line TLS 1.3 exemption only to curl flags. Other hard-coded protocol patterns still report when TLS 1.3 appears on that line.
+- Registered JSX and TSX comment syntax, and routed `.cshtml` and `.razor` through a dedicated Razor language that preserves C# rule coverage while enabling HTML analysis.
+- Corrected rule edge cases for untagged images from registries with ports, case-insensitive connection-string options, NuGet `<clear />` scoping, pip extra indexes in dotenv and Dockerfile inputs, and `rel` tokens scoped to individual HTML anchors.
+- Added F# assignment syntax to the .NET XXE rules and made the lxml rule report each unsafe parser option independently.
+
+### Dependencies
+- Updated `Microsoft.CST.ApplicationInspector.RulesEngine` and `Microsoft.CST.ApplicationInspector.Logging` from 1.10.1 to 1.10.2, fixing verifier and analyzer agreement for rules combining expressions and conditions.
+
+## [1.0.110] - 2026-08-26
+### Changed
+- Moved to `Microsoft.CST.ApplicationInspector.RulesEngine` and `...Logging` 1.10.1. This is the first release carrying the boolean expression support from [ApplicationInspector#654](https://github.com/microsoft/ApplicationInspector/pull/654), plus four rules-engine fixes: string patterns always reported pattern index 0, conditions were only judged against the first capture, the async path over-reported by taking a union rather than an intersection, and override suppression used different overlap rules on the sync and async paths. The last of these affects DevSkim in particular, since 38 rules use `overrides` and the sync path now requires full containment; the preceding release brought every DevSkim override pair into containment ahead of this change.
+
+### Fix
+- Made `DS440017`'s `must-match` sample independent of comment styling. Its condition looks for `openssl` in `code` scope, but the sample placed it in a `/* */` comment, which passed under 1.9.50 only because the verifier's fallback language has no comment syntax. The sample now puts `openssl` in a string literal.
+
+## [1.0.108] - 2026-08-19
+### Added
+- Added Kubernetes Security Baseline rules (`DS200000`-`DS200007`) covering privileged containers, privilege escalation, host namespace sharing, writable root filesystems, running as root, unpinned images, dangerous Linux capabilities, and `hostPath` volumes. These are the first rules to use the engine's `ymlpaths` support, which no shipped rule had used.
+- Added package source rules `DS205000` (a `nuget.config` `<packageSources>` with no `<clear />`, so the sources are added to those inherited from machine and user level configuration rather than replacing them) and `DS205001` (`--extra-index-url` and `PIP_EXTRA_INDEX_URL`).
+- Added `DS114352`, which detects connection strings that leave transport encryption optional (`Encrypt=False`, `TrustServerCertificate=True`, `sslmode=prefer`/`allow`/`disable`, MySQL `SslMode=Preferred`/`None`, JDBC `useSSL=false`). Guidance for this rule was already in the repository but no rule referenced it.
+- Added secret detection for PEM private key blocks (`DS173238`), provider access tokens from GitHub, AWS, Google, Slack, Stripe, npm, SendGrid and GitLab (`DS173239`), and Azure Storage account keys and shared access signatures (`DS173240`). The two existing secret rules keyed on 30 or more lowercase hex characters and matched none of these formats.
+- Added `DS610000` for anchors using `target="_blank"` without `rel="noopener noreferrer"`. Its guidance was already present but the rule could not be written because no `html` language existed.
+- Added deserialization rules for the libraries ADM.10010 names as unapproved: Python `torch.load`, `joblib.load`, `dill.load` and `marshal` (`DS425050`); PyYAML `yaml.load` without a safe loader (`DS425060`); .NET `BinaryFormatter`, `SoapFormatter`, `NetDataContractSerializer`, `LosFormatter` and `ObjectStateFormatter` (`DS425070`); `JavaScriptSerializer` and `SimpleTypeResolver` (`DS425080`); and Boost Property Tree (`DS425090`).
+- Added XXE rules for .NET `DtdProcessing.Parse` and `ProhibitDtd = false` (`DS132782`), .NET `XmlResolver` assignment (`DS132783`), Java parser factories with no hardening feature anywhere in the file (`DS132784`), PHP `libxml_disable_entity_loader(false)` and `LIBXML_NOENT` (`DS132785`), and lxml entity resolution (`DS132786`). Previous coverage was Objective-C and Swift only.
+- Added `DS154190` (the `IsBad*Ptr` family), `DS154191` (`CopyMemory` and `RtlCopyMemory`), `DS154192` (`strlen`, `wcslen`, `_tcslen`, `lstrlen`) and `DS154193` (Objective-C method swizzling).
+- Added `html`, `dockerfile`, `terraform`, `bicep`, `kotlin`, `scala`, `dart`, `toml`, `gradle`, `msbuild` (`.props`/`.targets`), `dotenv`, `makefile` and `pem` language definitions with matching comment syntax. 32 rules declare no `applies_to` and so apply to every known language, meaning each addition extends those rules to a file type that was previously skipped.
+- Added `file-names` entries so extensionless files are scanned. `Dockerfile`, `Makefile`, `Cargo.toml`, `id_rsa` and the shell dotfiles have no extension, so extension-based matching alone never reached them.
+- Added `must-match` self-tests to the 32 rules that had none. Every rule now has a positive self-test.
+
+### Fix
+- Fixed the four rules that were never shipped. `android.json` (`DS180000`, `DS180001`, `DS180002`) and `xslt_scripting.json` (`DS132781`) were missing from the hand-maintained `<EmbeddedResource>` list in `Microsoft.DevSkim.csproj`, so they were absent from the default rule set. This is also why their dangling `rule_info` references never failed CI, since the tests iterate the shipped set. Their missing guidance has been written.
+- Fixed `DS180000`, which bound the default XML namespace to the Maven POM namespace and matched `//default:application`. A real `AndroidManifest.xml` has no default namespace, so the rule could not fire on one; its self-test used a manifest with the Maven namespace and therefore passed while testing a document shape that does not occur.
+- Fixed `DS132781`, which declared `applies_to: ["CSharp"]`. Language names are matched exactly against `languages.json`, which defines `csharp`, so the rule reported nothing.
+- Fixed `DS191340`, which used `$1` as a backreference. .NET spells that `\1`, and `$` is an end-of-line anchor, so the pattern could never match.
+- Fixed `DS440016`'s `--(sslv2|sslv3|tlsv1|tlsv11|tlsv1\.1|tlsv1\.2)` alternation, which was ordered shortest-first. .NET alternation is leftmost-first rather than longest-match, so `tlsv1` always won and the `tlsv11`, `tlsv1\.1` and `tlsv1\.2` branches were unreachable; `curl --tlsv1.1` reported a span covering only `--tlsv1`.
+- Fixed `DS440016`'s `--secure-protocol=` pattern, which was typed as `string` and therefore word-boundary anchored. A leading hyphen is not a word character, so `wget --secure-protocol=SSLv3` was not reported at all. It is now a regex that also covers the protocol value following the flag.
+- Repointed `DS140021` (`strlen`) from `DS154189` to `DS154192`. `strlen` moved into `DS154192` in this release, which left the old override inert and made `strlen(s)` report twice at the same severity.
+- Gave the two unrelated rules that both used the ID `DS440011` distinct IDs. SARIF emits one `tool.driver.rules` entry per rule ID, so findings from the `hardcoded_tls.json` rule were reported with the other rule's name and a `helpUri` pointing at the wrong guidance document, and suppressing either ID suppressed both. The `hardcoded_tls.json` rule is now `DS440017`.
+- Removed `DS440060`, which had an empty `patterns` array and so could not produce a finding while still occupying an entry in SARIF tool metadata.
+- Normalised `DS450003`'s severity from `manualreview` to `ManualReview`.
+
+### Changed
+- Extended `DS154189` from 80 to 178 alternatives. Comparing the shipped rules against the 194 APIs enumerated in ADM.10082 found 113 that DevSkim did not report: 108 absent, and 5 present only in the wrong case, which `RegexWord` does not match.
+- Moved `wcslen` and `_tcslen` from `DS154189` into `DS154192` so the same defect is not reported at two different severities depending on which variant is used.
+- Added `javascriptreact` and `typescriptreact` to the 7 rules that target `javascript` or `typescript`. Both languages were already defined and mapped to `.jsx` and `.tsx`, but no rule named them, so React source received none of those rules.
+
 ## [1.0.97] - 2026-08-11
 ### Pipeline
 - Fixed the VS Code extension release pipeline failing at the publish step with `npm error code E401`. The step ran `npx @vscode/vsce`, and because the argument is a package name rather than a bin name, npx cannot short circuit to the copy installed by the preceding `npm install -g @vscode/vsce` step and always fetches the package manifest from the npm registry, which is not authenticated inside the `AzureCLI@2` task. The step now invokes the globally installed `vsce.cmd` by its full path, so publishing needs no registry access, and fails with an explicit message if the binary is missing.
