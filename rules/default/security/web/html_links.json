@@ -21,31 +21,40 @@
         "rule_info": "DS610000.md",
         "patterns": [
             {
-                "pattern": "<a\\s[^>]*target\\s*=\\s*[\"']?_blank",
+                "pattern": "<a\\b(?=[^>]*\\btarget\\s*=\\s*(?:\"_blank\"|'_blank'|_blank(?=\\s|>)))[^>]*>",
                 "type": "regex",
                 "scopes": [
                     "code"
+                ],
+                "modifiers": [
+                    "i"
                 ]
             }
         ],
         "conditions": [
             {
                 "pattern": {
-                    "pattern": "(noopener|noreferrer)",
+                    "pattern": "\\brel\\s*=\\s*(?:\"(?:[^\"]*\\s)?(?:noopener|noreferrer)(?=\\s|\")[^\"]*\"|'(?:[^']*\\s)?(?:noopener|noreferrer)(?=\\s|')[^']*'|(?:noopener|noreferrer)(?=\\s|>))",
                     "type": "regex",
                     "scopes": [
                         "code"
+                    ],
+                    "modifiers": [
+                        "i"
                     ]
                 },
                 "negate_finding": true,
-                "search_in": "same-line"
+                "search_in": "finding-only"
             }
         ],
         "must-match": [
-            "<a href=\"https://example.com\" target=\"_blank\">Open</a>"
+            "<a href=\"https://example.com\" target=\"_blank\">Open</a>",
+            "noopener <a href=\"https://example.com\" target=\"_blank\">Open</a>",
+            "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopenerish\">Open</a>"
         ],
         "must-not-match": [
             "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Open</a>",
+            "<A TARGET='_BLANK' REL='external NOOPENER'>Open</A>",
             "<a href=\"/about\">About</a>"
         ]
     }
