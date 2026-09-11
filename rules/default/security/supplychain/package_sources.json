@@ -29,8 +29,11 @@
         "conditions": [
             {
                 "pattern": {
-                    "pattern": "<clear",
-                    "type": "substring",
+                    "xpaths": [
+                        "/configuration/packageSources[clear]/add/@key"
+                    ],
+                    "pattern": "^.+$",
+                    "type": "regex",
                     "scopes": [
                         "code"
                     ]
@@ -40,7 +43,9 @@
             }
         ],
         "must-match": [
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>"
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>",
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <disabledPackageSources>\n    <clear />\n  </disabledPackageSources>\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>",
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <!-- <clear /> does not clear inherited package sources. -->\n  <packageSources>\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>"
         ],
         "must-not-match": [
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<configuration>\n  <packageSources>\n    <clear />\n    <add key=\"contoso\" value=\"https://pkgs.dev.azure.com/contoso/_packaging/feed/nuget/v3/index.json\" />\n  </packageSources>\n</configuration>"
@@ -56,6 +61,8 @@
             "shellscript",
             "powershell",
             "yaml",
+            "dotenv",
+            "dockerfile",
             ".config"
         ],
         "tags": [

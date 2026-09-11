@@ -141,6 +141,8 @@ public class DefaultRulesTests
             [DataRow("DS440016", "test.sh", "curl --tlsv1.2 https://example.com", 1)]
             [DataRow("DS440016", "test.sh", "curl --tlsv1.3 https://example.com", 0)]
             [DataRow("DS440016", "test.sh", "wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com", 1)]
+            [DataRow("DS205001", ".env", "PIP_EXTRA_INDEX_URL=https://pypi.org/simple", 1)]
+            [DataRow("DS205001", "Dockerfile", "ENV PIP_EXTRA_INDEX_URL=https://pypi.org/simple", 1)]
             [DataRow("DS610000", "view.cshtml", "<a href=\"https://example.com\" target=\"_blank\">Open</a>", 1)]
             [DataRow("DS610000", "view.razor", "<!-- <a href=\"https://example.com\" target=\"_blank\">Open</a> -->", 0)]
             [DataRow("DS610000", "view.razor", "// <a href=\"https://example.com\" target=\"_blank\">Open</a>", 0)]
