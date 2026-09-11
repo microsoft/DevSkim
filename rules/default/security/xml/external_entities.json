@@ -152,14 +152,14 @@
         "rule_info": "DS132782.md",
         "patterns": [
             {
-                "pattern": "DtdProcessing\\s*[=.]\\s*(DtdProcessing\\s*\\.\\s*)?Parse",
+                "pattern": "DtdProcessing\\s*(?:[=.]|<-)\\s*(DtdProcessing\\s*\\.\\s*)?Parse",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             },
             {
-                "pattern": "ProhibitDtd\\s*=\\s*false",
+                "pattern": "ProhibitDtd\\s*(?:=|<-)\\s*false",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -168,7 +168,9 @@
         ],
         "must-match": [
             "reader.DtdProcessing = DtdProcessing.Parse;",
-            "settings.ProhibitDtd = false;"
+            "settings.ProhibitDtd = false;",
+            "settings.DtdProcessing <- DtdProcessing.Parse",
+            "settings.ProhibitDtd <- false"
         ],
         "must-not-match": [
             "reader.DtdProcessing = DtdProcessing.Prohibit;",
@@ -194,7 +196,7 @@
         "rule_info": "DS132783.md",
         "patterns": [
             {
-                "pattern": "XmlResolver\\s*=\\s*new\\s+Xml(Url|Secure)Resolver",
+                "pattern": "XmlResolver\\s*(?:=|<-)\\s*new\\s+Xml(Url|Secure)Resolver",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -203,7 +205,8 @@
         ],
         "must-match": [
             "reader.XmlResolver = new XmlUrlResolver();",
-            "settings.XmlResolver = new XmlSecureResolver(new XmlUrlResolver(), url);"
+            "settings.XmlResolver = new XmlSecureResolver(new XmlUrlResolver(), url);",
+            "settings.XmlResolver <- new XmlUrlResolver()"
         ],
         "must-not-match": [
             "reader.XmlResolver = null;"
@@ -363,32 +366,21 @@
         "rule_info": "DS132786.md",
         "patterns": [
             {
-                "pattern": "(resolve_entities|load_dtd|no_network)\\s*=\\s*(True|False)",
+                "pattern": "(resolve_entities\\s*=\\s*True|load_dtd\\s*=\\s*True|no_network\\s*=\\s*False)",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             }
         ],
-        "conditions": [
-            {
-                "pattern": {
-                    "pattern": "resolve_entities\\s*=\\s*False",
-                    "type": "regex",
-                    "scopes": [
-                        "code"
-                    ]
-                },
-                "negate_finding": true,
-                "search_in": "same-line"
-            }
-        ],
         "must-match": [
             "parser = etree.XMLParser(resolve_entities=True)",
-            "parser = etree.XMLParser(load_dtd=True, no_network=False)"
+            "parser = etree.XMLParser(load_dtd=True, no_network=False)",
+            "parser = etree.XMLParser(resolve_entities=False, load_dtd=True)"
         ],
         "must-not-match": [
-            "parser = etree.XMLParser(resolve_entities=False, no_network=True)"
+            "parser = etree.XMLParser(resolve_entities=False, no_network=True)",
+            "parser = etree.XMLParser(load_dtd=False, no_network=True)"
         ]
     }
 ]
