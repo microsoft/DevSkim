@@ -36,6 +36,9 @@
                 "type": "regex",
                 "scopes": [
                     "code"
+                ],
+                "modifiers": [
+                    "i"
                 ]
             }
         ],
@@ -44,10 +47,14 @@
             "{\n  \"ConnectionStrings\": {\n    \"Pg\": \"Host=db;Username=u;sslmode=prefer\"\n  }\n}",
             "<add name=\"Default\" connectionString=\"Server=db;Encrypt=False;\" />",
             "var cs = \"Server=db;Database=app;TrustServerCertificate=True;\";",
-            "DATABASE_URL=postgres://u:p@db/app?sslmode=disable"
+            "DATABASE_URL=postgres://u:p@db/app?sslmode=disable",
+            "server=db;encrypt=false",
+            "Server=db;TRUSTSERVERCERTIFICATE=true",
+            "Server=db;SslMode=preferred"
         ],
         "must-not-match": [
-            "{\n  \"ConnectionStrings\": {\n    \"Default\": \"Server=db;Database=app;Encrypt=True;TrustServerCertificate=False;\"\n  }\n}"
+            "{\n  \"ConnectionStrings\": {\n    \"Default\": \"Server=db;Database=app;Encrypt=True;TrustServerCertificate=False;\"\n  }\n}",
+            "server=db;encrypt=TRUE;trustservercertificate=FALSE;sslmode=verify-full"
         ]
     }
 ]
