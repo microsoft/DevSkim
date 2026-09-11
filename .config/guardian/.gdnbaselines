@@ -1,0 +1,34 @@
+{
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines"
+  },
+  "version": "1.0.0",
+  "baselines": {
+    "default": {
+      "name": "default",
+      "createdDate": "2026-09-11 01:35:23Z",
+      "lastUpdatedDate": "2026-09-11 01:35:23Z"
+    }
+  },
+  "results": {
+    "a26bfd6a17f1d98c61402c9a79c72d4b04c983df51bd056cf91d96209d636fd3": {
+      "signature": "a26bfd6a17f1d98c61402c9a79c72d4b04c983df51bd056cf91d96209d636fd3",
+      "alternativeSignatures": [
+        "c997d1a7538343538af54833838a4d2c55e5bda4daafcdc6fdc033dae970de39",
+        "a223c655a70c0488bdefc14fdd96a205cfc353246a98752148deb79c0d73bc6e",
+        "bc620efcd277f5c1fa427b5c9fa3d0e7b2d00f2d66778b61a93d51867d6b8706"
+      ],
+      "target": "DevSkim-DotNet/Microsoft.DevSkim/DevSkimRuleSet.cs",
+      "line": 32,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-09-11 01:35:23Z",
+      "expirationDate": "2027-02-28 01:36:51Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-09-11 01:36:51Z"
+    }
+  }
+}
