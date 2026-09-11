@@ -123,6 +123,7 @@
         "recommendation": "Use TypeNameHandling.None",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [
@@ -246,6 +247,7 @@
         "recommendation": "Use System.Text.Json or another approved serializer. BinaryFormatter is obsolete and was removed in .NET 9.",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp",
             "vb"
         ],
@@ -281,6 +283,7 @@
         "recommendation": "Use System.Text.Json. If JavaScriptSerializer cannot be removed, never construct it with a JavaScriptTypeResolver.",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp",
             "vb"
         ],

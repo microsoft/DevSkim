@@ -13,8 +13,10 @@
       "rust",
       "swift",
       "javascript",
+      "javascriptreact",
       "java",
       "typescript",
+      "typescriptreact",
       "php",
       "kotlin",
       "scala",
@@ -85,6 +87,14 @@
     "inline": "::",
     "prefix": "Rem",
     "suffix": "\n"
+  },
+  {
+    "language": [
+      "razor"
+    ],
+    "inline": "//",
+    "prefix": "<!--",
+    "suffix": "-->"
   },
   {
     "language": [

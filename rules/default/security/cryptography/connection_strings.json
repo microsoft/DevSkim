@@ -9,6 +9,7 @@
             "xml",
             ".config",
             "csharp",
+            "razor",
             "vb",
             "fsharp",
             "python",

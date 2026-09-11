@@ -6,6 +6,7 @@
         "recommendation": "Add rel=\"noopener noreferrer\" to the anchor.",
         "applies_to": [
             "html",
+            "razor",
             "javascript",
             "javascriptreact",
             "typescript",

@@ -63,7 +63,12 @@
   {
     "name": "csharp",
     "extensions": [
-      ".cs",
+      ".cs"
+    ]
+  },
+  {
+    "name": "razor",
+    "extensions": [
       ".cshtml",
       ".razor"
     ]
@@ -135,9 +140,7 @@
       ".html",
       ".htm",
       ".xhtml",
-      ".cshtml",
-      ".vbhtml",
-      ".razor"
+      ".vbhtml"
     ]
   },
   {

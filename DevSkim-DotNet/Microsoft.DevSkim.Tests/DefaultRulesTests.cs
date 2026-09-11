@@ -65,6 +65,27 @@ public class DefaultRulesTests
         Assert.IsFalse(result.DevSkimRuleStatuses.Any(x => x.Errors.Any()));
     }
 
+    [TestMethod]
+    public void RazorLanguagePreservesCSharpAndHtmlCoverage()
+    {
+        var languages = DevSkimLanguages.LoadEmbedded();
+        Assert.IsTrue(languages.FromFileNameOut("view.cshtml", out var cshtml));
+        Assert.AreEqual("razor", cshtml.Name);
+        Assert.IsTrue(languages.FromFileNameOut("component.razor", out var razor));
+        Assert.AreEqual("razor", razor.Name);
+        Assert.AreEqual("//", languages.GetCommentInline("razor"));
+        Assert.AreEqual("<!--", languages.GetCommentPrefix("razor"));
+        Assert.AreEqual("-->", languages.GetCommentSuffix("razor"));
+
+        DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet();
+        string[] missingRazorCoverage = ruleSet
+            .Where(rule => rule.AppliesTo?.Contains("csharp") == true && rule.AppliesTo?.Contains("razor") != true)
+            .Select(rule => rule.Id)
+            .ToArray();
+        Assert.AreEqual(0, missingRazorCoverage.Length, $"C# rules missing Razor coverage: {string.Join(", ", missingRazorCoverage)}");
+        CollectionAssert.Contains(ruleSet.Single(rule => rule.Id == "DS610000").AppliesTo?.ToList(), "razor");
+    }
+
         [TestMethod]
         [DataRow("curl --tlsv1.2 https://example.com", 1)]
         [DataRow("curl --tlsv1.3 https://example.com", 0)]
@@ -120,6 +141,9 @@ public class DefaultRulesTests
             [DataRow("DS440016", "test.sh", "curl --tlsv1.2 https://example.com", 1)]
             [DataRow("DS440016", "test.sh", "curl --tlsv1.3 https://example.com", 0)]
             [DataRow("DS440016", "test.sh", "wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com", 1)]
+            [DataRow("DS610000", "view.cshtml", "<a href=\"https://example.com\" target=\"_blank\">Open</a>", 1)]
+            [DataRow("DS610000", "view.razor", "<!-- <a href=\"https://example.com\" target=\"_blank\">Open</a> -->", 0)]
+            [DataRow("DS610000", "view.razor", "// <a href=\"https://example.com\" target=\"_blank\">Open</a>", 0)]
             [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\");", 1)]
             [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure; HttpOnly; SameSite=Lax\");", 0)]
             [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\"); response.setHeader(\"Set-Cookie\", \"other=two; HttpOnly; SameSite=Lax\");", 2)]

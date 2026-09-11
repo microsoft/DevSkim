@@ -388,6 +388,7 @@
         "recommendation": "Always use a valid certificate, even during testing.",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [

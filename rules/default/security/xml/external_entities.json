@@ -140,6 +140,7 @@
         "recommendation": "Set DtdProcessing to Prohibit, as shown in the worked example in ADM.10010.",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp",
             "vb"
         ],
@@ -181,6 +182,7 @@
         "recommendation": "Set XmlResolver to null, or leave it unset on frameworks where the default is already null.",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp",
             "vb"
         ],

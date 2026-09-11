@@ -74,6 +74,7 @@
         "recommendation": "",
         "applies_to": [
             "csharp",
+            "razor",
             "vb"
         ],
         "tags": [
