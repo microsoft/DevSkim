@@ -1,0 +1,134 @@
+## DO NOT MODIFY THIS FILE MANUALLY. This is part of auto-baselining from 1ES Pipeline Templates. Go to [https://aka.ms/1espt-autobaselining] for more details.
+
+pipelines:
+  225:
+    retail:
+      source:
+        credscan:
+          lastModifiedDate: 2024-09-14
+        eslint:
+          lastModifiedDate: 2024-09-14
+        psscriptanalyzer:
+          lastModifiedDate: 2024-09-14
+        armory:
+          lastModifiedDate: 2024-09-14
+      binary:
+        credscan:
+          lastModifiedDate: 2025-02-01
+        binskim:
+          lastModifiedDate: 2025-03-08
+        spotbugs:
+          lastModifiedDate: 2025-02-01
+  221:
+    retail:
+      source:
+        credscan:
+          lastModifiedDate: 2024-09-14
+        eslint:
+          lastModifiedDate: 2024-09-14
+        psscriptanalyzer:
+          lastModifiedDate: 2024-09-14
+        armory:
+          lastModifiedDate: 2024-09-14
+      binary:
+        credscan:
+          lastModifiedDate: 2025-02-01
+        binskim:
+          lastModifiedDate: 2025-03-08
+        spotbugs:
+          lastModifiedDate: 2025-02-01
+  223:
+    retail:
+      source:
+        credscan:
+          lastModifiedDate: 2024-09-21
+        eslint:
+          lastModifiedDate: 2024-09-21
+        psscriptanalyzer:
+          lastModifiedDate: 2024-09-21
+        armory:
+          lastModifiedDate: 2024-09-21
+      binary:
+        credscan:
+          lastModifiedDate: 2025-02-01
+        binskim:
+          lastModifiedDate: 2025-03-08
+        spotbugs:
+          lastModifiedDate: 2025-02-01
+  1047:
+    retail:
+      source:
+        credscan:
+          lastModifiedDate: 2024-11-01
+        eslint:
+          lastModifiedDate: 2024-11-01
+        psscriptanalyzer:
+          lastModifiedDate: 2024-11-01
+        armory:
+          lastModifiedDate: 2024-11-01
+      binary:
+        credscan:
+          lastModifiedDate: 2025-01-31
+        binskim:
+          lastModifiedDate: 2025-01-31
+        spotbugs:
+          lastModifiedDate: 2025-01-31
+  1046:
+    retail:
+      source:
+        credscan:
+          lastModifiedDate: 2024-11-01
+        eslint:
+          lastModifiedDate: 2024-11-01
+        psscriptanalyzer:
+          lastModifiedDate: 2024-11-01
+        armory:
+          lastModifiedDate: 2024-11-01
+  1045:
+    retail:
+      source:
+        credscan:
+          lastModifiedDate: 2024-11-01
+        eslint:
+          lastModifiedDate: 2024-11-01
+        psscriptanalyzer:
+          lastModifiedDate: 2024-11-01
+        armory:
+          lastModifiedDate: 2024-11-01
+      binary:
+        credscan:
+          lastModifiedDate: 2025-01-31
+        binskim:
+          lastModifiedDate: 2025-01-31
+        spotbugs:
+          lastModifiedDate: 2025-01-31
+  150:
+    usedNonDefaultBranch: true
+    retail:
+      source:
+        eslint:
+          lastModifiedDate: 2026-09-11
+        psscriptanalyzer:
+          lastModifiedDate: 2026-09-11
+        armory:
+          lastModifiedDate: 2026-09-11
+      binary:
+        binskim:
+          lastModifiedDate: 2026-09-11
+        spotbugs:
+          lastModifiedDate: 2026-09-11
+  154:
+    usedNonDefaultBranch: true
+    retail:
+      source:
+        eslint:
+          lastModifiedDate: 2026-02-05
+        psscriptanalyzer:
+          lastModifiedDate: 2026-02-05
+        armory:
+          lastModifiedDate: 2026-02-05
+      binary:
+        binskim:
+          lastModifiedDate: 2026-02-05
+        spotbugs:
+          lastModifiedDate: 2026-02-05
