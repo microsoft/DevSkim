@@ -281,6 +281,12 @@ public class DefaultRulesTests
     [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=31536000; custom=O'Brien; includeSubDomains\");", 0)]
     [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=300; custom=O'Brien; includeSubDomains\");", 1)]
     [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=31536000; custom=O'Brien\"); header(\"Strict-Transport-Security: max-age=31536000; includeSubDomains\");", 1)]
+    [DataRow("DS610001", "response.yaml", "Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax", 0)]
+    [DataRow("DS610001", "response.yaml", "Set-Cookie: name=O'Brien; Secure", 1)]
+    [DataRow("DS610001", "app.cs", "Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax", 0)]
+    [DataRow("DS610001", "response.yaml", "Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax\nSet-Cookie: other=two; Secure", 1)]
+    [DataRow("DS610002", "response.yaml", "Strict-Transport-Security: max-age=31536000; custom=O'Brien; includeSubDomains", 0)]
+    [DataRow("DS610002", "response.yaml", "Strict-Transport-Security: max-age=300; custom=O'Brien; includeSubDomains", 1)]
     public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
     {
         DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });

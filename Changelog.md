@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.123] - 2026-09-14
+### Changed
+- **Breaking for custom rules.** `.cshtml` and `.razor` now resolve to the `razor` language instead of `csharp`, so a rule declaring only `"applies_to": ["csharp"]` no longer runs against Razor files. Every rule shipped here names both languages; rule authors maintaining their own rulesets must add `"razor"` alongside `"csharp"` to keep their Razor coverage.
+
+### Fix
+- Allowed apostrophes in cookie and HSTS header values that are not enclosed in a quoted source string, completing the previous fix. A value such as `name=O'Brien` truncated the match at the apostrophe, so attributes after it were not seen and a fully hardened header was reported.
+
 ## [1.0.122] - 2026-09-14
 ### Fix
 - Evaluate nested PyYAML loads independently and distinguish loader arguments from list, set, and dictionary contents.
@@ -15,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.120] - 2026-09-11
 ### Fix
-- Registered JSX and TSX comment syntax, and routed `.cshtml` and `.razor` through a dedicated Razor language that preserves C# rule coverage while enabling HTML analysis.
+- Registered JSX and TSX comment syntax, and routed `.cshtml` and `.razor` through a dedicated Razor language so Razor files receive HTML analysis. Every C# rule shipped here also names `razor`, so their coverage is unchanged; see the breaking-change note above for custom rules.
 - Corrected rule edge cases for untagged images from registries with ports, case-insensitive connection-string options, NuGet `<clear />` scoping, pip extra indexes in dotenv and Dockerfile inputs, and `rel` tokens scoped to individual HTML anchors.
 - Added F# assignment syntax to the .NET XXE rules and made the lxml rule report each unsafe parser option independently.
 
