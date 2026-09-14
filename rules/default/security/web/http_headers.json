@@ -12,7 +12,7 @@
         "rule_info": "DS610001.md",
         "patterns": [
             {
-                "pattern": "(?:(?<doubleQuotedSource>\")|'|(?<![\\w\"'-])|(?<=\\\\[rn]))Set-Cookie[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>=[ \\t]*(?(doubleQuotedSource)(?=\\\\\"))(?<cookieQuote>\\\\?\")[^\\s\"\\\\;,]*\\k<cookieQuote>|\\\\(?![rn]).|[^\\\\\\r\\n\"'])+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
+                "pattern": "(?:(?<doubleQuotedSource>\")|'|(?<![\\w\"'-])|(?<=\\\\[rn]))Set-Cookie[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>=[ \\t]*(?(doubleQuotedSource)(?=\\\\\"))(?<cookieQuote>\\\\?\")[^\\s\"\\\\;,]*\\k<cookieQuote>|\\\\(?![rn]).|(?(doubleQuotedSource)[^\\\\\\r\\n\"]|[^\\\\\\r\\n\"']))+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -83,6 +83,7 @@
         ],
         "expression": "(rawHeader OR literalHeader) AND NOT (secure AND httpOnly AND sameSite)",
         "must-match": [
+            "header(\"Set-Cookie: name=O'Brien; Secure\");",
             "Set-Cookie: session=\"value\"; Secure",
             "Set-Cookie: session=value",
             "Set-Cookie: session=value; Secure",
@@ -101,6 +102,7 @@
             "response.setHeader(\"Set-Cookie\", \"session=value; Secure\"); response.setHeader(\"Set-Cookie\", \"other=value; Secure; HttpOnly; SameSite=Lax\");"
         ],
         "must-not-match": [
+            "header(\"Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax\");",
             "Set-Cookie: session=\"value\"; Secure; HttpOnly; SameSite=Lax",
             "Set-Cookie: session=value; Secure; HttpOnly; SameSite=Lax",
             "set-cookie: session=value; samesite=Strict; HTTPONLY; SECURE",
@@ -129,7 +131,7 @@
         "rule_info": "DS610002.md",
         "patterns": [
             {
-                "pattern": "(?:(?<doubleQuotedSource>\")|'|(?<![\\w\"'-])|(?<=\\\\[rn]))Strict-Transport-Security[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>=[ \\t]*(?(doubleQuotedSource)(?=\\\\\"))(?<directiveQuote>\\\\?\")(?:(?!\\k<directiveQuote>)(?:\\\\(?![rn]).|[^\\\\\\r\\n]))*\\k<directiveQuote>|\\\\(?![rn]).|[^\\\\\\r\\n\"'])+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
+                "pattern": "(?:(?<doubleQuotedSource>\")|'|(?<![\\w\"'-])|(?<=\\\\[rn]))Strict-Transport-Security[ \\t]*:[ \\t]*(?=[^\\s\"'])(?>=[ \\t]*(?(doubleQuotedSource)(?=\\\\\"))(?<directiveQuote>\\\\?\")(?:(?!\\k<directiveQuote>)(?:\\\\(?![rn]).|[^\\\\\\r\\n]))*\\k<directiveQuote>|\\\\(?![rn]).|(?(doubleQuotedSource)[^\\\\\\r\\n\"]|[^\\\\\\r\\n\"']))+(?=[\\r\\n\"']|\\\\[rn]|$)(?![\"']\\s*[+.])",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -170,6 +172,7 @@
         ],
         "expression": "(rawHeader OR literalHeader) AND NOT validPolicy",
         "must-match": [
+            "header(\"Strict-Transport-Security: max-age=300; custom=O'Brien; includeSubDomains\");",
             "Strict-Transport-Security: max-age=0; max-age=31536000; includeSubDomains",
             "Strict-Transport-Security: max-age=31536000; includeSubDomains; includeSubDomains",
             "Strict-Transport-Security: max-age=300; custom=\"max-age=31536000; includeSubDomains\"",
@@ -188,6 +191,7 @@
             "Strict-Transport-Security: \"max-age=31536000\""
         ],
         "must-not-match": [
+            "header(\"Strict-Transport-Security: max-age=31536000; custom=O'Brien; includeSubDomains\");",
             "Strict-Transport-Security: custom=\"max-age=0; unrelated\"; max-age=31536000; includeSubDomains",
             "Strict-Transport-Security: max-age=31536000; includeSubDomains",
             "Strict-Transport-Security: max-age=31539999; includeSubDomains",

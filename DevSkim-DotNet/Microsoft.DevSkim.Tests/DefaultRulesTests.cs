@@ -235,6 +235,15 @@ public class DefaultRulesTests
     [DataRow("DS425060", "loader.py", "config = yaml.load('Loader=yaml.SafeLoader', Loader=yaml.UnsafeLoader)", 1)]
     [DataRow("DS425060", "loader.py", "config = yaml.load(stream,\n    # Loader=yaml.SafeLoader\n    Loader=yaml.UnsafeLoader\n)", 1)]
     [DataRow("DS425060", "loader.py", "config = yaml.load(SafeLoader, Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load(yaml.load(data, Loader=yaml.UnsafeLoader), Loader=yaml.SafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load(yaml.load(data, Loader=yaml.UnsafeLoader), Loader=yaml.UnsafeLoader)", 2)]
+    [DataRow("DS425060", "loader.py", "yaml.load(yaml.load(data, Loader=yaml.SafeLoader), Loader=yaml.SafeLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "yaml.load_all(yaml.load(data, Loader=yaml.UnsafeLoader), Loader=yaml.SafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load([data, yaml.SafeLoader, None][0], Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load({data, yaml.SafeLoader, None}.pop(), Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load([data, yaml.UnsafeLoader, None][0], Loader=yaml.SafeLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "yaml.load({'document': data}['document'], Loader=yaml.CSafeLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "yaml.load([data, None][0], yaml.SafeLoader)", 0)]
     [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\">Open</a><a href=\"/about\" rel=\"noopener\">About</a>", 1)]
     [DataRow("DS610000", "links.html", "<a href=\"https://example.com\"\n   target=\"_blank\"\n   rel=\"noopener noreferrer\">Open</a>", 0)]
     [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\" title=\"noopener\">Open</a>", 1)]
@@ -266,6 +275,12 @@ public class DefaultRulesTests
     [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"custom=\\\"max-age=0; unrelated\\\"; max-age=31536000; includeSubDomains\");", 0)]
     [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \";; max-age=31536000;; includeSubDomains; ;\");", 0)]
     [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000 includeSubDomains\");", 1)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax\");", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: name=O'Brien; Secure\");", 1)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: name=O'Brien; Secure\"); header(\"Set-Cookie: other=value; Secure; HttpOnly; SameSite=Lax\");", 1)]
+    [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=31536000; custom=O'Brien; includeSubDomains\");", 0)]
+    [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=300; custom=O'Brien; includeSubDomains\");", 1)]
+    [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=31536000; custom=O'Brien\"); header(\"Strict-Transport-Security: max-age=31536000; includeSubDomains\");", 1)]
     public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
     {
         DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });

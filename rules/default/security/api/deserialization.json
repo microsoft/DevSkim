@@ -211,28 +211,17 @@
         "rule_info": "DS425060.md",
         "patterns": [
             {
-                "pattern": "\\byaml\\.load(?:_all)?\\s*\\((?>[^()\"'#]+|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|#[^\\r\\n]*(?:\\r?\\n|$)|(?<nestedCall>\\()|(?<-nestedCall>\\)))*(?(nestedCall)(?!))\\)",
+                "pattern": "\\byaml\\.load(?:_all)?\\s*\\((?!(?>[^()\\[\\]{}\"'#,]+|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|#[^\\r\\n]*(?:\\r?\\n|$)|(?<nestedArgument>[([{])|(?<-nestedArgument>[)\\]}])|,(?(nestedArgument)|(?<argument>)))*(?(nestedArgument)(?!))(?<=\\(|,)(?:\\s|#[^\\r\\n]*(?:\\r?\\n|$))*(?(argument)(?:Loader\\s*=\\s*)?|Loader\\s*=\\s*)(?:yaml\\.)?(?:SafeLoader|CSafeLoader|BaseLoader)\\s*(?=,|\\)))",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             }
         ],
-        "conditions": [
-            {
-                "pattern": {
-                    "pattern": "^yaml\\.load(?:_all)?\\s*\\((?>[^()\"'#,]+|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|#[^\\r\\n]*(?:\\r?\\n|$)|(?<nestedCall>\\()|(?<-nestedCall>\\))|,(?(nestedCall)|(?<argument>)))*(?(nestedCall)(?!))(?<=\\(|,)(?:\\s|#[^\\r\\n]*(?:\\r?\\n|$))*(?(argument)(?:Loader\\s*=\\s*)?|Loader\\s*=\\s*)(?:yaml\\.)?(?:SafeLoader|CSafeLoader|BaseLoader)\\s*(?=,|\\))",
-                    "type": "regex",
-                    "scopes": [
-                        "code"
-                    ]
-                },
-                "negate_finding": true,
-                "search_in": "finding-only"
-            }
-        ],
         "must-match": [
             "config = yaml.load(open('config.yml'))",
+            "config = yaml.load(yaml.load(data, Loader=yaml.UnsafeLoader), Loader=yaml.SafeLoader)",
+            "config = yaml.load([data, yaml.SafeLoader, None][0], Loader=yaml.UnsafeLoader)",
             "data = yaml.load_all(stream)"
         ],
         "must-not-match": [
