@@ -6,6 +6,7 @@
         "recommendation": "Either leave off or set to SecurityProtocolType.Tls12;",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [

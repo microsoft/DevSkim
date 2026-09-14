@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.121] - 2026-09-14
+### Fix
+- Reconciled the reviewed rule fixes with the remote Razor, F# XML parsing, and dotenv package-source coverage, preserving both sets of regression tests.
+
+## [1.0.120] - 2026-09-11
+### Fix
+- Registered JSX and TSX comment syntax, and routed `.cshtml` and `.razor` through a dedicated Razor language that preserves C# rule coverage while enabling HTML analysis.
+- Corrected rule edge cases for untagged images from registries with ports, case-insensitive connection-string options, NuGet `<clear />` scoping, pip extra indexes in dotenv and Dockerfile inputs, and `rel` tokens scoped to individual HTML anchors.
+- Added F# assignment syntax to the .NET XXE rules and made the lxml rule report each unsafe parser option independently.
+
 ## [1.0.119] - 2026-09-10
 ### Fix
 - Validate HSTS directive structure so quoted extension values cannot supply required protections, and repeated `max-age` or `includeSubDomains` directives are reported.

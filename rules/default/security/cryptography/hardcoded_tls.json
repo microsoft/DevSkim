@@ -207,6 +207,7 @@
         "recommendation": "",
         "applies_to": [
             "csharp",
+            "razor",
             "powershell",
             "vb",
             "fsharp"
@@ -332,6 +333,7 @@
             "c",
             "cpp",
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [

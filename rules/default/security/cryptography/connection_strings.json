@@ -9,6 +9,7 @@
             "xml",
             ".config",
             "csharp",
+            "razor",
             "vb",
             "fsharp",
             "python",
@@ -35,6 +36,9 @@
                 "type": "regex",
                 "scopes": [
                     "code"
+                ],
+                "modifiers": [
+                    "i"
                 ]
             }
         ],
@@ -45,10 +49,14 @@
             "var cs = \"Server=db;Database=app;TrustServerCertificate=True;\";",
             "var cs = \"Server=db;encrypt=false;\";",
             "var cs = \"Server=db;TRUSTSERVERCERTIFICATE=TRUE;\";",
-            "DATABASE_URL=postgres://u:p@db/app?sslmode=disable"
+            "DATABASE_URL=postgres://u:p@db/app?sslmode=disable",
+            "server=db;encrypt=false",
+            "Server=db;TRUSTSERVERCERTIFICATE=true",
+            "Server=db;SslMode=preferred"
         ],
         "must-not-match": [
-            "{\n  \"ConnectionStrings\": {\n    \"Default\": \"Server=db;Database=app;Encrypt=True;TrustServerCertificate=False;\"\n  }\n}"
+            "{\n  \"ConnectionStrings\": {\n    \"Default\": \"Server=db;Database=app;Encrypt=True;TrustServerCertificate=False;\"\n  }\n}",
+            "server=db;encrypt=TRUE;trustservercertificate=FALSE;sslmode=verify-full"
         ]
     }
 ]

@@ -91,6 +91,14 @@
   },
   {
     "language": [
+      "razor"
+    ],
+    "inline": "//",
+    "prefix": "<!--",
+    "suffix": "-->"
+  },
+  {
+    "language": [
       "html",
       "msbuild"
     ],

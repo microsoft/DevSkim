@@ -6,6 +6,7 @@
         "recommendation": "Add rel=\"noopener noreferrer\" to the anchor.",
         "applies_to": [
             "html",
+            "razor",
             "javascript",
             "javascriptreact",
             "typescript",
@@ -62,11 +63,14 @@
         ],
         "must-match": [
             "<a href=\"https://example.com\" target=\"_blank\">Open</a><a rel=\"noopener\" href=\"/about\">About</a>",
-            "<a href=\"https://example.com\" target=\"_blank\">Open</a>"
+            "<a href=\"https://example.com\" target=\"_blank\">Open</a>",
+            "noopener <a href=\"https://example.com\" target=\"_blank\">Open</a>",
+            "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopenerish\">Open</a>"
         ],
         "must-not-match": [
             "<a href=\"https://example.com\"\n   target=\"_blank\"\n   rel=\"noopener noreferrer\">Open</a>",
             "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Open</a>",
+            "<A TARGET='_BLANK' REL='external NOOPENER'>Open</A>",
             "<a href=\"/about\">About</a>"
         ]
     }

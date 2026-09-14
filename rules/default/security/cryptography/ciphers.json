@@ -37,6 +37,7 @@
         ],
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [
@@ -126,6 +127,7 @@
         "recommendation": "Use AES instead.",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [
@@ -263,6 +265,7 @@
         "recommendation": "Use AES instead.",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [

@@ -6,6 +6,7 @@
         "recommendation": "Add additional entropy (per-application secret).",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [

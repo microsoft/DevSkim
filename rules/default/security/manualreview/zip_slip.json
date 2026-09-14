@@ -6,6 +6,7 @@
         "recommendation": "Make sure that ZipArchiveEntry.FullName doesn't directory stepping characters ..\\",
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [

@@ -307,11 +307,13 @@
         ],
         "must-match": [
             "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app:latest\n",
-            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app\n"
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: localhost:5000/team/app\n"
         ],
         "must-not-match": [
             "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app@sha256:0123456789abcdef\n",
-            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app:1.2.3\n"
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app:1.2.3\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: localhost:5000/team/app:1.2.3\n"
         ]
     },
     {
