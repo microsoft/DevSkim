@@ -163,12 +163,16 @@
                 "type": "regex",
                 "scopes": [
                     "code"
+                ],
+                "modifiers": [
+                    "i"
                 ]
             }
         ],
         "must-match": [
             "reader.DtdProcessing = DtdProcessing.Parse;",
             "settings.ProhibitDtd = false;",
+            "settings.ProhibitDtd = False",
             "settings.DtdProcessing <- DtdProcessing.Parse",
             "settings.ProhibitDtd <- false"
         ],
@@ -200,12 +204,16 @@
                 "type": "regex",
                 "scopes": [
                     "code"
+                ],
+                "modifiers": [
+                    "i"
                 ]
             }
         ],
         "must-match": [
             "reader.XmlResolver = new XmlUrlResolver();",
             "settings.XmlResolver = new XmlSecureResolver(new XmlUrlResolver(), url);",
+            "settings.XmlResolver = New XmlUrlResolver()",
             "settings.XmlResolver <- new XmlUrlResolver()"
         ],
         "must-not-match": [

@@ -53,7 +53,7 @@
     {
         "name": "Kubernetes container allows privilege escalation",
         "id": "DS200001",
-        "description": "allowPrivilegeEscalation is true, so a process in the container can gain more privileges than its parent, for example through a setuid binary. The Restricted Pod Security Standard requires this to be false.",
+        "description": "allowPrivilegeEscalation is not set to false, so a process in the container can gain more privileges than its parent, for example through a setuid binary. Kubernetes defaults the field to true when it is omitted, and the Restricted Pod Security Standard requires it to be explicitly false.",
         "recommendation": "Set allowPrivilegeEscalation: false in the container securityContext.",
         "applies_to": [
             "yaml"
@@ -61,24 +61,25 @@
         "tags": [
             "Container.Kubernetes"
         ],
-        "confidence": "high",
+        "confidence": "medium",
         "severity": "important",
         "rule_info": "DS200001.md",
         "patterns": [
             {
                 "ymlpaths": [
-                    "/spec/containers/*/securityContext/allowPrivilegeEscalation",
-                    "/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
-                    "/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
-                    "/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
-                    "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
-                    "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation"
+                    "/spec/containers/*/name",
+                    "/spec/initContainers/*/name",
+                    "/spec/template/spec/containers/*/name",
+                    "/spec/template/spec/initContainers/*/name",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/name",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/name"
                 ],
-                "pattern": "^(true|True|TRUE)$",
+                "pattern": "^.+$",
                 "type": "regex",
                 "scopes": [
                     "code"
-                ]
+                ],
+                "label": "container"
             }
         ],
         "conditions": [
@@ -91,11 +92,34 @@
                     ]
                 },
                 "negate_finding": false,
-                "search_in": "same-file"
+                "search_in": "same-file",
+                "label": "manifest"
+            },
+            {
+                "pattern": {
+                    "ymlpaths": [
+                        "/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                        "/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
+                        "/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                        "/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
+                        "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                        "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation"
+                    ],
+                    "pattern": "^(false|False|FALSE)$",
+                    "type": "regex",
+                    "scopes": [
+                        "code"
+                    ]
+                },
+                "negate_finding": false,
+                "search_in": "same-file",
+                "label": "escalationDisabled"
             }
         ],
+        "expression": "manifest AND container AND NOT escalationDisabled",
         "must-match": [
-            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: true\n"
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: true\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app@sha256:0123456789abcdef\n"
         ],
         "must-not-match": [
             "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: false\n"

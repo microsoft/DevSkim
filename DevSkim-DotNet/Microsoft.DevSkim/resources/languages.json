@@ -258,6 +258,14 @@
     ]
   },
   {
+    "name": "pip-config",
+    "extensions": [],
+    "file-names": [
+      "pip.conf",
+      "pip.ini"
+    ]
+  },
+  {
     "name": "pip-requirements",
     "extensions": [],
     "file-names": [

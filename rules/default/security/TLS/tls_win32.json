@@ -189,13 +189,6 @@
         "rule_info": "DS440000.md",
         "patterns": [
             {
-                "pattern": "CONF_modules_load_file|SSL_CTX_config|SSL_config|SSL_CONF_cmd|SSL_CONF_cmd_value_type",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
                 "pattern": "SSL_set_security_callback|SSL_set_security_level|SSL_CTX_set_security_level",
                 "type": "regex",
                 "scopes": [
@@ -210,13 +203,6 @@
                 ]
             },
             {
-                "pattern": "DTLS_client_method|DTLS_server_method|TLS_client_method|TLS_server_method|TLS_method",
-                "type": "regex",
-                "scopes": [
-                    "code"
-                ]
-            },
-            {
                 "pattern": "SSLv3_method|SSLv3_server_method|SSLv3_client_method|SSLv23_method|SSLv23_server_method|SSLv23_client_method|TLSv1_method|TLSv1_server_method|TLSv1_client_method|TLSv1_1_method|TLSv1_1_server_method|TLSv1_1_client_method|TLSv1_2_method|TLSv1_2_server_method|TLSv1_2_client_method|DTLSv1_method|DTLSv1_server_method|DTLSv1_client_method|DTLSv1_2_method|DTLSv1_2_server_method|DTLSv1_2_client_method",
                 "type": "regex",
                 "scopes": [
@@ -224,14 +210,14 @@
                 ]
             },
             {
-                "pattern": "SSL_set_ssl_method|SSL_CTX_set_ssl_version|SSL_CTX_new|SSL_CTX_add_client_custom_ext|SSL_CTX_add_server_custom_ext",
+                "pattern": "SSL_set_ssl_method|SSL_CTX_set_ssl_version",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ]
             },
             {
-                "pattern": "DTLSv1_listen|SSL_stateless|SSL_CTX_add_custom_ext",
+                "pattern": "DTLSv1_listen",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -240,16 +226,17 @@
         ],
         "fix_its": [],
         "must-match": [
-            "SSL_CTX_config(ctx, \"system_default\");",
             "SSL_CTX_set_security_level(ctx, 0);",
             "SSL_CTX_set_min_proto_version(ctx, TLS1_VERSION);",
-            "const SSL_METHOD *m = TLS_client_method();",
             "const SSL_METHOD *m = SSLv3_method();",
-            "ctx = SSL_CTX_new(method);",
-            "SSL_stateless(ssl);"
+            "SSL_CTX_set_ssl_version(ctx, TLSv1_method());"
         ],
         "must-not-match": [
-            "SSL *ssl = SSL_new(ctx);"
+            "SSL *ssl = SSL_new(ctx);",
+            "SSL_CTX_config(ctx, \"system_default\");",
+            "const SSL_METHOD *m = TLS_client_method();",
+            "ctx = SSL_CTX_new(method);",
+            "SSL_stateless(ssl);"
         ]
     }
 ]

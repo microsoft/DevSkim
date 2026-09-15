@@ -81,7 +81,7 @@
                 "_comment": "OpenSSL functions that implement specific protocol versions"
             },
             {
-                "pattern": "DTLSv1_listen|SSL_stateless",
+                "pattern": "DTLSv1_listen",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -123,14 +123,14 @@
         ],
         "must-match": [
             "const SSL_METHOD *m = SSLv23_method();",
-            "SSL_stateless(ssl);",
             "SSL_CTX_set_max_proto_version(ctx, TLS1_1_VERSION);",
             "flags |= SSL_EXT_TLS_ONLY;",
             "options |= SSL_OP_NO_SSLv3;",
             "SSL_CTX_set_cipher_list(ctx, \"AES256-SHA\");"
         ],
         "must-not-match": [
-            "const SSL_METHOD *m = DTLS_method();"
+            "const SSL_METHOD *m = DTLS_method();",
+            "SSL_stateless(ssl);"
         ]
     },
     {

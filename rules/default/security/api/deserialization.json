@@ -165,7 +165,7 @@
     {
         "name": "Do not deserialize untrusted data.",
         "id": "DS425050",
-        "description": "torch.load, joblib.load and the marshal module execute arbitrary code while deserializing. ADM.10010 names these explicitly for AI model files obtained from public sources such as GitHub or Hugging Face.",
+        "description": "torch.load, joblib.load and dill.load execute arbitrary code while deserializing. marshal does not execute the reconstructed object, but it is documented as unsafe for untrusted or malformed input, which can crash the interpreter. ADM.10010 names these explicitly for AI model files obtained from public sources such as GitHub or Hugging Face.",
         "recommendation": "Load model weights with a format that does not execute code, such as safetensors, or verify provenance and load only in a sandbox.",
         "applies_to": [
             "python"

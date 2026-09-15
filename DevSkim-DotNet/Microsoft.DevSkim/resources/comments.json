@@ -9,7 +9,7 @@
       "go",
       "groovy",
       "jade",
-      "objective-C",
+      "objective-c",
       "rust",
       "swift",
       "javascript",
@@ -45,16 +45,24 @@
       "powershell",
       "python",
       "dockerfile",
-      "terraform",
       "toml",
       "dotenv",
       "makefile",
       "pem",
-      "pip-requirements"
+      "pip-requirements",
+      "pip-config"
     ],
     "inline": "#",
     "prefix": "#",
     "suffix": "\n"
+  },
+  {
+    "language": [
+      "terraform"
+    ],
+    "inline": "#",
+    "prefix": "/*",
+    "suffix": "*/"
   },
   {
     "language": [

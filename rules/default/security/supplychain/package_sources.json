@@ -49,6 +49,7 @@
             "dotenv",
             "dockerfile",
             "pip-requirements",
+            "pip-config",
             ".config"
         ],
         "tags": [
@@ -68,6 +69,7 @@
         ],
         "must-match": [
             "pip install --extra-index-url https://pypi.org/simple contoso-lib",
+            "[global]\nextra-index-url = https://pypi.org/simple",
             "RUN pip install --extra-index-url https://pypi.org/simple contoso-lib",
             "--extra-index-url https://pypi.org/simple\ncontoso-lib",
             "PIP_EXTRA_INDEX_URL=https://pypi.org/simple"
