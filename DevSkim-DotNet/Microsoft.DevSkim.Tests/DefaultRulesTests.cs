@@ -66,6 +66,272 @@ public class DefaultRulesTests
     }
 
     [TestMethod]
+    public void RazorLanguagePreservesCSharpAndHtmlCoverage()
+    {
+        var languages = DevSkimLanguages.LoadEmbedded();
+        Assert.IsTrue(languages.FromFileNameOut("view.cshtml", out var cshtml));
+        Assert.AreEqual("razor", cshtml.Name);
+        Assert.IsTrue(languages.FromFileNameOut("component.razor", out var razor));
+        Assert.AreEqual("razor", razor.Name);
+        Assert.AreEqual("//", languages.GetCommentInline("razor"));
+        Assert.AreEqual("<!--", languages.GetCommentPrefix("razor"));
+        Assert.AreEqual("-->", languages.GetCommentSuffix("razor"));
+
+        DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet();
+        string[] missingRazorCoverage = ruleSet
+            .Where(rule => rule.AppliesTo?.Contains("csharp") == true && rule.AppliesTo?.Contains("razor") != true)
+            .Select(rule => rule.Id)
+            .ToArray();
+        Assert.AreEqual(0, missingRazorCoverage.Length, $"C# rules missing Razor coverage: {string.Join(", ", missingRazorCoverage)}");
+        CollectionAssert.Contains(ruleSet.Single(rule => rule.Id == "DS610000").AppliesTo?.ToList(), "razor");
+    }
+
+        [TestMethod]
+        [DataRow("curl --tlsv1.2 https://example.com", 1)]
+        [DataRow("curl --tlsv1.3 https://example.com", 0)]
+        [DataRow("curl --tlsv1.2 --tlsv1.3 https://example.com", 0)]
+        [DataRow("curl --tlsv1.2 https://example.com\ncurl --tlsv1.3 https://example.com", 1)]
+        [DataRow("wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com", 1)]
+        public void BooleanExpressionVerifierMatchesAnalyzer(string content, int expectedFindings)
+        {
+                string rule = @"[{
+    ""name"": ""Boolean TLS condition"",
+    ""id"": ""DS440016"",
+    ""description"": ""Match guarded curl flags and unguarded wget flags."",
+    ""recommendation"": ""Maintain TLS protocol agility."",
+    ""severity"": ""ManualReview"",
+    ""confidence"": ""high"",
+    ""tags"": [ ""Cryptography.Protocol.TLS.Hard-Coded"" ],
+    ""patterns"": [
+        { ""pattern"": ""--tlsv1"", ""type"": ""substring"", ""scopes"": [ ""code"" ], ""label"": ""curlFlag"" },
+        { ""pattern"": ""--secure-protocol=\\S*"", ""type"": ""regex"", ""scopes"": [ ""code"" ], ""label"": ""wgetFlag"" }
+    ],
+    ""conditions"": [
+        {
+            ""pattern"": { ""pattern"": ""--tlsv1.3"", ""type"": ""substring"", ""scopes"": [ ""code"" ] },
+            ""negate_finding"": false,
+            ""search_in"": ""same-line"",
+            ""label"": ""tls13""
+        }
+    ],
+    ""expression"": ""(curlFlag AND NOT tls13) OR wgetFlag"",
+    ""must-match"": [
+        ""curl --tlsv1.2 https://example.com"",
+        ""wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com""
+    ],
+    ""must-not-match"": [ ""curl --tlsv1.3 https://example.com"" ]
+}]";
+                DevSkimRuleSet ruleSet = new DevSkimRuleSet();
+                ruleSet.AddString(rule, "testRules");
+                var verifier = new DevSkimRuleVerifier(new DevSkimRuleVerifierOptions()
+                {
+                        LanguageSpecs = DevSkimLanguages.LoadEmbedded()
+                });
+                DevSkimRulesVerificationResult result = verifier.Verify(ruleSet);
+                Assert.IsTrue(result.Verified, string.Join(Environment.NewLine, result.Errors.SelectMany(status => status.Errors)));
+
+                var analyzer = new DevSkimRuleProcessor(ruleSet, new DevSkimRuleProcessorOptions()
+                {
+                    SeverityFilter = ApplicationInspector.RulesEngine.Severity.ManualReview
+                });
+                Assert.AreEqual(expectedFindings, analyzer.Analyze(content, "test.sh").Count());
+        }
+
+            [TestMethod]
+            [DataRow("DS440016", "test.sh", "curl --tlsv1.2 https://example.com", 1)]
+            [DataRow("DS440016", "test.sh", "curl --tlsv1.3 https://example.com", 0)]
+            [DataRow("DS440016", "test.sh", "wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com", 1)]
+            [DataRow("DS205001", ".env", "PIP_EXTRA_INDEX_URL=https://pypi.org/simple", 1)]
+            [DataRow("DS205001", "Dockerfile", "ENV PIP_EXTRA_INDEX_URL=https://pypi.org/simple", 1)]
+            [DataRow("DS132782", "parser.fs", "settings.DtdProcessing <- DtdProcessing.Parse", 1)]
+            [DataRow("DS132782", "parser.fs", "settings.ProhibitDtd <- false", 1)]
+            [DataRow("DS132783", "parser.fs", "settings.XmlResolver <- new XmlUrlResolver()", 1)]
+            [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(resolve_entities=False, load_dtd=True)", 1)]
+            [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(load_dtd=False, no_network=True)", 0)]
+            [DataRow("DS610000", "view.cshtml", "<a href=\"https://example.com\" target=\"_blank\">Open</a>", 1)]
+            [DataRow("DS610000", "view.razor", "<!-- <a href=\"https://example.com\" target=\"_blank\">Open</a> -->", 0)]
+            [DataRow("DS610000", "view.razor", "// <a href=\"https://example.com\" target=\"_blank\">Open</a>", 0)]
+            [DataRow("DS610000", "index.html", "<a target=\"_blank\" href=\"/unsafe\">Unsafe</a> <a target=\"_blank\" rel=\"noopener\" href=\"/safe\">Safe</a>", 1)]
+            [DataRow("DS610000", "index.html", "noopener <a target=\"_blank\" href=\"/unsafe\">Unsafe</a>", 1)]
+            [DataRow("DS610000", "index.html", "<a target=\"_blank\" rel=\"noopenerish\" href=\"/unsafe\">Unsafe</a>", 1)]
+            [DataRow("DS610000", "index.html", "<A TARGET='_BLANK' REL='external NOOPENER' HREF='/safe'>Safe</A>", 0)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\");", 1)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure; HttpOnly; SameSite=Lax\");", 0)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\"); response.setHeader(\"Set-Cookie\", \"other=two; HttpOnly; SameSite=Lax\");", 2)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\"Set-Cookie\", \"sid=one; Secure\"); response.setHeader(\"Set-Cookie\", \"other=two; Secure; HttpOnly; SameSite=Lax\");", 1)]
+            [DataRow("DS610001", "headers.js", "response.setHeader(\n  \"Set-Cookie\",\n  \"sid=one; Secure; HttpOnly; SameSite=Strict\"\n);", 0)]
+            [DataRow("DS610001", "headers.cs", "Response.Headers[\"Set-Cookie\"] = \"sid=one; HttpOnly; SameSite=Lax\";", 1)]
+            [DataRow("DS610001", "headers.json", "{\"Set-Cookie\": \"sid=one; Secure; HttpOnly; SameSite=Lax\"}", 0)]
+            [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=one; Secure');", 1)]
+            [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=one; Secure; HttpOnly; SameSite=Lax');", 0)]
+            [DataRow("DS610001", "headers.js", "const partial = \"Set-Cookie: sid=one; Secure\";\nconst hardened = \"Set-Cookie: other=two; Secure; HttpOnly; SameSite=Lax\";", 1)]
+            [DataRow("DS610001", "headers.js", "// response.setHeader(\"Set-Cookie\", \"sid=one\");", 0)]
+            [DataRow("DS610001", "headers.yaml", "Set-Cookie: \"sid=one; Secure\"\nX-Other: value", 1)]
+            [DataRow("DS610001", "headers.yaml", "Set-Cookie: \"sid=one; Secure; HttpOnly; SameSite=Lax\"\nX-Other: value", 0)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000\");", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"includeSubDomains\");", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31535999; includeSubDomains\");", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; includeSubDomains\");", 0)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=63072000; includeSubDomains\");", 0)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000\"); response.setHeader(\"Strict-Transport-Security\", \"includeSubDomains\");", 2)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=300; includeSubDomains\"); response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; includeSubDomains\");", 1)]
+            [DataRow("DS610002", "headers.cs", "Response.Headers[\"Strict-Transport-Security\"] = \"max-age=31536000; includeSubDomains\";", 0)]
+            [DataRow("DS610002", "headers.php", "<?php header('Strict-Transport-Security: max-age=\"31536000\"; includeSubDomains');", 0)]
+            [DataRow("DS610002", "headers.php", "<?php header('Strict-Transport-Security: max-age=\"31535999\"; includeSubDomains');", 1)]
+            [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=\\\"31536000\\\"; includeSubDomains\");", 0)]
+            [DataRow("DS610002", "headers.yaml", "Strict-Transport-Security: \"max-age=31536000; includeSubDomains\"\nX-Other: value", 0)]
+            public void BooleanExpressionDefaultRulesScanFixtures(string ruleId, string fileName, string content, int expectedFindings)
+            {
+                DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });
+                Assert.AreEqual(1, ruleSet.Count(), $"Rule {ruleId} must be embedded exactly once.");
+                var analyzer = new DevSkimRuleProcessor(ruleSet, new DevSkimRuleProcessorOptions()
+                {
+                    SeverityFilter = ruleSet.Single().Severity
+                });
+                Assert.AreEqual(expectedFindings, analyzer.Analyze(content, fileName).Count());
+            }
+
+    [TestMethod]
+    [DataRow("DS189424", "component.jsx", "// eval(input)", 0)]
+    [DataRow("DS189424", "component.tsx", "/* eval(input) */", 0)]
+    [DataRow("DS189424", "component.jsx", "eval(input)", 1)]
+    [DataRow("DS189424", "component.tsx", "eval(input); // DevSkim: ignore DS189424", 0)]
+    [DataRow("DS205001", "Dockerfile", "RUN pip install --extra-index-url https://pypi.org/simple contoso-lib", 1)]
+    [DataRow("DS205001", "Dockerfile", "# RUN pip install --extra-index-url https://pypi.org/simple contoso-lib", 0)]
+    [DataRow("DS205001", "requirements.txt", "--extra-index-url https://pypi.org/simple\ncontoso-lib", 1)]
+    [DataRow("DS205001", "requirements-dev.txt", "--extra-index-url https://pypi.org/simple\ncontoso-lib", 1)]
+    [DataRow("DS205001", "constraints.txt", "--extra-index-url https://pypi.org/simple\ncontoso-lib", 1)]
+    [DataRow("DS205001", "requirements.txt", "# --extra-index-url https://pypi.org/simple\ncontoso-lib", 0)]
+    [DataRow("DS205001", "requirements.txt", "--index-url https://example.com/simple\ncontoso-lib", 0)]
+    [DataRow("DS205001", "notes.txt", "--extra-index-url https://pypi.org/simple", 0)]
+    [DataRow("DS200000", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        privileged: True\n", 1)]
+    [DataRow("DS200000", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        privileged: TRUE\n", 1)]
+    [DataRow("DS200000", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        privileged: False\n", 0)]
+    [DataRow("DS200001", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: True\n", 1)]
+    [DataRow("DS200002", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  hostNetwork: TRUE\n", 1)]
+    [DataRow("DS200003", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        readOnlyRootFilesystem: False\n", 1)]
+    [DataRow("DS200004", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        runAsNonRoot: FALSE\n", 1)]
+    [DataRow("DS200005", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: registry.example.com:5000/app\n", 1)]
+    [DataRow("DS200005", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: registry.example.com:5000/app:latest\n", 1)]
+    [DataRow("DS200005", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: registry.example.com:5000/app:1.2.3\n", 0)]
+    [DataRow("DS200005", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: registry.example.com:5000/app@sha256:0123456789abcdef\n", 0)]
+    [DataRow("DS114352", "settings.json", "{\"ConnectionString\":\"Server=db;encrypt=false;\"}", 1)]
+    [DataRow("DS114352", "settings.json", "{\"ConnectionString\":\"Server=db;ENCRYPT=FALSE;\"}", 1)]
+    [DataRow("DS114352", "settings.json", "{\"ConnectionString\":\"Server=db;trustservercertificate=true;\"}", 1)]
+    [DataRow("DS114352", "settings.json", "{\"ConnectionString\":\"Server=db;encrypt=true;trustservercertificate=false;\"}", 0)]
+    [DataRow("DS205000", "NuGet.config", "<configuration><packageSources><add key=\"private\" value=\"https://example.com/v3/index.json\" /></packageSources><disabledPackageSources><clear /></disabledPackageSources></configuration>", 1)]
+    [DataRow("DS205000", "NuGet.config", "<configuration><packageSources><!-- <clear /> --><add key=\"private\" value=\"https://example.com/v3/index.json\" /></packageSources></configuration>", 1)]
+    [DataRow("DS205000", "NuGet.config", "<configuration><packageSources><clear /><add key=\"private\" value=\"https://example.com/v3/index.json\" /></packageSources><disabledPackageSources><clear /></disabledPackageSources></configuration>", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(\n    resolve_entities=False,\n    load_dtd=False,\n    no_network=True,\n)", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(load_dtd=False)", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(no_network=True)", 0)]
+    [DataRow("DS132786", "parser.py", "parser = etree.XMLParser(resolve_entities=True, no_network=True)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(\n    stream,\n    Loader=yaml.SafeLoader\n)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(\n    open('config.yml'),\n    Loader=yaml.CSafeLoader,\n)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream, yaml.BaseLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream,\n    # Select a safe loader\n    Loader=yaml.SafeLoader\n)", 0)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream); other = yaml.load(stream, Loader=yaml.SafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream, Loader=get_loader(Loader=yaml.SafeLoader))", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load('Loader=yaml.SafeLoader', Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(stream,\n    # Loader=yaml.SafeLoader\n    Loader=yaml.UnsafeLoader\n)", 1)]
+    [DataRow("DS425060", "loader.py", "config = yaml.load(SafeLoader, Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load(yaml.load(data, Loader=yaml.UnsafeLoader), Loader=yaml.SafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load(yaml.load(data, Loader=yaml.UnsafeLoader), Loader=yaml.UnsafeLoader)", 2)]
+    [DataRow("DS425060", "loader.py", "yaml.load(yaml.load(data, Loader=yaml.SafeLoader), Loader=yaml.SafeLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "yaml.load_all(yaml.load(data, Loader=yaml.UnsafeLoader), Loader=yaml.SafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load([data, yaml.SafeLoader, None][0], Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load({data, yaml.SafeLoader, None}.pop(), Loader=yaml.UnsafeLoader)", 1)]
+    [DataRow("DS425060", "loader.py", "yaml.load([data, yaml.UnsafeLoader, None][0], Loader=yaml.SafeLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "yaml.load({'document': data}['document'], Loader=yaml.CSafeLoader)", 0)]
+    [DataRow("DS425060", "loader.py", "yaml.load([data, None][0], yaml.SafeLoader)", 0)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\">Open</a><a href=\"/about\" rel=\"noopener\">About</a>", 1)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\"\n   target=\"_blank\"\n   rel=\"noopener noreferrer\">Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\" title=\"noopener\">Open</a>", 1)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" target=\"_blank\" rel=\"notnoopener\">Open</a>", 1)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" data-target=\"_blank\">Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<a href=\"https://example.com\" title=\"target='_blank'\">Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<A HREF=\"https://example.com\" TARGET=\"_blank\" REL=\"NOOPENER\">Open</A>", 0)]
+    [DataRow("DS610000", "links.html", "<a title=\"x > y\" target=_blank rel=noreferrer>Open</a>", 0)]
+    [DataRow("DS610000", "links.html", "<a target=\"_blank\" rel=\"external\nnoopener noreferrer\">Open</a>", 0)]
+    [DataRow("DS610000", "links.tsx", "<a {...props}\n target=\"_blank\"\n rel=\"noopener noreferrer\">Open</a>", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=\"value\"; Secure; HttpOnly; SameSite=Lax');", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header('Set-Cookie: sid=\"value\"; Secure');", 1)]
+    [DataRow("DS610001", "headers.js", "response.write(\"Set-Cookie: sid=\\\"value\\\"; Secure; HttpOnly; SameSite=Lax\");", 0)]
+    [DataRow("DS610001", "headers.js", "response.write(\"Set-Cookie: sid=\\\"value\\\"; Secure\");", 1)]
+    [DataRow("DS610001", "headers.js", "response.write(\"Set-Cookie: sid=\"+value+\"; Secure\");", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: sid=\".$value);", 0)]
+    [DataRow("DS610001", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nSet-Cookie: sid=one\\r\\nSet-Cookie: other=two; Secure; HttpOnly; SameSite=Lax; Path=/\\r\\n\\r\\n\");", 1)]
+    [DataRow("DS610001", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nSet-Cookie: sid=one; Secure; HttpOnly; SameSite=Lax\\r\\nSet-Cookie: other=two; Secure; HttpOnly; SameSite=Strict\\r\\n\\r\\n\");", 0)]
+    [DataRow("DS610002", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nStrict-Transport-Security: max-age=0\\r\\nX-Other: max-age=31536000; includeSubDomains; extra=value\\r\\n\\r\\n\");", 1)]
+    [DataRow("DS610002", "headers.js", "socket.write(\"HTTP/1.1 200 OK\\r\\nStrict-Transport-Security: max-age=31536000; includeSubDomains\\r\\n\\r\\n\");", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=0; max-age=31536000; includeSubDomains\");", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; MAX-AGE=63072000; includeSubDomains\");", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000; includeSubDomains; INCLUDESUBDOMAINS\");", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'max-age=300; custom=\"max-age=31536000; includeSubDomains\"');", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'max-age=31536000; custom=\"includeSubDomains\"');", 1)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'custom=\"max-age=0; unrelated\"; max-age=31536000; includeSubDomains');", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; custom=\"max-age=0; unrelated\"');", 0)]
+    [DataRow("DS610002", "headers.php", "<?php header('Strict-Transport-Security: custom=\"max-age=0; unrelated\"; max-age=31536000; includeSubDomains');", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"custom=\\\"max-age=0; unrelated\\\"; max-age=31536000; includeSubDomains\");", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \";; max-age=31536000;; includeSubDomains; ;\");", 0)]
+    [DataRow("DS610002", "headers.js", "response.setHeader(\"Strict-Transport-Security\", \"max-age=31536000 includeSubDomains\");", 1)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax\");", 0)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: name=O'Brien; Secure\");", 1)]
+    [DataRow("DS610001", "headers.php", "<?php header(\"Set-Cookie: name=O'Brien; Secure\"); header(\"Set-Cookie: other=value; Secure; HttpOnly; SameSite=Lax\");", 1)]
+    [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=31536000; custom=O'Brien; includeSubDomains\");", 0)]
+    [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=300; custom=O'Brien; includeSubDomains\");", 1)]
+    [DataRow("DS610002", "headers.php", "<?php header(\"Strict-Transport-Security: max-age=31536000; custom=O'Brien\"); header(\"Strict-Transport-Security: max-age=31536000; includeSubDomains\");", 1)]
+    [DataRow("DS610001", "response.yaml", "Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax", 0)]
+    [DataRow("DS610001", "response.yaml", "Set-Cookie: name=O'Brien; Secure", 1)]
+    [DataRow("DS610001", "app.cs", "Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax", 0)]
+    [DataRow("DS610001", "response.yaml", "Set-Cookie: name=O'Brien; Secure; HttpOnly; SameSite=Lax\nSet-Cookie: other=two; Secure", 1)]
+    [DataRow("DS610002", "response.yaml", "Strict-Transport-Security: max-age=31536000; custom=O'Brien; includeSubDomains", 0)]
+    [DataRow("DS610002", "response.yaml", "Strict-Transport-Security: max-age=300; custom=O'Brien; includeSubDomains", 1)]
+    [DataRow("DS154193", "swizzle.m", "// class_addMethod(cls, sel, imp, types);", 0)]
+    [DataRow("DS154193", "swizzle.m", "/* class_addMethod(cls, sel, imp, types); */", 0)]
+    [DataRow("DS154193", "swizzle.m", "class_addMethod(cls, sel, imp, types);", 1)]
+    [DataRow("DS173239", "main.tf", "# token = \"ghp_0123456789abcdefghijklmnopqrstuvwxyz\"", 0)]
+    [DataRow("DS173239", "main.tf", "/* token = \"ghp_0123456789abcdefghijklmnopqrstuvwxyz\" */", 0)]
+    [DataRow("DS173239", "main.tf", "token = \"ghp_0123456789abcdefghijklmnopqrstuvwxyz\"", 1)]
+    [DataRow("DS205001", "pip.conf", "[global]\nextra-index-url = https://pypi.org/simple", 1)]
+    [DataRow("DS205001", "pip.ini", "[global]\nextra-index-url = https://pypi.org/simple", 1)]
+    [DataRow("DS205001", "pip.conf", "# extra-index-url = https://pypi.org/simple", 0)]
+    [DataRow("DS132782", "parser.vb", "settings.ProhibitDtd = False", 1)]
+    [DataRow("DS132783", "parser.vb", "settings.XmlResolver = New XmlUrlResolver()", 1)]
+    [DataRow("DS132783", "parser.vb", "settings.XmlResolver = Nothing", 0)]
+    [DataRow("DS200001", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app@sha256:0123456789abcdef\n", 1)]
+    [DataRow("DS200001", "pod.yaml", "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: false\n", 0)]
+    [DataRow("DS440077", "tls.c", "SSL_CTX_config(ctx, \"system_default\");", 0)]
+    [DataRow("DS440077", "tls.c", "const SSL_METHOD *m = TLS_client_method();", 0)]
+    [DataRow("DS440077", "tls.c", "ctx = SSL_CTX_new(method);", 0)]
+    [DataRow("DS440077", "tls.c", "SSL_stateless(ssl);", 0)]
+    [DataRow("DS440077", "tls.c", "SSL_CTX_set_min_proto_version(ctx, TLS1_VERSION);", 1)]
+    [DataRow("DS440077", "tls.c", "SSL_CTX_set_security_level(ctx, 0);", 1)]
+    [DataRow("DS440011", "tls.c", "SSL_stateless(ssl);", 0)]
+    [DataRow("DS440011", "tls.c", "const SSL_METHOD *m = SSLv23_method();", 1)]
+    [DataRow("DS440010", "tls.c", "options |= SSL_OP_NO_COMPRESSION;", 0)]
+    [DataRow("DS440010", "tls.c", "options |= SSL_OP_NO_TLSv1_1;", 1)]
+    public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
+    {
+        DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });
+        Assert.AreEqual(1, ruleSet.Count(), $"Rule {ruleId} must be embedded exactly once.");
+        var analyzer = new DevSkimRuleProcessor(ruleSet, new DevSkimRuleProcessorOptions()
+        {
+            SeverityFilter = ruleSet.Single().Severity
+        });
+        Assert.AreEqual(expectedFindings, analyzer.Analyze(content, fileName).Count(issue => !issue.IsSuppressionInfo));
+    }
+
+    [TestMethod]
+    [DataRow("component.jsx")]
+    [DataRow("component.tsx")]
+    public void ReactSuppressionUsesCommentSyntax(string fileName)
+    {
+        Assert.AreEqual("// DevSkim: ignore DS189424", DevSkimRuleProcessor.GenerateSuppressionByFileName(fileName, "DS189424"));
+        Assert.AreEqual("/* DevSkim: ignore DS189424 */", DevSkimRuleProcessor.GenerateSuppressionByFileName(fileName, "DS189424", preferMultiLine: true));
+    }
+
+    [TestMethod]
     public void DenamespacedRule()
     {
         string content = @"<?xml version=""1.0"" encoding=""UTF-8""?>

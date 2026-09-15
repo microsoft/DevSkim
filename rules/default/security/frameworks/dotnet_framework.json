@@ -139,7 +139,7 @@
             "Framework.NET"
         ],
         "confidence": "high",
-        "severity": "manualreview",
+        "severity": "ManualReview",
         "rule_info": "DS450003.md",
         "patterns": [
             {

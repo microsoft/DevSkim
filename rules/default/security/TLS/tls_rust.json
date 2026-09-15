@@ -26,7 +26,12 @@
                 "_comment": "RustTLS Enumeration: https://github.com/ctz/rustls/blob/1d70e45af6c7f0d6940f4c7b641daacc70ac9ce8/rustls/src/msgs/enums.rs"
             }
         ],
-        "fix_its": [
+        "fix_its": [],
+        "must-match": [
+            "let v = ProtocolVersion::TLSv1_0;"
+        ],
+        "must-not-match": [
+            "let cfg = ClientConfig::builder().with_safe_defaults();"
         ]
     }
 ]

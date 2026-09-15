@@ -6,7 +6,9 @@
         "recommendation": "Review to ensure that a TLS protocol agility is maintained.",
         "applies_to": [
             "javascript",
-            "typescript"
+            "typescript",
+            "javascriptreact",
+            "typescriptreact"
         ],
         "overrides": [
             "DS440000"
@@ -34,6 +36,13 @@
                 ],
                 "_comment": "https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener"
             }
+        ],
+        "must-match": [
+            "const agent = new https.Agent({ secureProtocol: 'TLSv1_method' });",
+            "npm config set tls-min-v1.0 true"
+        ],
+        "must-not-match": [
+            "const agent = new https.Agent({ minVersion: 'TLSv1.3' });"
         ]
     }
 ]
