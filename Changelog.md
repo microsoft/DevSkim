@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.99] - 2026-09-21
+### Fix
+- Fixed rule DS440011 (OpenSSL cipher-suite names such as `ECDHE-RSA-AES256-GCM-SHA384`) taking quadratic time on a long unbroken run of cipher-name characters. The middle `[A-Z0-9\-]+-?` group backtracked from every cipher-name prefix (`AES`, `DH`, `DES`, ...) found in the run, so a single 100 KB line such as `AES-AES-AES-...` took about 13 seconds and a 400 KB line took several minutes, hanging the scan. The run is now bounded to 64 characters (`[A-Z0-9\-]{1,64}`), which is longer than any real cipher-suite name, and the redundant `-?` was dropped because `-` is already in the character class. Match spans are unchanged for real OpenSSL cipher names.
+- Added `must-match` and `must-not-match` self-tests to DS440011, and a regression test that analyzes a 200 KB line with the default rules.
+
 ## [1.0.97] - 2026-08-11
 ### Pipeline
 - Fixed the VS Code extension release pipeline failing at the publish step with `npm error code E401`. The step ran `npx @vscode/vsce`, and because the argument is a package name rather than a bin name, npx cannot short circuit to the copy installed by the preceding `npm install -g @vscode/vsce` step and always fetches the package manifest from the npm registry, which is not authenticated inside the `AzureCLI@2` task. The step now invokes the globally installed `vsce.cmd` by its full path, so publishing needs no registry access, and fails with an explicit message if the binary is missing.
