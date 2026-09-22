@@ -118,6 +118,22 @@ public class DefaultRulesTests
         Assert.AreEqual(1, analysis.Count());
     }
 
+    [TestMethod]
+    public void HardcodedOpenSslCipherRuleDoesNotBacktrackOnLongRuns()
+    {
+        // A long unbroken run of cipher-name characters that contains many cipher-name prefixes
+        // but no SHA/MD/GOST used to make DS440011 quadratic: 100 KB took ~13 s, 400 KB minutes.
+        string content = "const char *s = \"" + string.Concat(Enumerable.Repeat("AES-", 50000)) + "\";";
+        DevSkimRuleProcessor analyzer = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(), new DevSkimRuleProcessorOptions());
+
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        IEnumerable<Issue> analysis = analyzer.Analyze(content, "long.c");
+        stopwatch.Stop();
+
+        Assert.IsFalse(analysis.Any(x => x.Rule.Id == "DS440011"));
+        Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromSeconds(15), $"Analysis of a 200 KB line took {stopwatch.Elapsed}.");
+    }
+
     public static IEnumerable<object[]> DefaultRules
     {
         get
