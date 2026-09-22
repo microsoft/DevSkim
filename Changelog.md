@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.124] - 2026-09-15
+## [1.0.100] - 2026-09-22
 ### Added
 - Added Kubernetes Security Baseline rules (`DS200000`-`DS200007`) covering privileged containers, privilege escalation, host namespace sharing, writable root filesystems, running as root, unpinned images, dangerous Linux capabilities, and `hostPath` volumes. These are the first rules to use the engine's `ymlpaths` support, which no shipped rule had used.
 - Added package source rules `DS205000` (a `nuget.config` `<packageSources>` with no `<clear />`, so the sources are added to those inherited from machine and user level configuration rather than replacing them) and `DS205001` (`--extra-index-url`, `PIP_EXTRA_INDEX_URL`, and the `extra-index-url` setting in `pip.conf`/`pip.ini`).
@@ -48,6 +48,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restricted HTML link protection checks to the same opening anchor tag and its actual attributes, including multiline attributes and case-insensitive HTML names.
 - Recognised the supported YAML boolean spellings in the Kubernetes security settings.
 - Corrected guidance that misdescribed behaviour: `DS154191` no longer claims to detect plain `memcpy`, `DS200005` shows a real admission policy instead of repeating `imagePullPolicy`, `DS425050` no longer attributes code execution to `marshal`, and `DS425060` describes PyYAML 6 requiring the `Loader` argument.
+
+## [1.0.99] - 2026-09-21
+### Fix
+- Fixed rule DS440011 (OpenSSL cipher-suite names such as `ECDHE-RSA-AES256-GCM-SHA384`) taking quadratic time on a long unbroken run of cipher-name characters. The middle `[A-Z0-9\-]+-?` group backtracked from every cipher-name prefix (`AES`, `DH`, `DES`, ...) found in the run, so a single 100 KB line such as `AES-AES-AES-...` took about 13 seconds and a 400 KB line took several minutes, hanging the scan. The run is now bounded to 64 characters (`[A-Z0-9\-]{1,64}`), which is longer than any real cipher-suite name, and the redundant `-?` was dropped because `-` is already in the character class. Match spans are unchanged for real OpenSSL cipher names.
+- Added `must-match` and `must-not-match` self-tests to DS440011, and a regression test that analyzes a 200 KB line with the default rules.
 
 ## [1.0.97] - 2026-08-11
 ### Pipeline
