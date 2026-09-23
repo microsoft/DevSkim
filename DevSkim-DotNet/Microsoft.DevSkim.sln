@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
@@ -7,12 +8,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.CLI", "Microsoft.DevSkim.CLI\Microsoft.DevSkim.CLI.csproj", "{6330E8E3-8D91-458E-945C-CE9B71FE809B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.Tests", "Microsoft.DevSkim.Tests\Microsoft.DevSkim.Tests.csproj", "{22E5C50D-93C9-4007-881F-D8B751B880D0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.LanguageServer", "Microsoft.DevSkim.LanguageServer\Microsoft.DevSkim.LanguageServer.csproj", "{1668F782-FE09-4106-8393-9A9D9823E027}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.VisualStudio", "Microsoft.DevSkim.VisualStudio\Microsoft.DevSkim.VisualStudio.csproj", "{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DevSkim.LanguageProtoInterop", "Microsoft.DevSkim.LanguageProtoInterop\Microsoft.DevSkim.LanguageProtoInterop.csproj", "{774E78F3-B48A-4D01-B70B-9CFB03A55663}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,30 +41,6 @@ Global
 		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x64.ActiveCfg = Release|Any CPU
 		{22E5C50D-93C9-4007-881F-D8B751B880D0}.Release|x64.Build.0 = Release|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Debug|x64.Build.0 = Debug|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Release|x64.ActiveCfg = Release|Any CPU
-		{1668F782-FE09-4106-8393-9A9D9823E027}.Release|x64.Build.0 = Release|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Debug|x64.Build.0 = Debug|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Release|x64.ActiveCfg = Release|Any CPU
-		{E7A5F71D-137D-4D65-AB27-2ADD1FA6B26B}.Release|x64.Build.0 = Release|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Debug|x64.Build.0 = Debug|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|Any CPU.Build.0 = Release|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|x64.ActiveCfg = Release|Any CPU
-		{774E78F3-B48A-4D01-B70B-9CFB03A55663}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
