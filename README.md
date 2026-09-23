@@ -69,7 +69,7 @@ Then download the DevSkim netcoreapp archive from the [releases page](https://gi
 
 ## Build from Source
 
-DevSkim requires the [.NET SDK](https://dotnet.microsoft.com/) (8.0 or later).
+DevSkim requires the [.NET SDK](https://dotnet.microsoft.com/) (10.0 or later).
 
 ```bash
 cd DevSkim-DotNet
