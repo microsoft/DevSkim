@@ -306,12 +306,12 @@
         "rule_info": "DS440001.md",
         "patterns": [
             {
-                "pattern": "--(sslv2|sslv3|tlsv1\\.1|tlsv1\\.2|tlsv11|tlsv1)",
+                "pattern": "(?<!--tlsv1\\.3[^;&|\\r\\n]*)--(sslv2|sslv3|tlsv1\\.[012]|tlsv11|tlsv1)(?![\\w.])(?![^;&|\\r\\n]*--tlsv1\\.3)",
                 "type": "regex",
                 "scopes": [
                     "code"
                 ],
-                "_comment": "curl",
+                "_comment": "curl; --tlsv1.3 in the same shell command exempts the flag",
                 "label": "curlFlag"
             },
             {
@@ -376,25 +376,13 @@
                 "label": "p6"
             }
         ],
-        "conditions": [
-            {
-                "pattern": {
-                    "pattern": "--tlsv1.3",
-                    "type": "substring",
-                    "scopes": [
-                        "code"
-                    ]
-                },
-                "negate_finding": false,
-                "search_in": "same-line",
-                "label": "tls13"
-            }
-        ],
-        "expression": "(curlFlag AND NOT tls13) OR p0 OR p1 OR p2 OR p3 OR p4 OR p5 OR p6",
         "must-match": [
             "curl --sslv3 https://example.com",
             "curl --tlsv1.1 https://example.com",
             "curl --tlsv1.2 https://example.com",
+            "curl --tlsv1.0 https://example.com",
+            "curl --tlsv1.1 https://old.example.com; curl --tlsv1.3 https://new.example.com",
+            "curl --tlsv1.3 https://new.example.com && curl --tlsv1.1 https://old.example.com",
             "curl --tlsv1.2 https://example.com\ncurl --tlsv1.3 https://example.com",
             "wget --secure-protocol=SSLv3 https://example.com; curl --tlsv1.3 https://example.com",
             "wget --secure-protocol=SSLv3 https://example.com",
@@ -408,6 +396,7 @@
         "must-not-match": [
             "curl --tlsv1.3 https://example.com",
             "curl --tlsv1.2 --tlsv1.3 https://example.com",
+            "curl --tlsv1.3 --tlsv1.2 https://example.com",
             "wget https://example.com"
         ]
     },

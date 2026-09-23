@@ -60,7 +60,7 @@
         "rule_info": "DS191340.md",
         "patterns": [
             {
-                "pattern": "NSUserDefaults \\*(.*) = \\[NSUserDefaults standardUserDefaults\\];(\\n.*){1,5}\\1 .*setString:(password|key)",
+                "pattern": "NSUserDefaults \\*(.*) = \\[NSUserDefaults standardUserDefaults\\];(\\n.*){1,5}\\1 .*set(?:Object|Value):(password|key)",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -68,10 +68,12 @@
             }
         ],
         "must-match": [
-            "NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];\n[defaults setString:password forKey:@\"pw\"];"
+            "NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];\n[defaults setObject:password forKey:@\"pw\"];",
+            "NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];\n[defaults setValue:key forKey:@\"apiKey\"];"
         ],
         "must-not-match": [
-            "[[A2Keychain sharedKeychain] setString:password forKey:@\"pw\"];"
+            "[[A2Keychain sharedKeychain] setString:password forKey:@\"pw\"];",
+            "NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];\n[defaults setObject:username forKey:@\"user\"];"
         ]
     }
 ]

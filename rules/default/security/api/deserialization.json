@@ -318,7 +318,7 @@
         "rule_info": "DS425090.md",
         "patterns": [
             {
-                "pattern": "(boost::property_tree|read_json|read_xml)",
+                "pattern": "boost::property_tree\\b|\\b(?:read_json|read_xml)\\s*\\(",
                 "type": "regex",
                 "scopes": [
                     "code"
@@ -327,10 +327,14 @@
         ],
         "must-match": [
             "boost::property_tree::ptree pt;",
-            "read_json(stream, pt);"
+            "read_json(stream, pt);",
+            "pt::read_xml (stream, tree);"
         ],
         "must-not-match": [
-            "nlohmann::json j = nlohmann::json::parse(input);"
+            "nlohmann::json j = nlohmann::json::parse(input);",
+            "read_json_schema(stream, schema);",
+            "thread_xml(stream);",
+            "int read_json_count = 0;"
         ]
     }
 ]

@@ -80,6 +80,22 @@
                     "code"
                 ],
                 "label": "container"
+            },
+            {
+                "ymlpaths": [
+                    "/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
+                    "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation"
+                ],
+                "pattern": "^(?!(?:false|False|FALSE)$).+$",
+                "type": "regex",
+                "scopes": [
+                    "code"
+                ],
+                "label": "escalationEnabled"
             }
         ],
         "conditions": [
@@ -105,7 +121,7 @@
                         "/spec/jobTemplate/spec/template/spec/containers/*/securityContext/allowPrivilegeEscalation",
                         "/spec/jobTemplate/spec/template/spec/initContainers/*/securityContext/allowPrivilegeEscalation"
                     ],
-                    "pattern": "^(false|False|FALSE)$",
+                    "pattern": "^.+$",
                     "type": "regex",
                     "scopes": [
                         "code"
@@ -113,13 +129,14 @@
                 },
                 "negate_finding": false,
                 "search_in": "same-file",
-                "label": "escalationDisabled"
+                "label": "escalationSet"
             }
         ],
-        "expression": "manifest AND container AND NOT escalationDisabled",
+        "expression": "manifest AND (escalationEnabled OR (container AND NOT escalationSet))",
         "must-match": [
             "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: true\n",
-            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app@sha256:0123456789abcdef\n"
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      image: contoso/app@sha256:0123456789abcdef\n",
+            "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: safe\n      securityContext:\n        allowPrivilegeEscalation: false\n    - name: unsafe\n      securityContext:\n        allowPrivilegeEscalation: true\n"
         ],
         "must-not-match": [
             "apiVersion: v1\nkind: Pod\nspec:\n  containers:\n    - name: app\n      securityContext:\n        allowPrivilegeEscalation: false\n"
