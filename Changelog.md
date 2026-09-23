@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.100] - 2026-09-23
+### Removed
+- Removed the Visual Studio Code extension (`DevSkim-VSCode-Plugin`) and the Visual Studio extension (`Microsoft.DevSkim.VisualStudio`), along with the IDE-only `Microsoft.DevSkim.LanguageServer` and `Microsoft.DevSkim.LanguageProtoInterop` projects. DevSkim is now distributed only as the `Microsoft.CST.DevSkim` library and the `Microsoft.CST.DevSkim.CLI` tool.
+- Removed Visual Studio-only media assets and the root `.vscode` workspace configuration used for extension development.
+
+### Pipeline
+- Removed the VS Code and Visual Studio extension PR and release pipelines.
+- Removed the npm ecosystem from `.github/dependabot.yml`.
+
+### Changed
+- Rewrote `README.md` to cover only the DevSkim library and CLI.
+- Removed extension build artifacts from `.gitignore` and extension guidance from the Copilot instructions.
+
 ## [1.0.99] - 2026-09-21
 ### Fix
 - Fixed rule DS440011 (OpenSSL cipher-suite names such as `ECDHE-RSA-AES256-GCM-SHA384`) taking quadratic time on a long unbroken run of cipher-name characters. The middle `[A-Z0-9\-]+-?` group backtracked from every cipher-name prefix (`AES`, `DH`, `DES`, ...) found in the run, so a single 100 KB line such as `AES-AES-AES-...` took about 13 seconds and a 400 KB line took several minutes, hanging the scan. The run is now bounded to 64 characters (`[A-Z0-9\-]{1,64}`), which is longer than any real cipher-suite name, and the redundant `-?` was dropped because `-` is already in the character class. Match spans are unchanged for real OpenSSL cipher names.
