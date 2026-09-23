@@ -2,12 +2,11 @@
 
 ## Repository Overview
 
-DevSkim is a framework of IDE extensions and language analyzers that provide inline security analysis in the dev environment as the developer writes code. The repository contains:
+DevSkim is a .NET library and cross-platform command line tool that performs static security analysis of source code. The repository contains:
 
-- **DevSkim Library** (C#/.NET): Core security analysis engine (`./DevSkim-DotNet/`)
+- **DevSkim Library** (C#/.NET): Core security analysis engine (`./DevSkim-DotNet/Microsoft.DevSkim/`)
 - **DevSkim CLI** (C#/.NET): Command-line tool (`./DevSkim-DotNet/Microsoft.DevSkim.CLI/`)
-- **Visual Studio Extension** (C#/.NET): VS extension (`./DevSkim-DotNet/Microsoft.DevSkim.VisualStudio/`)
-- **VS Code Plugin** (TypeScript): VSCode extension (`./DevSkim-VSCode-Plugin/`)
+- **Tests** (C#/.NET): MSTest project (`./DevSkim-DotNet/Microsoft.DevSkim.Tests/`)
 - **Security Rules**: Default rules and guidance (`./rules/default/`, `./guidance/`)
 
 ## Critical Repository-Specific Rules
@@ -17,12 +16,11 @@ DevSkim is a framework of IDE extensions and language analyzers that provide inl
 **⚠️ IMPORTANT**: This repository uses private Azure DevOps feeds for package management:
 
 - **nuget.config**: Contains private feed configuration (`PublicRegistriesFeed`)
-- **.npmrc files**: VSCode plugin uses `.npmrc.pipeline` for private feeds
 
 **Rules for agents**:
-1. You MAY temporarily modify `nuget.config` or `.npmrc` files to use public feeds (nuget.org, npmjs.com) when working locally
+1. You MAY temporarily modify `nuget.config` to use public feeds (nuget.org) when working locally
 2. You MUST NOT commit these changes - always revert them before committing
-3. Use `git restore nuget.config` or `git restore DevSkim-VSCode-Plugin/.npmrc.pipeline` before creating commits
+3. Use `git restore nuget.config` before creating commits
 4. The private feed configuration must remain in the repository commits
 
 ### Changelog Requirements
@@ -62,35 +60,6 @@ DevSkim is a framework of IDE extensions and language analyzers that provide inl
 
 ## Building and Testing
 
-### VS Code Plugin (TypeScript)
-
-**Location**: `./DevSkim-VSCode-Plugin/`
-
-**Setup**:
-```bash
-cd DevSkim-VSCode-Plugin
-npm run setup          # Install dependencies and build .NET language server
-npm run setup:release  # Release build
-```
-
-**Build**:
-```bash
-npm run compile        # Compile TypeScript
-npm run build          # Full build (setup + compile)
-npm run watch          # Watch mode for development
-```
-
-**Lint**:
-```bash
-npm run lint           # Run ESLint on TypeScript files
-```
-
-**Package**:
-```bash
-npm run pack-ext       # Package extension for release
-npm run pack-ext:debug # Package extension for debug
-```
-
 ### .NET Projects (C#)
 
 **Location**: `./DevSkim-DotNet/`
@@ -114,15 +83,6 @@ cd DevSkim-DotNet/Microsoft.DevSkim.CLI
 dotnet run -- analyze --source-code <path>
 ```
 
-### Language Server
-
-**Build**:
-```bash
-cd DevSkim-DotNet/Microsoft.DevSkim.LanguageServer
-dotnet publish -c Debug -f net8.0 -o ../../DevSkim-VSCode-Plugin/devskimBinaries
-dotnet publish -c Release -f net8.0 -o ../../DevSkim-VSCode-Plugin/devskimBinaries
-```
-
 ## Code Style and Conventions
 
 ### C# Code
@@ -130,12 +90,6 @@ dotnet publish -c Release -f net8.0 -o ../../DevSkim-VSCode-Plugin/devskimBinari
 - Use meaningful variable and method names
 - Add XML documentation comments for public APIs
 - Security-focused: prioritize secure defaults
-
-### TypeScript Code
-- Use ESLint configuration in `DevSkim-VSCode-Plugin/.eslintrc.js`
-- Follow TypeScript best practices
-- Use type annotations
-- Avoid `any` types when possible
 
 ### Security Rules
 - Rules are JSON files in `./rules/default/`
@@ -153,13 +107,10 @@ dotnet publish -c Release -f net8.0 -o ../../DevSkim-VSCode-Plugin/devskimBinari
 
 ### Updating Dependencies
 - For .NET: Use `dotnet add package` or edit `.csproj` files
-- For npm: Use `npm install` or edit `package.json`
 - Document in Changelog.md under `### Dependencies`
 
 ### Debugging
-- **VS Code plugin**: Use F5 in VS Code to launch Extension Development Host
-- **.NET projects**: Use Visual Studio or `dotnet run`
-- **Language Server**: Attach debugger to running process
+- Use Visual Studio, VS Code with the C# extension, or `dotnet run`
 
 ## Git Workflow
 
