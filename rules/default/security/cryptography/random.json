@@ -11,11 +11,14 @@
             "c",
             "cpp",
             "csharp",
+            "razor",
             "python",
             "php",
             "java",
             "javascript",
-            "typescript"
+            "typescript",
+            "javascriptreact",
+            "typescriptreact"
         ],
         "confidence": "high",
         "severity": "important",
@@ -132,6 +135,14 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "let mut rng = StdRng::seed_from_u64(42);",
+            "let x = fastrand::u32(..);",
+            "let mut r = oorandom::Rand32::new(0);"
+        ],
+        "must-not-match": [
+            "let mut rng = OsRng;"
         ]
     },
     {
@@ -160,6 +171,13 @@
                     "code"
                 ]
             }
+        ],
+        "must-match": [
+            "curve = DUAL_EC_DRBG;",
+            "int seed = 32969;"
+        ],
+        "must-not-match": [
+            "curve = SECP256R1;"
         ]
     },
     {

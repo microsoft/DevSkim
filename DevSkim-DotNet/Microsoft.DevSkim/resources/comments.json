@@ -9,13 +9,20 @@
       "go",
       "groovy",
       "jade",
-      "objective-C",
+      "objective-c",
       "rust",
       "swift",
       "javascript",
+      "javascriptreact",
       "java",
       "typescript",
-      "php"
+      "typescriptreact",
+      "php",
+      "kotlin",
+      "scala",
+      "dart",
+      "bicep",
+      "gradle"
     ],
     "inline": "//",
     "prefix": "/*",
@@ -25,7 +32,7 @@
     "language": [
       "plaintext"
     ],
-    "always":  true
+    "always": true
   },
   {
     "language": [
@@ -36,11 +43,26 @@
       "ruby",
       "yaml",
       "powershell",
-      "python"
+      "python",
+      "dockerfile",
+      "toml",
+      "dotenv",
+      "makefile",
+      "pem",
+      "pip-requirements",
+      "pip-config"
     ],
     "inline": "#",
     "prefix": "#",
     "suffix": "\n"
+  },
+  {
+    "language": [
+      "terraform"
+    ],
+    "inline": "#",
+    "prefix": "/*",
+    "suffix": "*/"
   },
   {
     "language": [
@@ -74,5 +96,21 @@
     "inline": "::",
     "prefix": "Rem",
     "suffix": "\n"
+  },
+  {
+    "language": [
+      "razor"
+    ],
+    "inline": "//",
+    "prefix": "<!--",
+    "suffix": "-->"
+  },
+  {
+    "language": [
+      "html",
+      "msbuild"
+    ],
+    "prefix": "<!--",
+    "suffix": "-->"
   }
 ]
