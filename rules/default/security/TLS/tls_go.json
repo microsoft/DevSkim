@@ -40,7 +40,14 @@
                     "code"
                 ],
                 "_comment": "https://golang.org/src/crypto/tls/common.go"
-            }           
+            }
+        ],
+        "must-match": [
+            "cfg := &tls.Config{MinVersion: tls.VersionTLS10}",
+            "cfg.CurvePreferences = []tls.CurveID{tls.CurveP256}"
+        ],
+        "must-not-match": [
+            "cfg := &tls.Config{}"
         ]
     }
 ]

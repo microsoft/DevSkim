@@ -338,6 +338,7 @@
         ],
         "applies_to": [
             "csharp",
+            "razor",
             "fsharp"
         ],
         "tags": [

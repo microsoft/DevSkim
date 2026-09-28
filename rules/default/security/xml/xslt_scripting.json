@@ -5,7 +5,8 @@
         "description": "XSLT Scripting is a feature that should only be enabled if script support is necessary and you are certain this is used in a trusted environment.",
         "recommendation": "Disable XSLT scripting.",
         "applies_to": [
-            "CSharp"
+            "csharp",
+            "razor"
         ],
         "tags": [
             "XSLT"
