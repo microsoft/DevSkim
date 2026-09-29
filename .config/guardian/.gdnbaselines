@@ -1,0 +1,53 @@
+{
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines"
+  },
+  "version": "1.0.0",
+  "baselines": {
+    "default": {
+      "name": "default",
+      "createdDate": "2026-09-11 01:42:09Z",
+      "lastUpdatedDate": "2026-09-11 01:42:09Z"
+    }
+  },
+  "results": {
+    "a26bfd6a17f1d98c61402c9a79c72d4b04c983df51bd056cf91d96209d636fd3": {
+      "signature": "a26bfd6a17f1d98c61402c9a79c72d4b04c983df51bd056cf91d96209d636fd3",
+      "alternativeSignatures": [
+        "c997d1a7538343538af54833838a4d2c55e5bda4daafcdc6fdc033dae970de39",
+        "a223c655a70c0488bdefc14fdd96a205cfc353246a98752148deb79c0d73bc6e",
+        "bc620efcd277f5c1fa427b5c9fa3d0e7b2d00f2d66778b61a93d51867d6b8706"
+      ],
+      "target": "DevSkim-DotNet/Microsoft.DevSkim/DevSkimRuleSet.cs",
+      "line": 32,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-09-11 01:42:09Z",
+      "expirationDate": "2027-02-28 01:43:41Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-09-11 01:43:41Z"
+    },
+    "9a5b7a20a5f8c4190ae0a8a4d25b47c65edfd037495cb1a494c188e441990664": {
+      "signature": "9a5b7a20a5f8c4190ae0a8a4d25b47c65edfd037495cb1a494c188e441990664",
+      "alternativeSignatures": [
+        "f7bc37e5e7fd7993e5bfc2df57d61cb6767e6b428c226b762d138da3f35018b8",
+        "bcb23453136009eb3c190e99caebfefe6eb9bbd329b7a74736b64ce12c243b2f",
+        "7fe4c648a554fd7529a9e04e1cb8c7f59d31fef4a66f67cc5e6d1118036f92c8"
+      ],
+      "target": "DevSkim-DotNet/Microsoft.DevSkim.CLI/Commands/SuppressionCommand.cs",
+      "line": 102,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-09-11 01:42:09Z",
+      "expirationDate": "2027-02-28 01:43:41Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-09-11 01:43:41Z"
+    }
+  }
+}
