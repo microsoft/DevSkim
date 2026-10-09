@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.101] - 2026-09-23
+### Removed
+- Removed the Visual Studio Code extension (`DevSkim-VSCode-Plugin`) and the Visual Studio extension (`Microsoft.DevSkim.VisualStudio`), along with the IDE-only `Microsoft.DevSkim.LanguageServer` and `Microsoft.DevSkim.LanguageProtoInterop` projects. DevSkim is now distributed only as the `Microsoft.CST.DevSkim` library and the `Microsoft.CST.DevSkim.CLI` tool.
+- Removed Visual Studio-only media assets and the root `.vscode` workspace configuration used for extension development.
+
+### Pipeline
+- Removed the VS Code and Visual Studio extension PR and release pipelines.
+- Removed the npm ecosystem from `.github/dependabot.yml`.
+
+### Changed
+- Rewrote `README.md` to cover only the DevSkim library and CLI.
+- Removed extension build artifacts from `.gitignore` and extension guidance from the Copilot instructions.
+
 ## [1.0.100] - 2026-09-22
 ### Added
 - Added Kubernetes Security Baseline rules (`DS200000`-`DS200007`) covering privileged containers, privilege escalation, host namespace sharing, writable root filesystems, running as root, unpinned images, dangerous Linux capabilities, and `hostPath` volumes. These are the first rules to use the engine's `ymlpaths` support, which no shipped rule had used.

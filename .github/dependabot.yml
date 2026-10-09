@@ -2,7 +2,7 @@
 #
 # Goal: one pull request to review and merge instead of one per dependency.
 #
-# * Version updates for every ecosystem (npm, NuGet, GitHub Actions) are assigned to
+# * Version updates for every ecosystem (NuGet, GitHub Actions) are assigned to
 #   the `all-dependencies` multi-ecosystem group, so Dependabot consolidates them --
 #   across every directory it monitors -- into a single weekly pull request.
 # * Security updates cannot join a multi-ecosystem group, so each ecosystem also
@@ -30,32 +30,7 @@ multi-ecosystem-groups:
       - "no changelog"
 
 updates:
-  # VS Code plugin: extension host and language client packages.
-  - package-ecosystem: "npm"
-    directories:
-      - "/DevSkim-VSCode-Plugin"
-      - "/DevSkim-VSCode-Plugin/client"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Etc/UTC"
-    multi-ecosystem-group: "all-dependencies"
-    patterns:
-      - "*"
-    open-pull-requests-limit: 1
-    labels:
-      - "dependencies"
-      - "no changelog"
-      - "javascript"
-    groups:
-      npm-security-updates:
-        applies-to: security-updates
-        patterns:
-          - "*"
-
-  # .NET: library, CLI, language server, and Visual Studio extension projects
-  # discovered through Microsoft.DevSkim.sln.
+  # .NET: library, CLI, and test projects discovered through Microsoft.DevSkim.sln.
   - package-ecosystem: "nuget"
     directory: "/DevSkim-DotNet"
     schedule:
