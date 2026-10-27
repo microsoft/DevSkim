@@ -315,7 +315,8 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         /// <summary>
         /// Get the path that the file regexes of rules (<c>applies_to_file_regex</c> and <c>exclude_file_regex</c>) are matched against.
-        /// This is the path of the file relative to the scanned path, using '/' as the directory separator on every platform, or just the file name when a single file is scanned.
+        /// This is the path of the file relative to the scanned path, using '/' as the directory separator on every platform: just the file name when a single file is scanned,
+        /// or the entry's path inside the archive when a single archive is scanned with archive crawling.
         /// </summary>
         /// <param name="scanPath">The full path of the directory or file being scanned</param>
         /// <param name="fileEntry">The file being analyzed</param>
