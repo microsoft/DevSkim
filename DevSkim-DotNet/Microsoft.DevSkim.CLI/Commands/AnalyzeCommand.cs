@@ -128,7 +128,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     fileListing = innerList;
                 }
             }
-            return RunFileEntries(fileListing, languages);
+            return RunFileEntries(fileListing, languages, fullPath);
         }
 
         /// <summary>
@@ -313,7 +313,24 @@ namespace Microsoft.DevSkim.CLI.Commands
             return childPath;
         }
 
-        private int RunFileEntries(IEnumerable<FileEntry> fileListing, Languages devSkimLanguages)
+        /// <summary>
+        /// Get the path that the file regexes of rules (<c>applies_to_file_regex</c> and <c>exclude_file_regex</c>) are matched against.
+        /// This is the path of the file relative to the scanned path, using '/' as the directory separator on every platform, or just the file name when a single file is scanned.
+        /// </summary>
+        /// <param name="scanPath">The full path of the directory or file being scanned</param>
+        /// <param name="fileEntry">The file being analyzed</param>
+        /// <returns>The path to match file regexes against</returns>
+        internal static string GetPathForFileRegexes(string scanPath, FileEntry fileEntry)
+        {
+            string relativePath = Path.GetRelativePath(scanPath, fileEntry.FullPath);
+            if (relativePath == ".")
+            {
+                return fileEntry.Name;
+            }
+            return relativePath.Replace(Path.DirectorySeparatorChar, '/');
+        }
+
+        private int RunFileEntries(IEnumerable<FileEntry> fileListing, Languages devSkimLanguages, string scanPath)
         {
             DevSkimRuleSet devSkimRuleSet = _opts.IgnoreDefaultRules ? new() : DevSkimRuleSet.GetDefaultRuleSet();
             if (_opts.Rules.Any())
@@ -418,7 +435,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                     }
 
 
-                    List<Issue> issues = processor.Analyze(fileText, fileEntry.Name).ToList();
+                    List<Issue> issues = processor.Analyze(fileText, GetPathForFileRegexes(scanPath, fileEntry)).ToList();
                     if (_opts is SerializedAnalyzeCommandOptions serializedAnalyzeCommandOptions)
                     {
                         if (serializedAnalyzeCommandOptions.LanguageRuleIgnoreMap.TryGetValue(languageInfo.Name,

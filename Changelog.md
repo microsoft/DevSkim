@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.102] - 2026-10-27
+### Fix
+- Fixed `devskim analyze` matching a rule's `applies_to_file_regex` and `exclude_file_regex` against only the file name, so a pattern naming a directory, such as `"exclude_file_regex": ["project/tests/"]`, never matched (#795). The CLI has passed the bare file name to the rules engine since the move to the Application Inspector engine (#390), although the engine matches these regexes against the path it is given. They are now matched against the file's path relative to the scanned directory, with `/` as the separator on every platform (for example `project/tests/e2e/fixtures/prepare-ner.py`), and against the file name when a single file is scanned. `--base-path` and `--absolute-path` still affect only the output. Note that `exclude_file_regex` only filters the files a rule selects through `applies_to_file_regex`: a rule still runs on files matching its `applies_to` languages, and on every file if it sets neither field.
+- **Behavior change for custom rules.** A pattern anchored to the start of the file name, such as `^prepare-ner\.py$`, now matches only files at the root of the scanned directory. Use `(^|/)prepare-ner\.py$` to match the name at any depth. Unanchored patterns such as `\.config$`, including those in the default rules, behave as before.
+
 ## [1.0.101] - 2026-09-23
 ### Removed
 - Removed the Visual Studio Code extension (`DevSkim-VSCode-Plugin`) and the Visual Studio extension (`Microsoft.DevSkim.VisualStudio`), along with the IDE-only `Microsoft.DevSkim.LanguageServer` and `Microsoft.DevSkim.LanguageProtoInterop` projects. DevSkim is now distributed only as the `Microsoft.CST.DevSkim` library and the `Microsoft.CST.DevSkim.CLI` tool.
