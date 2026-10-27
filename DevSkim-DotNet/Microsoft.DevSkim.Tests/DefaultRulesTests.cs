@@ -314,6 +314,14 @@ public class DefaultRulesTests
     [DataRow("DS440011", "tls.c", "const SSL_METHOD *m = SSLv23_method();", 1)]
     [DataRow("DS440010", "tls.c", "options |= SSL_OP_NO_COMPRESSION;", 0)]
     [DataRow("DS440010", "tls.c", "options |= SSL_OP_NO_TLSv1_1;", 1)]
+    [DataRow("DS117838", "compose.yaml", "image: registry.gitlab.com/example/keycloak@sha256:28ea761821b553939f940f81640b2c004b5a512c58d190b7b766382d6395e3dc", 0)]
+    [DataRow("DS117838", "requirements.txt", "keyring==24.3.0 --hash=sha256:28ea761821b553939f940f81640b2c004b5a512c58d190b7b766382d6395e3dc", 0)]
+    [DataRow("DS117838", "manifest.json", "{ \"path\": \"license.txt\", \"sha256\": \"28ea761821b553939f940f81640b2c004b5a512c58d190b7b766382d6395e3dc\" }", 0)]
+    [DataRow("DS117838", "manifest.json", "{ \"license_key\": \"0123456789abcdef0123456789abcdef\", \"sha256\": \"28ea761821b553939f940f81640b2c004b5a512c58d190b7b766382d6395e3dc\" }", 1)]
+    [DataRow("DS173237", "manifest.json", "{ \"path\": \"formats-reference.md\", \"sha256\": \"bf1dd3e3c71a72cc309db4fca5074abdc9618b8351ab2c72fc896f22f6457769\" }", 0)]
+    [DataRow("DS173237", "package.toml", "MD5 = \"0123456789abcdef0123456789abcdef\"", 0)]
+    [DataRow("DS173237", "manifest.json", "{ \"token\": \"0123456789abcdef0123456789abcdef\", \"sha256\": \"bf1dd3e3c71a72cc309db4fca5074abdc9618b8351ab2c72fc896f22f6457769\" }", 1)]
+    [DataRow("DS173237", "settings.toml", "hmac_sha256_key = \"0123456789abcdef0123456789abcdef\"", 1)]
     public void DefaultRuleRegression(string ruleId, string fileName, string content, int expectedFindings)
     {
         DevSkimRuleSet ruleSet = DevSkimRuleSet.GetDefaultRuleSet().WithIds(new[] { ruleId });
