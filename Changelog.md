@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.102] - 2026-10-27
+### Fix
+- Fixed `devskim analyze` matching a rule's `applies_to_file_regex` and `exclude_file_regex` against only the file name, so a pattern naming a directory, such as `"exclude_file_regex": ["project/tests/"]`, never matched (#795). The CLI has passed the bare file name to the rules engine since the move to the Application Inspector engine (#390), although the engine matches these regexes against the path it is given. They are now matched against the file's path relative to the scanned directory, with `/` as the separator on every platform (for example `project/tests/e2e/fixtures/prepare-ner.py`), and against the file name when a single file is scanned (for a single archive scanned with `--crawl-archives`, each entry's path inside the archive). `--base-path` and `--absolute-path` still affect only the output. Note that `exclude_file_regex` only filters the files a rule selects through `applies_to_file_regex`: a rule still runs on files matching its `applies_to` languages, and on every file if it sets neither field.
+- **Behavior change for custom rules.** Because these patterns now see the whole relative path, a pattern anchored to the start of the file name, such as `^prepare-ner\.py$`, matches only files directly in the scanned directory, and a pattern can now match a directory name: `"exclude_file_regex": ["test"]` also excludes every file under a `tests/` or `latest/` directory. To match only the file name, anchor the pattern to the last path segment, as in `(^|/)prepare-ner\.py$` or `(^|/)[^/]*test[^/]*$`. Patterns anchored to the end of the name, such as `.*\.config$` in the default rules, match the same files as before.
+
 ## [1.0.101] - 2026-09-23
 ### Removed
 - Removed the Visual Studio Code extension (`DevSkim-VSCode-Plugin`) and the Visual Studio extension (`Microsoft.DevSkim.VisualStudio`), along with the IDE-only `Microsoft.DevSkim.LanguageServer` and `Microsoft.DevSkim.LanguageProtoInterop` projects. DevSkim is now distributed only as the `Microsoft.CST.DevSkim` library and the `Microsoft.CST.DevSkim.CLI` tool.

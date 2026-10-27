@@ -23,6 +23,15 @@ namespace Microsoft.DevSkim
             _processorOptions = processorOptions;
         }
 
+        /// <summary>
+        ///     Analyzes the provided source code for issues
+        /// </summary>
+        /// <param name="text"> Source code to analyze </param>
+        /// <param name="fileName">
+        ///     Name or path of the file. Its file name determines the language, and the whole value is what
+        ///     the rules' <c>applies_to_file_regex</c> and <c>exclude_file_regex</c> are matched against
+        /// </param>
+        /// <returns> The issues found </returns>
         public IEnumerable<Issue> Analyze(string text, string fileName)
         {
             List<Issue> resultsList = new List<Issue>();

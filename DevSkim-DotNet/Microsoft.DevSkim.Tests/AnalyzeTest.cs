@@ -1,8 +1,10 @@
 // Copyright (C) Microsoft. All rights reserved. Licensed under the MIT License.
 
 using Microsoft.CodeAnalysis.Sarif;
+using Microsoft.CST.RecursiveExtractor;
 using Microsoft.DevSkim.CLI.Commands;
 using System.Text;
+using System.Text.Json;
 using Microsoft.DevSkim.CLI;
 using Microsoft.DevSkim.CLI.Options;
 
@@ -311,6 +313,74 @@ namespace Microsoft.DevSkim.Tests
             var configJsonRuleMatches = configJsonResults.Runs[0].Results
                 .Where(r => r.RuleId == "DS450001" || r.RuleId == "DS450002" || r.RuleId == "DS450003");
             Assert.AreEqual(0, configJsonRuleMatches.Count(), "Config xpath rules should NOT match .config.json files");
+        }
+
+        [TestMethod]
+        // Excluding a directory (https://github.com/microsoft/DevSkim/issues/795)
+        [DataRow(".*", "project/tests/", false, true)]
+        // The path is relative to the scanned directory, so patterns can be anchored to it
+        [DataRow(".*", "^project/tests/", false, true)]
+        [DataRow("^project/tests/", null, true, false)]
+        // Patterns for file names keep working unless they are anchored to the start of the path
+        [DataRow(@"\.py$", null, true, true)]
+        [DataRow(".*", @"(^|/)prepare-ner\.py$", false, true)]
+        [DataRow(".*", @"^prepare-ner\.py$", true, true)]
+        public void TestFileRegexesMatchPathRelativeToScannedDirectory(string appliesToFileRegex, string? excludeFileRegex, bool expectIssueInTestFile, bool expectIssueInSourceFile)
+        {
+            string scanDirectory = PathHelper.GetRandomTempFile();
+            string testFile = Path.Combine(scanDirectory, "project", "tests", "e2e", "fixtures", "prepare-ner.py");
+            string sourceFile = Path.Combine(scanDirectory, "project", "src", "app.py");
+            foreach (string file in new[] { testFile, sourceFile })
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(file)!);
+                File.WriteAllText(file, "MD5\n");
+            }
+
+            string ruleFileName = PathHelper.GetRandomTempFile("json");
+            File.WriteAllText(ruleFileName, $@"[
+    {{
+        ""name"": ""File regex test"",
+        ""id"": ""DSFILEREGEX"",
+        ""description"": ""Test rule for applies_to_file_regex and exclude_file_regex"",
+        ""applies_to_file_regex"": {JsonSerializer.Serialize(new[] { appliesToFileRegex })},
+        ""exclude_file_regex"": {JsonSerializer.Serialize(excludeFileRegex is null ? Array.Empty<string>() : new[] { excludeFileRegex })},
+        ""tags"": [ ""Tests.FileRegex"" ],
+        ""severity"": ""ManualReview"",
+        ""patterns"": [ {{ ""pattern"": ""MD5"", ""type"": ""regex"", ""scopes"": [ ""code"" ] }} ]
+    }}
+]");
+            string outFileName = PathHelper.GetRandomTempFile("sarif");
+            AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
+            {
+                Path = scanDirectory,
+                OutputFile = outFileName,
+                OutputFileFormat = "sarif",
+                Rules = new[] { ruleFileName },
+                IgnoreDefaultRules = true
+            };
+
+            Assert.AreEqual((int)ExitCode.Okay, new AnalyzeCommand(opts).Run());
+
+            SarifLog resultsFile = SarifLog.Load(outFileName);
+            string[] filesWithIssues = resultsFile.Runs[0].Results
+                .Select(x => Path.GetFileName(x.Locations[0].PhysicalLocation.ArtifactLocation.Uri.GetFilePath()))
+                .ToArray();
+            Assert.AreEqual((expectIssueInTestFile ? 1 : 0) + (expectIssueInSourceFile ? 1 : 0), filesWithIssues.Length);
+            Assert.AreEqual(expectIssueInTestFile, filesWithIssues.Contains("prepare-ner.py"));
+            Assert.AreEqual(expectIssueInSourceFile, filesWithIssues.Contains("app.py"));
+        }
+
+        [TestMethod]
+        public void TestGetPathForFileRegexes()
+        {
+            string scanDirectory = PathHelper.GetRandomTempFile();
+            string filePath = Path.Combine(scanDirectory, "project", "tests", "prepare-ner.py");
+            FileEntry fileEntry = new FileEntry(filePath, new MemoryStream());
+
+            // Relative to the scanned directory, using '/' as the separator on every platform
+            Assert.AreEqual("project/tests/prepare-ner.py", AnalyzeCommand.GetPathForFileRegexes(scanDirectory, fileEntry));
+            // Just the file name when the file itself is scanned
+            Assert.AreEqual("prepare-ner.py", AnalyzeCommand.GetPathForFileRegexes(filePath, fileEntry));
         }
     }
 }
