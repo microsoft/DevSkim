@@ -411,6 +411,77 @@ public class DefaultRulesTests
         Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromSeconds(15), $"Analysis of a 200 KB line took {stopwatch.Elapsed}.");
     }
 
+    [TestMethod]
+    [DataRow("password-sha256")]
+    [DataRow("hmac-key-sha256")]
+    [DataRow("password.sha256")]
+    [DataRow("hmac/key/sha256")]
+    [DataRow("password_sha256")]
+    [DataRow("hmac key sha256")]
+    public void DigestAlgorithmSuffixDoesNotHideSecretKeys(string key)
+    {
+        const string secret = "0123456789abcdef0123456789abcdef";
+        foreach (string ruleId in new[] { "DS117838", "DS173237" })
+        {
+            DefaultRuleRegression(ruleId, "settings.json", $"{{ \"{key}\": \"{secret}\" }}", 1);
+            DefaultRuleRegression(ruleId, "settings.toml", $"'{key}' = '{secret}'", 1);
+            if (!key.Contains(' '))
+            {
+                DefaultRuleRegression(ruleId, "settings.yaml", $"{key}: \"{secret}\"", 1);
+            }
+        }
+    }
+
+    [TestMethod]
+    [DataRow("md5")]
+    [DataRow("sha1")]
+    [DataRow("sha224")]
+    [DataRow("SHA256")]
+    [DataRow("sha384")]
+    [DataRow("sha512")]
+    public void DigestLabelsDoNotHideOtherSecrets(string algorithm)
+    {
+        const string hex = "0123456789abcdef0123456789abcdef";
+        foreach (string ruleId in new[] { "DS117838", "DS173237" })
+        {
+            DefaultRuleRegression(ruleId, "manifest.json", $"{{ \"path\": \"license.txt\", \"{algorithm}\": \"{hex}\" }}", 0);
+            DefaultRuleRegression(ruleId, "settings.toml", $"'license' = 'public'\n'{algorithm}' = '{hex}'", 0);
+            DefaultRuleRegression(ruleId, "settings.yaml", $"license: public\n{algorithm}: \"{hex}\"", 0);
+            DefaultRuleRegression(ruleId, "settings.toml", $"{algorithm} = \"{hex}\"", 0);
+            DefaultRuleRegression(ruleId, "settings.json", $"{{ \"license_key\": \"{hex}\", \"{algorithm}\": \"{hex}\" }}", 1);
+            DefaultRuleRegression(ruleId, "settings.json", $"{{ \"{algorithm}\": \"{hex}\", \"license_key\": \"{hex}\" }}", 1);
+            DefaultRuleRegression(ruleId, "settings.yaml", $"key: \"{algorithm}:{hex}\"", 0);
+        }
+    }
+
+    [TestMethod]
+    public void KeywordSecretRuleRejectsLongLinesWithoutHexTokens()
+    {
+        string content = "{" + string.Join(",", Enumerable.Repeat("\"key\":\"some ordinary configuration value\"", 6000)) + "}";
+        DevSkimRule rule = DevSkimRuleSet.GetDefaultRuleSet().Single(rule => rule.Id == "DS117838");
+        var baseline = new System.Text.RegularExpressions.Regex(
+            "(secret|license|key|pass).*[a-f0-9]{30,}",
+            System.Text.RegularExpressions.RegexOptions.None,
+            TimeSpan.FromSeconds(15));
+        var regex = new System.Text.RegularExpressions.Regex(
+            rule.Patterns.Single().Pattern!,
+            System.Text.RegularExpressions.RegexOptions.None,
+            TimeSpan.FromSeconds(15));
+
+        baseline.IsMatch("\"key\":\"value\"");
+        regex.IsMatch("\"key\":\"value\"");
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        Assert.IsFalse(baseline.IsMatch(content));
+        TimeSpan baselineTime = stopwatch.Elapsed;
+        stopwatch.Restart();
+        Assert.IsFalse(regex.IsMatch(content));
+        stopwatch.Stop();
+
+        // Compare with the pre-digest pattern so the budget scales with the test host.
+        Assert.IsTrue(stopwatch.Elapsed < baselineTime * 1.5 + TimeSpan.FromMilliseconds(100),
+            $"Keyword scan took {stopwatch.Elapsed}; pre-digest baseline took {baselineTime}.");
+    }
+
     public static IEnumerable<object[]> DefaultRules
     {
         get
