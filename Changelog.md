@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the changelog-checking GitHub Actions workflow.
 - Updated contributor guidance to reflect that changelog updates are no longer enforced by an automated PR gate.
 
-## [1.0.101] - 2026-09-23
+### Documentation
+- Realigned changelog headings with the versions Nerdbank.GitVersioning stamps on their commits. Entries from 1.0.64 through 1.0.98 had drifted one to three versions behind the builds they describe, which also produced a duplicate `1.0.63` heading. Heading dates now record when each commit landed on `main` rather than when the entry was written.
+- Fixed unpadded dates, three subsections written as `##` headings, trailing whitespace, and zero-width spaces that broke copying the 1.0.1 usage commands.
+
+## [1.0.101] - 2026-10-08
 ### Removed
 - Removed the Visual Studio Code extension (`DevSkim-VSCode-Plugin`) and the Visual Studio extension (`Microsoft.DevSkim.VisualStudio`), along with the IDE-only `Microsoft.DevSkim.LanguageServer` and `Microsoft.DevSkim.LanguageProtoInterop` projects. DevSkim is now distributed only as the `Microsoft.CST.DevSkim` library and the `Microsoft.CST.DevSkim.CLI` tool.
 - Removed Visual Studio-only media assets and the root `.vscode` workspace configuration used for extension development.
@@ -22,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrote `README.md` to cover only the DevSkim library and CLI.
 - Removed extension build artifacts from `.gitignore` and extension guidance from the Copilot instructions.
 
-## [1.0.100] - 2026-09-22
+## [1.0.100] - 2026-09-28
 ### Added
 - Added Kubernetes Security Baseline rules (`DS200000`-`DS200007`) covering privileged containers, privilege escalation, host namespace sharing, writable root filesystems, running as root, unpinned images, dangerous Linux capabilities, and `hostPath` volumes. These are the first rules to use the engine's `ymlpaths` support, which no shipped rule had used.
 - Added package source rules `DS205000` (a `nuget.config` `<packageSources>` with no `<clear />`, so the sources are added to those inherited from machine and user level configuration rather than replacing them) and `DS205001` (`--extra-index-url`, `PIP_EXTRA_INDEX_URL`, and the `extra-index-url` setting in `pip.conf`/`pip.ini`).
@@ -67,18 +71,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recognised the supported YAML boolean spellings in the Kubernetes security settings.
 - Corrected guidance that misdescribed behaviour: `DS154191` no longer claims to detect plain `memcpy`, `DS200005` shows a real admission policy instead of repeating `imagePullPolicy`, `DS425050` no longer attributes code execution to `marshal`, and `DS425060` describes PyYAML 6 requiring the `Loader` argument.
 
-## [1.0.99] - 2026-09-21
+## [1.0.99] - 2026-09-22
 ### Fix
 - Fixed rule DS440011 (OpenSSL cipher-suite names such as `ECDHE-RSA-AES256-GCM-SHA384`) taking quadratic time on a long unbroken run of cipher-name characters. The middle `[A-Z0-9\-]+-?` group backtracked from every cipher-name prefix (`AES`, `DH`, `DES`, ...) found in the run, so a single 100 KB line such as `AES-AES-AES-...` took about 13 seconds and a 400 KB line took several minutes, hanging the scan. The run is now bounded to 64 characters (`[A-Z0-9\-]{1,64}`), which is longer than any real cipher-suite name, and the redundant `-?` was dropped because `-` is already in the character class. Match spans are unchanged for real OpenSSL cipher names.
 - Added `must-match` and `must-not-match` self-tests to DS440011, and a regression test that analyzes a 200 KB line with the default rules.
 
-## [1.0.97] - 2026-08-11
+## [1.0.98] - 2026-08-16
 ### Pipeline
 - Fixed the VS Code extension release pipeline failing at the publish step with `npm error code E401`. The step ran `npx @vscode/vsce`, and because the argument is a package name rather than a bin name, npx cannot short circuit to the copy installed by the preceding `npm install -g @vscode/vsce` step and always fetches the package manifest from the npm registry, which is not authenticated inside the `AzureCLI@2` task. The step now invokes the globally installed `vsce.cmd` by its full path, so publishing needs no registry access, and fails with an explicit message if the binary is missing.
 - Removed the `npm_config_registry` environment variable from the publish step. It was only there to make the `npx` fetch resolve, is redundant with the `.npmrc` copied into the staging directory, and does not affect where the extension is published - `vsce publish` uploads to the Visual Studio Marketplace, not to an npm registry.
 - Hardened the VS Code publish step against an unexpected artifact count. It previously passed a `Resolve-Path` result straight to `--packagePath`, which yields `$null` when signing produced no `.vsix` and an array that splats into multiple arguments when it produced more than one. The step now resolves the artifact explicitly and fails with a clear message unless exactly one is present.
 
-## [1.0.96] - 2026-08-03
+## [1.0.96] - 2026-08-11
 ### Dependencies
 - Consolidated the open Dependabot pull requests (#765, #766, #767, #768, #769) into a single update for the VS Code extension: `linkify-it` 5.0.1 to 5.0.2, `fast-uri` 3.1.2 to 3.1.4, `undici` 7.24.6 to 7.29.0, and `brace-expansion` 1.1.14 to 1.1.16 and 5.0.5 to 5.0.8.
 - Bumped `vscode-languageclient` from 7.0.0 to 10.1.0 in the extension client, which pulls `vscode-languageserver-protocol` up to 3.18.2 and replaces the transitive `minimatch` 3.1.5 chain with 10.2.5.
@@ -98,11 +102,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Corrected the changelog guidance in `.github/copilot-instructions.md` to derive the version heading from Nerdbank.GitVersioning (`nbgv get-version`) instead of incrementing the previous entry, which had let the changelog headings drift behind the versions actually built, and documented the `no changelog` label as the gate's escape hatch.
 
-## [1.0.87] - 2026-07-15
+## [1.0.90] - 2026-07-17
 ### Pipeline
 - Updated the CLI release pipeline to use the .NET 10 SDK when restoring, building, packaging, and releasing .NET 10 targets.
 
-## [1.0.86] - 2026-06-10
+## [1.0.89] - 2026-06-16
 ### Added
 - Added .NET 10 as a publishing target for the DevSkim library, CLI, and Language Server.
 
@@ -113,32 +117,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Pipeline
 - Added .NET 10 (`10.0.x`) SDK to the CLI, VS Code, and Visual Studio build pipelines.
 
-## [1.0.85] - 2026-06-10
+## [1.0.88] - 2026-06-09
 ### Dependencies
 - Bump qs from 6.15.0 to 6.15.2 in /DevSkim-VSCode-Plugin (#753)
 
-## [1.0.84] - 2026-06-10
+## [1.0.87] - 2026-06-09
 ### Dependencies
 - Bump @azure/identity from 4.13.0 to 4.13.1 and remove the now-unused uuid transitive dependency in /DevSkim-VSCode-Plugin (#752)
 
-## [1.0.83] - 2026-06-10
+## [1.0.86] - 2026-06-09
 ### Dependencies
 - Bump tmp from 0.2.5 to 0.2.7 in /DevSkim-VSCode-Plugin (#754)
 
-## [1.0.82] - 2026-05-12
+## [1.0.85] - 2026-05-12
 ### Dependencies
 - Update dependencies for VS Code Extension
 
-## [1.0.81] - 2026-04-16
+## [1.0.84] - 2026-04-16
 ### Pipeline
 - Updates to fix release pipeline for VSCode extension.
- 
-## [1.0.80] - 2026-04-15
+
+## [1.0.82] - 2026-04-15
 ### Dependencies
 - Run Npm Audit Fix to update VS Code Dependencies.
 
-
-## [1.0.79] - 2026-04-14
+## [1.0.80] - 2026-04-14
 ### Changed
 - Rewrote Visual Studio extension using VisualStudio.Extensibility SDK for VS2022/2026 compatibility
 - Replaced legacy MEF-based ILanguageClient with LanguageServerProvider from new VS Extensibility SDK
@@ -151,7 +154,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `Pipelines/vs/devskim-visualstudio-pr.yml` for PR validation builds
 - Added `Pipelines/vs/devskim-visualstudio-release.yml` for release signing, VS Marketplace publishing, and GitHub releases
 
-## [1.0.78] - 2026-03-30
+## [1.0.79] - 2026-04-13
 ### Dependencies
 - Updated VS Code plugin npm dependencies to resolve security vulnerabilities (consolidates dependabot PRs #725, #727, #728, #729, #730, #731, #735):
   - Bumped `picomatch` from 2.3.1 to 2.3.2
@@ -162,34 +165,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Bumped `@vscode/test-electron` from 1.6.1 to 2.5.2 (removes vulnerable `@tootallnate/once`)
   - Additional transitive dependency updates via `npm audit fix`
 
-## [1.0.77] - 2026-03-26
+## [1.0.78] - 2026-03-30
 ### Pipeline
 Try to fix VS Code Publishing Pipeline issue with VSCE tool install
 
-## [1.0.76] - 2026-02-12
+## [1.0.77] - 2026-02-17
 ### Fix
 - Fixed DS126858 rule (Weak/Broken Hash Algorithm) false positive when MD5 is explicitly disabled via flags like `--nomd5`, `nomd5`, `no-md5`, `no_md5`, or `disable_md5_check`
 
-## [1.0.75] - 2026-02-06
+## [1.0.76] - 2026-02-06
 ### Changed
 - Removed unnecessary uninstall/reinstall of @vscode/vsce from postinstall script in VSCode plugin
 
-## [1.0.74] - 2026-02-05
+## [1.0.75] - 2026-02-06
 ### Fix
 - Fixed overly broad filename regex in .NET Framework configuration rules (DS450001, DS450002, DS450003) that incorrectly matched JSON files containing `.config` in their names (e.g., `file.test.config.json`), causing XML parsing errors
 
-## [1.0.73] - 2026-02-04
+## [1.0.74] - 2026-02-05
 ### Fix
 Suppress DS173237 on all-zero values
 
-## [1.0.72] - 2026-02-04
+## [1.0.73] - 2026-02-05
 ### Added
 - Added Copilot instructions file (.github/copilot-instructions.md) with repository-specific guidance for AI coding agents
 - Documented build, test, and development workflows for C# and TypeScript components
 - Included special instructions for handling nuget.config and .npmrc files
 - Added mandatory Changelog.md update requirements for all PRs
 
-## [1.0.71] - 2026-02-03
+## [1.0.72] - 2026-02-04
 ### Fix
 - Fixed invalid JSON in package.json (trailing comma in scripts section) that caused npm parse errors in Azure DevOps pipeline
 - Fixed @vscode/vsce package installation issue where `out/` folder was missing, causing "Cannot find module './out/main'" error
@@ -197,55 +200,55 @@ Suppress DS173237 on all-zero values
 ### Dependencies
 - Updated @vscode/vsce from 3.4.2 to 3.7.1
 
-## [1.0.70] - 2026-01-29
+## [1.0.71] - 2026-01-30
 ### Pipeline
 Fix release pipeline for VSCode extension
 
-## [1.0.69] - 2026-01-28
+## [1.0.70] - 2026-01-28
 ### Pipeline
 Move PR and release pipelines to new ADO organization
 
-## [1.0.68] - 2025-12-04
+## [1.0.69] - 2025-12-05
 ### Dependencies
 Bump jws from 3.2.2 to 3.2.3 in /DevSkim-VSCode-Plugin
 
-## [1.0.67] - 2025-11-18
+## [1.0.68] - 2025-11-19
 ### Dependencies
 Update Dependencies for VS Code Extension
 
-## [1.0.66] - 2025-09-04
+## [1.0.67] - 2025-09-11
 ### Dependencies
 Update Dependencies for C# Projects
 
-## [1.0.65] - 2025-09-04
+## [1.0.66] - 2025-09-04
 ### Dependencies
 Update VS Code IDE `tmp` Dependency
 
-## [1.0.64] - 2025-07-31
+## [1.0.65] - 2025-08-01
 ### Pipeline
 - Updated VS Code extension pipeline scripts to properly configure .npmrc files before credential provider setup
 - Modified updatePackageLock.js script to accept registry base URL as command line argument instead of hardcoded value
 - Added support for different registry configurations for PR builds vs release builds
 
-## [1.0.63] - 2025-07-30
+## [1.0.64] - 2025-07-31
 ### Pipeline
 Fix for VS Code Pipeline Build
 
-## [1.0.63] - 2025-07-29
+## [1.0.63] - 2025-07-30
 ### Fix
 Fixes Sarif Markdown value failing to populate the rule provided recommendation value. #697
 
 ### Dependencies
-Update dependencies 
+Update dependencies
 
 ### Tests
 Adds test cases for SarifWriter
 
-## [1.0.62] - 2025-07-23
+## [1.0.62] - 2025-07-28
 ### Pipelines
 Pipeline updates
 
-## [1.0.61] - 2025-07-11
+## [1.0.61] - 2025-07-14
 ### Pipelines
 Pipeline updates
 
@@ -255,20 +258,20 @@ Pipeline updates
 
 ## [1.0.59] - 2025-06-10
 ### Misc (non-code)
-Removes old doc publish workflow. 
+Removes old doc publish workflow.
 
-## [1.0.58] - 2025-06-09
+## [1.0.58] - 2025-06-10
 ### New Feature
 Adds a `vs` output format to leverage the DevSkim CLI as a build task in a csproj.
 
-## [1.0.57] - 2025-05-28
+## [1.0.57] - 2025-05-29
 ### Fix
 Fix an issue handling non-ascii paths when launching LSP in VS Code Extension
 
 ### Dependencies
 Update Dependencies
 
-## [1.0.56] - 2025-04-14
+## [1.0.56] - 2025-04-15
 ### Tests
 Migrate to MTP
 
@@ -276,15 +279,15 @@ Migrate to MTP
 ### Dependencies
 Updates Dependencies
 
-## [1.0.54] - 2025-04-09
+## [1.0.54] - 2025-04-10
 ### Dependencies
 Updates Dependencies
 
-## [1.0.53] - 2025-04-01
+## [1.0.53] - 2025-04-02
 ### Documentation
 Adds a link to the Microsoft Privacy Statement to the Readme.
 
-## [1.0.52] - 2024-12-09
+## [1.0.52] - 2025-01-30
 ### Dependencies
 Updates Dependencies
 
@@ -295,18 +298,18 @@ CLI now targets .NET 8.0 and .NET 9.0, .NET 6.0/7.0 targeting removed. DevSkim L
 ### Fix
 Fix confidence filtering at rule level.
 
-## [1.0.50] - 2024-12-05
+## [1.0.50] - 2024-12-06
 ### Fix
 Fixes #664 handling of options from IgnoreRuleMap when using OptionsJson
 
 ### New Functionality
 Adds `include-globs` argument to require all scanned files match a specific glob pattern #663.
 
-## [1.0.49] - 2024-12-03
+## [1.0.49] - 2024-12-04
 ### Rules
 Fixed false positives and false negatives in outdated/banned SSL/TLS protocols. #649
 
-## [1.0.48] - 2024-11-20
+## [1.0.48] - 2024-12-03
 ### Dependencies
 Update VS Code Extension Dependencies
 
@@ -314,11 +317,11 @@ Update VS Code Extension Dependencies
 ### Pipeline
 Pipeline only changes
 
-## [1.0.46] - 2024-11-05
+## [1.0.46] - 2024-11-06
 ### Pipeline
 Pipeline only changes
 
-## [1.0.45] - 2024-11-01
+## [1.0.45] - 2024-11-04
 ### Pipeline
 Pipeline only changes
 
@@ -326,31 +329,31 @@ Pipeline only changes
 ### Pipeline
 Pipeline only changes
 
-## [1.0.43] - 2024-10-29
+## [1.0.43] - 2024-11-01
 ### Pipeline
 Pipeline only changes
 
-## [1.0.42] - 2024-08-26
-## Fix
+## [1.0.42] - 2024-08-27
+### Fix
 Fixes suppression command to not perturb line breaks, particularly when a file has findings which are not selected for suppression. #631
 
-## [1.0.41] - 2024-08-23
-## Rules
+## [1.0.41] - 2024-08-26
+### Rules
 Extend the false positive fix for the issue reported in #548 to Sdk-style msbuild projects.
 
-## [1.0.40] - 2024-7-08
-## Fix
+## [1.0.40] - 2024-07-12
+### Fix
 Fixes extraneous printing of git errors when git ignore checking is enabled during analysis.
 
-## [1.0.39] - 2024-6-26
+## [1.0.39] - 2024-06-26
 ### Pipelines
 Pipeline maintenance.
 
-## [1.0.38] - 2024-6-05
+## [1.0.38] - 2024-06-07
 ### Incomplete Guidance
 Expanded content for rule guidance containing "TO DO"s.
 
-## [1.0.37] - 2024-5-23
+## [1.0.37] - 2024-05-23
 ### Missing Guidance
 Added guidance for several rules such as weak hash algorithm, disabling certificate validation, and TLS client configuration.
 
@@ -358,23 +361,23 @@ Added guidance for several rules such as weak hash algorithm, disabling certific
 ### Rules
 Fix substitution pattern in PHP Request rule.
 
-## [1.0.35] - 2024-5-8
+## [1.0.35] - 2024-05-09
 ### Pipeline
 Pipeline only changes
 
-## [1.0.34] - 2024-3-18
+## [1.0.34] - 2024-03-27
 ### Pipeline
 Pipeline only changes
 
-## [1.0.33] - 2024-3-13
+## [1.0.33] - 2024-03-14
 ### Fix
 Fixes properly setting the default value for the `OutputFileFormat` and `OutputTextFormat` fields when using the `options-json` argument to the analyze command.
 
-## [1.0.32] - 2024-3-04
+## [1.0.32] - 2024-03-05
 ### Pipeline
 Improvement to pipeline to allow rerunning failed deploy jobs.
 
-## [1.0.31] - 2024-2-28
+## [1.0.31] - 2024-02-29
 ### Sarif Format
 Populate additional fields for GitHub Code scanning
 
@@ -387,40 +390,40 @@ Update Dependencies
 ### Engine
 Prioritize confidence value from Pattern level in Issue records but fall back to rule level if not specified.
 
-## [1.0.30] - 2024-1-31
+## [1.0.30] - 2024-02-07
 ### Pipeline
 Additional pipeline fixes
 
-## [1.0.29] - 2024-1-17
+## [1.0.29] - 2024-01-18
 ### Pipeline
 Fix GitHub binary release process
 
 ### Dependencies
 Update Application Inspector dependency
 
-## [1.0.28] - 2024-1-4
+## [1.0.28] - 2024-01-08
 ### Fix
 Remove trailing period after general guidance URI in output to make it clickable when automatically converted to uri by terminal
 
 ### Dependencies
 Update dependencies
 
-## [1.0.27] - 2023-12-12
+## [1.0.27] - 2023-12-14
 ### Pipelines
 Move GitHub Release task to last task in publish pipeline.
 
-## [1.0.26] - 2023-12-05
+## [1.0.26] - 2023-12-07
 ### Dependencies
 Update dependencies.
 
 ### Framework
 Build using .NET 8
 
-## [1.0.25] - 2023-11-10
+## [1.0.25] - 2023-11-28
 ### Dependencies
 Update dependencies. Resolves an issue with some xpath queries via AppInspector Rules engine https://github.com/microsoft/ApplicationInspector/pull/567
 
-## [1.0.24] - 2023-10-10
+## [1.0.24] - 2023-10-11
 ### Dependencies
 Update OmniSharp language server and App Inspector dependencies.
 
@@ -428,7 +431,7 @@ Update OmniSharp language server and App Inspector dependencies.
 ### Miscellaneous
 Update deployment pipeline version
 
-## [1.0.22] - 2023-09-14
+## [1.0.22] - 2023-09-18
 ### Dependencies
 Update dependencies - incorporate a fix for an issue with JSONPath selection used for matching boolean values. https://github.com/microsoft/ApplicationInspector/pull/561
 
@@ -442,7 +445,7 @@ Delete advisory parser script. #586
 ### Dependencies
 Update action versions for github workflows.
 
-## [1.0.20] - 2023-08-28
+## [1.0.20] - 2023-08-29
 ### Fixes
 Removes workaround for 404 sarif schema uri
 
@@ -452,7 +455,7 @@ Updates dependencies to latest.
 ### VS Extension
 Fix ordering of proposed fixes in UX. #582
 
-## [1.0.19] - 2023-08-22
+## [1.0.19] - 2023-08-23
 ### VS Extension
 Fix concurrent access issue with cache storage for fixes. Fix #480
 
@@ -485,7 +488,7 @@ Update VS Code Extension Dependencies
 
 ## [1.0.12] - 2023-07-24
 ### Guidance
-Updated Guidance for DS126858 
+Updated Guidance for DS126858
 
 ## [1.0.11] - 2023-06-26
 ### Update Dependency
@@ -507,7 +510,7 @@ Updated Guidance for DS126858
 ### Fixed
 - Fixes issue where the CLI global tool package was attempting to run with a mismatched runtime.
 
-## [1.0.6] - 2023-05-25
+## [1.0.6] - 2023-05-26
 ### Republish
 - Republish of 1.0.5 due to a release pipeline error
 
@@ -518,11 +521,11 @@ Updated Guidance for DS126858
 ### Fixed
 - Support ignore-case `i` and multi-line `m` modifiers on the Pattern property of Fixes.
 
-## [1.0.4] - 2023-05-24
+## [1.0.4] - 2023-05-25
 ### Fixed
 - Fixes output sarif returning not applicable fixes
 
-## [1.0.3] - 2023-05-24
+## [1.0.3] - 2023-05-25
 ### Fixed
 - Fixes output sarif for runs with rules with empty string for Recommendation and Description
 
@@ -536,10 +539,10 @@ This version is a major refactor of DevSkim.
 ### Added
 - Added fix and suppress commands that operate on the output sarif from Analyze and the source code scanned with analyze to apply fixes/suppressions
 
-Usage: 
+Usage:
 ```bash
-devskim analyze -I path/to/source -O myresults.sarif​
-devskim fix -I path/to/source -O myresults.sarif --dry-run --all​
+devskim analyze -I path/to/source -O myresults.sarif
+devskim fix -I path/to/source -O myresults.sarif --dry-run --all
 devskim suppress -I path/to/source -O myresults.sarif --dry-run --all
 ```
 - Support jsonpath/xpath and ymlpath based rules
