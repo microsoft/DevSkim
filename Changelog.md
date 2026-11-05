@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.102] - 2026-11-05
 ### Pipeline
 - Removed the changelog-checking GitHub Actions workflow and its obsolete Dependabot bypass labels.
+- Removed Dependabot's GitHub Actions update configuration because no GitHub Actions workflows remain.
 - Updated contributor guidance to reflect that changelog updates are no longer enforced by an automated PR gate.
 
 ## [1.0.101] - 2026-09-23

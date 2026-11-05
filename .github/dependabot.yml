@@ -2,8 +2,8 @@
 #
 # Goal: one pull request to review and merge instead of one per dependency.
 #
-# * Version updates for every ecosystem (NuGet, GitHub Actions) are assigned to
-#   the `all-dependencies` multi-ecosystem group, so Dependabot consolidates them --
+# * NuGet version updates are assigned to the `all-dependencies` multi-ecosystem
+#   group, so Dependabot consolidates them --
 #   across every directory it monitors -- into a single weekly pull request.
 # * Security updates cannot join a multi-ecosystem group, so each ecosystem also
 #   declares a `*-security-updates` group. Advisory-driven bumps then arrive as one
@@ -47,26 +47,3 @@ updates:
         applies-to: security-updates
         patterns:
           - "*"
-
-  # GitHub Actions used by the workflows in .github/workflows.
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Etc/UTC"
-    multi-ecosystem-group: "all-dependencies"
-    patterns:
-      - "*"
-    open-pull-requests-limit: 1
-    labels:
-      - "dependencies"
-      - "pipeline"
-    groups:
-      github-actions-security-updates:
-        applies-to: security-updates
-        patterns:
-          - "*"
-    cooldown:
-      default-days: 7
