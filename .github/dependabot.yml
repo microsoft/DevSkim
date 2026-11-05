@@ -10,8 +10,6 @@
 #   grouped pull request per ecosystem instead of one per advisory.
 # * `open-pull-requests-limit: 1` caps each ecosystem at a single open version-update
 #   pull request, so nothing slips out of the grouping.
-# * The `no changelog` label lets the required "Check Changelog Action" gate pass on
-#   bot pull requests, which do not touch Changelog.md.
 #
 # Reference:
 # https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
@@ -27,7 +25,6 @@ multi-ecosystem-groups:
       timezone: "Etc/UTC"
     labels:
       - "dependencies"
-      - "no changelog"
 
 updates:
   # .NET: library, CLI, and test projects discovered through Microsoft.DevSkim.sln.
@@ -44,7 +41,6 @@ updates:
     open-pull-requests-limit: 1
     labels:
       - "dependencies"
-      - "no changelog"
       - ".NET"
     groups:
       nuget-security-updates:
@@ -66,7 +62,6 @@ updates:
     open-pull-requests-limit: 1
     labels:
       - "dependencies"
-      - "no changelog"
       - "pipeline"
     groups:
       github-actions-security-updates:
