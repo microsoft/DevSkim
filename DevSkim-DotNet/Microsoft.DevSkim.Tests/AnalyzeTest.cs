@@ -312,5 +312,69 @@ namespace Microsoft.DevSkim.Tests
                 .Where(r => r.RuleId == "DS450001" || r.RuleId == "DS450002" || r.RuleId == "DS450003");
             Assert.AreEqual(0, configJsonRuleMatches.Count(), "Config xpath rules should NOT match .config.json files");
         }
+
+        [DataTestMethod]
+        [DataRow(false, 0)]
+        [DataRow(true, 1)]
+        public void TestAnalyzeUnknownExtensionlessFiles(bool analyzeUnknownFileTypes, int expectedNumResults)
+        {
+            string testDirectory = Path.Combine(Path.GetTempPath(), $"{nameof(TestAnalyzeUnknownExtensionlessFiles)}_{Guid.NewGuid()}");
+            Directory.CreateDirectory(testDirectory);
+
+            try
+            {
+                string extensionlessFileName = Path.Combine(testDirectory, "passwd");
+                string outFileName = PathHelper.GetRandomTempFile("sarif");
+                string ruleFileName = PathHelper.GetRandomTempFile("json");
+
+                string passwdContent = @"root:x:0:0:root:/root:/bin/bash";
+                string ruleFileContent = @"[
+    {
+        ""name"": ""Detect /etc/passwd-like syntax"",
+        ""id"": ""DSTESTPASSWD"",
+        ""description"": ""Detects /etc/passwd-like syntax."",
+        ""severity"": ""BestPractice"",
+        ""confidence"": ""High"",
+        ""tags"": [""security"", ""passwd""],
+        ""applies_to_file_regex"": [""(^|[\\\\/])passwd$""],
+        ""patterns"": [
+            {
+                ""pattern"": ""^root:x:0:0:root:/root:/bin/bash$"",
+                ""type"": ""regex"",
+                ""modifiers"": [""m""],
+                ""scopes"": [""all""]
+            }
+        ]
+    }
+]";
+
+                File.WriteAllText(extensionlessFileName, passwdContent);
+                File.WriteAllText(ruleFileName, ruleFileContent);
+
+                AnalyzeCommandOptions opts = new AnalyzeCommandOptions()
+                {
+                    Path = testDirectory,
+                    OutputFile = outFileName,
+                    OutputFileFormat = "sarif",
+                    Rules = new[] { ruleFileName },
+                    IgnoreDefaultRules = true,
+                    AnalyzeUnknownFileTypes = analyzeUnknownFileTypes
+                };
+
+                int resultCode = new AnalyzeCommand(opts).Run();
+                Assert.AreEqual((int)ExitCode.Okay, resultCode);
+
+                SarifLog resultsFile = SarifLog.Load(outFileName);
+                Assert.AreEqual(1, resultsFile.Runs.Count);
+                Assert.AreEqual(expectedNumResults, resultsFile.Runs[0].Results?.Count ?? 0);
+            }
+            finally
+            {
+                if (Directory.Exists(testDirectory))
+                {
+                    Directory.Delete(testDirectory, true);
+                }
+            }
+        }
     }
 }
