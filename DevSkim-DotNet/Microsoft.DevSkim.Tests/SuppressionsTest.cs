@@ -379,7 +379,7 @@ namespace Microsoft.DevSkim.Tests
             int duration = 30;
             DateTime expectedDate = DateTime.Now.AddDays(duration);
             string expectedDateStr = expectedDate.ToString("yyyy-MM-dd");
-            
+
             string suppression = DevSkimRuleProcessor.GenerateSuppressionByLanguage("xml", "DS123456", duration: duration);
             Assert.IsTrue(suppression.StartsWith("<!--"), "XML suppression should start with <!--");
             Assert.IsTrue(suppression.EndsWith("-->"), "XML suppression should end with -->");
@@ -406,7 +406,7 @@ namespace Microsoft.DevSkim.Tests
         {
             string xmlLine = "<!-- DevSkim: ignore DS123456 -->";
             Suppression suppression = new Suppression(xmlLine);
-            
+
             Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
             Assert.AreEqual("DS123456", suppression.GetSuppressedIds.First(), "Suppression should contain the correct rule ID");
         }
@@ -420,10 +420,10 @@ namespace Microsoft.DevSkim.Tests
             string futureDate = DateTime.Now.AddDays(30).ToString("yyyy-MM-dd");
             string xmlLine = $"<!-- DevSkim: ignore DS123456 until {futureDate} -->";
             Suppression suppression = new Suppression(xmlLine);
-            
+
             Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
             Assert.AreEqual("DS123456", suppression.GetSuppressedIds.First(), "Suppression should contain the correct rule ID");
-            Assert.AreEqual(DateTime.ParseExact(futureDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), 
+            Assert.AreEqual(DateTime.ParseExact(futureDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
                 suppression.ExpirationDate, "Suppression should have the correct expiration date");
         }
 
@@ -436,7 +436,7 @@ namespace Microsoft.DevSkim.Tests
             string pastDate = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
             string xmlLine = $"<!-- DevSkim: ignore DS123456 until {pastDate} -->";
             Suppression suppression = new Suppression(xmlLine);
-            
+
             Assert.IsFalse(suppression.IsInEffect, "Expired suppression should not be in effect");
             Assert.IsTrue(suppression.IsExpired, "Suppression should be marked as expired");
         }
@@ -449,7 +449,7 @@ namespace Microsoft.DevSkim.Tests
         {
             string xmlLine = "<!-- DevSkim: ignore DS123456 by TestReviewer -->";
             Suppression suppression = new Suppression(xmlLine);
-            
+
             Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
             Assert.AreEqual("DS123456", suppression.GetSuppressedIds.First(), "Suppression should contain the correct rule ID");
             Assert.AreEqual("TestReviewer", suppression.Reviewer, "Suppression should have the correct reviewer");
@@ -480,9 +480,9 @@ namespace Microsoft.DevSkim.Tests
 
             int resultCode = new SuppressionCommand(opts).Run();
             Assert.AreEqual(0, resultCode);
-            
+
             string result = File.ReadAllText(sourceFile);
-            
+
             // Verify that XML-style suppressions were added
             Assert.IsTrue(result.Contains("<!-- DevSkim: ignore"), "XML suppression comment should be present");
             Assert.IsTrue(result.Contains("-->"), "XML suppression comment should be properly closed");
@@ -529,7 +529,7 @@ namespace Microsoft.DevSkim.Tests
             DateTime expectedExpiration = DateTime.Now.AddDays(duration);
             int resultCode = new SuppressionCommand(opts).Run();
             Assert.AreEqual(0, resultCode);
-            
+
             string result = File.ReadAllText(sourceFile);
             Assert.IsTrue(result.Contains("<!-- DevSkim: ignore"), "XML suppression comment should be present");
             Assert.IsTrue(result.Contains("-->"), "XML suppression comment should be properly closed");
@@ -542,12 +542,12 @@ namespace Microsoft.DevSkim.Tests
             {
                 Suppression suppression = new Suppression(line);
                 Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
-                
+
                 if (!string.IsNullOrEmpty(reviewerName))
                 {
                     Assert.AreEqual(reviewerName, suppression.Reviewer, "Reviewer name should match");
                 }
-                
+
                 if (duration > 0)
                 {
                     Assert.AreEqual(expectedExpiration.Date, suppression.ExpirationDate, "Expiration date should match");
