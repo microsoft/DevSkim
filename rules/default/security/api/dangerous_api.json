@@ -17,7 +17,7 @@
         "rule_info": "DS154189.md",
         "patterns": [
             {
-                "pattern": "(sprintf|_getts|_getws|_snprintf|_sntprintf|_snwprintf|_stprintf|_tcsat|_tcscpy|_tcslen|_tcsncpy|_vsnprintf|_vsntprintf|_vsnwprintf|_vstprintf|alloca|asctime|atof|atoi|atoll|bsearch|ctime|fopen|fprintf|freopen|fscanf|fwprintf|fwscanf|getenv|getwd|gmtime|localtime|lstrcat|lstrcpy|mbsrtowcs|mbstowcs|memmove|mktemp|printf|qsort|rewind|scanf|setbuf|sscanf|strcatbuff|strerror|strtok|swprintf|swscanf|tmpnam|vfprintf|vfscanf|vfwscanf|vprintf|vscanf|vsnprintf|vsprintf|vsscanf|vswprintf|vswscanf|vwprintf|vwscanf|wcrtomb|wcrtombs|wcscat|wcscpy|wcslen|wcsncat|wcsncpy|wcsrtombs|wcstok|wctomb|wmemcpy|wmemmove|wnsprintf|wprintf|wscanf|wsprintf|wvnsprintf|wvsprintf)",
+                "pattern": "(_alloca|_ftcscat|_ftcscpy|_getts|_gettws|_getws|_i64toa|_i64tow|_itoa|_itow|_makepath|_mbccat|_mbccpy|_mbscat|_mbscpy|_mbsnbcat|_mbsnbcpy|_mbsncat|_mbsncpy|_mbstok|_snprintf|_sntprintf|_sntscanf|_snwprintf|_splitpath|_stprintf|_stscanf|_tccat|_tccpy|_tcsat|_tcscat|_tcscpy|_tcsncat|_tcsncpy|_tcstok|_tmakepath|_tscanf|_tsplitpath|_ui64toa|_ui64tot|_ui64tow|_ultoa|_ultot|_ultow|_vsnprintf|_vsntprintf|_vsnwprintf|_vstprintf|_wmakepath|_wsplitpath|alloca|asctime|atof|atoi|atol|atoll|bsearch|ChangeWindowMessageFilter|CharToOem|CharToOemA|CharToOemBuffA|CharToOemBuffW|CharToOemW|ctime|fopen|fprintf|freopen|fscanf|fwprintf|fwscanf|getenv|getwd|gmtime|localtime|lstrcat|lstrcatA|lstrcatn|lstrcatnA|lstrcatnW|lstrcatW|lstrcpy|lstrcpyA|lstrcpyn|lstrcpynA|lstrcpynW|lstrcpyW|lstrncat|makepath|mbsrtowcs|mbstowcs|memmove|mktemp|OemToChar|OemToCharA|OemToCharW|printf|qsort|rewind|scanf|setbuf|snprintf|snscanf|snwscanf|sprintf|sprintfA|sprintfW|sscanf|StrCat|StrCatA|strcatA|StrCatBuff|strcatbuff|StrCatBuffA|StrCatBuffW|StrCatChainW|StrCatN|StrCatNA|StrCatNW|StrCatW|strcatW|StrCpy|StrCpyA|strcpyA|StrCpyN|StrCpyNA|strcpynA|StrCpyNW|StrCpyW|strcpyW|strerror|StrNCat|StrNCatA|StrNCatW|StrNCpy|StrNCpyA|StrNCpyW|strtok|swprintf|swscanf|tmpnam|vfprintf|vfscanf|vfwscanf|vprintf|vscanf|vsnprintf|vsprintf|vsscanf|vswprintf|vswscanf|vwprintf|vwscanf|wcrtomb|wcrtombs|wcscat|wcscpy|wcsncat|wcsncpy|wcsrtombs|wcstok|wcstombs|wctomb|wmemcpy|wmemmove|wnsprintf|wnsprintfA|wnsprintfW|wprintf|wscanf|wsprintf|wsprintfA|wsprintfW|wvnsprintf|wvnsprintfA|wvnsprintfW|wvsprintf|wvsprintfA|wvsprintfW)",
                 "type": "RegexWord",
                 "scopes": [
                     "code"
@@ -25,7 +25,17 @@
             }
         ],
         "must-match": [
-            "int main ()\n{\n  char buffer [50];\n  int n, a=5, b=3;\n  n=sprintf (buffer, \"%d plus %d is %d\", a, b, a+b);\\n  printf (\"[%s] is a string %d chars long\n\",buffer,n);\n  return 0;\n}"
+            "int main ()\n{\n  char buffer [50];\n  int n, a=5, b=3;\n  n=sprintf (buffer, \"%d plus %d is %d\", a, b, a+b);\\n  printf (\"[%s] is a string %d chars long\n\",buffer,n);\n  return 0;\n}",
+            "lstrcpyn(dest, src, 32);",
+            "StrCpyW(dest, src);",
+            "_splitpath(path, drive, dir, fname, ext);",
+            "_itoa(value, buffer, 10);",
+            "CharToOemA(src, dest);"
+        ],
+        "must-not-match": [
+            "strcpy_s(d, _countof(d), s);",
+            "snprintf_s(buf, sizeof(buf), \"%d\", n);",
+            "int total = countItems();"
         ]
     },
     {
@@ -325,6 +335,139 @@
         "must-not-match": [
             "fgets(string);",
             "gets_s(string);"
+        ]
+    },
+    {
+        "name": "Banned pointer validation function detected (IsBad*Ptr)",
+        "id": "DS154190",
+        "description": "The IsBad*Ptr family cannot reliably determine whether a pointer is valid. It works by triggering and swallowing access violations, which can corrupt the guard page of a thread stack, mask real defects, and still return the wrong answer for a pointer that becomes invalid immediately afterwards.",
+        "recommendation": "Remove the check. Validate pointers by contract and structured design rather than by probing memory.",
+        "applies_to": [
+            "c",
+            "cpp",
+            "objective-c"
+        ],
+        "tags": [
+            "API.DangerousAPI.BannedFunction"
+        ],
+        "confidence": "high",
+        "severity": "important",
+        "rule_info": "DS154190.md",
+        "patterns": [
+            {
+                "pattern": "(IsBadCodePtr|IsBadHugeReadPtr|IsBadHugeWritePtr|IsBadReadPtr|IsBadStringPtr|IsBadStringPtrA|IsBadStringPtrW|IsBadWritePtr)",
+                "type": "RegexWord",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "if (IsBadWritePtr(p, cb)) { return E_POINTER; }",
+            "IsBadReadPtr(buffer, length);",
+            "if (IsBadStringPtrW(s, MAX_PATH)) return;"
+        ],
+        "must-not-match": [
+            "if (p == nullptr) { return E_POINTER; }"
+        ]
+    },
+    {
+        "name": "Banned unbounded memory copy detected (CopyMemory)",
+        "id": "DS154191",
+        "description": "CopyMemory and RtlCopyMemory are Windows aliases for memcpy. They take a caller-supplied length and perform no bounds checking against the destination, so an incorrect length silently corrupts adjacent memory.",
+        "recommendation": "Use memcpy_s, or a bounded copy that is given the size of the destination buffer.",
+        "applies_to": [
+            "c",
+            "cpp",
+            "objective-c"
+        ],
+        "tags": [
+            "API.DangerousAPI.BannedFunction"
+        ],
+        "confidence": "high",
+        "severity": "moderate",
+        "rule_info": "DS154191.md",
+        "patterns": [
+            {
+                "pattern": "(CopyMemory|RtlCopyMemory)",
+                "type": "RegexWord",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "RtlCopyMemory(dest, src, cb);",
+            "CopyMemory(&out, &in, sizeof(in));"
+        ],
+        "must-not-match": [
+            "memcpy_s(dest, sizeof(dest), src, len);",
+            "RtlCopyMemoryNonTemporal(dest, src, cb);"
+        ]
+    },
+    {
+        "name": "Banned unbounded string length function detected",
+        "id": "DS154192",
+        "description": "strlen and lstrlen read until they find a terminator. If the buffer is not terminated within its allocation they read past the end of it.",
+        "recommendation": "Use strnlen_s, or another length function that is given the size of the buffer.",
+        "applies_to": [
+            "c",
+            "cpp",
+            "objective-c"
+        ],
+        "tags": [
+            "API.DangerousAPI.BannedFunction"
+        ],
+        "confidence": "medium",
+        "severity": "BestPractice",
+        "rule_info": "DS154192.md",
+        "patterns": [
+            {
+                "pattern": "(_tcslen|lstrlen|lstrlenA|lstrlenW|strlen|wcslen)",
+                "type": "RegexWord",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "size_t n = strlen(input);",
+            "int n = lstrlenW(s);",
+            "size_t n = wcslen(ws);"
+        ],
+        "must-not-match": [
+            "size_t n = strnlen_s(input, sizeof(input));"
+        ]
+    },
+    {
+        "name": "Objective-C method swizzling detected",
+        "id": "DS154193",
+        "description": "class_addMethod and class_replaceMethod rewrite the method table at runtime. The SDL lists both as banned because the result depends on load order, silently changes behaviour for every caller of the affected selector, and is difficult to reason about or review.",
+        "recommendation": "Prefer subclassing, categories that add rather than replace behaviour, or an explicit delegate.",
+        "applies_to": [
+            "objective-c"
+        ],
+        "tags": [
+            "API.DangerousAPI.BannedFunction"
+        ],
+        "confidence": "high",
+        "severity": "ManualReview",
+        "rule_info": "DS154193.md",
+        "patterns": [
+            {
+                "pattern": "(class_addMethod|class_replaceMethod)",
+                "type": "RegexWord",
+                "scopes": [
+                    "code"
+                ]
+            }
+        ],
+        "must-match": [
+            "class_replaceMethod(cls, sel, imp, types);",
+            "class_addMethod(cls, @selector(foo), (IMP)fooImp, \"v@:\");"
+        ],
+        "must-not-match": [
+            "[super viewDidLoad];"
         ]
     }
 ]
