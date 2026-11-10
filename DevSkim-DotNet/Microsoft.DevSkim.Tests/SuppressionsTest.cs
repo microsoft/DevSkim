@@ -611,6 +611,60 @@ namespace Microsoft.DevSkim.Tests
         }
 
         [TestMethod]
+        [DataRow(0)]
+        [DataRow(1)]
+        [DataRow(2)]
+        public void UnsafeXmlDoesNotPreventSuppressingOtherFiles(int unsafeFilePosition)
+        {
+            string unsafeContent = "<config algorithm=\"MD5\"\n enabled=\"true\" />";
+            string safeXmlContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<config>MD5</config>";
+            string pythonContent = "algorithm = 'MD5'";
+            var (basePath, unsafeFile, unsafeSarif) = runAnalysis(unsafeContent, "xml");
+            var (_, safeXmlFile, safeXmlSarif) = runAnalysis(safeXmlContent, "xml");
+            var (_, pythonFile, pythonSarif) = runAnalysis(pythonContent, "py");
+            byte[] unsafeBytes = File.ReadAllBytes(unsafeFile);
+
+            var results = new List<Result>();
+            foreach (string sarif in new[] { safeXmlSarif, pythonSarif })
+            {
+                Result[] findings = SarifLog.Load(sarif).Runs.Single().Results.ToArray();
+                Assert.HasCount(1, findings);
+                Assert.AreEqual("DS126858", findings.Single().RuleId);
+                results.Add(findings.Single());
+            }
+            SarifLog combinedLog = SarifLog.Load(unsafeSarif);
+            Assert.HasCount(1, combinedLog.Runs.Single().Results);
+            Assert.AreEqual("DS126858", combinedLog.Runs.Single().Results.Single().RuleId);
+            results.Insert(unsafeFilePosition, combinedLog.Runs.Single().Results.Single());
+            combinedLog.Runs.Single().Results = results;
+            combinedLog.Save(unsafeSarif);
+
+            Assert.AreEqual((int)ExitCode.CriticalError, new SuppressionCommand(new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = unsafeSarif,
+                ApplyAllSuppression = true
+            }).Run());
+            CollectionAssert.AreEqual(unsafeBytes, File.ReadAllBytes(unsafeFile));
+            AssertXmlRoundTrip(safeXmlContent, safeXmlFile, safeXmlSarif, 1);
+
+            var processor = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(),
+                new DevSkimRuleProcessorOptions());
+            Issue[] pythonIssues = processor.Analyze(File.ReadAllText(pythonFile), pythonFile).ToArray();
+            Assert.HasCount(1, pythonIssues);
+            Assert.IsTrue(pythonIssues.Single().IsSuppressionInfo);
+            Assert.AreEqual("DS126858", pythonIssues.Single().Rule.Id);
+            Assert.AreEqual(0, new AnalyzeCommand(new AnalyzeCommandOptions
+            {
+                Path = pythonFile,
+                OutputFile = pythonSarif,
+                OutputFileFormat = "sarif",
+                BasePath = basePath
+            }).Run());
+            Assert.IsEmpty(SarifLog.Load(pythonSarif).Runs.Single().Results);
+        }
+
+        [TestMethod]
         [DataRow(false)]
         [DataRow(true)]
         public void XmlSuppressionPreservesUtf16Encoding(bool bigEndian)

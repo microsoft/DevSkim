@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fix
 - Generate XML suppression comments with `<!-- -->` delimiters, continuing the contribution in #705.
 - Preserve XML byte-order-mark encodings when suppressing findings. Reject unsafe line-end insertions (including multiline tags, comments, and CDATA) without changing the file instead of corrupting XML or silently adding ineffective suppressions.
+- Continue suppressing other SARIF files after refusing an unsafe XML insertion, and return an aggregate error when any XML file is rejected.
 - Add XML CLI round-trip coverage that verifies baseline findings, well-formed output, effective suppressions, newline preservation, reviewer attribution, and expiration.
 
 ### Changed

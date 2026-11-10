@@ -30,6 +30,7 @@ namespace Microsoft.DevSkim.CLI.Commands
 
         public int Run()
         {
+            ExitCode exitCode = ExitCode.NoIssues;
             SarifLog sarifLog = SarifLog.Load(_opts.SarifInput);
             if (sarifLog.Runs.Count > 0)
             {
@@ -156,7 +157,8 @@ namespace Microsoft.DevSkim.CLI.Commands
                     string updatedContent = sb.ToString();
                     if (isXml && !ValidateXmlSuppressions(updatedContent, encoding, xmlComments, potentialPath))
                     {
-                        return (int)ExitCode.CriticalError;
+                        exitCode = ExitCode.CriticalError;
+                        continue;
                     }
 
                     if (!_opts.DryRun)
@@ -177,7 +179,7 @@ namespace Microsoft.DevSkim.CLI.Commands
                 }
             }
 
-            return (int)ExitCode.NoIssues;
+            return (int)exitCode;
         }
 
         private bool ValidateXmlSuppressions(string content, Encoding encoding,
