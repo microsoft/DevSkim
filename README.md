@@ -93,6 +93,8 @@ The CLI also provides the following commands:
 
 Run `devskim --help` or `devskim <command> --help` for all options. For more information, see the wiki page about the [Command Line Interface](https://github.com/microsoft/DevSkim/wiki/Command-Line-Interface).
 
+For XML, `suppress` uses `<!-- -->` comments on the finding's line and preserves UTF byte-order-mark encodings. It reports an error and leaves the affected file unchanged when a line-end comment cannot be inserted safely, such as inside a multiline tag, attribute, comment, or CDATA section. XML containing DTDs or an encoding declaration inconsistent with the detected encoding is also rejected. Move the finding to a line where a comment can follow a complete XML construct, or add a suppression manually in a valid XML comment on the same line.
+
 ## Writing Rules
 
 Please see [Writing Rules](https://github.com/Microsoft/DevSkim/wiki/Writing-Rules) for

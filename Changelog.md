@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.103] - 2026-11-10
+### Fix
+- Generate XML suppression comments with `<!-- -->` delimiters, continuing the contribution in #705.
+- Preserve XML byte-order-mark encodings when suppressing findings. Reject unsafe line-end insertions (including multiline tags, comments, and CDATA) without changing the file instead of corrupting XML or silently adding ineffective suppressions.
+- Add XML CLI round-trip coverage that verifies baseline findings, well-formed output, effective suppressions, newline preservation, reviewer attribution, and expiration.
+
 ## [1.0.102] - 2026-11-05
 ### Pipeline
 - Removed the changelog-checking GitHub Actions workflow.

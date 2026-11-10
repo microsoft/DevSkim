@@ -3,6 +3,7 @@
 using Microsoft.CodeAnalysis.Sarif;
 using Microsoft.DevSkim.CLI.Commands;
 using System.Text;
+using System.Xml;
 using Microsoft.DevSkim.CLI;
 using Microsoft.DevSkim.CLI.Options;
 
@@ -11,6 +12,17 @@ namespace Microsoft.DevSkim.Tests
     [TestClass]
     public class SuppressionTest
     {
+        private readonly List<string> temporaryFiles = new();
+
+        [TestCleanup]
+        public void DeleteTemporaryFiles()
+        {
+            foreach (string path in temporaryFiles)
+            {
+                File.Delete(path);
+            }
+        }
+
         [DataTestMethod]
         [DataRow("", 30)]
         [DataRow("Contoso", 30)]
@@ -265,9 +277,10 @@ namespace Microsoft.DevSkim.Tests
 
         private (string basePath, string sourceFile, string sarifPath) runAnalysis(string content, string ext)
         {
-            string tempFileName = $"{Path.GetTempFileName()}.{ext}";
-            string outFileName = Path.GetTempFileName();
-            File.Delete(outFileName);
+            string tempFileName = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.{ext}");
+            string outFileName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            temporaryFiles.Add(tempFileName);
+            temporaryFiles.Add(outFileName);
 
             string basePath = Path.GetTempPath();
             using FileStream file = File.Open(tempFileName, FileMode.Create);
@@ -446,10 +459,14 @@ namespace Microsoft.DevSkim.Tests
         /// Integration test: Execute suppressions for XML files
         /// </summary>
         [TestMethod]
-        public void ExecuteSuppressionsForXml()
+        [DataRow("\n", false)]
+        [DataRow("\r\n", false)]
+        [DataRow("\n", true)]
+        [DataRow("\r\n", true)]
+        public void ExecuteSuppressionsForXml(string newline, bool preferMultiline)
         {
-            // XML content with an MD5 reference that triggers DevSkim rule
-            string xmlContent = @"<config><algorithm>MD5</algorithm></config>";
+            string xmlContent = string.Join(newline, "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+                "<config>", "  <algorithm>MD5</algorithm>", "  <algorithm>SHA1</algorithm>", "</config>", "");
 
             (string basePath, string sourceFile, string sarifPath) = runAnalysis(xmlContent, "xml");
 
@@ -457,7 +474,8 @@ namespace Microsoft.DevSkim.Tests
             {
                 Path = basePath,
                 SarifInput = sarifPath,
-                ApplyAllSuppression = true
+                ApplyAllSuppression = true,
+                PreferMultiline = preferMultiline
             };
 
             int resultCode = new SuppressionCommand(opts).Run();
@@ -480,6 +498,9 @@ namespace Microsoft.DevSkim.Tests
                 Assert.IsTrue(suppression.IsInEffect, "Suppression should be in effect");
                 Assert.IsTrue(suppression.GetSuppressedIds.Length > 0, "Should have at least one suppressed rule ID");
             }
+            Assert.AreEqual(xmlContent.Replace("MD5</algorithm>", "MD5</algorithm> <!-- DevSkim: ignore DS126858 -->")
+                .Replace("SHA1</algorithm>", "SHA1</algorithm> <!-- DevSkim: ignore DS126858 -->"), result);
+            AssertXmlRoundTrip(xmlContent, sourceFile, sarifPath, 2);
         }
 
         /// <summary>
@@ -516,6 +537,7 @@ namespace Microsoft.DevSkim.Tests
             // Verify suppression contains expected parts
             string[] lines = File.ReadAllLines(sourceFile);
             var suppressionLines = lines.Where(line => line.Contains("<!-- DevSkim: ignore"));
+            Assert.IsTrue(suppressionLines.Any());
             foreach (string line in suppressionLines)
             {
                 Suppression suppression = new Suppression(line);
@@ -531,6 +553,117 @@ namespace Microsoft.DevSkim.Tests
                     Assert.AreEqual(expectedExpiration.Date, suppression.ExpirationDate, "Expiration date should match");
                 }
             }
+            AssertXmlRoundTrip(xmlContent, sourceFile, sarifPath, 1);
+        }
+
+        private void AssertXmlRoundTrip(string originalContent, string sourceFile, string sarifPath, int expectedFindings)
+        {
+            Result[] baseline = SarifLog.Load(sarifPath).Runs.Single().Results.ToArray();
+            Assert.HasCount(expectedFindings, baseline);
+            Assert.IsTrue(baseline.All(result => result.RuleId == "DS126858"));
+
+            var processor = new DevSkimRuleProcessor(DevSkimRuleSet.GetDefaultRuleSet(),
+                new DevSkimRuleProcessorOptions());
+            Assert.HasCount(expectedFindings, processor.Analyze(originalContent, sourceFile).ToArray());
+            Issue[] issues = processor.Analyze(File.ReadAllText(sourceFile), sourceFile).ToArray();
+            Assert.HasCount(expectedFindings, issues);
+            Assert.IsTrue(issues.All(issue => issue.IsSuppressionInfo && issue.Rule.Id == "DS126858"));
+            using (XmlReader reader = XmlReader.Create(sourceFile, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit }))
+            {
+                while (reader.Read()) { }
+            }
+            Assert.AreEqual(0, new AnalyzeCommand(new AnalyzeCommandOptions
+            {
+                Path = sourceFile,
+                OutputFile = sarifPath,
+                OutputFileFormat = "sarif",
+                BasePath = Path.GetTempPath()
+            }).Run());
+            Assert.IsEmpty(SarifLog.Load(sarifPath).Runs.Single().Results);
+        }
+
+        [TestMethod]
+        [DataRow("<config algorithm=\"MD5\"\n enabled=\"true\" />", "")]
+        [DataRow("<config algorithm=\"first\nMD5\nlast\" />", "")]
+        [DataRow("<config><!--\nTODO: review configuration\n--></config>", "")]
+        [DataRow("<config><![CDATA[\nMD5\n]]></config>", "")]
+        [DataRow("<config>MD5</config>", "Reviewer--Name")]
+        [DataRow("<config>MD5</config>", "Reviewer-->Name")]
+        [DataRow("<!DOCTYPE config [<!ENTITY hash 'MD5'>]><config>MD5</config>", "")]
+        public void UnsafeXmlSuppressionLeavesFileUnchanged(string xmlContent, string reviewer)
+        {
+            foreach (string newline in new[] { "\n", "\r\n" })
+            {
+                string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + newline +
+                    xmlContent.Replace("\n", newline);
+                var (basePath, sourceFile, sarifPath) = runAnalysis(content, "xml");
+                Assert.IsNotEmpty(SarifLog.Load(sarifPath).Runs.Single().Results);
+                byte[] originalBytes = File.ReadAllBytes(sourceFile);
+                Assert.AreEqual((int)ExitCode.CriticalError, new SuppressionCommand(new SuppressionCommandOptions
+                {
+                    Path = basePath,
+                    SarifInput = sarifPath,
+                    ApplyAllSuppression = true,
+                    Reviewer = reviewer
+                }).Run());
+                CollectionAssert.AreEqual(originalBytes, File.ReadAllBytes(sourceFile));
+            }
+        }
+
+        [TestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public void XmlSuppressionPreservesUtf16Encoding(bool bigEndian)
+        {
+            string content = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<config>MD5</config>";
+            var (basePath, sourceFile, sarifPath) = runAnalysis(content, "xml");
+            Encoding encoding = new UnicodeEncoding(bigEndian, true);
+            File.WriteAllText(sourceFile, content, encoding);
+            Assert.AreEqual(0, new SuppressionCommand(new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true
+            }).Run());
+            CollectionAssert.AreEqual(encoding.GetPreamble(), File.ReadAllBytes(sourceFile)[..2]);
+            AssertXmlRoundTrip(content, sourceFile, sarifPath, 1);
+        }
+
+        [TestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public void XmlSuppressionPreservesUtf8Preamble(bool emitPreamble)
+        {
+            string content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<config>MD5</config>";
+            var (basePath, sourceFile, sarifPath) = runAnalysis(content, "xml");
+            Encoding encoding = new UTF8Encoding(emitPreamble);
+            File.WriteAllText(sourceFile, content, encoding);
+            Assert.AreEqual(0, new SuppressionCommand(new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true
+            }).Run());
+            byte[] expected = encoding.GetPreamble().Concat(encoding.GetBytes(
+                content + " <!-- DevSkim: ignore DS126858 -->")).ToArray();
+            CollectionAssert.AreEqual(expected, File.ReadAllBytes(sourceFile));
+            AssertXmlRoundTrip(content, sourceFile, sarifPath, 1);
+        }
+
+        [TestMethod]
+        public void XmlSuppressionRejectsUnsupportedEncodingWithoutWriting()
+        {
+            string content = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<config>MD5</config>";
+            var (basePath, sourceFile, sarifPath) = runAnalysis(content, "xml");
+            byte[] originalBytes = File.ReadAllBytes(sourceFile);
+            Assert.IsNotEmpty(SarifLog.Load(sarifPath).Runs.Single().Results);
+            Assert.AreEqual((int)ExitCode.CriticalError, new SuppressionCommand(new SuppressionCommandOptions
+            {
+                Path = basePath,
+                SarifInput = sarifPath,
+                ApplyAllSuppression = true
+            }).Run());
+            CollectionAssert.AreEqual(originalBytes, File.ReadAllBytes(sourceFile));
         }
 
         /// <summary>
@@ -542,30 +675,17 @@ namespace Microsoft.DevSkim.Tests
             // XML content with MD5 that already has a suppression comment
             string xmlContent = @"<config><algorithm>MD5 <!-- DevSkim: ignore DS126858 --></algorithm></config>";
 
-            string tempFileName = $"{Path.GetTempFileName()}.xml";
-            File.WriteAllText(tempFileName, xmlContent);
+            string tempFileName = "test.xml";
 
-            try
+            DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
+            DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions()
             {
-                DevSkimRuleSet devSkimRuleSet = DevSkimRuleSet.GetDefaultRuleSet();
-                DevSkimRuleProcessor processor = new DevSkimRuleProcessor(devSkimRuleSet, new DevSkimRuleProcessorOptions()
-                {
-                    EnableSuppressions = true
-                });
+                EnableSuppressions = true
+            });
 
-                IEnumerable<Issue> issues = processor.Analyze(xmlContent, tempFileName);
-
-                // The DS126858 (MD5) issue should be suppressed
-                var unsuppressedIssues = issues.Where(i => !i.IsSuppressionInfo && i.Rule.Id == "DS126858");
-                Assert.AreEqual(0, unsuppressedIssues.Count(), "MD5 issue should be suppressed");
-            }
-            finally
-            {
-                if (File.Exists(tempFileName))
-                {
-                    File.Delete(tempFileName);
-                }
-            }
+            Issue[] issues = processor.Analyze(xmlContent, tempFileName).ToArray();
+            Assert.HasCount(1, issues);
+            Assert.IsTrue(issues.Single().IsSuppressionInfo);
         }
 
         /// <summary>
