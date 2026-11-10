@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Preserve XML byte-order-mark encodings when suppressing findings. Reject unsafe line-end insertions (including multiline tags, comments, and CDATA) without changing the file instead of corrupting XML or silently adding ineffective suppressions.
 - Add XML CLI round-trip coverage that verifies baseline findings, well-formed output, effective suppressions, newline preservation, reviewer attribution, and expiration.
 
+### Changed
+- Corrected the Azure DevOps NuGet source to the `microsoft-sdl` feed and removed agent instructions permitting public-feed overrides.
+
 ## [1.0.102] - 2026-11-05
 ### Pipeline
 - Removed the changelog-checking GitHub Actions workflow.
