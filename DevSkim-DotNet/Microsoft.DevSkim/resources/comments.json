@@ -108,7 +108,8 @@
   {
     "language": [
       "html",
-      "msbuild"
+      "msbuild",
+      "xml"
     ],
     "prefix": "<!--",
     "suffix": "-->"

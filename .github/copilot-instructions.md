@@ -15,13 +15,13 @@ DevSkim is a .NET library and cross-platform command line tool that performs sta
 
 **⚠️ IMPORTANT**: This repository uses private Azure DevOps feeds for package management:
 
-- **nuget.config**: Contains private feed configuration (`PublicRegistriesFeed`)
+- **nuget.config**: Contains private feed configuration (`microsoft-sdl`)
 
 **Rules for agents**:
-1. You MAY temporarily modify `nuget.config` to use public feeds (nuget.org) when working locally
-2. You MUST NOT commit these changes - always revert them before committing
-3. Use `git restore nuget.config` before creating commits
-4. The private feed configuration must remain in the repository commits
+1. Use the feed configured in `nuget.config` for package restores
+2. Do not rewrite `nuget.config` or override package sources to use public feeds
+3. If feed authentication fails, ask the user to run `dotnet restore DevSkim-DotNet/Microsoft.DevSkim.sln --interactive` from the repository root
+4. Report unresolved feed permission or authentication failures instead of bypassing the configured feed
 
 ### Changelog Requirements
 
