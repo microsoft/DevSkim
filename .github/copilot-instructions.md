@@ -28,7 +28,7 @@ DevSkim is a .NET library and cross-platform command line tool that performs sta
 **⚠️ MANDATORY**: All pull requests MUST include an update to `Changelog.md`
 
 - This project uses **squash merges**
-- PR gate checks verify `Changelog.md` is updated
+- Changelog updates are a contributor requirement, not an automated PR gate
 - Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Version headings are `[MAJOR.MINOR.PATCH]` and must match the version the build actually produces
 
@@ -55,8 +55,6 @@ DevSkim is a .NET library and cross-platform command line tool that performs sta
 ### Changed
 - Updated build documentation
 ```
-
-**Exception**: the gate ([`tarides/changelog-check-action`](https://github.com/tarides/changelog-check-action)) is skipped on PRs carrying the `no changelog` label. That is reserved for changes that are not user-visible, and Dependabot applies it automatically via `.github/dependabot.yml`. Do not use it to avoid writing an entry for a real change.
 
 ## Building and Testing
 
