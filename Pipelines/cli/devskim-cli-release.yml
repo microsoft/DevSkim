@@ -16,7 +16,7 @@ resources:
 variables:
   BuildConfiguration: 'Release'
   DotnetVersion: '10.0.x'
-  EsrpConnectedServiceName: 'oss-signing-v6-devskim'
+  EsrpConnectedServiceName: 'oss-signing-v6-devskim' 
   EsrpAppRegistrationClientId: 'be7ae77e-8364-4022-94f4-584b632311be'
   EsrpAppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
   EsrpAuthAKVName: 'oss-signing-vault'
