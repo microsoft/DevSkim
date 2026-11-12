@@ -16,7 +16,15 @@ resources:
 variables:
   BuildConfiguration: 'Release'
   DotnetVersion: '10.0.x'
- 
+  EsrpConnectedServiceName: 'oss-signing-v6-devskim' 
+  EsrpAppRegistrationClientId: 'be7ae77e-8364-4022-94f4-584b632311be'
+  EsrpAppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
+  EsrpAuthAKVName: 'oss-signing-vault'
+  EsrpAuthSignCertName: 'oss-esrp-signing-cert'
+  EsrpAuthCertName: 'oss-esrp-auth-cert'
+  EsrpClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
+  EsrpServiceEndpointUrl: 'https://api.esrp.microsoft.com/api/v2'
+
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
@@ -204,15 +212,18 @@ extends:
             packageType: 'sdk'
             version: '6.x'
         # First party code signing
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: First Party Code Sign - Linux
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
             Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
             signConfigType: 'inlineSignParams'
@@ -243,15 +254,18 @@ extends:
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
 
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: First Party Code Sign - MacOS
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
             Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
             signConfigType: 'inlineSignParams'
@@ -282,15 +296,18 @@ extends:
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
 
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: First Party Code Sign - Windows
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/win/DevSkim_CLI_win_$(ReleaseVersion)'
             Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
             signConfigType: 'inlineSignParams'
@@ -321,15 +338,18 @@ extends:
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
 
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: First Party Code Sign - .NET Core App
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
             Pattern: 'ApplicationInspector.*.dll, devskim.dll, devskim.exe, Microsoft.DevSkim.dll, OAT.dll, RecursiveExtractor.dll'
             signConfigType: 'inlineSignParams'
@@ -361,15 +381,18 @@ extends:
             MaxRetryAttempts: '5'
 
         # Third party code signing
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: Third Party Code Sign - Linux
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/linux/DevSkim_CLI_linux_$(ReleaseVersion)'
             Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
             signConfigType: 'inlineSignParams'
@@ -400,15 +423,18 @@ extends:
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
 
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: Third Party Code Sign - MacOS
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/macos/DevSkim_CLI_macos_$(ReleaseVersion)'
             Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
             signConfigType: 'inlineSignParams'
@@ -438,15 +464,18 @@ extends:
             SessionTimeout: '60'
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: Third Party Code Sign - Windows
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/win/DevSkim_CLI_win_$(ReleaseVersion)'
             Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
             signConfigType: 'inlineSignParams'
@@ -476,15 +505,18 @@ extends:
             SessionTimeout: '60'
             MaxConcurrency: '50'
             MaxRetryAttempts: '5'
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: Third Party Code Sign - .NET Core App
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)/netcoreapp/DevSkim_CLI_netcoreapp_$(ReleaseVersion)'
             Pattern: 'CommandLine.dll, DiscUtils.*.dll, gfs.*.dll, git2-*.dll, Glob.dll, ICSharpCode.*.dll, JsonCons.*.dll, KellermanSoftware.*.dll, LibGit2Sharp.dll, lzo.*.dll, Newtonsoft.*.dll, NLog.dll, Serilog.*.dll, SharpCompress.dll, YamlDotNet.dll'
             signConfigType: 'inlineSignParams'
@@ -516,15 +548,18 @@ extends:
             MaxRetryAttempts: '5'
 
         # Code Signing - NuGet Package
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: Code Sign Nuget Packages
           inputs:
-            ConnectedServiceName: 'oss-esrp-signing-devskim-v5-connection'
-            AppRegistrationClientId: '8694c10c-c89d-4231-9dca-36cb80737ad0'
-            AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-            AuthAKVName: 'oss-signing-vault'
-            AuthCertName: 'oss-esrp-auth-cert'
-            AuthSignCertName: 'oss-esrp-signing-cert'
+            ConnectedServiceName: '$(EsrpConnectedServiceName)'
+            AppRegistrationClientId: '$(EsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(EsrpAppRegistrationTenantId)'
+            AuthAKVName: '$(EsrpAuthAKVName)'
+            AuthCertName: '$(EsrpAuthCertName)'
+            AuthSignCertName: '$(EsrpAuthSignCertName)'
+            useMsiAuthentication: true
+            esrpClientId: '$(EsrpClientId)'
+            ServiceEndpointUrl: '$(EsrpServiceEndpointUrl)'
             FolderPath: '$(System.ArtifactsDirectory)'
             Pattern: '*.nupkg, *.snupkg'
             signConfigType: 'inlineSignParams'
